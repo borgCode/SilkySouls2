@@ -25,7 +25,7 @@ namespace SilkySouls2
         private readonly PlayerViewModel _playerViewModel;
         private readonly TravelViewModel _travelViewModel;
 
-        // private readonly UtilityViewModel _utilityViewModel;
+        private readonly UtilityViewModel _utilityViewModel;
         private readonly EnemyViewModel _enemyViewModel;
 
         // private readonly ItemViewModel _itemViewModel;
@@ -52,7 +52,7 @@ namespace SilkySouls2
             //
             var playerService = new PlayerService(_memoryIo, _hookManager);
             var travelService = new TravelService(_memoryIo, _hookManager);
-            // var utilityService = new UtilityService(_memoryIo, _hookManager);
+            var utilityService = new UtilityService(_memoryIo, _hookManager);
             var enemyService = new EnemyService(_memoryIo, _hookManager);
             // var cinderService = new CinderService(_memoryIo, _hookManager);
             // var itemService = new ItemService(_memoryIo, _hookManager);
@@ -60,21 +60,21 @@ namespace SilkySouls2
             //
             _playerViewModel = new PlayerViewModel(playerService, hotkeyManager);
             _travelViewModel = new TravelViewModel(travelService, hotkeyManager);
-            // _utilityViewModel = new UtilityViewModel(utilityService, hotkeyManager, _playerViewModel);
+            _utilityViewModel = new UtilityViewModel(utilityService, hotkeyManager);
             _enemyViewModel = new EnemyViewModel(enemyService, hotkeyManager);
             // _itemViewModel = new ItemViewModel(itemService);
             // _settingsViewModel = new SettingsViewModel(settingsService, hotkeyManager);
             //
             var playerTab = new PlayerTab(_playerViewModel);
             var travelTab = new TravelTab(_travelViewModel);
-            // var utilityTab = new UtilityTab(_utilityViewModel);
+            var utilityTab = new UtilityTab(_utilityViewModel);
             var enemyTab = new EnemyTab(_enemyViewModel);
             // var itemTab = new ItemTab(_itemViewModel);
             // var settingsTab = new SettingsTab(_settingsViewModel);
             //
             MainTabControl.Items.Add(new TabItem { Header = "Player", Content = playerTab });
             MainTabControl.Items.Add(new TabItem { Header = "Travel", Content = travelTab });
-            // MainTabControl.Items.Add(new TabItem { Header = "Utility", Content = utilityTab });
+            MainTabControl.Items.Add(new TabItem { Header = "Utility", Content = utilityTab });
             MainTabControl.Items.Add(new TabItem { Header = "Enemies", Content = enemyTab });
             // MainTabControl.Items.Add(new TabItem { Header = "Items", Content = itemTab });
             // MainTabControl.Items.Add(new TabItem { Header = "Settings", Content = settingsTab });
@@ -174,6 +174,7 @@ namespace SilkySouls2
         private void TryEnableFeatures()
         {
             _playerViewModel.TryEnableFeatures();
+            _utilityViewModel.TryEnableFeatures();
             _enemyViewModel.TryEnableFeatures();
         }
 

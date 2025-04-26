@@ -41,7 +41,7 @@ namespace SilkySouls2.Memory
         public static readonly Pattern WarpCoordWrite = new Pattern(
             new byte[] { 0x66, 0x0F, 0x7F, 0x3B, 0x0F },
             "xxxxx",
-            0,
+            0x19,
             None);
         
         public static readonly Pattern SetAreaVariable = new Pattern(
@@ -75,6 +75,14 @@ namespace SilkySouls2.Memory
             0,
             None
         );
+
+        public static readonly Pattern SetEvent = new Pattern(
+            new byte[] { 0x45, 0x0F, 0xB6, 0xD8, 0xB8 },
+            "xxxxx",
+            -0xC,
+            None
+        );
+
 
     }
 }

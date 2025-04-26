@@ -188,7 +188,7 @@ e9 00 00 00 00          jmp    2f &lt;exit+0x6&gt;</value>
 59                      pop    rcx
 e9 00 00 00 00          jmp    31 &lt;exit+0x6&gt;</value>
   </data>
-  <data name="Bonfires" xml:space="preserve">
+  <data name="WarpLocations" xml:space="preserve">
     <value>2650,Things Betwixt,Fire Keeper's Dwelling
 4650,Majula,Far Fire
 10655,Forest of Fallen Giants,Cardinal Tower
@@ -265,7 +265,8 @@ e9 00 00 00 00          jmp    31 &lt;exit+0x6&gt;</value>
 37665,Frozen Eleum Loyce,Lower Garrison			
 37675,Frozen Eleum Loyce,Expulsion Chamber
 37685,Frozen Eleum Loyce,Inner Wall
-37670,Grand Cathedral,Grand Cathedral</value>
+37670,Grand Cathedral,Grand Cathedral
+31655,Boss,Ornstein,-137.72:8.98:173.02:1.00:0.00:-0.82:0.00:0.57</value>
   </data>
   <data name="BonfireWarp" xml:space="preserve">
     <value>48 83 ec 60             sub    rsp,0x60
@@ -279,5 +280,45 @@ e8 00 00 00 00          call   1d &lt;_main+0x1d&gt;
 e8 00 00 00 00          call   33 &lt;_main+0x33&gt;
 48 83 c4 60             add    rsp,0x60
 c3                      ret</value>
+  </data>
+  <data name="WarpCoordWrite" xml:space="preserve">
+    <value>44 0f 10 35 00 00 00    movups xmm14,XMMWORD PTR [rip+0x0]        # 8 &lt;_main+0x8&gt;
+00
+44 0f 10 3d 00 00 00    movups xmm15,XMMWORD PTR [rip+0x0]        # 10 &lt;_main+0x10&gt;
+00
+44 0f 11 37             movups XMMWORD PTR [rdi],xmm14
+44 0f 11 7f 10          movups XMMWORD PTR [rdi+0x10],xmm15
+45 0f 57 f6             xorps  xmm14,xmm14
+45 0f 57 ff             xorps  xmm15,xmm15
+48 8b 8c 24 80 00 00    mov    rcx,QWORD PTR [rsp+0x80]
+00
+e9 00 00 00 00          jmp    2e &lt;_main+0x2e&gt;</value>
+  </data>
+  <data name="SetEventOn" xml:space="preserve">
+    <value>48 b9 00 00 00 00 00    movabs rcx,0x0
+00 00 00
+48 ba 00 00 00 00 00    movabs rdx,0x0
+00 00 00
+41 b8 01 00 00 00       mov    r8d,0x1
+48 b8 00 00 00 00 00    movabs rax,0x0
+00 00 00
+48 83 ec 28             sub    rsp,0x28
+ff d0                   call   rax
+48 83 c4 28             add    rsp,0x28
+c3                      ret</value>
+  </data>
+  <data name="SetEventOff" xml:space="preserve">
+    <value>48 b9 00 00 00 00 00    movabs rcx,0x0
+00 00 00
+48 ba 00 00 00 00 00    movabs rdx,0x0
+00 00 00
+41 b8 00 00 00 00       mov    r8d,0x0
+48 b8 00 00 00 00 00    movabs rax,0x0
+00 00 00
+48 83 ec 28             sub    rsp,0x28
+ff d0                   call   rax
+48 83 c4 28             add    rsp,0x28
+c3                      ret
+</value>
   </data>
 </root>

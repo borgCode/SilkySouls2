@@ -14,18 +14,18 @@ namespace SilkySouls2.ViewModels
         
         
         private ObservableCollection<string> _mainAreas;
-        private ObservableCollection<Bonfire> _areaBonfires;
+        private ObservableCollection<WarpLocation> _areaLocations;
         
         private string _selectedMainArea;
-        private Bonfire _selectedBonfire;
+        private WarpLocation _selectedWarpLocation;
         
-        private Dictionary<string, List<Bonfire>> _bonfireDict;
-        private List<Bonfire> _allBonfires;
+        private Dictionary<string, List<WarpLocation>> _locationDict;
+        private List<WarpLocation> _allLocations;
         
         private string _searchText = string.Empty;
         private bool _isSearchActive;
         private string _preSearchMainArea;
-        private readonly ObservableCollection<Bonfire> _searchResultsCollection = new ObservableCollection<Bonfire>();
+        private readonly ObservableCollection<WarpLocation> _searchResultsCollection = new ObservableCollection<WarpLocation>();
         
         
         
@@ -35,18 +35,18 @@ namespace SilkySouls2.ViewModels
             _hotkeyManager = hotkeyManager;
             
             _mainAreas = new ObservableCollection<string>();
-            _areaBonfires = new ObservableCollection<Bonfire>();
+            _areaLocations = new ObservableCollection<WarpLocation>();
 
-            LoadBonfires();
+            LoadLocations();
         }
 
-        private void LoadBonfires()
+        private void LoadLocations()
         {
-            _bonfireDict = DataLoader.GetBonfires();
+            _locationDict = DataLoader.GetLocations();
             
-            _allBonfires = _bonfireDict.Values.SelectMany(x => x).ToList();
+            _allLocations = _locationDict.Values.SelectMany(x => x).ToList();
             
-            foreach (var area in _bonfireDict.Keys)
+            foreach (var area in _locationDict.Keys)
             {
                 _mainAreas.Add(area);
             }
@@ -60,10 +60,10 @@ namespace SilkySouls2.ViewModels
             private set => SetProperty(ref _mainAreas, value);
         }
         
-        public ObservableCollection<Bonfire> AreaBonfires
+        public ObservableCollection<WarpLocation> AreaLocations
         {
-            get => _areaBonfires;
-            set => SetProperty(ref _areaBonfires, value);
+            get => _areaLocations;
+            set => SetProperty(ref _areaLocations, value);
         }
         
         public string SelectedMainArea
@@ -81,14 +81,14 @@ namespace SilkySouls2.ViewModels
                     _preSearchMainArea = null;
                 }
                 
-                UpdateBonfiresList();
+                UpdateLocationsList();
             }
         }
         
-        public Bonfire SelectedBonfire
+        public WarpLocation SelectedWarpLocation
         {
-            get => _selectedBonfire;
-            set => SetProperty(ref _selectedBonfire, value);
+            get => _selectedWarpLocation;
+            set => SetProperty(ref _selectedWarpLocation, value);
         }
         
         public bool IsSearchActive
@@ -111,7 +111,7 @@ namespace SilkySouls2.ViewModels
                     if (_preSearchMainArea != null)
                     {
                         _selectedMainArea = _preSearchMainArea;
-                        UpdateBonfiresList();
+                        UpdateLocationsList();
                         _preSearchMainArea = null;
                     }
                 }
@@ -128,16 +128,16 @@ namespace SilkySouls2.ViewModels
             }
         }
         
-        private void UpdateBonfiresList()
+        private void UpdateLocationsList()
         {
-            if (string.IsNullOrEmpty(SelectedMainArea) || !_bonfireDict.ContainsKey(SelectedMainArea))
+            if (string.IsNullOrEmpty(SelectedMainArea) || !_locationDict.ContainsKey(SelectedMainArea))
             {
-                AreaBonfires = new ObservableCollection<Bonfire>();
+                AreaLocations = new ObservableCollection<WarpLocation>();
                 return;
             }
             
-            AreaBonfires = new ObservableCollection<Bonfire>(_bonfireDict[SelectedMainArea]);
-            SelectedBonfire = AreaBonfires.FirstOrDefault();
+            AreaLocations = new ObservableCollection<WarpLocation>(_locationDict[SelectedMainArea]);
+            SelectedWarpLocation = AreaLocations.FirstOrDefault();
         }
         
         private void ApplyFilter()
@@ -145,19 +145,19 @@ namespace SilkySouls2.ViewModels
             _searchResultsCollection.Clear();
             var searchTextLower = SearchText.ToLower();
             
-            foreach (var bonfire in _allBonfires)
+            foreach (var location in _allLocations)
             {
-                if (bonfire.BonfireName.ToLower().Contains(searchTextLower) || 
-                    bonfire.MainArea.ToLower().Contains(searchTextLower))
+                if (location.LocationName.ToLower().Contains(searchTextLower) || 
+                    location.MainArea.ToLower().Contains(searchTextLower))
                 {
-                    _searchResultsCollection.Add(bonfire);
+                    _searchResultsCollection.Add(location);
                 }
             }
             
-            AreaBonfires = new ObservableCollection<Bonfire>(_searchResultsCollection);
-            SelectedBonfire = AreaBonfires.FirstOrDefault();
+            AreaLocations = new ObservableCollection<WarpLocation>(_searchResultsCollection);
+            SelectedWarpLocation = AreaLocations.FirstOrDefault();
         }
 
-        public void BonfireWarp() => _travelService.BonfireWarp(SelectedBonfire.BonfireId);
+        public void Warp() => _travelService.Warp(SelectedWarpLocation);
     }
 }

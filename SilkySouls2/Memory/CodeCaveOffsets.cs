@@ -22,7 +22,9 @@ namespace SilkySouls2.Memory
         {
             EmptySpace = 0x110,
             BonfireId = 0x190,
-            Code = 0x1A0
+            WarpCode = 0x1A0,
+            Coords = 0x1E0,
+            CoordWrite = 0x200 
         }
     }
 }

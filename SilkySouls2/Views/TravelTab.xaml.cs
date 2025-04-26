@@ -16,7 +16,7 @@ namespace SilkySouls2.Views
 
         private void WarpButton_Click(object sender, RoutedEventArgs e)
         {
-            _travelViewModel.BonfireWarp();
+            _travelViewModel.Warp();
         }
     }
 }

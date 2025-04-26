@@ -64,8 +64,7 @@
                     </Style>
                 </ListBox.ItemContainerStyle>
             </ListBox>
-
-            <!-- Warp Button -->
+            
             <Button Grid.Row="2" 
                     Content="Warp"
                     Click="WarpButton_Click"
@@ -73,8 +72,7 @@
                     Height="25"
                     Margin="0,10,0,0" />
         </Grid>
-
-        <!-- Right Panel - Search and Bonfire List -->
+        
         <TextBox Grid.Row="0" Grid.Column="1"
                  Name="SearchBox"
                  Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
@@ -140,20 +138,18 @@
                 </ControlTemplate>
             </TextBox.Template>
         </TextBox>
-
-        <!-- Bonfire List with NG+ Option -->
+        
         <Grid Grid.Row="1" Grid.Column="1" Margin="10,0,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-
-            <!-- Bonfire ListView -->
+            
             <Border Grid.Row="0"
                     BorderThickness="1"
                     BorderBrush="#333">
-                <ListView ItemsSource="{Binding AreaBonfires}"
-                          SelectedItem="{Binding SelectedBonfire}"
+                <ListView ItemsSource="{Binding AreaLocations}"
+                          SelectedItem="{Binding SelectedWarpLocation}"
                           VirtualizingPanel.IsVirtualizing="True"
                           VirtualizingPanel.VirtualizationMode="Recycling"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -201,7 +197,7 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="{Binding BonfireName}" VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding LocationName}" VerticalAlignment="Center" />
                                 <TextBlock Grid.Column="1"
                                            Text="{Binding MainArea}"
                                            Foreground="#888888"
@@ -215,20 +211,6 @@
                     </ListView.ItemTemplate>
                 </ListView>
             </Border>
-
-            <!-- NG+ Options -->
-            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,10,0,0">
-                <CheckBox Content="Upgrade Bonfire (NG+)" 
-                          IsChecked="{Binding IsUpgraded}"
-                          IsEnabled="{Binding AreFeaturesEnabled}"
-                          VerticalAlignment="Center" />
-                
-                <CheckBox Content="Show Boss Warps" 
-                          IsChecked="{Binding ShowBossWarps}"
-                          IsEnabled="{Binding AreFeaturesEnabled}"
-                          Margin="20,0,0,0"
-                          VerticalAlignment="Center" />
-            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>

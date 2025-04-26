@@ -49,6 +49,7 @@ namespace SilkySouls2.Memory
             {
 
                 public const int PlayerActionCtrlPtr = 0xE0;
+                public const int ChrPhysicsCtrlPtr = 0x100;
                 public const int Hp = 0x168;
                 public const int MinHp = 0x16C;
                 public const int MaxHp = 0x170;
@@ -60,6 +61,7 @@ namespace SilkySouls2.Memory
                 {
                     public const int PlayerDamageActionCtrl = 0x200;
                 }
+                
                 
                 
                 public static class Stats
@@ -98,6 +100,7 @@ namespace SilkySouls2.Memory
         {
             public static long WarpPrep;
             public static long BonfireWarp;
+            public static long SetEvent;
         }
     }
 }

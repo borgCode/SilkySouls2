@@ -60,26 +60,6 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 2650,Things Betwixt,Fire Keeper&apos;s Dwelling
-        ///4650,Majula,Far Fire
-        ///10655,Forest of Fallen Giants,Cardinal Tower
-        ///10660,Forest of Fallen Giants,Soldier&apos;s Rest
-        ///10670,Forest of Fallen Giants,Crestfallen&apos;s Retreat
-        ///10675,Forest of Fallen Giants,The Place Unbeknownst
-        ///31650,Heide&apos;s Tower of Flame,Tower of Flame
-        ///31655,Heide&apos;s Tower of Flame,Heide&apos;s Ruin
-        ///31660,Heide&apos;s Tower of Flame,Cathedral of Blue
-        ///18650,No-man&apos;s Wharf,Unseen Path to Heide&apos;s
-        ///16650,The Lost Bastille,Straid&apos;s Cell
-        ///16655,The Lost Bastille,Exil [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string Bonfires {
-            get {
-                return ResourceManager.GetString("Bonfires", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to 48 83 ec 60             sub    rsp,0x60
         ///48 8d 0d 00 00 00 00    lea    rcx,[rip+0x0]        # b &lt;_main+0xb&gt;
         ///0f b7 15 00 00 00 00    movzx  edx,WORD PTR [rip+0x0]        # 12 &lt;_main+0x12&gt;
@@ -203,6 +183,84 @@ namespace SilkySouls2.Properties {
         internal static string SetAreaVariable {
             get {
                 return ResourceManager.GetString("SetAreaVariable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 48 b9 00 00 00 00 00    movabs rcx,0x0
+        ///00 00 00
+        ///48 ba 00 00 00 00 00    movabs rdx,0x0
+        ///00 00 00
+        ///41 b8 00 00 00 00       mov    r8d,0x0
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
+        ///48 83 ec 28             sub    rsp,0x28
+        ///ff d0                   call   rax
+        ///48 83 c4 28             add    rsp,0x28
+        ///c3                      ret
+        ///.
+        /// </summary>
+        internal static string SetEventOff {
+            get {
+                return ResourceManager.GetString("SetEventOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 48 b9 00 00 00 00 00    movabs rcx,0x0
+        ///00 00 00
+        ///48 ba 00 00 00 00 00    movabs rdx,0x0
+        ///00 00 00
+        ///41 b8 01 00 00 00       mov    r8d,0x1
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
+        ///48 83 ec 28             sub    rsp,0x28
+        ///ff d0                   call   rax
+        ///48 83 c4 28             add    rsp,0x28
+        ///c3                      ret.
+        /// </summary>
+        internal static string SetEventOn {
+            get {
+                return ResourceManager.GetString("SetEventOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 44 0f 10 35 00 00 00    movups xmm14,XMMWORD PTR [rip+0x0]        # 8 &lt;_main+0x8&gt;
+        ///00
+        ///44 0f 10 3d 00 00 00    movups xmm15,XMMWORD PTR [rip+0x0]        # 10 &lt;_main+0x10&gt;
+        ///00
+        ///44 0f 11 37             movups XMMWORD PTR [rdi],xmm14
+        ///44 0f 11 7f 10          movups XMMWORD PTR [rdi+0x10],xmm15
+        ///45 0f 57 f6             xorps  xmm14,xmm14
+        ///45 0f 57 ff             xorps  xmm15,xmm15
+        ///48 8b 8c 24 80 00 00    mov    rcx,QWORD PTR [rsp+0x80]
+        ///00
+        ///e9 00 00 00 00          jmp    2e &lt;_main+0x2e&gt;.
+        /// </summary>
+        internal static string WarpCoordWrite {
+            get {
+                return ResourceManager.GetString("WarpCoordWrite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 2650,Things Betwixt,Fire Keeper&apos;s Dwelling
+        ///4650,Majula,Far Fire
+        ///10655,Forest of Fallen Giants,Cardinal Tower
+        ///10660,Forest of Fallen Giants,Soldier&apos;s Rest
+        ///10670,Forest of Fallen Giants,Crestfallen&apos;s Retreat
+        ///10675,Forest of Fallen Giants,The Place Unbeknownst
+        ///31650,Heide&apos;s Tower of Flame,Tower of Flame
+        ///31655,Heide&apos;s Tower of Flame,Heide&apos;s Ruin
+        ///31660,Heide&apos;s Tower of Flame,Cathedral of Blue
+        ///18650,No-man&apos;s Wharf,Unseen Path to Heide&apos;s
+        ///16650,The Lost Bastille,Straid&apos;s Cell
+        ///16655,The Lost Bastille,Exil [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string WarpLocations {
+            get {
+                return ResourceManager.GetString("WarpLocations", resourceCulture);
             }
         }
     }

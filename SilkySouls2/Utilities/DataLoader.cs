@@ -8,10 +8,10 @@ namespace SilkySouls2.Utilities
      public static class DataLoader
     {
       
-        public static Dictionary<string, List<Bonfire>> GetBonfires()
+        public static Dictionary<string, List<WarpLocation>> GetLocations()
         {
-            Dictionary<string, List<Bonfire>> warpDict = new Dictionary<string, List<Bonfire>>();
-            string csvData = Properties.Resources.Bonfires;
+            Dictionary<string, List<WarpLocation>> warpDict = new Dictionary<string, List<WarpLocation>>();
+            string csvData = Properties.Resources.WarpLocations;
 
             if (string.IsNullOrWhiteSpace(csvData))
                 return warpDict;
@@ -30,16 +30,27 @@ namespace SilkySouls2.Utilities
                     string mainAreaName = parts[1].Trim();
                     string bonfireName = parts[2].Trim();
                     
-                    Bonfire location = new Bonfire
+                    WarpLocation location = new WarpLocation
                     {
                         BonfireId = bonfireId,
                         MainArea = mainAreaName,
-                        BonfireName = bonfireName
+                        LocationName = bonfireName
                     };
+                    
+                    if (parts.Length > 3 && !string.IsNullOrWhiteSpace(parts[3]))
+                    {
+                        string[] coordParts = parts[3].Split(':');
+                        location.Coordinates = new float[coordParts.Length];
+                        
+                        for (int i = 0; i < coordParts.Length; i++)
+                        {
+                            location.Coordinates[i] = float.Parse(coordParts[i], CultureInfo.InvariantCulture);
+                        }
+                    }
                     
                     if (!warpDict.ContainsKey(mainAreaName))
                     {
-                        warpDict[mainAreaName] = new List<Bonfire>();
+                        warpDict[mainAreaName] = new List<WarpLocation>();
                     }
                     
                     warpDict[mainAreaName].Add(location);
@@ -48,5 +59,6 @@ namespace SilkySouls2.Utilities
 
             return warpDict;
         }
+        
     }
 }

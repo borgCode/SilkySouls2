@@ -11,10 +11,11 @@
 
         public static class EventFlags
         {
-            public const ulong KingsRingAcquired = 100804;
-            public const ulong Dlc3Ice = 537000011;
-            public const ulong VisibleAava = 537000012;
-            public static readonly ulong[] Dlc3Knights = { 537000020, 537000021 };
+            public const long KingsRingAcquired = 100804;
+            public const long Dlc3Ice = 537000011;
+            public const long VisibleAava = 537000012;
+            public static readonly long[] Dlc3Knights = { 537000020, 537000021 };
+            public static readonly long[] IvoryBlackKnights = { 537020035, 537020036, 537020037 };
         }
     }
 }

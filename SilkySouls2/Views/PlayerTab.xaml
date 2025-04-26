@@ -173,6 +173,9 @@
                     <CheckBox Content="One Shot"
                               IsChecked="{Binding IsOneShotEnabled}"
                               Margin="0,2" />
+                    <CheckBox Content="Deal No Damage"
+                              IsChecked="{Binding IsDealNoDamageEnabled}"
+                              Margin="0,2" />
                     <CheckBox Content="Invisible"
                               IsChecked="{Binding IsInvisibleEnabled}"
                               Margin="0,2" />

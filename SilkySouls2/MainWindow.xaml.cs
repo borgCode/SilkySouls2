@@ -23,8 +23,10 @@ namespace SilkySouls2
         private readonly HookManager _hookManager;
 
         private readonly PlayerViewModel _playerViewModel;
+
         // private readonly UtilityViewModel _utilityViewModel;
-        // private readonly EnemyViewModel _enemyViewModel;
+        private readonly EnemyViewModel _enemyViewModel;
+
         // private readonly ItemViewModel _itemViewModel;
         // private readonly SettingsViewModel _settingsViewModel;
         public MainWindow()
@@ -43,32 +45,32 @@ namespace SilkySouls2
             // else WindowStartupLocation = WindowStartupLocation.CenterScreen;
             //
             //
-            // _hookManager = new HookManager(_memoryIo);
+            _hookManager = new HookManager(_memoryIo);
             _aobScanner = new AoBScanner(_memoryIo);
             var hotkeyManager = new HotkeyManager(_memoryIo);
             //
-            var playerService = new PlayerService(_memoryIo);
+            var playerService = new PlayerService(_memoryIo, _hookManager);
             // var utilityService = new UtilityService(_memoryIo, _hookManager);
-            // var enemyService = new EnemyService(_memoryIo, _hookManager);
+            var enemyService = new EnemyService(_memoryIo, _hookManager);
             // var cinderService = new CinderService(_memoryIo, _hookManager);
             // var itemService = new ItemService(_memoryIo, _hookManager);
             // var settingsService = new SettingsService(_memoryIo);
             //
             _playerViewModel = new PlayerViewModel(playerService, hotkeyManager);
             // _utilityViewModel = new UtilityViewModel(utilityService, hotkeyManager, _playerViewModel);
-            // _enemyViewModel = new EnemyViewModel(enemyService, cinderService, hotkeyManager);
+            _enemyViewModel = new EnemyViewModel(enemyService, hotkeyManager);
             // _itemViewModel = new ItemViewModel(itemService);
             // _settingsViewModel = new SettingsViewModel(settingsService, hotkeyManager);
             //
             var playerTab = new PlayerTab(_playerViewModel);
             // var utilityTab = new UtilityTab(_utilityViewModel);
-            // var enemyTab = new EnemyTab(_enemyViewModel);
+            var enemyTab = new EnemyTab(_enemyViewModel);
             // var itemTab = new ItemTab(_itemViewModel);
             // var settingsTab = new SettingsTab(_settingsViewModel);
             //
             MainTabControl.Items.Add(new TabItem { Header = "Player", Content = playerTab });
             // MainTabControl.Items.Add(new TabItem { Header = "Utility", Content = utilityTab });
-            // MainTabControl.Items.Add(new TabItem { Header = "Enemies", Content = enemyTab });
+            MainTabControl.Items.Add(new TabItem { Header = "Enemies", Content = enemyTab });
             // MainTabControl.Items.Add(new TabItem { Header = "Items", Content = itemTab });
             // MainTabControl.Items.Add(new TabItem { Header = "Settings", Content = settingsTab });
             //
@@ -95,6 +97,7 @@ namespace SilkySouls2
         private bool _hasAppliedNoLogo;
 
         private bool _appliedOneTimeFeatures;
+        
 
         private void Timer_Tick(object sender, EventArgs e)
         {
@@ -102,8 +105,8 @@ namespace SilkySouls2
             {
                 IsAttachedText.Text = "Attached to game";
                 IsAttachedText.Foreground = (SolidColorBrush)Application.Current.Resources["AttachedBrush"];
-          
-                
+
+
                 // LaunchGameButton.IsEnabled = false;
 
                 if (!_hasScanned)
@@ -112,6 +115,7 @@ namespace SilkySouls2
                     _hasScanned = true;
                     Console.WriteLine($"Base: 0x{_memoryIo.BaseAddress.ToInt64():X}");
                 }
+         
                 //
                 // if (!_hasAppliedNoLogo)
                 // {
@@ -119,28 +123,28 @@ namespace SilkySouls2
                 //     _hasAppliedNoLogo = true;
                 // }
 
-                // if (!_hasAllocatedMemory)
-                // {
-                //     _memoryIo.AllocCodeCave();
-                //     Console.WriteLine($"Code cave: 0x{CodeCaveOffsets.Base.ToInt64():X}");
-                //     _hasAllocatedMemory = true;
-                // }
-
-                // if (_memoryIo.IsGameLoaded())
-                // {
-                //     if (_loaded) return;
-                //     _loaded = true;
-                // TryEnableFeatures();
+                if (!_hasAllocatedMemory)
+                {
+                    _memoryIo.AllocCodeCave();
+                    Console.WriteLine($"Code cave: 0x{CodeCaveOffsets.Base.ToInt64():X}");
+                    _hasAllocatedMemory = true;
+                }
+                
+                if (_memoryIo.IsGameLoaded())
+                {
+                    if (_loaded) return;
+                    _loaded = true;
+                TryEnableFeatures();
                 // TrySetGameStartPrefs();
-                // if (_appliedOneTimeFeatures) return;
-                // ApplyOneTimeFeatures();
-                // _appliedOneTimeFeatures = true;
-                // }
-                // else if (_loaded)
-                // {
-                //     DisableFeatures();
-                //     _loaded = false;
-                // }
+                if (_appliedOneTimeFeatures) return;
+                ApplyOneTimeFeatures();
+                _appliedOneTimeFeatures = true;
+                }
+                else if (_loaded)
+                {
+                    DisableFeatures();
+                    _loaded = false;
+                }
             }
             else
             {
@@ -148,18 +152,29 @@ namespace SilkySouls2
                 DisableFeatures();
                 // _settingsViewModel.ResetAttached();
                 _loaded = false;
-                // _hasAllocatedMemory = false;
+                _hasAllocatedMemory = false;
                 // _hasAppliedNoLogo = false;
-                // _appliedOneTimeFeatures = false;
+                _appliedOneTimeFeatures = false;
                 IsAttachedText.Text = "Not attached";
                 IsAttachedText.Foreground = (SolidColorBrush)Application.Current.Resources["NotAttachedBrush"];
                 // LaunchGameButton.IsEnabled = true;
             }
         }
 
+        private void ApplyOneTimeFeatures()
+        {
+            _playerViewModel.TryApplyOneTimeFeatures();
+        }
+
+        private void TryEnableFeatures()
+        {
+            _playerViewModel.TryEnableFeatures();
+            _enemyViewModel.TryEnableFeatures();
+        }
+
         private void DisableFeatures()
         {
-            // TODO 
+            _playerViewModel.DisableFeatures();
         }
 
         private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

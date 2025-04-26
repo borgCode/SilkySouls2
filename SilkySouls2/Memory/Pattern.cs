@@ -30,17 +30,38 @@ namespace SilkySouls2.Memory
 
         // Hooks
 
-        public static readonly Pattern OverrideGeneratorStartPositionRandom = new Pattern(
-            new byte[] { 0x8B, 0x41, 0x18, 0x8B, 0x40, 0x50 },
+        public static readonly Pattern HpWrite = new Pattern(
+            new byte[] { 0x48, 0x0F, 0x4F, 0xC6, 0x8B, 0x00 },
             "xxxxxx",
-            0,
+            0x6,
             None
         );
 
-        public static readonly Pattern SetAreaVariable = new Pattern(
-            new byte[] { 0x40, 0x88, 0x74, 0x24, 0x28, 0x89, 0x6C },
-            "xxxxxxx",
+        public static readonly Pattern DamageCalcResult = new Pattern(
+            new byte[] { 0x4C, 0x8D, 0x4D, 0x90, 0x4C, 0x8D, 0x45, 0x70 },
+            "xxxxxxxx",
             0,
+            None);
+
+        public static readonly Pattern WarpCoordWrite = new Pattern(
+            new byte[] { 0x66, 0x0F, 0x7F, 0x3B, 0x0F },
+            "xxxxx",
+            0,
+            None);
+
+        public static readonly Pattern WarpFunc = new Pattern(
+            new byte[] { 0x48, 0x8D, 0x4C, 0x24, 0x78, 0x0F, 0xB7 },
+            "xxxxxxx",
+            -0x15,
+            None
+        );
+            
+
+
+        public static readonly Pattern SetAreaVariable = new Pattern(
+            new byte[] { 0x0F, 0x84, 0xC8, 0xB8 },
+            "xxxx",
+            0x6,
             None
         );
 
@@ -49,6 +70,6 @@ namespace SilkySouls2.Memory
             "xxxxxx",
             0,
             None
-            );
+        );
     }
 }

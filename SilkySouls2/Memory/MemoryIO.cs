@@ -19,16 +19,16 @@ namespace SilkySouls2.Memory
         private const string ProcessName = "darksoulsii";
         private bool _disposed;
         public bool IsAttached;
-        
+
         private Timer _autoAttachTimer;
-        
+
         public void StartAutoAttach()
         {
             _autoAttachTimer = new Timer(4000);
             _autoAttachTimer.Elapsed += (sender, e) => TryAttachToProcess();
-            
+
             TryAttachToProcess();
-    
+
             _autoAttachTimer.Start();
         }
 
@@ -43,9 +43,10 @@ namespace SilkySouls2.Memory
                     TargetProcess = null;
                     IsAttached = false;
                 }
-                return; 
+
+                return;
             }
-    
+
             var processes = Process.GetProcessesByName(ProcessName);
             if (processes.Length > 0 && !processes[0].HasExited)
             {
@@ -54,7 +55,7 @@ namespace SilkySouls2.Memory
                     ProcessVmRead | ProcessVmWrite | ProcessVmOperation | ProcessQueryInformation,
                     false,
                     TargetProcess.Id);
-    
+
                 if (ProcessHandle == IntPtr.Zero)
                 {
                     TargetProcess = null;
@@ -66,11 +67,12 @@ namespace SilkySouls2.Memory
                     {
                         BaseAddress = TargetProcess.MainModule.BaseAddress;
                     }
+
                     IsAttached = true;
                 }
             }
         }
-        
+
         public void Dispose()
         {
             if (!_disposed)
@@ -81,7 +83,7 @@ namespace SilkySouls2.Memory
                     _autoAttachTimer.Dispose();
                     _autoAttachTimer = null;
                 }
-        
+
                 if (ProcessHandle != IntPtr.Zero)
                 {
                     Kernel32.CloseHandle(ProcessHandle);
@@ -89,8 +91,10 @@ namespace SilkySouls2.Memory
                     TargetProcess = null;
                     IsAttached = false;
                 }
+
                 _disposed = true;
             }
+
             GC.SuppressFinalize(this);
         }
 
@@ -103,7 +107,8 @@ namespace SilkySouls2.Memory
         {
             var array = new byte[1];
             var lpNumberOfBytesRead = 1;
-            return Kernel32.ReadProcessMemory(ProcessHandle, addr, array, 1, ref lpNumberOfBytesRead) && lpNumberOfBytesRead == 1;
+            return Kernel32.ReadProcessMemory(ProcessHandle, addr, array, 1, ref lpNumberOfBytesRead) &&
+                   lpNumberOfBytesRead == 1;
         }
 
         public void ReadTestFull(IntPtr addr)
@@ -141,41 +146,43 @@ namespace SilkySouls2.Memory
 
         public uint RunThread(IntPtr address, uint timeout = 0xFFFFFFFF)
         {
-            IntPtr thread = Kernel32.CreateRemoteThread(ProcessHandle, IntPtr.Zero, 0, address, IntPtr.Zero, 0, IntPtr.Zero);
+            IntPtr thread =
+                Kernel32.CreateRemoteThread(ProcessHandle, IntPtr.Zero, 0, address, IntPtr.Zero, 0, IntPtr.Zero);
             var ret = Kernel32.WaitForSingleObject(thread, timeout);
             Kernel32.CloseHandle(thread);
             return ret;
         }
-        
+
         public bool RunThreadAndWaitForCompletion(IntPtr address, uint timeout = 0xFFFFFFFF)
         {
-            IntPtr thread = Kernel32.CreateRemoteThread(ProcessHandle, IntPtr.Zero, 0, address, IntPtr.Zero, 0, IntPtr.Zero);
-            
+            IntPtr thread =
+                Kernel32.CreateRemoteThread(ProcessHandle, IntPtr.Zero, 0, address, IntPtr.Zero, 0, IntPtr.Zero);
+
             if (thread == IntPtr.Zero)
             {
                 return false;
             }
-    
+
             uint waitResult = Kernel32.WaitForSingleObject(thread, timeout);
             Kernel32.CloseHandle(thread);
-  
+
             return waitResult == 0;
         }
 
         public void AllocateAndExecute(byte[] shellcode)
         {
             IntPtr allocatedMemory = Kernel32.VirtualAllocEx(ProcessHandle, IntPtr.Zero, (uint)shellcode.Length);
-            
+
             if (allocatedMemory == IntPtr.Zero) return;
-            
+
             WriteBytes(allocatedMemory, shellcode);
             bool executionSuccess = RunThreadAndWaitForCompletion(allocatedMemory);
-            
+
             if (!executionSuccess) return;
-            
+
             Kernel32.VirtualFreeEx(ProcessHandle, allocatedMemory, 0, 0x8000);
         }
-        
+
         public int ReadInt32(IntPtr addr)
         {
             var bytes = ReadBytes(addr, 4);
@@ -257,7 +264,7 @@ namespace SilkySouls2.Memory
         {
             WriteBytes(addr, BitConverter.GetBytes(val));
         }
-        
+
         public void WriteDouble(IntPtr addr, double val)
         {
             WriteBytes(addr, BitConverter.GetBytes(val));
@@ -287,22 +294,22 @@ namespace SilkySouls2.Memory
             WriteBytes(addr, bytes);
         }
 
-        
+
         internal IntPtr FollowPointers(IntPtr baseAddress, int[] offsets, bool readFinalPtr)
         {
             ulong ptr = ReadUInt64(baseAddress);
-            
+
             for (int i = 0; i < offsets.Length - 1; i++)
             {
                 ptr = ReadUInt64((IntPtr)ptr + offsets[i]);
             }
-            
+
             IntPtr finalAddress = (IntPtr)ptr + offsets[offsets.Length - 1];
-            
-            if (readFinalPtr) 
+
+            if (readFinalPtr)
                 return (IntPtr)ReadUInt64(finalAddress);
-    
-            
+
+
             return finalAddress;
         }
 
@@ -310,65 +317,73 @@ namespace SilkySouls2.Memory
         {
             byte currentByte = ReadUInt8(addr);
             byte modifiedByte;
-    
+
             if (setValue)
                 modifiedByte = (byte)(currentByte | flagMask);
             else
                 modifiedByte = (byte)(currentByte & ~flagMask);
             WriteUInt8(addr, modifiedByte);
         }
-        
+
         public bool IsBitSet(IntPtr addr, byte flagMask)
         {
             byte currentByte = ReadUInt8(addr);
-            
+
             return (currentByte & flagMask) != 0;
         }
-        
+
         public void SetBit32(IntPtr addr, int bitPosition, bool setValue)
         {
             IntPtr wordAddr = IntPtr.Add(addr, (bitPosition / 32) * 4);
-            
+
             int bitPos = bitPosition % 32;
-            
+
             uint currentValue = ReadUInt32(wordAddr);
-            
+
             uint bitMask = 1u << bitPos;
-            
-            uint newValue = setValue 
-                ? currentValue | bitMask 
+
+            uint newValue = setValue
+                ? currentValue | bitMask
                 : currentValue & ~bitMask;
-            
+
             WriteInt32(wordAddr, (int)newValue);
         }
-        //
-        // public bool IsGameLoaded()
-        // {
-        //     return (IntPtr) ReadUInt64((IntPtr)ReadUInt64(Offsets.WorldChrMan.Base) + Offsets.WorldChrMan.PlayerIns)!= IntPtr.Zero;
-        // }
-        
+
+        public bool IsGameLoaded()
+        {
+            return (IntPtr)ReadUInt64((IntPtr)ReadUInt64(Offsets.GameManagerImp.Base) +
+                                      Offsets.GameManagerImp.Offsets.PlayerCtrl) != IntPtr.Zero;
+        }
+
         public void AllocCodeCave()
         {
-            // IntPtr searchRangeStart = BaseAddress - 0x40000000;
-            // IntPtr searchRangeEnd = BaseAddress - 0x30000;
-            // uint codeCaveSize = 0x2000;
-            // IntPtr allocatedMemory;
-            //
-            // for (IntPtr addr = searchRangeEnd; addr.ToInt64() > searchRangeStart.ToInt64(); addr -= 0x10000)
-            // {
-            //     allocatedMemory = Kernel32.VirtualAllocEx(ProcessHandle, addr, codeCaveSize);
-            //
-            //     if (allocatedMemory != IntPtr.Zero)
-            //     {
-            //         CodeCaveOffsets.Base = allocatedMemory;
-            //         break;
-            //     }
-            // }
+            IntPtr searchRangeStart = BaseAddress - 0x40000000;
+            IntPtr searchRangeEnd = BaseAddress - 0x30000;
+            uint codeCaveSize = 0x2000;
+            IntPtr allocatedMemory;
+
+            for (IntPtr addr = searchRangeEnd; addr.ToInt64() > searchRangeStart.ToInt64(); addr -= 0x10000)
+            {
+                allocatedMemory = Kernel32.VirtualAllocEx(ProcessHandle, addr, codeCaveSize);
+
+                if (allocatedMemory != IntPtr.Zero)
+                {
+                    CodeCaveOffsets.Base = allocatedMemory;
+                    break;
+                }
+            }
         }
         //
         // public IntPtr GetModuleStart(IntPtr address)
         // {
         //     return Kernel32.QueryMemory(ProcessHandle, address).AllocationBase;
         // }
+
+        public int GetMapId()
+        {
+            var mapPtr = ReadInt64((IntPtr)ReadInt64(Offsets.GameManagerImp.Base) +
+                                   Offsets.GameManagerImp.Offsets.CameraManager);
+            return ReadInt32((IntPtr)mapPtr + Offsets.GameManagerImp.CameraManagerOffsets.MapId);
+        }
     }
 }

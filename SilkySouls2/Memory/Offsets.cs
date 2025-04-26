@@ -21,6 +21,16 @@ namespace SilkySouls2.Memory
                 public const int GameDataManager = 0xA8;
                 public const int PlayerCtrl = 0xD0;
             }
+            
+            public static class CameraManagerOffsets
+            {
+                public const int MapId = 0x45C;
+            }
+
+            public static class AiManagerOffsets
+            {
+                public const int DisableAi = 0x18;
+            }
 
             public static class EventManagerOffsets
             {
@@ -36,20 +46,21 @@ namespace SilkySouls2.Memory
 
             public static class PlayerCtrlOffsets
             {
-          
-                public const int PlayerOperatorPtr = 0xE8;
+
+                public const int PlayerActionCtrlPtr = 0xE0;
                 public const int Hp = 0x168;
+                public const int MinHp = 0x16C;
                 public const int MaxHp = 0x170;
                 public const int Stamina = 0x1AC;
                 public const int MaxStamina = 0x1B4;
                 public const int StatsPtr = 0x490;
 
-                
-                public static class PlayerOperator
+                public static class PlayerActionCtrl
                 {
-                    public const int NoDamage = 0x28; // TODO no good
+                    public const int PlayerDamageActionCtrl = 0x200;
                 }
-
+                
+                
                 public static class Stats
                 {
                     public const int Vig = 0x08;
@@ -74,15 +85,17 @@ namespace SilkySouls2.Memory
         
         public static class Hooks
         {
-            public static long OverrideGeneratorStartPositionRandom; // Sets 1 out of 2 spawn positions for forlorn
             public static long SetAreaVariable; // Sets which of the forlorns should spawn
             public static long CompareEventRandValue; // Checks if forlorn should spawn
+            public static long HpWrite;
+            public static long DamageCalcResult;
+            public static long WarpCoordWrite;
 
         }
 
         public static class Funcs
         {
-           
+            public static long Warp;
         }
     }
 }

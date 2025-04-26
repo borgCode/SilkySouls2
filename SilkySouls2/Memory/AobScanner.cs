@@ -65,9 +65,9 @@ namespace SilkySouls2.Memory
             //     saved);
             // TryPatternWithFallback("FreeCam", Patterns.FreeCamPatch, addr => Offsets.Patches.FreeCam = addr, saved);
             //
-            TryPatternWithFallback("OverrideGeneratorStartPositionRandom",
-                Patterns.OverrideGeneratorStartPositionRandom,
-                addr => Offsets.Hooks.OverrideGeneratorStartPositionRandom = addr.ToInt64(), saved);
+            // TryPatternWithFallback("OverrideGeneratorStartPositionRandom",
+            //     Patterns.OverrideGeneratorStartPositionRandom,
+            //     addr => Offsets.Hooks.OverrideGeneratorStartPositionRandom = addr.ToInt64(), saved);
             
             TryPatternWithFallback("SetAreaVariable",
                 Patterns.SetAreaVariable,
@@ -76,12 +76,12 @@ namespace SilkySouls2.Memory
             TryPatternWithFallback("CompareEventRandValue",
                 Patterns.CompareEventRandValue,
                 addr => Offsets.Hooks.CompareEventRandValue = addr.ToInt64(), saved);
-            // TryPatternWithFallback("WarpCoordWrite", Patterns.WarpCoordWrite,
-            //     addr => Offsets.Hooks.WarpCoordWrite = addr.ToInt64(), saved);
-            // TryPatternWithFallback("AddSubGoal", Patterns.AddSubGoal, addr => Offsets.Hooks.AddSubGoal = addr.ToInt64(),
-            //     saved);
-            // TryPatternWithFallback("InAirTimer", Patterns.NoClipInAirTimer,
-            //     addr => Offsets.Hooks.InAirTimer = addr.ToInt64(), saved);
+            TryPatternWithFallback("HpWrite", Patterns.HpWrite,
+                addr => Offsets.Hooks.HpWrite = addr.ToInt64(), saved);
+            TryPatternWithFallback("DamageCalcResult", Patterns.DamageCalcResult, addr => Offsets.Hooks.DamageCalcResult = addr.ToInt64(),
+                saved);
+            TryPatternWithFallback("WarpCoordWrite", Patterns.WarpCoordWrite,
+                addr => Offsets.Hooks.WarpCoordWrite = addr.ToInt64(), saved);
             // TryPatternWithFallback("NoClipKeyboard", Patterns.NoClipKeyboard,
             //     addr => Offsets.Hooks.NoClipKeyboard = addr.ToInt64(), saved);
             // TryPatternWithFallback("NoClipUpdateCoords", Patterns.NoClipUpdateCoords,
@@ -105,13 +105,13 @@ namespace SilkySouls2.Memory
             //     saved["NoClipTriggers2"] = triggers[1].ToInt64();
             // }
             //
-            // using (var writer = new StreamWriter(savePath))
-            // {
-            //     foreach (var pair in saved)
-            //         writer.WriteLine($"{pair.Key}={pair.Value:X}");
-            // }
+            using (var writer = new StreamWriter(savePath))
+            {
+                foreach (var pair in saved)
+                    writer.WriteLine($"{pair.Key}={pair.Value:X}");
+            }
             //
-            // Offsets.Funcs.Warp = FindAddressByPattern(Patterns.WarpFunc).ToInt64();
+            Offsets.Funcs.Warp = FindAddressByPattern(Patterns.WarpFunc).ToInt64();
             // Offsets.Funcs.ItemSpawn = FindAddressByPattern(Patterns.ItemSpawnFunc).ToInt64();
             // Offsets.Funcs.BreakAllObjects = FindAddressByPattern(Patterns.BreakAllObjects).ToInt64();
             // Offsets.Funcs.RestoreAllObjects = FindAddressByPattern(Patterns.RestoreAllObjects).ToInt64();
@@ -159,10 +159,12 @@ namespace SilkySouls2.Memory
             // Console.WriteLine($"Patches.TargetingView: 0x{Offsets.Patches.DbgDrawFlag.ToInt64():X}");
             // Console.WriteLine($"Patches.FreeCam: 0x{Offsets.Patches.FreeCam.ToInt64():X}");
             //
-            Console.WriteLine($"Hooks.OverrideGeneratorStartPositionRandom: 0x{Offsets.Hooks.OverrideGeneratorStartPositionRandom:X}");
+           
             Console.WriteLine($"Hooks.SetAreaVariable: 0x{Offsets.Hooks.SetAreaVariable:X}");
             Console.WriteLine($"Hooks.CompareEventRandValue: 0x{Offsets.Hooks.CompareEventRandValue:X}");
-            // Console.WriteLine($"Hooks.WarpCoordWrite: 0x{Offsets.Hooks.WarpCoordWrite:X}");
+            Console.WriteLine($"Hooks.HpWrite: 0x{Offsets.Hooks.HpWrite:X}");
+            Console.WriteLine($"Hooks.DamageCalcResult: 0x{Offsets.Hooks.DamageCalcResult:X}");
+            Console.WriteLine($"Hooks.WarpCoordWrite: 0x{Offsets.Hooks.WarpCoordWrite:X}");
             // Console.WriteLine($"Hooks.AddSubGoal: 0x{Offsets.Hooks.AddSubGoal:X}");
             // Console.WriteLine($"Hooks.InAirTimer: 0x{Offsets.Hooks.InAirTimer:X}");
             // Console.WriteLine($"Hooks.NoClipKeyboard: 0x{Offsets.Hooks.NoClipKeyboard:X}");
@@ -172,7 +174,7 @@ namespace SilkySouls2.Memory
             // Console.WriteLine($"Hooks.CameraUpLimit: 0x{Offsets.Hooks.CameraUpLimit:X}");
             // Console.WriteLine($"Hooks.ItemLotBase: 0x{Offsets.Hooks.ItemLotBase:X}");
             //
-            // Console.WriteLine($"Funcs.Warp: 0x{Offsets.Funcs.Warp:X}");
+            Console.WriteLine($"Funcs.Warp: 0x{Offsets.Funcs.Warp:X}");
             // Console.WriteLine($"Funcs.ItemSpawn: 0x{Offsets.Funcs.ItemSpawn:X}");
             // Console.WriteLine($"Funcs.SetEvent: 0x{Offsets.Funcs.SetEvent:X}");
             // Console.WriteLine($"Funcs.Travel: 0x{Offsets.Funcs.Travel:X}");

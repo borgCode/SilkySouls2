@@ -62,19 +62,99 @@ namespace SilkySouls2.Properties {
         /// <summary>
         ///   Looks up a localized string similar to 44 8b 41 1c             mov    r8d,DWORD PTR [rcx+0x1c]
         ///53                      push   rbx
-        ///48 8b 1d 00 00 00 00    mov    rbx,QWORD PTR [rip+0x0]        # c &lt;_main+0xc&gt;
-        ///48 3b 5a 68             cmp    rbx,QWORD PTR [rdx+0x68]
-        ///75 0b                   jne    1d &lt;original&gt;
+        ///8b 1d 00 00 00 00       mov    ebx,DWORD PTR [rip+0x0]        # b &lt;_main+0xb&gt;
+        ///3b 5a 68                cmp    ebx,DWORD PTR [rdx+0x68]
+        ///75 0b                   jne    1b &lt;original&gt;
         ///ba 64 00 00 00          mov    edx,0x64
         ///5b                      pop    rbx
-        ///e9 00 00 00 00          jmp    1d &lt;original&gt;
-        ///00000000001d &lt;original&gt;:
+        ///e9 00 00 00 00          jmp    1b &lt;original&gt;
+        ///00000000001b &lt;original&gt;:
         ///8b 54 82 40             mov    edx,DWORD PTR [rdx+rax*4+0x40]
         ///5b                      p [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string CompareEventRandValue {
             get {
                 return ResourceManager.GetString("CompareEventRandValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 4c 8d 4d 70             lea    r9,[rbp+0x70]
+        ///4c 8d 45 70             lea    r8,[rbp+0x70]
+        ///50                      push   rax
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
+        ///48 39 d8                cmp    rax,rbx
+        ///74 0a                   je     22 &lt;exit&gt;
+        ///c7 85 a4 00 00 00 00    mov    DWORD PTR [rbp+0xa4],0x0
+        ///00 00 00 
+        ///000000000022 &lt;exit&gt;:
+        ///58                      pop    rax
+        ///e9 00 00 00 00          jmp    28 &lt;exit+0x6&gt;.
+        /// </summary>
+        internal static string DealNoDamage {
+            get {
+                return ResourceManager.GetString("DealNoDamage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 2650,Things Betwixt,Fire Keeper&apos;s Dwelling
+        ///4650,Majula,Far Fire
+        ///10655,Forest of Fallen Giants,Cardinal Tower
+        ///10660,Forest of Fallen Giants,Soldier&apos;s Rest
+        ///10670,Forest of Fallen Giants,Crestfallen&apos;s Retreat
+        ///10675,Forest of Fallen Giants,The Place Unbeknownst
+        ///31650,Heide&apos;s Tower of Flame,Tower of Flame
+        ///31655,Heide&apos;s Tower of Flame,Heide&apos;s Ruin
+        ///31660,Heide&apos;s Tower of Flame,Cathedral of Blue
+        ///18650,No-man&apos;s Wharf,Unseen Path to Heide&apos;s
+        ///16650,The Lost Bastille,Straid&apos;s Cell
+        ///16655,The Lost Bastille,Exil [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Locations {
+            get {
+                return ResourceManager.GetString("Locations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 51                      push   rcx
+        ///48 b9 00 00 00 00 00    movabs rcx,0x0
+        ///00 00 00
+        ///48 8b 09                mov    rcx,QWORD PTR [rcx]
+        ///48 8b 89 d0 00 00 00    mov    rcx,QWORD PTR [rcx+0xd0]
+        ///48 39 d9                cmp    rcx,rbx
+        ///75 06                   jne    20 &lt;exit&gt;
+        ///8b 81 68 01 00 00       mov    eax,DWORD PTR [rcx+0x168]
+        ///000000000020 &lt;exit&gt;:
+        ///59                      pop    rcx
+        ///89 83 68 01 00 00       mov    DWORD PTR [rbx+0x168],eax
+        ///e9 00 00 00 00          jmp    2c &lt;exit+0xc&gt;.
+        /// </summary>
+        internal static string NoDamage {
+            get {
+                return ResourceManager.GetString("NoDamage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 4c 8d 4d 70             lea    r9,[rbp+0x70]
+        ///4c 8d 45 70             lea    r8,[rbp+0x70]
+        ///50                      push   rax
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
+        ///48 39 d8                cmp    rax,rbx
+        ///74 0a                   je     22 &lt;exit&gt;
+        ///c7 85 a4 00 00 00 99    mov    DWORD PTR [rbp+0xa4],0x9999999
+        ///99 99 09
+        ///000000000022 &lt;exit&gt;:
+        ///58                      pop    rax
+        ///e9 00 00 00 00          jmp    28 &lt;exit+0x6&gt;.
+        /// </summary>
+        internal static string OneShot {
+            get {
+                return ResourceManager.GetString("OneShot", resourceCulture);
             }
         }
         
@@ -89,20 +169,34 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 40 88 74 24 28          mov    BYTE PTR [rsp+0x28],sil
+        ///   Looks up a localized string similar to 49 8b 8f b0 00 00 00    mov    rcx,QWORD PTR [r15+0xb0]
         ///53                      push   rbx
-        ///48 8b 1d 00 00 00 00    mov    rbx,QWORD PTR [rip+0x0]        # d &lt;_main+0xd&gt;
-        ///48 3b 5e 68             cmp    rbx,QWORD PTR [rsi+0x68]
-        ///75 0c                   jne    1f &lt;original&gt;
-        ///8b 2d 00 00 00 00       mov    ebp,DWORD PTR [rip+0x0]        # 19 &lt;_main+0x19&gt;
+        ///8b 1d 00 00 00 00       mov    ebx,DWORD PTR [rip+0x0]        # e &lt;_main+0xe&gt;
+        ///41 3b 5f 68             cmp    ebx,DWORD PTR [r15+0x68]
+        ///75 06                   jne    1a &lt;skip&gt;
+        ///8b 35 00 00 00 00       mov    esi,DWORD PTR [rip+0x0]        # 1a &lt;skip&gt;
+        ///00000000001a &lt;skip&gt;:
         ///5b                      pop    rbx
-        ///e9 00 00 00 00          jmp    1f &lt;original&gt;
-        ///00000000001f &lt;original&gt;:
-        ///89 6c 24 2c             mov    DWORD PTR [rsp+0x2 [rest of string was truncated]&quot;;.
+        ///e9 00 00 00 00          jmp    20 &lt;skip+0x6&gt;.
         /// </summary>
         internal static string SetAreaVariable {
             get {
                 return ResourceManager.GetString("SetAreaVariable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 48 8d 0d 00 00 00 00    lea    rcx,[rip+0x0]        # 7 &lt;_main+0x7&gt;
+        ///0f b7 15 00 00 00 00    movzx  edx,WORD PTR [rip+0x0]        # e &lt;_main+0xe&gt;
+        ///41 b8 05 00 00 00       mov    r8d,0x5
+        ///48 83 ec 28             sub    rsp,0x28
+        ///e8 00 00 00 00          call   1d &lt;_main+0x1d&gt;
+        ///48 83 c4 28             add    rsp,0x28
+        ///c3                      ret.
+        /// </summary>
+        internal static string Warp {
+            get {
+                return ResourceManager.GetString("Warp", resourceCulture);
             }
         }
     }

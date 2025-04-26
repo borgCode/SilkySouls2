@@ -119,31 +119,158 @@
 e9 00 00 00 00          jmp    b &lt;_main+0xb&gt;</value>
   </data>
   <data name="SetAreaVariable" xml:space="preserve">
-    <value>40 88 74 24 28          mov    BYTE PTR [rsp+0x28],sil
+    <value>49 8b 8f b0 00 00 00    mov    rcx,QWORD PTR [r15+0xb0]
 53                      push   rbx
-48 8b 1d 00 00 00 00    mov    rbx,QWORD PTR [rip+0x0]        # d &lt;_main+0xd&gt;
-48 3b 5e 68             cmp    rbx,QWORD PTR [rsi+0x68]
-75 0c                   jne    1f &lt;original&gt;
-8b 2d 00 00 00 00       mov    ebp,DWORD PTR [rip+0x0]        # 19 &lt;_main+0x19&gt;
+8b 1d 00 00 00 00       mov    ebx,DWORD PTR [rip+0x0]        # e &lt;_main+0xe&gt;
+41 3b 5f 68             cmp    ebx,DWORD PTR [r15+0x68]
+75 06                   jne    1a &lt;skip&gt;
+8b 35 00 00 00 00       mov    esi,DWORD PTR [rip+0x0]        # 1a &lt;skip&gt;
+00000000001a &lt;skip&gt;:
 5b                      pop    rbx
-e9 00 00 00 00          jmp    1f &lt;original&gt;
-00000000001f &lt;original&gt;:
-89 6c 24 2c             mov    DWORD PTR [rsp+0x2c],ebp
-5b                      pop    rbx
-e9 00 00 00 00          jmp    29 &lt;original+0xa&gt;</value>
+e9 00 00 00 00          jmp    20 &lt;skip+0x6&gt;</value>
   </data>
   <data name="CompareEventRandValue" xml:space="preserve">
     <value>44 8b 41 1c             mov    r8d,DWORD PTR [rcx+0x1c]
 53                      push   rbx
-48 8b 1d 00 00 00 00    mov    rbx,QWORD PTR [rip+0x0]        # c &lt;_main+0xc&gt;
-48 3b 5a 68             cmp    rbx,QWORD PTR [rdx+0x68]
-75 0b                   jne    1d &lt;original&gt;
+8b 1d 00 00 00 00       mov    ebx,DWORD PTR [rip+0x0]        # b &lt;_main+0xb&gt;
+3b 5a 68                cmp    ebx,DWORD PTR [rdx+0x68]
+75 0b                   jne    1b &lt;original&gt;
 ba 64 00 00 00          mov    edx,0x64
 5b                      pop    rbx
-e9 00 00 00 00          jmp    1d &lt;original&gt;
-00000000001d &lt;original&gt;:
+e9 00 00 00 00          jmp    1b &lt;original&gt;
+00000000001b &lt;original&gt;:
 8b 54 82 40             mov    edx,DWORD PTR [rdx+rax*4+0x40]
 5b                      pop    rbx
-e9 00 00 00 00          jmp    27 &lt;original+0xa&gt;</value>
+e9 00 00 00 00          jmp    25 &lt;original+0xa&gt;</value>
+  </data>
+  <data name="NoDamage" xml:space="preserve">
+    <value>51                      push   rcx
+48 b9 00 00 00 00 00    movabs rcx,0x0
+00 00 00
+48 8b 09                mov    rcx,QWORD PTR [rcx]
+48 8b 89 d0 00 00 00    mov    rcx,QWORD PTR [rcx+0xd0]
+48 39 d9                cmp    rcx,rbx
+75 06                   jne    20 &lt;exit&gt;
+8b 81 68 01 00 00       mov    eax,DWORD PTR [rcx+0x168]
+000000000020 &lt;exit&gt;:
+59                      pop    rcx
+89 83 68 01 00 00       mov    DWORD PTR [rbx+0x168],eax
+e9 00 00 00 00          jmp    2c &lt;exit+0xc&gt;</value>
+  </data>
+  <data name="OneShot" xml:space="preserve">
+    <value>4c 8d 4d 70             lea    r9,[rbp+0x70]
+4c 8d 45 70             lea    r8,[rbp+0x70]
+50                      push   rax
+48 b8 00 00 00 00 00    movabs rax,0x0
+00 00 00
+48 39 d8                cmp    rax,rbx
+74 0a                   je     22 &lt;exit&gt;
+c7 85 a4 00 00 00 99    mov    DWORD PTR [rbp+0xa4],0x9999999
+99 99 09
+000000000022 &lt;exit&gt;:
+58                      pop    rax
+e9 00 00 00 00          jmp    28 &lt;exit+0x6&gt;</value>
+  </data>
+  <data name="DealNoDamage" xml:space="preserve">
+    <value>4c 8d 4d 70             lea    r9,[rbp+0x70]
+4c 8d 45 70             lea    r8,[rbp+0x70]
+50                      push   rax
+48 b8 00 00 00 00 00    movabs rax,0x0
+00 00 00
+48 39 d8                cmp    rax,rbx
+74 0a                   je     22 &lt;exit&gt;
+c7 85 a4 00 00 00 00    mov    DWORD PTR [rbp+0xa4],0x0
+00 00 00 
+000000000022 &lt;exit&gt;:
+58                      pop    rax
+e9 00 00 00 00          jmp    28 &lt;exit+0x6&gt;</value>
+  </data>
+  <data name="Locations" xml:space="preserve">
+    <value>2650,Things Betwixt,Fire Keeper's Dwelling
+4650,Majula,Far Fire
+10655,Forest of Fallen Giants,Cardinal Tower
+10660,Forest of Fallen Giants,Soldier's Rest
+10670,Forest of Fallen Giants,Crestfallen's Retreat
+10675,Forest of Fallen Giants,The Place Unbeknownst
+31650,Heide's Tower of Flame,Tower of Flame
+31655,Heide's Tower of Flame,Heide's Ruin
+31660,Heide's Tower of Flame,Cathedral of Blue
+18650,No-man's Wharf,Unseen Path to Heide's
+16650,The Lost Bastille,Straid's Cell
+16655,The Lost Bastille,Exile Holding Cells
+16660,The Lost Bastille,The Tower Apart
+16670,The Lost Bastille,McDuff's Workshop
+16675,The Lost Bastille,Servant's Quarters
+16685,Sinners' Rise,The Saltfort
+16665,Belfry Luna,Upper Ramparts
+23650,Huntsman's Copse,Undead Refuge
+23655,Huntsman's Copse,Bridge Approach
+23660,Huntsman's Copse,Undead Lockaway
+23665,Undead Purgatory,Undead Purgatory
+17650,Harvest Valley,The Mines
+17665,Harvest Valley,Poison Pool
+17655,Earthen Peak,Lower Earthen Peak
+17670,Earthen Peak,Central Earthen Peak
+17675,Earthen Peak,Upper Earthen Peak
+19650,Iron Keep,Ironhearth Hall
+19655,Iron Keep,Threshold Bridge
+19660,Iron Keep,Eygil's Idol
+19665,Belfry Sol,Belfry Sol Approach
+29650,Shaded Woods,Old Akelarre
+32655,Shaded Woods,Ruined Fork Road
+32660,Shaded Woods,Shaded Ruins
+33655,Doors of Pharros,Gyrm's Respite
+33660,Doors of Pharros,Ordeal's End
+14650,Brightstone Cove Tseldora,Lower Brightstone Cove
+14655,Brightstone Cove Tseldora,Royal Army Campsite
+14660,Brightstone Cove Tseldora,Chapel Threshold
+34650,Grave of Saints,Grave Entrance
+34655,Grave of Saints,Harvel's Resting Place
+25655,The Gutter,Central Gutter
+25665,The Gutter,Upper Gutter
+25650,Black Gulch,Black Gulch Mouth
+25660,Black Gulch,Hidden Chamber
+21650,Drangleic Castle,King's Gate
+21655,Drangleic Castle,Central Castle Drangleic
+21660,Drangleic Castle,Forgotten Chamber
+21665,Drangleic Castle,Underneath Castle Drangleic
+11650,Shrine of Amana,Tower of Prayer
+11655,Shrine of Amana,Crumbled Ruins
+11660,Shrine of Amana,Rhoy's Resting Place
+11670,Shrine of Amana,Rise of the Dead
+24650,Undead Crypt,Undead Ditch
+24655,Undead Crypt,Undead Crypt Entrance
+15650,Aldia's Keep,Foregarden
+15655,Aldia's Keep,Ritual Site
+27650,Dragon Aerie,Dragon Aerie
+27655,Dragon Shrine,Shrine Entrance
+35650,Shulva - Sanctum City,Sanctum Walk
+35685,Shulva - Sanctum City,Tower of Prayer
+35655,Shulva - Sanctum City,Priestess's Chamber
+35670,Dragon's Sanctum,Hidden Sanctum Chamber
+35675,Dragon's Sanctum,Lair of the Imperfect
+35680,Dragon's Sanctum,Sanctum Interior
+35665,Dragon's Rest,Sanctum Nadir
+36650,Brume Tower,Throne Floor
+36655,Brume Tower,Foyer
+36660,Brume Tower,Upper Floor
+36670,Brume Tower,Lowermost Floor
+36675,Brume Tower,The Smelter Throne
+36665,Iron Passage,Iron Passage
+37650,Frozen Eleum Loyce,Outer Wall
+37660,Frozen Eleum Loyce,Abandoned Dwelling
+37665,Frozen Eleum Loyce,Lower Garrison			
+37675,Frozen Eleum Loyce,Expulsion Chamber
+37685,Frozen Eleum Loyce,Inner Wall
+37670,Grand Cathedral,Grand Cathedral</value>
+  </data>
+  <data name="Warp" xml:space="preserve">
+    <value>48 8d 0d 00 00 00 00    lea    rcx,[rip+0x0]        # 7 &lt;_main+0x7&gt;
+0f b7 15 00 00 00 00    movzx  edx,WORD PTR [rip+0x0]        # e &lt;_main+0xe&gt;
+41 b8 05 00 00 00       mov    r8d,0x5
+48 83 ec 28             sub    rsp,0x28
+e8 00 00 00 00          call   1d &lt;_main+0x1d&gt;
+48 83 c4 28             add    rsp,0x28
+c3                      ret</value>
   </data>
 </root>

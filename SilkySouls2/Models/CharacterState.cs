@@ -1,4 +1,4 @@
-﻿namespace SilkySouls3.Models
+﻿namespace SilkySouls2.Models
 {
     public class CharacterState
     {

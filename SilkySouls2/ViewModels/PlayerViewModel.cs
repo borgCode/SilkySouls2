@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows.Threading;
 using SilkySouls2.Memory;
+using SilkySouls2.Models;
 using SilkySouls2.Services;
 using SilkySouls2.Utilities;
-using SilkySouls3.Models;
 
 namespace SilkySouls2.ViewModels
 {
@@ -29,6 +29,7 @@ namespace SilkySouls2.ViewModels
         private bool _isInfiniteFpEnabled;
         private bool _isInfiniteDurabilityEnabled;
         private bool _isOneShotEnabled;
+        private bool _isDealNoDamageEnabled;
         private bool _isInvisibleEnabled;
         private bool _isSilentEnabled;
         private bool _isNoAmmoConsumeEnabled;
@@ -250,29 +251,29 @@ namespace SilkySouls2.ViewModels
         // }
 
         //
-        // public bool IsNoDeathEnabled
-        // {
-        //     get => _isNoDeathEnabled;
-        //     set
-        //     {
-        //         if (SetProperty(ref _isNoDeathEnabled, value))
-        //         {
-        //             _playerService.ToggleDebugFlag(DebugFlags.NoDeath, _isNoDeathEnabled ? 1 : 0);
-        //         }
-        //     }
-        // }
-        //
-        // public bool IsNoDamageEnabled
-        // {
-        //     get => _isNoDamageEnabled;
-        //     set
-        //     {
-        //         if (SetProperty(ref _isNoDamageEnabled, value))
-        //         {
-        //             _playerService.ToggleNoDamage(_isNoDamageEnabled);
-        //         }
-        //     }
-        // }
+        public bool IsNoDeathEnabled
+        {
+            get => _isNoDeathEnabled;
+            set
+            {
+                if (SetProperty(ref _isNoDeathEnabled, value))
+                {
+                    _playerService.ToggleNoDeath(_isNoDeathEnabled);
+                }
+            }
+        }
+        
+        public bool IsNoDamageEnabled
+        {
+            get => _isNoDamageEnabled;
+            set
+            {
+                if (SetProperty(ref _isNoDamageEnabled, value))
+                {
+                    _playerService.ToggleNoDamage(_isNoDamageEnabled);
+                }
+            }
+        }
 
         // public bool IsInfiniteStaminaEnabled
         // {
@@ -323,17 +324,36 @@ namespace SilkySouls2.ViewModels
         //     }
         // }
         //
-        // public bool IsOneShotEnabled
-        // {
-        //     get => _isOneShotEnabled;
-        //     set
-        //     {
-        //         if (SetProperty(ref _isOneShotEnabled, value))
-        //         {
-        //             _playerService.ToggleDebugFlag(DebugFlags.OneShot, _isOneShotEnabled ? 1 : 0);
-        //         }
-        //     }
-        // }
+        
+        public bool IsDealNoDamageEnabled
+        {
+            get => _isDealNoDamageEnabled;
+            set
+            {
+                if (!SetProperty(ref _isDealNoDamageEnabled, value)) return;
+                if (IsOneShotEnabled && _isDealNoDamageEnabled)
+                {
+                    _playerService.ToggleOneShot(false);
+                    IsOneShotEnabled = false;
+                }
+                _playerService.ToggleDealNoDamage(_isDealNoDamageEnabled);
+            }
+        }
+        
+        public bool IsOneShotEnabled
+        {
+            get => _isOneShotEnabled;
+            set
+            {
+                if (!SetProperty(ref _isOneShotEnabled, value)) return;
+                if (IsDealNoDamageEnabled && _isOneShotEnabled)
+                {
+                    _playerService.ToggleDealNoDamage(false);
+                    IsDealNoDamageEnabled = false;
+                }
+                _playerService.ToggleOneShot(_isOneShotEnabled);
+            }
+        }
         //
         // public bool IsInvisibleEnabled
         // {
@@ -401,10 +421,8 @@ namespace SilkySouls2.ViewModels
         //
         public void TryEnableFeatures()
         {
-            // if (IsNoDeathEnabled)
-            //     _playerService.ToggleDebugFlag(DebugFlags.NoDeath, 1);
-            // if (IsNoDamageEnabled)
-            //     _playerService.ToggleNoDamage(true);
+            if (IsOneShotEnabled) _playerService.ToggleOneShot(true);
+            if (IsDealNoDamageEnabled) _playerService.ToggleDealNoDamage(true);
             // if (IsInfiniteStaminaEnabled)
             //     _playerService.ToggleDebugFlag(DebugFlags.InfiniteStam, 1);
             // if (IsNoGoodsConsumeEnabled)
@@ -425,9 +443,9 @@ namespace SilkySouls2.ViewModels
             //     _playerService.ToggleInfiniteDurability(true);
             // if (IsNoRollEnabled)
             //     _playerService.ToggleNoRoll(true);
-            // AreOptionsEnabled = true;
+            AreOptionsEnabled = true;
             // LoadStats();
-            // _timer.Start();
+            _timer.Start();
         }
 
         // public void DisableFeatures()
@@ -565,5 +583,16 @@ namespace SilkySouls2.ViewModels
         // {
         //     _playerService.GiveSouls();
         // }
+        public void TryApplyOneTimeFeatures()
+        {
+            if (IsNoDeathEnabled) _playerService.ToggleNoDeath(true);
+            if (IsNoDamageEnabled) _playerService.ToggleNoDamage(true);
+        }
+
+        public void DisableFeatures()
+        {
+            AreOptionsEnabled = false;
+            _timer.Stop();
+        }
     }
 }

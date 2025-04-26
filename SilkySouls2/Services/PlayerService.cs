@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using SilkySouls2.Memory;
+using SilkySouls2.Utilities;
 using static SilkySouls2.Memory.Offsets;
 
 namespace SilkySouls2.Services
@@ -8,6 +9,7 @@ namespace SilkySouls2.Services
     public class PlayerService
     {
         private readonly MemoryIo _memoryIo;
+        private readonly HookManager _hookManager;
 
         private readonly Dictionary<int, int> _lowLevelSoulRequirements = new Dictionary<int, int>
         {
@@ -15,9 +17,10 @@ namespace SilkySouls2.Services
             { 11, 829 },
         };
 
-        public PlayerService(MemoryIo memoryIo)
+        public PlayerService(MemoryIo memoryIo, HookManager hookManager)
         {
             _memoryIo = memoryIo;
+            _hookManager = hookManager;
         }
 
         public int GetHp() =>
@@ -249,6 +252,86 @@ namespace SilkySouls2.Services
         //                public int GetSp() => _memoryIo.ReadInt32(GetChrDataFieldPtr((int)WorldChrMan.ChrDataModule.Stam));
         //        
         //                public void SetMp(int val) => _memoryIo.WriteInt32(GetChrDataFieldPtr((int)WorldChrMan.ChrDataModule.Mp), val);
-        //                public void SetSp(int val) => _memoryIo.WriteInt32(GetChrDataFieldPtr((int)WorldChrMan.ChrDataModule.Stam), val);
+        //
+        // public void SetSp(int val) => _memoryIo.WriteInt32(GetChrDataFieldPtr((int)WorldChrMan.ChrDataModule.Stam), val);
+        public void ToggleNoDeath(bool isNoDeathEnabled) =>
+            _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.PlayerCtrlOffsets.MinHp),
+                isNoDeathEnabled ? 1 : -99999);
+
+        public void ToggleNoDamage(bool isNoDamageEnabled)
+        {
+            var code = CodeCaveOffsets.Base + CodeCaveOffsets.NoDamagePlayer;
+            var hookLoc = Hooks.HpWrite;
+            if (isNoDamageEnabled)
+            {
+                var hpWriteBytes = AsmLoader.GetAsmBytes("NoDamage");
+                var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt64());
+                Array.Copy(bytes, 0, hpWriteBytes, 0x1 + 2, 8);
+                bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 6, code + 0x2C);
+                Array.Copy(bytes, 0, hpWriteBytes, 0x27 + 1, 4);
+
+                _memoryIo.WriteBytes(code, hpWriteBytes);
+                _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[]
+                    { 0x89, 0x83, 0x68, 0x01, 0x00, 0x00 });
+            }
+            else _hookManager.UninstallHook(code.ToInt64());
+        }
+
+        public void ToggleOneShot(bool isOneShotEnabled)
+        {
+            var code = CodeCaveOffsets.Base + CodeCaveOffsets.OneShot;
+            var hookLoc = Hooks.DamageCalcResult;
+            if (isOneShotEnabled)
+            {
+                var pDamageActCtrl = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+                {
+                    GameManagerImp.Offsets.PlayerCtrl,
+                    GameManagerImp.PlayerCtrlOffsets.PlayerActionCtrlPtr,
+                    GameManagerImp.PlayerCtrlOffsets.PlayerActionCtrl.PlayerDamageActionCtrl,
+                }, true);
+                
+                var codeBytes = AsmLoader.GetAsmBytes("OneShot");
+                var bytes = BitConverter.GetBytes(pDamageActCtrl.ToInt64());
+                Array.Copy(bytes, 0, codeBytes, 0x9 + 2, 8);
+                bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 8, code + 0x28);
+                Array.Copy(bytes, 0, codeBytes, 0x23 + 1, 4);
+                _memoryIo.WriteBytes(code, codeBytes);
+                _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[]
+                    { 0x4C, 0x8D, 0x4D, 0x70, 0x4C, 0x8D, 0x45, 0x70 });
+            }
+            else
+            {
+                _hookManager.UninstallHook(code.ToInt64());
+            }
+            
+        }
+
+        public void ToggleDealNoDamage(bool isDealNoDamageEnabled)
+        {
+            var code = CodeCaveOffsets.Base + CodeCaveOffsets.DealNoDaamge;
+            var hookLoc = Hooks.DamageCalcResult;
+            if (isDealNoDamageEnabled)
+            {
+                var pDamageActCtrl = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+                {
+                    GameManagerImp.Offsets.PlayerCtrl,
+                    GameManagerImp.PlayerCtrlOffsets.PlayerActionCtrlPtr,
+                    GameManagerImp.PlayerCtrlOffsets.PlayerActionCtrl.PlayerDamageActionCtrl,
+                }, true);
+                
+                var codeBytes = AsmLoader.GetAsmBytes("DealNoDamage");
+                var bytes = BitConverter.GetBytes(pDamageActCtrl.ToInt64());
+                Array.Copy(bytes, 0, codeBytes, 0x9 + 2, 8);
+                bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 8, code + 0x28);
+                Array.Copy(bytes, 0, codeBytes, 0x23 + 1, 4);
+                _memoryIo.WriteBytes(code, codeBytes);
+                _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[]
+                    { 0x4C, 0x8D, 0x4D, 0x70, 0x4C, 0x8D, 0x45, 0x70 });
+            }
+            else
+            {
+                _hookManager.UninstallHook(code.ToInt64());
+            }
+        }
     }
 }

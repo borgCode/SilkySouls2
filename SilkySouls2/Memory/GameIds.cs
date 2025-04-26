@@ -2,10 +2,19 @@
 {
     public static class GameIds
     {
-        public static class Forlorns
+
+        public static class AreaId
         {
-            public static readonly (int funcId, int numOfSpawns) EarthenPeak = (4002000, 6);
-            public static readonly (int funcId, int numOfSpawns) ShadedWoods = (4011000, 2);
+            public const int HarvestPeak = 1017000;
+            public const int ShadedWoods = 1032000;
+        }
+
+        public static class EventFlags
+        {
+            public const ulong KingsRingAcquired = 100804;
+            public const ulong Dlc3Ice = 537000011;
+            public const ulong VisibleAava = 537000012;
+            public static readonly ulong[] Dlc3Knights = { 537000020, 537000021 };
         }
     }
 }

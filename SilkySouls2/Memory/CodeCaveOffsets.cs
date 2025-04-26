@@ -16,7 +16,13 @@ namespace SilkySouls2.Memory
 
         public const int NoDamagePlayer = 0x70;
         public const int OneShot = 0xA0;
-        public const int DealNoDaamge = 0xD0;
-        
+        public const int DealNoDamage = 0xD0;
+
+        public enum BonfireWarp
+        {
+            EmptySpace = 0x110,
+            BonfireId = 0x190,
+            Code = 0x1A0
+        }
     }
 }

@@ -60,6 +60,45 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 2650,Things Betwixt,Fire Keeper&apos;s Dwelling
+        ///4650,Majula,Far Fire
+        ///10655,Forest of Fallen Giants,Cardinal Tower
+        ///10660,Forest of Fallen Giants,Soldier&apos;s Rest
+        ///10670,Forest of Fallen Giants,Crestfallen&apos;s Retreat
+        ///10675,Forest of Fallen Giants,The Place Unbeknownst
+        ///31650,Heide&apos;s Tower of Flame,Tower of Flame
+        ///31655,Heide&apos;s Tower of Flame,Heide&apos;s Ruin
+        ///31660,Heide&apos;s Tower of Flame,Cathedral of Blue
+        ///18650,No-man&apos;s Wharf,Unseen Path to Heide&apos;s
+        ///16650,The Lost Bastille,Straid&apos;s Cell
+        ///16655,The Lost Bastille,Exil [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Bonfires {
+            get {
+                return ResourceManager.GetString("Bonfires", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 48 83 ec 60             sub    rsp,0x60
+        ///48 8d 0d 00 00 00 00    lea    rcx,[rip+0x0]        # b &lt;_main+0xb&gt;
+        ///0f b7 15 00 00 00 00    movzx  edx,WORD PTR [rip+0x0]        # 12 &lt;_main+0x12&gt;
+        ///41 b8 05 00 00 00       mov    r8d,0x5
+        ///e8 00 00 00 00          call   1d &lt;_main+0x1d&gt;
+        ///48 b9 00 00 00 00 00    movabs rcx,0x0
+        ///00 00 00
+        ///48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 2e &lt;_main+0x2e&gt;
+        ///e8 00 00 00 00          call   33 &lt;_main+0x33&gt;
+        ///48 83 c4 60             add    rsp,0x60
+        ///c3                       [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string BonfireWarp {
+            get {
+                return ResourceManager.GetString("BonfireWarp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 44 8b 41 1c             mov    r8d,DWORD PTR [rcx+0x1c]
         ///53                      push   rbx
         ///8b 1d 00 00 00 00       mov    ebx,DWORD PTR [rip+0x0]        # b &lt;_main+0xb&gt;
@@ -96,26 +135,6 @@ namespace SilkySouls2.Properties {
         internal static string DealNoDamage {
             get {
                 return ResourceManager.GetString("DealNoDamage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 2650,Things Betwixt,Fire Keeper&apos;s Dwelling
-        ///4650,Majula,Far Fire
-        ///10655,Forest of Fallen Giants,Cardinal Tower
-        ///10660,Forest of Fallen Giants,Soldier&apos;s Rest
-        ///10670,Forest of Fallen Giants,Crestfallen&apos;s Retreat
-        ///10675,Forest of Fallen Giants,The Place Unbeknownst
-        ///31650,Heide&apos;s Tower of Flame,Tower of Flame
-        ///31655,Heide&apos;s Tower of Flame,Heide&apos;s Ruin
-        ///31660,Heide&apos;s Tower of Flame,Cathedral of Blue
-        ///18650,No-man&apos;s Wharf,Unseen Path to Heide&apos;s
-        ///16650,The Lost Bastille,Straid&apos;s Cell
-        ///16655,The Lost Bastille,Exil [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string Locations {
-            get {
-                return ResourceManager.GetString("Locations", resourceCulture);
             }
         }
         
@@ -184,21 +203,6 @@ namespace SilkySouls2.Properties {
         internal static string SetAreaVariable {
             get {
                 return ResourceManager.GetString("SetAreaVariable", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 48 8d 0d 00 00 00 00    lea    rcx,[rip+0x0]        # 7 &lt;_main+0x7&gt;
-        ///0f b7 15 00 00 00 00    movzx  edx,WORD PTR [rip+0x0]        # e &lt;_main+0xe&gt;
-        ///41 b8 05 00 00 00       mov    r8d,0x5
-        ///48 83 ec 28             sub    rsp,0x28
-        ///e8 00 00 00 00          call   1d &lt;_main+0x1d&gt;
-        ///48 83 c4 28             add    rsp,0x28
-        ///c3                      ret.
-        /// </summary>
-        internal static string Warp {
-            get {
-                return ResourceManager.GetString("Warp", resourceCulture);
             }
         }
     }

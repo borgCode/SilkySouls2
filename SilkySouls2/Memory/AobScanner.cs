@@ -111,7 +111,8 @@ namespace SilkySouls2.Memory
                     writer.WriteLine($"{pair.Key}={pair.Value:X}");
             }
             //
-            Offsets.Funcs.Warp = FindAddressByPattern(Patterns.WarpFunc).ToInt64();
+            Offsets.Funcs.WarpPrep = FindAddressByPattern(Patterns.WarpPrep).ToInt64();
+            Offsets.Funcs.BonfireWarp = FindAddressByPattern(Patterns.BonfireWarp).ToInt64();
             // Offsets.Funcs.ItemSpawn = FindAddressByPattern(Patterns.ItemSpawnFunc).ToInt64();
             // Offsets.Funcs.BreakAllObjects = FindAddressByPattern(Patterns.BreakAllObjects).ToInt64();
             // Offsets.Funcs.RestoreAllObjects = FindAddressByPattern(Patterns.RestoreAllObjects).ToInt64();
@@ -174,7 +175,8 @@ namespace SilkySouls2.Memory
             // Console.WriteLine($"Hooks.CameraUpLimit: 0x{Offsets.Hooks.CameraUpLimit:X}");
             // Console.WriteLine($"Hooks.ItemLotBase: 0x{Offsets.Hooks.ItemLotBase:X}");
             //
-            Console.WriteLine($"Funcs.Warp: 0x{Offsets.Funcs.Warp:X}");
+            Console.WriteLine($"Funcs.WarpPrep: 0x{Offsets.Funcs.WarpPrep:X}");
+            Console.WriteLine($"Funcs.BonfireWarp: 0x{Offsets.Funcs.BonfireWarp:X}");
             // Console.WriteLine($"Funcs.ItemSpawn: 0x{Offsets.Funcs.ItemSpawn:X}");
             // Console.WriteLine($"Funcs.SetEvent: 0x{Offsets.Funcs.SetEvent:X}");
             // Console.WriteLine($"Funcs.Travel: 0x{Offsets.Funcs.Travel:X}");

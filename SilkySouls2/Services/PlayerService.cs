@@ -32,15 +32,20 @@ namespace SilkySouls2.Services
         public void SetHp(int hp) =>
             _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.PlayerCtrlOffsets.Hp), hp);
 
-        // public void ToggleNoDamage(bool isNoDamageEnabled)
-        // {
-        //     var noDamagePtr = _memoryIo.ReadInt64(GetPlayerCtrlField(GameManagerImp.PlayerCtrlOffsets.ChrFlagsPtr));
-        //     _memoryIo.WriteByte((IntPtr)noDamagePtr, isNoDamageEnabled ? 1 : 0);
-        // }
-
         private IntPtr GetPlayerCtrlField(int fieldOffset) =>
             _memoryIo.FollowPointers(GameManagerImp.Base, new[] { GameManagerImp.Offsets.PlayerCtrl, fieldOffset },
                 false);
+
+        // public void ToggleNoDamage(bool isNoDamageEnabled)
+
+        // {
+
+        //     var noDamagePtr = _memoryIo.ReadInt64(GetPlayerCtrlField(GameManagerImp.PlayerCtrlOffsets.ChrFlagsPtr));
+
+        //     _memoryIo.WriteByte((IntPtr)noDamagePtr, isNoDamageEnabled ? 1 : 0);
+
+        // }
+
 
         //        
         //                public void SavePos(int index)
@@ -302,7 +307,7 @@ namespace SilkySouls2.Services
 
         public void ToggleDealNoDamage(bool isDealNoDamageEnabled)
         {
-            var code = CodeCaveOffsets.Base + CodeCaveOffsets.DealNoDaamge;
+            var code = CodeCaveOffsets.Base + CodeCaveOffsets.DealNoDamage;
             var hookLoc = Hooks.OneShot;
             if (isDealNoDamageEnabled)
             {

@@ -188,7 +188,7 @@ e9 00 00 00 00          jmp    2f &lt;exit+0x6&gt;</value>
 59                      pop    rcx
 e9 00 00 00 00          jmp    31 &lt;exit+0x6&gt;</value>
   </data>
-  <data name="Locations" xml:space="preserve">
+  <data name="Bonfires" xml:space="preserve">
     <value>2650,Things Betwixt,Fire Keeper's Dwelling
 4650,Majula,Far Fire
 10655,Forest of Fallen Giants,Cardinal Tower
@@ -267,13 +267,17 @@ e9 00 00 00 00          jmp    31 &lt;exit+0x6&gt;</value>
 37685,Frozen Eleum Loyce,Inner Wall
 37670,Grand Cathedral,Grand Cathedral</value>
   </data>
-  <data name="Warp" xml:space="preserve">
-    <value>48 8d 0d 00 00 00 00    lea    rcx,[rip+0x0]        # 7 &lt;_main+0x7&gt;
-0f b7 15 00 00 00 00    movzx  edx,WORD PTR [rip+0x0]        # e &lt;_main+0xe&gt;
+  <data name="BonfireWarp" xml:space="preserve">
+    <value>48 83 ec 60             sub    rsp,0x60
+48 8d 0d 00 00 00 00    lea    rcx,[rip+0x0]        # b &lt;_main+0xb&gt;
+0f b7 15 00 00 00 00    movzx  edx,WORD PTR [rip+0x0]        # 12 &lt;_main+0x12&gt;
 41 b8 05 00 00 00       mov    r8d,0x5
-48 83 ec 28             sub    rsp,0x28
 e8 00 00 00 00          call   1d &lt;_main+0x1d&gt;
-48 83 c4 28             add    rsp,0x28
+48 b9 00 00 00 00 00    movabs rcx,0x0
+00 00 00
+48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 2e &lt;_main+0x2e&gt;
+e8 00 00 00 00          call   33 &lt;_main+0x33&gt;
+48 83 c4 60             add    rsp,0x60
 c3                      ret</value>
   </data>
 </root>

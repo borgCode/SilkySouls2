@@ -73,23 +73,30 @@
         <Compile Include="Converters\InverseBooleanConverter.cs" />
         <Compile Include="Converters\InverseBooleanToVisibilityConverter.cs" />
         <Compile Include="Converters\StringToVisibilityConverter.cs" />
+        <Compile Include="Models\Bonfire.cs" />
         <Compile Include="Models\CharacterState.cs" />
         <Compile Include="Models\Forlorn.cs" />
         <Compile Include="Services\EnemyService.cs" />
         <Compile Include="Services\PlayerService.cs" />
+        <Compile Include="Services\TravelService.cs" />
         <Compile Include="Services\UtilityService.cs" />
         <Compile Include="Utilities\AsmHelper.cs" />
         <Compile Include="Utilities\AsmLoader.cs" />
+        <Compile Include="Utilities\DataLoader.cs" />
         <Compile Include="Utilities\HotkeyManager.cs" />
         <Compile Include="ViewModels\BaseViewModel.cs" />
         <Compile Include="ViewModels\EnemyViewModel.cs" />
         <Compile Include="ViewModels\PlayerViewModel.cs" />
+        <Compile Include="ViewModels\TravelViewModel.cs" />
         <Compile Include="ViewModels\UtilityViewModel.cs" />
         <Compile Include="Views\EnemyTab.xaml.cs">
           <DependentUpon>EnemyTab.xaml</DependentUpon>
         </Compile>
         <Compile Include="Views\PlayerTab.xaml.cs">
           <DependentUpon>PlayerTab.xaml</DependentUpon>
+        </Compile>
+        <Compile Include="Views\TravelTab.xaml.cs">
+          <DependentUpon>TravelTab.xaml</DependentUpon>
         </Compile>
         <Compile Include="Views\UtilityTab.xaml.cs">
           <DependentUpon>UtilityTab.xaml</DependentUpon>
@@ -108,6 +115,7 @@
         </Compile>
         <Page Include="Views\EnemyTab.xaml" />
         <Page Include="Views\PlayerTab.xaml" />
+        <Page Include="Views\TravelTab.xaml" />
         <Page Include="Views\UtilityTab.xaml" />
     </ItemGroup>
     <ItemGroup>

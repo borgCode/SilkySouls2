@@ -35,6 +35,7 @@ namespace SilkySouls2.Memory
             public static class EventManagerOffsets
             {
                 public const int EventFlagManager = 0x20;
+                public const int WarpEventEntity = 0x70;
             }
 
             public static class GameDataManagerOffsets
@@ -95,7 +96,8 @@ namespace SilkySouls2.Memory
 
         public static class Funcs
         {
-            public static long Warp;
+            public static long WarpPrep;
+            public static long BonfireWarp;
         }
     }
 }

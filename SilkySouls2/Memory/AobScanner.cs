@@ -78,8 +78,8 @@ namespace SilkySouls2.Memory
                 addr => Offsets.Hooks.CompareEventRandValue = addr.ToInt64(), saved);
             TryPatternWithFallback("HpWrite", Patterns.HpWrite,
                 addr => Offsets.Hooks.HpWrite = addr.ToInt64(), saved);
-            TryPatternWithFallback("DamageCalcResult", Patterns.DamageCalcResult, addr => Offsets.Hooks.DamageCalcResult = addr.ToInt64(),
-                saved);
+            Offsets.Hooks.OneShot = Offsets.Hooks.HpWrite - 0xB;
+            
             TryPatternWithFallback("WarpCoordWrite", Patterns.WarpCoordWrite,
                 addr => Offsets.Hooks.WarpCoordWrite = addr.ToInt64(), saved);
             // TryPatternWithFallback("NoClipKeyboard", Patterns.NoClipKeyboard,
@@ -163,7 +163,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Hooks.SetAreaVariable: 0x{Offsets.Hooks.SetAreaVariable:X}");
             Console.WriteLine($"Hooks.CompareEventRandValue: 0x{Offsets.Hooks.CompareEventRandValue:X}");
             Console.WriteLine($"Hooks.HpWrite: 0x{Offsets.Hooks.HpWrite:X}");
-            Console.WriteLine($"Hooks.DamageCalcResult: 0x{Offsets.Hooks.DamageCalcResult:X}");
+            Console.WriteLine($"Hooks.OneShot: 0x{Offsets.Hooks.OneShot:X}");
             Console.WriteLine($"Hooks.WarpCoordWrite: 0x{Offsets.Hooks.WarpCoordWrite:X}");
             // Console.WriteLine($"Hooks.AddSubGoal: 0x{Offsets.Hooks.AddSubGoal:X}");
             // Console.WriteLine($"Hooks.InAirTimer: 0x{Offsets.Hooks.InAirTimer:X}");

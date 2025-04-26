@@ -88,7 +88,7 @@ namespace SilkySouls2.Memory
             public static long SetAreaVariable; // Sets which of the forlorns should spawn
             public static long CompareEventRandValue; // Checks if forlorn should spawn
             public static long HpWrite;
-            public static long DamageCalcResult;
+            public static long OneShot; // Also Deal no damage 
             public static long WarpCoordWrite;
 
         }

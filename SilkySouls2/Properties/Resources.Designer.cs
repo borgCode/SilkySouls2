@@ -79,18 +79,19 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 4c 8d 4d 70             lea    r9,[rbp+0x70]
-        ///4c 8d 45 70             lea    r8,[rbp+0x70]
-        ///50                      push   rax
-        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///   Looks up a localized string similar to 48 8d 44 24 30          lea    rax,[rsp+0x30]
+        ///48 0f 4f c6             cmovg  rax,rsi
+        ///51                      push   rcx
+        ///48 b9 00 00 00 00 00    movabs rcx,0x0
         ///00 00 00
-        ///48 39 d8                cmp    rax,rbx
-        ///74 0a                   je     22 &lt;exit&gt;
-        ///c7 85 a4 00 00 00 00    mov    DWORD PTR [rbp+0xa4],0x0
-        ///00 00 00 
-        ///000000000022 &lt;exit&gt;:
-        ///58                      pop    rax
-        ///e9 00 00 00 00          jmp    28 &lt;exit+0x6&gt;.
+        ///48 8b 09                mov    rcx,QWORD PTR [rcx]
+        ///48 8b 89 d0 00 00 00    mov    rcx,QWORD PTR [rcx+0xd0]
+        ///48 39 d9                cmp    rcx,rbx
+        ///74 08                   je     2b &lt;exit&gt;
+        ///8b 8b 68 01 00 00       mov    ecx,DWORD PTR [rbx+0x168]
+        ///89 08                   mov    DWORD PTR [rax],ecx
+        ///00000000002b &lt;exit&gt;:
+        ///59               [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DealNoDamage {
             get {
@@ -139,18 +140,19 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 4c 8d 4d 70             lea    r9,[rbp+0x70]
-        ///4c 8d 45 70             lea    r8,[rbp+0x70]
-        ///50                      push   rax
-        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///   Looks up a localized string similar to 48 8d 44 24 30          lea    rax,[rsp+0x30]
+        ///48 0f 4f c6             cmovg  rax,rsi
+        ///51                      push   rcx
+        ///48 b9 00 00 00 00 00    movabs rcx,0x0
         ///00 00 00
-        ///48 39 d8                cmp    rax,rbx
-        ///74 0a                   je     22 &lt;exit&gt;
-        ///c7 85 a4 00 00 00 99    mov    DWORD PTR [rbp+0xa4],0x9999999
-        ///99 99 09
-        ///000000000022 &lt;exit&gt;:
-        ///58                      pop    rax
-        ///e9 00 00 00 00          jmp    28 &lt;exit+0x6&gt;.
+        ///48 8b 09                mov    rcx,QWORD PTR [rcx]
+        ///48 8b 89 d0 00 00 00    mov    rcx,QWORD PTR [rcx+0xd0]
+        ///48 39 d9                cmp    rcx,rbx
+        ///74 06                   je     29 &lt;exit&gt;
+        ///c7 00 00 00 00 00       mov    DWORD PTR [rax],0x0
+        ///000000000029 &lt;exit&gt;:
+        ///59                      pop    rcx
+        ///e9 00 00 00 00          jmp    2f &lt;exi [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string OneShot {
             get {

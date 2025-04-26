@@ -280,24 +280,18 @@ namespace SilkySouls2.Services
         public void ToggleOneShot(bool isOneShotEnabled)
         {
             var code = CodeCaveOffsets.Base + CodeCaveOffsets.OneShot;
-            var hookLoc = Hooks.DamageCalcResult;
+            var hookLoc = Hooks.OneShot;
             if (isOneShotEnabled)
             {
-                var pDamageActCtrl = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
-                {
-                    GameManagerImp.Offsets.PlayerCtrl,
-                    GameManagerImp.PlayerCtrlOffsets.PlayerActionCtrlPtr,
-                    GameManagerImp.PlayerCtrlOffsets.PlayerActionCtrl.PlayerDamageActionCtrl,
-                }, true);
                 
                 var codeBytes = AsmLoader.GetAsmBytes("OneShot");
-                var bytes = BitConverter.GetBytes(pDamageActCtrl.ToInt64());
-                Array.Copy(bytes, 0, codeBytes, 0x9 + 2, 8);
-                bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 8, code + 0x28);
-                Array.Copy(bytes, 0, codeBytes, 0x23 + 1, 4);
+                var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt64());
+                Array.Copy(bytes, 0, codeBytes, 0xA + 2, 8);
+                bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 9, code + 0x2F);
+                Array.Copy(bytes, 0, codeBytes, 0x2A + 1, 4);
                 _memoryIo.WriteBytes(code, codeBytes);
                 _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[]
-                    { 0x4C, 0x8D, 0x4D, 0x70, 0x4C, 0x8D, 0x45, 0x70 });
+                    {  0x48, 0x8D, 0x44, 0x24, 0x30, 0x48, 0x0F, 0x4F, 0xC6 });
             }
             else
             {
@@ -309,24 +303,17 @@ namespace SilkySouls2.Services
         public void ToggleDealNoDamage(bool isDealNoDamageEnabled)
         {
             var code = CodeCaveOffsets.Base + CodeCaveOffsets.DealNoDaamge;
-            var hookLoc = Hooks.DamageCalcResult;
+            var hookLoc = Hooks.OneShot;
             if (isDealNoDamageEnabled)
             {
-                var pDamageActCtrl = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
-                {
-                    GameManagerImp.Offsets.PlayerCtrl,
-                    GameManagerImp.PlayerCtrlOffsets.PlayerActionCtrlPtr,
-                    GameManagerImp.PlayerCtrlOffsets.PlayerActionCtrl.PlayerDamageActionCtrl,
-                }, true);
-                
                 var codeBytes = AsmLoader.GetAsmBytes("DealNoDamage");
-                var bytes = BitConverter.GetBytes(pDamageActCtrl.ToInt64());
-                Array.Copy(bytes, 0, codeBytes, 0x9 + 2, 8);
-                bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 8, code + 0x28);
-                Array.Copy(bytes, 0, codeBytes, 0x23 + 1, 4);
+                var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt64());
+                Array.Copy(bytes, 0, codeBytes, 0xA + 2, 8);
+                bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 9, code + 0x31);
+                Array.Copy(bytes, 0, codeBytes, 0x2C + 1, 4);
                 _memoryIo.WriteBytes(code, codeBytes);
                 _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[]
-                    { 0x4C, 0x8D, 0x4D, 0x70, 0x4C, 0x8D, 0x45, 0x70 });
+                    {  0x48, 0x8D, 0x44, 0x24, 0x30, 0x48, 0x0F, 0x4F, 0xC6  });
             }
             else
             {

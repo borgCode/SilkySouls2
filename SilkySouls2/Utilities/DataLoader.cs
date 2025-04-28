@@ -39,12 +39,30 @@ namespace SilkySouls2.Utilities
                     
                     if (parts.Length > 3 && !string.IsNullOrWhiteSpace(parts[3]))
                     {
-                        string[] coordParts = parts[3].Split(':');
+                        string[] coordParts = parts[3].Split('|');
+                        
                         location.Coordinates = new float[coordParts.Length];
                         
                         for (int i = 0; i < coordParts.Length; i++)
                         {
-                            location.Coordinates[i] = float.Parse(coordParts[i], CultureInfo.InvariantCulture);
+                            if (!string.IsNullOrWhiteSpace(coordParts[i]))
+                            {
+                                location.Coordinates[i] = float.Parse(coordParts[i], CultureInfo.InvariantCulture);
+                            }
+                        }
+                    }
+                    
+                    if (parts.Length > 4 && !string.IsNullOrWhiteSpace(parts[4]))
+                    {
+                        string[] angleParts = parts[4].Split('|');
+
+                        location.Angle = new float[angleParts.Length];
+                        for (int i = 0; i < angleParts.Length; i++)
+                        {
+                            if (!string.IsNullOrWhiteSpace(angleParts[i]))
+                            {
+                                location.Angle[i] = float.Parse(angleParts[i], CultureInfo.InvariantCulture);
+                            }
                         }
                     }
                     

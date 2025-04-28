@@ -98,64 +98,22 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 48 8d 44 24 30          lea    rax,[rsp+0x30]
-        ///48 0f 4f c6             cmovg  rax,rsi
-        ///51                      push   rcx
-        ///48 b9 00 00 00 00 00    movabs rcx,0x0
-        ///00 00 00
-        ///48 8b 09                mov    rcx,QWORD PTR [rcx]
-        ///48 8b 89 d0 00 00 00    mov    rcx,QWORD PTR [rcx+0xd0]
-        ///48 39 d9                cmp    rcx,rbx
-        ///74 08                   je     2b &lt;exit&gt;
-        ///8b 8b 68 01 00 00       mov    ecx,DWORD PTR [rbx+0x168]
-        ///89 08                   mov    DWORD PTR [rax],ecx
-        ///00000000002b &lt;exit&gt;:
-        ///59               [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string DealNoDamage {
-            get {
-                return ResourceManager.GetString("DealNoDamage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to 51                      push   rcx
         ///48 b9 00 00 00 00 00    movabs rcx,0x0
         ///00 00 00
         ///48 8b 09                mov    rcx,QWORD PTR [rcx]
         ///48 8b 89 d0 00 00 00    mov    rcx,QWORD PTR [rcx+0xd0]
         ///48 39 d9                cmp    rcx,rbx
-        ///75 06                   jne    20 &lt;exit&gt;
-        ///8b 81 68 01 00 00       mov    eax,DWORD PTR [rcx+0x168]
-        ///000000000020 &lt;exit&gt;:
-        ///59                      pop    rcx
-        ///89 83 68 01 00 00       mov    DWORD PTR [rbx+0x168],eax
-        ///e9 00 00 00 00          jmp    2c &lt;exit+0xc&gt;.
+        ///74 02                   je     1c &lt;is_player&gt;
+        ///eb 11                   jmp    2d &lt;check_target&gt;
+        ///00000000001c &lt;is_player&gt;:
+        ///80 3d 00 00 00 00 00    cmp    BYTE PTR [rip+0x0],0x0        # 23 &lt;is_player+0x7&gt;
+        ///74 46                   je     6b &lt;exit&gt;
+        ///8b 81 68 01 00 00       mov  [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string NoDamage {
+        internal static string DamageControl {
             get {
-                return ResourceManager.GetString("NoDamage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 48 8d 44 24 30          lea    rax,[rsp+0x30]
-        ///48 0f 4f c6             cmovg  rax,rsi
-        ///51                      push   rcx
-        ///48 b9 00 00 00 00 00    movabs rcx,0x0
-        ///00 00 00
-        ///48 8b 09                mov    rcx,QWORD PTR [rcx]
-        ///48 8b 89 d0 00 00 00    mov    rcx,QWORD PTR [rcx+0xd0]
-        ///48 39 d9                cmp    rcx,rbx
-        ///74 06                   je     29 &lt;exit&gt;
-        ///c7 00 00 00 00 00       mov    DWORD PTR [rax],0x0
-        ///000000000029 &lt;exit&gt;:
-        ///59                      pop    rcx
-        ///e9 00 00 00 00          jmp    2f &lt;exi [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string OneShot {
-            get {
-                return ResourceManager.GetString("OneShot", resourceCulture);
+                return ResourceManager.GetString("DamageControl", resourceCulture);
             }
         }
         
@@ -166,6 +124,17 @@ namespace SilkySouls2.Properties {
         internal static string OverrideGeneratorStartPositionRandom {
             get {
                 return ResourceManager.GetString("OverrideGeneratorStartPositionRandom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 48 89 3d 00 00 00 00    mov    QWORD PTR [rip+0x0],rdi        # 7 &lt;_main+0x7&gt;
+        ///48 89 bb c0 00 00 00    mov    QWORD PTR [rbx+0xc0],rdi
+        ///e9 00 00 00 00          jmp    13 &lt;_main+0x13&gt;.
+        /// </summary>
+        internal static string SaveTargetPtr {
+            get {
+                return ResourceManager.GetString("SaveTargetPtr", resourceCulture);
             }
         }
         
@@ -226,17 +195,18 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 44 0f 10 35 00 00 00    movups xmm14,XMMWORD PTR [rip+0x0]        # 8 &lt;_main+0x8&gt;
-        ///00
-        ///44 0f 10 3d 00 00 00    movups xmm15,XMMWORD PTR [rip+0x0]        # 10 &lt;_main+0x10&gt;
-        ///00
-        ///44 0f 11 37             movups XMMWORD PTR [rdi],xmm14
-        ///44 0f 11 7f 10          movups XMMWORD PTR [rdi+0x10],xmm15
-        ///45 0f 57 f6             xorps  xmm14,xmm14
-        ///45 0f 57 ff             xorps  xmm15,xmm15
-        ///48 8b 8c 24 80 00 00    mov    rcx,QWORD PTR [rsp+0x80]
-        ///00
-        ///e9 00 00 00 00          jmp    2e &lt;_main+0x2e&gt;.
+        ///   Looks up a localized string similar to 0f 5c c2                subps  xmm0,xmm2
+        ///0f 29 47 50             movaps XMMWORD PTR [rdi+0x50],xmm0
+        ///50                      push   rax
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
+        ///48 8b 00                mov    rax,QWORD PTR [rax]
+        ///48 8b 40 58             mov    rax,QWORD PTR [rax+0x58]
+        ///48 8b 80 f8 01 00 00    mov    rax,QWORD PTR [rax+0x1f8]
+        ///48 8b 40 18             mov    rax,QWORD PTR [rax+0x18]
+        ///48 8b 40 08             mov    rax,QWORD PTR [rax+0x8]
+        ///48 05 50 01 00 00       add    rax,0x150
+        ///48 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string WarpCoordWrite {
             get {
@@ -247,9 +217,9 @@ namespace SilkySouls2.Properties {
         /// <summary>
         ///   Looks up a localized string similar to 2650,Things Betwixt,Fire Keeper&apos;s Dwelling
         ///4650,Majula,Far Fire
+        ///10670,Forest of Fallen Giants,Crestfallen&apos;s Retreat
         ///10655,Forest of Fallen Giants,Cardinal Tower
         ///10660,Forest of Fallen Giants,Soldier&apos;s Rest
-        ///10670,Forest of Fallen Giants,Crestfallen&apos;s Retreat
         ///10675,Forest of Fallen Giants,The Place Unbeknownst
         ///31650,Heide&apos;s Tower of Flame,Tower of Flame
         ///31655,Heide&apos;s Tower of Flame,Heide&apos;s Ruin

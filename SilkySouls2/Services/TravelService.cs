@@ -50,7 +50,7 @@ namespace SilkySouls2.Services
             
             _memoryIo.WriteBytes(codeLoc, warpBytes);
             _memoryIo.RunThread(codeLoc);
-
+            
             if (location.HasCoordinates) PerformCoordWrite(location);
         }
 
@@ -58,42 +58,66 @@ namespace SilkySouls2.Services
         {
             var hook = Hooks.WarpCoordWrite;
             var coordsLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.BonfireWarp.Coords;
+            var angleLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.BonfireWarp.Angle;
             var code = CodeCaveOffsets.Base + (int)CodeCaveOffsets.BonfireWarp.CoordWrite;
             
-            byte[] allCoordinateBytes = new byte[8 * sizeof(float)];
             
-            for (int i = 0; i < 8; i++)
+            byte[] allCoordinateBytes = new byte[16 * sizeof(float)];
+            
+            for (int i = 0; i < 16; i++)
             {
                 byte[] floatBytes = BitConverter.GetBytes(location.Coordinates[i]);
                 Buffer.BlockCopy(floatBytes, 0, allCoordinateBytes, i * sizeof(float), sizeof(float));
             }
             _memoryIo.WriteBytes(coordsLoc, allCoordinateBytes);
-
+            
+            byte[] angleBytes = new byte[4 * sizeof(float)];
+            
+            for (int i = 0; i < 4; i++)
+            {
+                byte[] floatBytes = BitConverter.GetBytes(location.Angle[i]);
+                Buffer.BlockCopy(floatBytes, 0, angleBytes, i * sizeof(float), sizeof(float));
+            }
+            
+            _memoryIo.WriteBytes(angleLoc, angleBytes);
+            
             var codeBytes = AsmLoader.GetAsmBytes("WarpCoordWrite");
+            AsmHelper.WriteAbsoluteAddresses(codeBytes, new []
+            {
+                (HkpPtrEntity.Base.ToInt64(), 0x8 + 2),
+                (GameManagerImp.Base.ToInt64(), 0x72 + 2)
+            });
+
             AsmHelper.WriteRelativeOffsets(codeBytes, new []
             {
-                (code.ToInt64(), coordsLoc.ToInt64(), 8, 0x0 + 4),
-                (code.ToInt64() + 0x8, coordsLoc.ToInt64() + 0x10, 8, 0x8 + 4)
+                (code.ToInt64() + 0x33, coordsLoc.ToInt64(), 8, 0x33 + 4),
+                (code.ToInt64() + 0x40, coordsLoc.ToInt64() + 0x10, 8, 0x40 + 4),
+                (code.ToInt64() + 0x4D, coordsLoc.ToInt64() + 0x20, 8, 0x4D + 4),
+                (code.ToInt64() + 0x5A, coordsLoc.ToInt64() + 0x30, 8, 0x5A + 4),
+                (code.ToInt64() + 0x6A, angleLoc.ToInt64(), 8, 0x6A + 4)
             });
-            var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(hook, 8, code + 0x2E);
-            Array.Copy(jmpBytes, 0, codeBytes, 0x29 + 1, 4);
+            var bytes = AsmHelper.GetJmpOriginOffsetBytes(hook, 7, code + 0xA3);
+            Array.Copy(bytes, 0, codeBytes, 0x9E + 1, 4);
             _memoryIo.WriteBytes(code, codeBytes);
             
             {
                 int start = Environment.TickCount;
-                while (_memoryIo.IsGameLoaded() && Environment.TickCount - start < 10000)
+                while (!IsLoadingScreen() && Environment.TickCount - start < 10000)
                     Thread.Sleep(50);
             }
-
+            
             _hookManager.InstallHook(code.ToInt64(), hook,
-                new byte[] { 0x48, 0x8B, 0x8C, 0x24, 0x80, 0x00, 0x00, 0x00 });
+                new byte[] { 0x0F, 0x5C, 0xC2, 0x0F, 0x29, 0x47, 0x50 });
             
             {
                 int start = Environment.TickCount;
-                while (!_memoryIo.IsGameLoaded() && Environment.TickCount - start < 10000)
+                while (IsLoadingScreen() && Environment.TickCount - start < 10000)
                     Thread.Sleep(50);
             }
             _hookManager.UninstallHook(code.ToInt64());
         }
+
+        public bool IsLoadingScreen() =>
+            _memoryIo.ReadUInt8((IntPtr)_memoryIo.ReadInt64(GameManagerImp.Base) + GameManagerImp.Offsets.LoadingFlag) == 1;
     }
 }

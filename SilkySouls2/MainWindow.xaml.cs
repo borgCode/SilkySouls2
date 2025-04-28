@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -29,7 +30,7 @@ namespace SilkySouls2
         private readonly EnemyViewModel _enemyViewModel;
 
         // private readonly ItemViewModel _itemViewModel;
-        // private readonly SettingsViewModel _settingsViewModel;
+        private readonly SettingsViewModel _settingsViewModel;
         public MainWindow()
         {
             _memoryIo = new MemoryIo();
@@ -38,49 +39,48 @@ namespace SilkySouls2
             InitializeComponent();
 
 
-            // if (SettingsManager.Default.WindowLeft != 0 || SettingsManager.Default.WindowTop != 0)
-            // {
-            //     Left = SettingsManager.Default.WindowLeft;
-            //     Top = SettingsManager.Default.WindowTop;
-            // }
-            // else WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            //
-            //
+            if (SettingsManager.Default.WindowLeft != 0 || SettingsManager.Default.WindowTop != 0)
+            {
+                Left = SettingsManager.Default.WindowLeft;
+                Top = SettingsManager.Default.WindowTop;
+            }
+            else WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            
+            
             _hookManager = new HookManager(_memoryIo);
             _aobScanner = new AoBScanner(_memoryIo);
             var hotkeyManager = new HotkeyManager(_memoryIo);
-            //
+   
             var playerService = new PlayerService(_memoryIo, _hookManager);
             var travelService = new TravelService(_memoryIo, _hookManager);
             var utilityService = new UtilityService(_memoryIo, _hookManager);
             var enemyService = new EnemyService(_memoryIo, _hookManager);
-            // var cinderService = new CinderService(_memoryIo, _hookManager);
             // var itemService = new ItemService(_memoryIo, _hookManager);
-            // var settingsService = new SettingsService(_memoryIo);
-            //
+            var settingsService = new SettingsService(_memoryIo);
+ 
             _playerViewModel = new PlayerViewModel(playerService, hotkeyManager);
             _travelViewModel = new TravelViewModel(travelService, hotkeyManager);
             _utilityViewModel = new UtilityViewModel(utilityService, hotkeyManager);
             _enemyViewModel = new EnemyViewModel(enemyService, hotkeyManager);
             // _itemViewModel = new ItemViewModel(itemService);
-            // _settingsViewModel = new SettingsViewModel(settingsService, hotkeyManager);
-            //
+            _settingsViewModel = new SettingsViewModel(settingsService, hotkeyManager);
+            
             var playerTab = new PlayerTab(_playerViewModel);
             var travelTab = new TravelTab(_travelViewModel);
             var utilityTab = new UtilityTab(_utilityViewModel);
             var enemyTab = new EnemyTab(_enemyViewModel);
             // var itemTab = new ItemTab(_itemViewModel);
-            // var settingsTab = new SettingsTab(_settingsViewModel);
-            //
+            var settingsTab = new SettingsTab(_settingsViewModel);
+            
             MainTabControl.Items.Add(new TabItem { Header = "Player", Content = playerTab });
             MainTabControl.Items.Add(new TabItem { Header = "Travel", Content = travelTab });
             MainTabControl.Items.Add(new TabItem { Header = "Utility", Content = utilityTab });
             MainTabControl.Items.Add(new TabItem { Header = "Enemies", Content = enemyTab });
             // MainTabControl.Items.Add(new TabItem { Header = "Items", Content = itemTab });
-            // MainTabControl.Items.Add(new TabItem { Header = "Settings", Content = settingsTab });
-            //
-            // _settingsViewModel.ApplyStartUpOptions();
-            // Closing += MainWindow_Closing;
+            MainTabControl.Items.Add(new TabItem { Header = "Settings", Content = settingsTab });
+            
+            _settingsViewModel.ApplyStartUpOptions();
+            Closing += MainWindow_Closing;
 
             _gameLoadedTimer = new DispatcherTimer
             {
@@ -133,6 +133,7 @@ namespace SilkySouls2
                     _memoryIo.AllocCodeCave();
                     Console.WriteLine($"Code cave: 0x{CodeCaveOffsets.Base.ToInt64():X}");
                     _hasAllocatedMemory = true;
+                    _memoryIo.WriteDamageControlCode();
                 }
                 
                 if (_memoryIo.IsGameLoaded())
@@ -200,5 +201,13 @@ namespace SilkySouls2
 
         private void MinimizeButton_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
         private void CloseButton_Click(object sender, RoutedEventArgs e) => Close();
+        
+        private void MainWindow_Closing(object sender, CancelEventArgs e)
+        {
+      
+            SettingsManager.Default.WindowLeft = Left;
+            SettingsManager.Default.WindowTop = Top;
+            SettingsManager.Default.Save();
+        }
     }
 }

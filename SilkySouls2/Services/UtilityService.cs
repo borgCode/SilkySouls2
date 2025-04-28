@@ -1,4 +1,5 @@
-﻿using SilkySouls2.Memory;
+﻿using System.Threading.Tasks;
+using SilkySouls2.Memory;
 using SilkySouls2.Utilities;
 using static SilkySouls2.Memory.Offsets;
 
@@ -68,6 +69,16 @@ namespace SilkySouls2.Services
             {
                 SetEventOff(gameId);
             }
+        }
+
+        public async Task ForceSave()
+        {
+            var forceSavePtr = Patches.ForceSave;
+            _memoryIo.WriteByte(forceSavePtr, 0x75);
+            _memoryIo.WriteByte(forceSavePtr + 0x8, 0xEB);
+            await Task.Delay(10);
+            _memoryIo.WriteByte(forceSavePtr, 0x74);
+            _memoryIo.WriteByte(forceSavePtr + 0x8, 0x76);
         }
     }
 }

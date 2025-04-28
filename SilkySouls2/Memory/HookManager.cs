@@ -22,6 +22,9 @@ namespace SilkySouls2.Memory
         }
 
 
+        public bool IsHookInstalled(long key) =>  _hookRegistry.ContainsKey(key);
+   
+        
         public long InstallHook(long codeLoc, long origin, byte[] originalBytes)
         {
             byte[] hookBytes = GetHookBytes(originalBytes.Length, codeLoc, origin);

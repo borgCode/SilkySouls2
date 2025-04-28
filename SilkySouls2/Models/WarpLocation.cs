@@ -6,7 +6,8 @@
         public string MainArea { get; set; }
         public string LocationName { get; set; }
         public float[] Coordinates { get; set; }
+        public float[] Angle { get; set; }
 
-        public bool HasCoordinates => Coordinates != null && Coordinates.Length == 8;
+        public bool HasCoordinates => Coordinates != null && Coordinates.Length == 16;
     }
 }

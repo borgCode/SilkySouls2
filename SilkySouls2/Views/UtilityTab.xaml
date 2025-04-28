@@ -128,10 +128,10 @@
                                       IsChecked="{Binding Is100DropEnabled}"
                                       VerticalAlignment="Center"
                                       Margin="0,0,20,0" />
-                            <Button Content="Break Objects"
-                          
+                            <Button Content="Force Save"
                                     IsEnabled="{Binding AreButtonsEnabled}"
                                     Padding="5,3"
+                                    Click="ForceSave_Click"
                                     Margin="0,0,20,0" />
                             <Button Content="Restore Objects"
                          

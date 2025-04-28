@@ -14,17 +14,26 @@ namespace SilkySouls2.Memory
             SetAreaVarCode = 0x40
         }
 
-        public const int NoDamagePlayer = 0x70;
-        public const int OneShot = 0xA0;
-        public const int DealNoDamage = 0xD0;
-
+        public enum DamageControl
+        {
+            PlayerNoDamageFlag = 0x70,
+            OneShotFlag = 0x71,
+            DealNoDamageFlag = 0x72,
+            FreezeTargetHpFlag = 0x73,
+            DamageControlCode = 0x80
+        }
+        
         public enum BonfireWarp
         {
             EmptySpace = 0x110,
             BonfireId = 0x190,
             WarpCode = 0x1A0,
-            Coords = 0x1E0,
-            CoordWrite = 0x200 
+            Coords = 0x1F0,
+            Angle = 0x230,
+            CoordWrite = 0x240,
         }
+        
+        public const int LockedTargetPtr = 0x300;
+        public const int SaveLockedTarget = 0x310;
     }
 }

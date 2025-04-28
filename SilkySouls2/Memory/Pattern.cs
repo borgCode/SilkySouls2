@@ -27,6 +27,13 @@ namespace SilkySouls2.Memory
             Mov64
         );
 
+        public static readonly Pattern HkpPtrEntity = new Pattern(
+            new byte[] { 0x48, 0x8B, 0x05, 0x00, 0x00, 0x00, 0x00, 0x83, 0x78, 0x10 },
+            "xxx????xxx",
+            0,
+            Mov64
+        );
+
 
         // Hooks
 
@@ -36,14 +43,14 @@ namespace SilkySouls2.Memory
             0x6,
             None
         );
-        
+
 
         public static readonly Pattern WarpCoordWrite = new Pattern(
-            new byte[] { 0x66, 0x0F, 0x7F, 0x3B, 0x0F },
-            "xxxxx",
-            0x19,
+            new byte[] { 0x0F, 0x5C, 0xC2, 0x0F, 0x29, 0x47, 0x50 },
+            "xxxxxxx",
+            0,
             None);
-        
+
         public static readonly Pattern SetAreaVariable = new Pattern(
             new byte[] { 0x0F, 0x84, 0xC8, 0xB8 },
             "xxxx",
@@ -57,11 +64,17 @@ namespace SilkySouls2.Memory
             0,
             None
         );
-        
-        
-        
+
+        public static readonly Pattern LockedTarget = new Pattern(
+            new byte[] { 0x48, 0x89, 0xBB, 0xC0, 0x00, 0x00, 0x00, 0xEB },
+            "xxxxxxxx",
+            0,
+            None
+        );
+
+
         //Funcs
-        
+
         public static readonly Pattern WarpPrep = new Pattern(
             new byte[] { 0x48, 0x8D, 0x4C, 0x24, 0x78, 0x0F, 0xB7 },
             "xxxxxxx",
@@ -84,5 +97,20 @@ namespace SilkySouls2.Memory
         );
 
 
+        // Patches
+
+        public static readonly Pattern InfiniteStam = new Pattern(
+            new byte[] { 0x0F, 0x83, 0x26, 0x01, 0x00, 0x00, 0x48, 0x8B },
+            "xxxxxxxx",
+            0,
+            None
+        );
+
+        public static readonly Pattern ForceSave = new Pattern(
+            new byte[] { 0x74, 0x5A, 0x8B, 0x4B },
+            "xxxx",
+            0,
+            None
+        );
     }
 }

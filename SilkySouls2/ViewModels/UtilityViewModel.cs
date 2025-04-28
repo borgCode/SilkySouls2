@@ -25,7 +25,11 @@ namespace SilkySouls2.ViewModels
 
         private void RegisterHotkeys()
         {
-           
+            _hotkeyManager.RegisterAction("ForceSave", () =>
+            {
+                if (!AreButtonsEnabled) return;
+                _ = _utilityService.ForceSave();
+            });
         }
         
         
@@ -85,5 +89,7 @@ namespace SilkySouls2.ViewModels
             // CameraFov = _utilityService.GetCameraFov();
             AreButtonsEnabled = true;
         }
+
+        public void ForceSave() => _utilityService.ForceSave();
     }
 }

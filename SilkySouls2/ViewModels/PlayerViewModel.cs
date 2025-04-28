@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Threading;
-using SilkySouls2.Memory;
 using SilkySouls2.Models;
 using SilkySouls2.Services;
 using SilkySouls2.Utilities;
+using static SilkySouls2.Memory.Offsets;
 
 namespace SilkySouls2.ViewModels
 {
@@ -44,7 +46,7 @@ namespace SilkySouls2.ViewModels
         private int _dexterity;
         private int _intelligence;
         private int _faith;
-        private int _luck;
+        private int _adp;
         private int _vitality;
         private int _soulLevel;
         private int _souls;
@@ -68,7 +70,7 @@ namespace SilkySouls2.ViewModels
             _playerService = playerService;
             _hotkeyManager = hotkeyManager;
 
-            AreOptionsEnabled = true; // Change this later
+
             // RegisterHotkeys();
 
             _timer = new DispatcherTimer
@@ -82,18 +84,16 @@ namespace SilkySouls2.ViewModels
                 CurrentHp = _playerService.GetHp();
                 CurrentMaxHp = _playerService.GetMaxHp();
                 // Souls = _playerService.GetPlayerStat(Offsets.GameManagerImp.PlayerCtrlOffsets.Stats.Souls);
-                // PlayerSpeed = _playerService.GetPlayerSpeed();
-                // int newSoulLevel = _playerService.GetPlayerStat(Offsets.GameManagerImp.PlayerCtrlOffsets.Stats.SoulLevel);
+                PlayerSpeed = _playerService.GetPlayerSpeed();
+                int newSoulLevel = _playerService.GetSoulLevel();
                 // _coords = _playerService.GetCoords();
                 // PosX = _coords.x;
                 // PosY = _coords.y;
                 // PosZ = _coords.z;
-                // if (_currentSoulLevel != newSoulLevel)
-                // {
-                //     SoulLevel = newSoulLevel;
-                //     _currentSoulLevel = newSoulLevel;
-                //     LoadStats();
-                // }
+                if (_currentSoulLevel == newSoulLevel) return;
+                SoulLevel = newSoulLevel;
+                _currentSoulLevel = newSoulLevel;
+                LoadStats();
             };
             _timer.Start();
         }
@@ -112,24 +112,25 @@ namespace SilkySouls2.ViewModels
         //     _hotkeyManager.RegisterAction("IncreasePlayerSpeed", () => SetSpeed(Math.Min(10, PlayerSpeed + 0.25f)));
         //     _hotkeyManager.RegisterAction("DecreasePlayerSpeed", () => SetSpeed(Math.Max(0, PlayerSpeed - 0.25f)));
         // }
-        //
-        // private void LoadStats()
-        // {
-        //     Vigor = _playerService.GetPlayerStat(Offsets.GameManagerImp.PlayerCtrlOffsets.Stats.Vigor);
-        //     Attunement = _playerService.GetPlayerStat(Offsets.GameManagerImp.PlayerCtrlOffsets.Stats.Attunement);
-        //     Endurance = _playerService.GetPlayerStat(Offsets.GameManagerImp.PlayerCtrlOffsets.Stats.Endurance);
-        //     Vitality = _playerService.GetPlayerStat(Offsets.GameManagerImp.PlayerCtrlOffsets.Stats.Vitality);
-        //     Strength = _playerService.GetPlayerStat(Offsets.GameManagerImp.PlayerCtrlOffsets.Stats.Strength);
-        //     Dexterity = _playerService.GetPlayerStat(Offsets.GameManagerImp.PlayerCtrlOffsets.Stats.Dexterity);
-        //     Intelligence = _playerService.GetPlayerStat(Offsets.GameManagerImp.PlayerCtrlOffsets.Stats.Intelligence);
-        //     Faith = _playerService.GetPlayerStat(Offsets.GameManagerImp.PlayerCtrlOffsets.Stats.Faith);
-        //     Luck = _playerService.GetPlayerStat(Offsets.GameManagerImp.PlayerCtrlOffsets.Stats.Luck);
-        //     SoulLevel = _playerService.GetPlayerStat(Offsets.GameManagerImp.PlayerCtrlOffsets.Stats.SoulLevel);
-        //     Souls = _playerService.GetPlayerStat(Offsets.GameManagerImp.PlayerCtrlOffsets.Stats.Souls);
-        //     NewGame = _playerService.GetNewGame();
-        //     PlayerSpeed = _playerService.GetPlayerSpeed();
-        // }
-        //
+
+        private void LoadStats()
+        {
+            Vigor = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Vig);
+            Endurance = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.End);
+            Vitality = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Vit);
+            Attunement = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Atn);
+            Strength = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Str);
+            Dexterity = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Dex);
+            Adp = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Adp);
+            Intelligence = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Int);
+            Faith = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Fth);
+            SoulLevel = _playerService.GetSoulLevel();
+            // Souls = _playerService.GetPlayerStat(Offsets.GameManagerImp.PlayerCtrlOffsets.Stats.Souls);
+            // NewGame = _playerService.GetNewGame();
+            // PlayerSpeed = _playerService.GetPlayerSpeed();
+            UpdateAgilityAndIFrames();
+        }
+
 
         public void PauseUpdates()
         {
@@ -262,7 +263,7 @@ namespace SilkySouls2.ViewModels
                 }
             }
         }
-        
+
         public bool IsNoDamageEnabled
         {
             get => _isNoDamageEnabled;
@@ -275,17 +276,17 @@ namespace SilkySouls2.ViewModels
             }
         }
 
-        // public bool IsInfiniteStaminaEnabled
-        // {
-        //     get => _isInfiniteStaminaEnabled;
-        //     set
-        //     {
-        //         if (SetProperty(ref _isInfiniteStaminaEnabled, value))
-        //         {
-        //             _playerService.ToggleDebugFlag(DebugFlags.InfiniteStam, _isInfiniteStaminaEnabled ? 1 : 0);
-        //         }
-        //     }
-        // }
+        public bool IsInfiniteStaminaEnabled
+        {
+            get => _isInfiniteStaminaEnabled;
+            set
+            {
+                if (SetProperty(ref _isInfiniteStaminaEnabled, value))
+                {
+                    _playerService.ToggleInfiniteStamina(_isInfiniteStaminaEnabled);
+                }
+            }
+        }
         //
         // public bool IsNoGoodsConsumeEnabled
         // {
@@ -324,7 +325,7 @@ namespace SilkySouls2.ViewModels
         //     }
         // }
         //
-        
+
         public bool IsDealNoDamageEnabled
         {
             get => _isDealNoDamageEnabled;
@@ -336,10 +337,11 @@ namespace SilkySouls2.ViewModels
                     _playerService.ToggleOneShot(false);
                     IsOneShotEnabled = false;
                 }
+
                 _playerService.ToggleDealNoDamage(_isDealNoDamageEnabled);
             }
         }
-        
+
         public bool IsOneShotEnabled
         {
             get => _isOneShotEnabled;
@@ -351,9 +353,74 @@ namespace SilkySouls2.ViewModels
                     _playerService.ToggleDealNoDamage(false);
                     IsDealNoDamageEnabled = false;
                 }
+
                 _playerService.ToggleOneShot(_isOneShotEnabled);
             }
         }
+
+        public void SavePos(int index)
+        {
+            // var state = index == 0 ? _saveState1 : _saveState2;
+            // if (index == 0) IsPos1Saved = true;
+            // else IsPos2Saved = true;
+            //
+            // if (IsStateIncluded)
+            // {
+            //     state.Hp = CurrentHp;
+            //     state.Mp = _playerService.GetMp();
+            //     state.Sp = _playerService.GetSp();
+            // }
+            //
+            // _playerService.SavePos(index);
+        }
+
+        public void RestorePos(int index)
+        {
+            // _playerService.RestorePos(index);
+            // if (!IsStateIncluded) return;
+            //
+            // var state = index == 0 ? _saveState1 : _saveState2;
+            // _playerService.SetHp(state.Hp);
+            // _playerService.SetMp(state.Mp);
+            // _playerService.SetSp(state.Sp);
+        }
+
+        public float PosX
+        {
+            get => _posX;
+            set => SetProperty(ref _posX, value);
+        }
+
+        public float PosY
+        {
+            get => _posY;
+            set => SetProperty(ref _posY, value);
+        }
+
+        public float PosZ
+        {
+            get => _posZ;
+            set => SetProperty(ref _posZ, value);
+        }
+
+        public void SetPosX(float value)
+        {
+            // _playerService.SetAxis(WorldChrMan.ChrPhysicsModule.X, value);
+            // PosX = value;
+        }
+
+        public void SetPosY(float value)
+        {
+            // _playerService.SetAxis(WorldChrMan.ChrPhysicsModule.Y, value);
+            // PosY = value;
+        }
+
+        public void SetPosZ(float value)
+        {
+            // _playerService.SetAxis(WorldChrMan.ChrPhysicsModule.Z, value);
+            // PosZ = value;
+        }
+
         //
         // public bool IsInvisibleEnabled
         // {
@@ -423,14 +490,12 @@ namespace SilkySouls2.ViewModels
         {
             if (IsOneShotEnabled) _playerService.ToggleOneShot(true);
             if (IsDealNoDamageEnabled) _playerService.ToggleDealNoDamage(true);
-            // if (IsInfiniteStaminaEnabled)
-            //     _playerService.ToggleDebugFlag(DebugFlags.InfiniteStam, 1);
+            if (IsInfiniteStaminaEnabled) _playerService.ToggleInfiniteStamina(true);
+
             // if (IsNoGoodsConsumeEnabled)
             //     _playerService.ToggleNoGoodsConsume(true);
             // if (_isInfiniteFpEnabled)
             //     _playerService.ToggleDebugFlag(DebugFlags.InfiniteFp, 1);
-            // if (IsOneShotEnabled)
-            //     _playerService.ToggleDebugFlag(DebugFlags.OneShot, 1);
             // if (IsInvisibleEnabled)
             //     _playerService.ToggleDebugFlag(DebugFlags.Invisible, 1);
             // if (IsSilentEnabled)
@@ -444,75 +509,69 @@ namespace SilkySouls2.ViewModels
             // if (IsNoRollEnabled)
             //     _playerService.ToggleNoRoll(true);
             AreOptionsEnabled = true;
-            // LoadStats();
+            LoadStats();
             _timer.Start();
         }
 
-        // public void DisableFeatures()
-        // {
-        //     AreOptionsEnabled = false;
-        //     _timer.Stop();
-        // }
-        //
-        // public int Vigor
-        // {
-        //     get => _vigor;
-        //     set => SetProperty(ref _vigor, value);
-        // }
-        //
-        // public int Attunement
-        // {
-        //     get => _attunement;
-        //     set => SetProperty(ref _attunement, value);
-        // }
-        //
-        // public int Endurance
-        // {
-        //     get => _endurance;
-        //     set => SetProperty(ref _endurance, value);
-        // }
-        //
-        // public int Strength
-        // {
-        //     get => _strength;
-        //     set => SetProperty(ref _strength, value);
-        // }
-        //
-        // public int Dexterity
-        // {
-        //     get => _dexterity;
-        //     set => SetProperty(ref _dexterity, value);
-        // }
-        //
-        // public int Intelligence
-        // {
-        //     get => _intelligence;
-        //     set => SetProperty(ref _intelligence, value);
-        // }
-        //
-        // public int Faith
-        // {
-        //     get => _faith;
-        //     set => SetProperty(ref _faith, value);
-        // }
-        //
-        // public int Luck
-        // {
-        //     get => _luck;
-        //     set => SetProperty(ref _luck, value);
-        // }
-        //
-        // public int Vitality
-        // {
-        //     get => _vitality;
-        //     set => SetProperty(ref _vitality, value);
-        // }
-        //
-        // public int SoulLevel
-        // {
-        //     get => _soulLevel;
-        //     private set => SetProperty(ref _soulLevel, value);
-        // }
+        public int Vigor
+        {
+            get => _vigor;
+            set => SetProperty(ref _vigor, value);
+        }
+
+        public int Attunement
+        {
+            get => _attunement;
+            set => SetProperty(ref _attunement, value);
+        }
+
+        public int Endurance
+        {
+            get => _endurance;
+            set => SetProperty(ref _endurance, value);
+        }
+
+        public int Strength
+        {
+            get => _strength;
+            set => SetProperty(ref _strength, value);
+        }
+
+        public int Dexterity
+        {
+            get => _dexterity;
+            set => SetProperty(ref _dexterity, value);
+        }
+
+        public int Intelligence
+        {
+            get => _intelligence;
+            set => SetProperty(ref _intelligence, value);
+        }
+
+        public int Faith
+        {
+            get => _faith;
+            set => SetProperty(ref _faith, value);
+        }
+
+        public int Adp
+        {
+            get => _adp;
+            set => SetProperty(ref _adp, value);
+        }
+
+        public int Vitality
+        {
+            get => _vitality;
+            set => SetProperty(ref _vitality, value);
+        }
+
+        public int SoulLevel
+        {
+            get => _soulLevel;
+            private set => SetProperty(ref _soulLevel, value);
+        }
         //
         // public void SetStat(string statName, int value)
         // {
@@ -537,41 +596,125 @@ namespace SilkySouls2.ViewModels
         //         }
         //     }
         // }
-        //
-        // public float PlayerSpeed
-        // {
-        //     get => _playerSpeed;
-        //     set
-        //     {
-        //         if (SetProperty(ref _playerSpeed, value))
-        //         {
-        //             _playerService.SetPlayerSpeed(value);
-        //         }
-        //     }
-        // }
-        //
-        // public void SetSpeed(float value) => PlayerSpeed = value;
-        //
-        // private void ToggleSpeed()
-        // {
-        //     if (!AreOptionsEnabled) return;
-        //
-        //     if (!IsApproximately(PlayerSpeed, DefaultSpeed))
-        //     {
-        //         _playerDesiredSpeed = PlayerSpeed;
-        //         SetSpeed(DefaultSpeed);
-        //     }
-        //     else if (_playerDesiredSpeed >= 0)
-        //     {
-        //         SetSpeed(_playerDesiredSpeed);
-        //     }
-        // }
-        //
-        // private bool IsApproximately(float a, float b)
-        // {
-        //     return Math.Abs(a - b) < Epsilon;
-        // }
-        //
+
+        private int _agility;
+
+        public int Agility
+        {
+            get => _agility;
+            private set => SetProperty(ref _agility, value);
+        }
+
+        private string _rollIFrames;
+
+        public string RollIFrames
+        {
+            get => _rollIFrames;
+            private set => SetProperty(ref _rollIFrames, value);
+        }
+
+        private string _backstepIFrames;
+
+        public string BackstepIFrames
+        {
+            get => _backstepIFrames;
+            private set => SetProperty(ref _backstepIFrames, value);
+        }
+
+        private string _nextBreakpoint;
+
+        public string NextBreakpoint
+        {
+            get => _nextBreakpoint;
+            private set => SetProperty(ref _nextBreakpoint, value);
+        }
+
+
+        private static readonly Dictionary<int, int> RollFrames = new Dictionary<int, int>
+        {
+            { 85, 5 }, { 86, 8 }, { 88, 9 },
+            { 92, 10 }, { 96, 11 }, { 99, 12 },
+            { 105, 13 }, { 111, 14 }, { 114, 15 }, { 116, 16 }
+        };
+
+        private static readonly Dictionary<int, int> BackstepFrames = new Dictionary<int, int>
+        {
+            { 85, 3 }, { 87, 5 }, { 91, 6 },
+            { 96, 7 }, { 99, 8 }, { 105, 9 }
+        };
+
+        private void UpdateAgilityAndIFrames()
+        {
+            int baseValue = Attunement + (3 * Adp);
+            int calculatedAgility;
+    
+            if (Attunement == 99 && Adp == 99)
+                calculatedAgility = 120;
+            else if (baseValue <= 120)
+                calculatedAgility = 80 + baseValue / 4;
+            else
+                calculatedAgility = 110 + (baseValue - 120) / 28;
+    
+            Agility = Math.Max(85, calculatedAgility);
+    
+            int currentRoll = 0;
+            int currentBackstep = 0;
+    
+            foreach (var entry in RollFrames.OrderBy(e => e.Key))
+                if (Agility >= entry.Key) currentRoll = entry.Value;
+    
+            foreach (var entry in BackstepFrames.OrderBy(e => e.Key))
+                if (Agility >= entry.Key) currentBackstep = entry.Value;
+    
+            RollIFrames = $"{currentRoll} iframes";
+            BackstepIFrames = $"{currentBackstep} iframes";
+    
+            int nextRoll = RollFrames.Keys.OrderBy(k => k).FirstOrDefault(k => k > Agility);
+    
+            if (nextRoll == 0)
+            {
+                NextBreakpoint = "Maximum roll iFrames reached";
+                return;
+            }
+    
+            NextBreakpoint = $"Next iframe at {nextRoll} agility";
+        }
+
+        
+        public float PlayerSpeed
+        {
+            get => _playerSpeed;
+            set
+            {
+                if (SetProperty(ref _playerSpeed, value))
+                {
+                    _playerService.SetPlayerSpeed(value);
+                }
+            }
+        }
+        
+        public void SetSpeed(float value) => PlayerSpeed = value;
+        
+        private void ToggleSpeed()
+        {
+            if (!AreOptionsEnabled) return;
+        
+            if (!IsApproximately(PlayerSpeed, DefaultSpeed))
+            {
+                _playerDesiredSpeed = PlayerSpeed;
+                SetSpeed(DefaultSpeed);
+            }
+            else if (_playerDesiredSpeed >= 0)
+            {
+                SetSpeed(_playerDesiredSpeed);
+            }
+        }
+        
+        private bool IsApproximately(float a, float b)
+        {
+            return Math.Abs(a - b) < Epsilon;
+        }
+        
         // public void TrySetNgPref()
         // {
         //     if (!IsAutoSetNewGameSevenEnabled) return;
@@ -593,6 +736,16 @@ namespace SilkySouls2.ViewModels
         {
             AreOptionsEnabled = false;
             _timer.Stop();
+        }
+
+        public void SetStat(string statName, int upDownValue)
+        {
+            // throw new NotImplementedException();
+        }
+
+        public void GiveSouls()
+        {
+            // throw new NotImplementedException();
         }
     }
 }

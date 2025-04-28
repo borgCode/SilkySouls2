@@ -20,6 +20,8 @@ namespace SilkySouls2.Memory
                 public const int StateActManager = 0xA0;
                 public const int GameDataManager = 0xA8;
                 public const int PlayerCtrl = 0xD0;
+                public const int MenuKick = 0x24B1;
+                public const int LoadingFlag = 0x24BC;
             }
             
             public static class CameraManagerOffsets
@@ -48,21 +50,43 @@ namespace SilkySouls2.Memory
             public static class PlayerCtrlOffsets
             {
 
+                public const int ChrParamPtr = 0x38;
                 public const int PlayerActionCtrlPtr = 0xE0;
+                public const int Coords = 0x90;
                 public const int ChrPhysicsCtrlPtr = 0x100;
                 public const int Hp = 0x168;
                 public const int MinHp = 0x16C;
                 public const int MaxHp = 0x170;
                 public const int Stamina = 0x1AC;
                 public const int MaxStamina = 0x1B4;
+                public const int PoiseCurrent = 0x1B8;
+                public const int PoiseMax = 0x1C0;
+                public const int PoisonCurrent = 0x1C4;
+                public const int PoisonMax = 0x1CC;
+                public const int BleedCurrent = 0x1D0;
+                public const int BleedMax = 0x1D8;
+                public const int ToxicCurrent = 0x200;
+                public const int ToxicMax = 0x208;
+                public const int Speed = 0x2A8;
+                
                 public const int StatsPtr = 0x490;
 
-                public static class PlayerActionCtrl
+                public static class ChrParam
                 {
-                    public const int PlayerDamageActionCtrl = 0x200;
+                    public const int PoisonToxicResist = 0xB0;
+                    public const int BleedResist = 0xB4;
                 }
-                
-                
+
+                public static class ChrActionCtrl
+                {
+                    public const int BossAttackCtrlPtr = 0x170;
+                }
+
+                public static class BossAttackCtrl
+                {
+                    public const int LastAttackPtr = 0x10;
+                    public const int LastAttack = 0xEC;
+                }
                 
                 public static class Stats
                 {
@@ -75,14 +99,26 @@ namespace SilkySouls2.Memory
                     public const int Int = 0x14;
                     public const int Fth = 0x16;
                     public const int Adp = 0x18;
+                    public const int SoulLevel = 0xD0;
                 }
             }
         }
 
+        public static class HkpPtrEntity
+        {
+            public static IntPtr Base;
+            public const int Ptr1 = 0x58;
+            public const int Ptr2 = 0x1F8;
+            public const int Ptr3 = 0x18;
+            public const int Ptr4 = 0x8;
+            public const int Offset = 0x150;
+        }
         
 
         public static class Patches
         {
+            public static IntPtr InfiniteStam;
+            public static IntPtr ForceSave;
         }
         
         
@@ -93,6 +129,7 @@ namespace SilkySouls2.Memory
             public static long HpWrite;
             public static long OneShot; // Also Deal no damage 
             public static long WarpCoordWrite;
+            public static long LockedTarget;
 
         }
 

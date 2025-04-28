@@ -33,6 +33,7 @@ namespace SilkySouls2.Memory
 
             //
             Offsets.GameManagerImp.Base = FindAddressByPattern(Patterns.GameManagerImp);
+            Offsets.HkpPtrEntity.Base = FindAddressByPattern(Patterns.HkpPtrEntity);
             // Offsets.GameMan.Base = FindAddressByPattern(Patterns.GameMan);
             // Offsets.LuaEventMan.Base = FindAddressByPattern(Patterns.LuaEventMan);
             // Offsets.SoloParamRepo.Base = FindAddressByPattern(Patterns.SoloParamRepo);
@@ -52,7 +53,9 @@ namespace SilkySouls2.Memory
             // Offsets.WorldObjMan.Base = FindAddressByPattern(Patterns.WorldObjManImpl);
             //
             //
-            // TryPatternWithFallback("NoLogo", Patterns.NoLogo, addr => Offsets.Patches.NoLogo = addr, saved);
+            TryPatternWithFallback("InfiniteStam", Patterns.InfiniteStam, addr => Offsets.Patches.InfiniteStam = addr, saved);
+            TryPatternWithFallback("ForceSave", Patterns.ForceSave,
+                addr => Offsets.Patches.ForceSave = addr, saved);
             // TryPatternWithFallback("RepeatAct", Patterns.RepeatAct, addr => Offsets.Patches.RepeatAct = addr, saved);
             // TryPatternWithFallback("GameSpeed", Patterns.GameSpeed, addr => Offsets.Patches.GameSpeed = addr, saved);
             // TryPatternWithFallback("InfiniteDurability", Patterns.InfiniteDurability,
@@ -82,10 +85,8 @@ namespace SilkySouls2.Memory
             
             TryPatternWithFallback("WarpCoordWrite", Patterns.WarpCoordWrite,
                 addr => Offsets.Hooks.WarpCoordWrite = addr.ToInt64(), saved);
-            // TryPatternWithFallback("NoClipKeyboard", Patterns.NoClipKeyboard,
-            //     addr => Offsets.Hooks.NoClipKeyboard = addr.ToInt64(), saved);
-            // TryPatternWithFallback("NoClipUpdateCoords", Patterns.NoClipUpdateCoords,
-            //     addr => Offsets.Hooks.NoClipUpdateCoords = addr.ToInt64(), saved);
+            TryPatternWithFallback("LockedTarget", Patterns.LockedTarget,
+                addr => Offsets.Hooks.LockedTarget = addr.ToInt64(), saved);
             // TryPatternWithFallback("CameraUpLimit", Patterns.CameraUpLimit,
             //     addr => Offsets.Hooks.CameraUpLimit = addr.ToInt64(), saved);
             // TryPatternWithFallback("ItemLotBase", Patterns.ItemLotBase,
@@ -132,7 +133,7 @@ namespace SilkySouls2.Memory
 
 #if DEBUG
             Console.WriteLine($"GameManagerImp.Base: 0x{Offsets.GameManagerImp.Base.ToInt64():X}");
-            // Console.WriteLine($"GameMan.Base: 0x{Offsets.GameMan.Base.ToInt64():X}");
+            Console.WriteLine($"HkpPtrEntity.Base: 0x{Offsets.HkpPtrEntity.Base.ToInt64():X}");
             // Console.WriteLine($"LuaEventMan.Base: 0x{Offsets.LuaEventMan.Base.ToInt64():X}");
             // Console.WriteLine($"EventFlagMan.Base: 0x{Offsets.EventFlagMan.Base.ToInt64():X}");
             // Console.WriteLine($"SoloParamRepo.Base: 0x{Offsets.SoloParamRepo.Base.ToInt64():X}");
@@ -150,7 +151,8 @@ namespace SilkySouls2.Memory
             // Console.WriteLine($"SprjFlipper.Base: 0x{Offsets.SprjFlipper.Base.ToInt64():X}");
             // Console.WriteLine($"WorldObjMan.Base: 0x{Offsets.WorldObjMan.Base.ToInt64():X}");
             //
-            // Console.WriteLine($"Patches.NoLogo: 0x{Offsets.Patches.NoLogo.ToInt64():X}");
+            Console.WriteLine($"Patches.InfiniteStam: 0x{Offsets.Patches.InfiniteStam.ToInt64():X}");
+            Console.WriteLine($"Patches.ForceSave: 0x{Offsets.Patches.ForceSave.ToInt64():X}");
             // Console.WriteLine($"Patches.RepeatAct: 0x{Offsets.Patches.RepeatAct.ToInt64():X}");
             // Console.WriteLine($"Patches.GameSpeed: 0x{Offsets.Patches.GameSpeed.ToInt64():X}");
             // Console.WriteLine($"Patches.InfiniteDurability: 0x{Offsets.Patches.InfiniteDurability.ToInt64():X}");
@@ -166,6 +168,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Hooks.HpWrite: 0x{Offsets.Hooks.HpWrite:X}");
             Console.WriteLine($"Hooks.OneShot: 0x{Offsets.Hooks.OneShot:X}");
             Console.WriteLine($"Hooks.WarpCoordWrite: 0x{Offsets.Hooks.WarpCoordWrite:X}");
+            Console.WriteLine($"Hooks.LockedTarget: 0x{Offsets.Hooks.LockedTarget:X}");
             // Console.WriteLine($"Hooks.AddSubGoal: 0x{Offsets.Hooks.AddSubGoal:X}");
             // Console.WriteLine($"Hooks.InAirTimer: 0x{Offsets.Hooks.InAirTimer:X}");
             // Console.WriteLine($"Hooks.NoClipKeyboard: 0x{Offsets.Hooks.NoClipKeyboard:X}");

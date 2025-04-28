@@ -19,6 +19,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
@@ -53,94 +54,104 @@
                 </StackPanel>
             </Grid>
 
-            <!-- <Border Grid.Row="1" Margin="0,10,0,10" BorderThickness="1" BorderBrush="#333" CornerRadius="3"> -->
-            <!--     <Grid Margin="10"> -->
-            <!--         <Grid.RowDefinitions> -->
-            <!--             <RowDefinition Height="Auto" /> -->
-            <!--             <RowDefinition Height="Auto" /> -->
-            <!--         </Grid.RowDefinitions> -->
-            <!--         <Grid.ColumnDefinitions> -->
-            <!--             <ColumnDefinition Width="200" /> -->
-            <!--             <ColumnDefinition Width="Auto" /> -->
-            <!--         </Grid.ColumnDefinitions> -->
-            <!-- -->
-            <!--         <UniformGrid Grid.Row="0" Grid.Column="0" Rows="1" Columns="2"> -->
-            <!--             <Button Content="Save Pos 1" -->
-            <!--                     Click="SavePos_Click" CommandParameter="0" -->
-            <!--                     Margin="0,0,5,5" -->
-            <!--                     IsEnabled="{Binding AreOptionsEnabled}" /> -->
-            <!-- -->
-            <!--             <Button Content="Restore Pos 1" -->
-            <!--                     Click="RestorePos_Click" CommandParameter="0" -->
-            <!--                     Margin="5,0,0,5"> -->
-            <!--                 <Button.IsEnabled> -->
-            <!--                     <MultiBinding Converter="{StaticResource BooleanAndConverter}"> -->
-            <!--                         <Binding Path="IsPos1Saved" /> -->
-            <!--                         <Binding Path="AreOptionsEnabled" /> -->
-            <!--                     </MultiBinding> -->
-            <!--                 </Button.IsEnabled> -->
-            <!--             </Button> -->
-            <!--         </UniformGrid> -->
-            <!-- -->
-            <!--         <StackPanel Grid.Row="0" Grid.Column="1"  -->
-            <!--                     Orientation="Horizontal"  -->
-            <!--                     VerticalAlignment="Center"  -->
-            <!--                     Margin="10,0,0,5"> -->
-            <!-- -->
-            <!--             <CheckBox Content="Include State" -->
-            <!--                       IsChecked="{Binding IsStateIncluded}" /> -->
-            <!--    -->
-            <!--             <Border Background="#3498db" -->
-            <!--                     CornerRadius="10" -->
-            <!--                     Width="12" -->
-            <!--                     Height="12" -->
-            <!--                     Margin="5,0,0,0" -->
-            <!--                     VerticalAlignment="Center" -->
-            <!--                     ToolTip="Remembers HP/FP/Stamina when saving position" -->
-            <!--                     ToolTipService.InitialShowDelay='100'> -->
-            <!--                 <TextBlock Text="i" -->
-            <!--                            Foreground="White" -->
-            <!--                            HorizontalAlignment="Center" -->
-            <!--                            VerticalAlignment="Center" -->
-            <!--                            FontWeight="Bold" -->
-            <!--                            FontSize="10" /> -->
-            <!--             </Border> -->
-            <!--         </StackPanel> -->
-            <!-- -->
-            <!--         <UniformGrid Grid.Row="1" Grid.Column="0" Rows="1" Columns="2"> -->
-            <!--             <Button Content="Save Pos 2" -->
-            <!--                     Click="SavePos_Click" CommandParameter="1" -->
-            <!--                     Margin="0,5,5,0" -->
-            <!--                     IsEnabled="{Binding AreOptionsEnabled}" /> -->
-            <!-- -->
-            <!--             <Button Content="Restore Pos 2" -->
-            <!--                     Click="RestorePos_Click" CommandParameter="1" -->
-            <!--                     Margin="5,5,0,0"> -->
-            <!--                 <Button.IsEnabled> -->
-            <!--                     <MultiBinding Converter="{StaticResource BooleanAndConverter}"> -->
-            <!--                         <Binding Path="IsPos2Saved" /> -->
-            <!--                         <Binding Path="AreOptionsEnabled" /> -->
-            <!--                     </MultiBinding> -->
-            <!--                 </Button.IsEnabled> -->
-            <!--             </Button> -->
-            <!--         </UniformGrid> -->
-            <!-- -->
-            <!--         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="10,5,0,0" -->
-            <!--                     HorizontalAlignment="Left"> -->
-            <!--             <xctk:DoubleUpDown Width="70" Margin="5,0,0,0" -->
-            <!--                                Padding="0,0,5,0" -->
-            <!--                                Value="{Binding PosX}" FormatString="F1" -->
-            <!--                                IsEnabled="{Binding AreOptionsEnabled}" /> -->
-            <!--             <xctk:DoubleUpDown Width="70" Margin="5,0,5,0" -->
-            <!--                                Padding="0,0,5,0" -->
-            <!--                                Value="{Binding PosY}" FormatString="F1" -->
-            <!--                                IsEnabled="{Binding AreOptionsEnabled}" /> -->
-            <!--             <xctk:DoubleUpDown Width="70" Value="{Binding PosZ}" FormatString="F1" -->
-            <!--                                Padding="0,0,5,0" -->
-            <!--                                IsEnabled="{Binding AreOptionsEnabled}" /> -->
-            <!--         </StackPanel> -->
-            <!--     </Grid> -->
-            <!-- </Border> -->
+            <Border Grid.Row="1" Margin="0,10,0,10" BorderThickness="1" BorderBrush="#333" CornerRadius="3">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <UniformGrid Grid.Row="0" Grid.Column="0" Rows="1" Columns="2">
+                        <Button Content="Save Pos 1"
+                                Click="SavePos_Click" CommandParameter="0"
+                                Margin="0,0,5,5"
+                                IsEnabled="{Binding AreOptionsEnabled}" />
+
+                        <Button Content="Restore Pos 1"
+                                Click="RestorePos_Click" CommandParameter="0"
+                                Margin="5,0,0,5">
+                            <Button.IsEnabled>
+                                <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                    <Binding Path="IsPos1Saved" />
+                                    <Binding Path="AreOptionsEnabled" />
+                                </MultiBinding>
+                            </Button.IsEnabled>
+                        </Button>
+                    </UniformGrid>
+
+                    <StackPanel Grid.Row="0" Grid.Column="1" 
+                                Orientation="Horizontal" 
+                                VerticalAlignment="Center" 
+                                Margin="10,0,0,5">
+    
+                        <CheckBox Content="Include State"
+                                  IsChecked="{Binding IsStateIncluded}" />
+              
+                        <Border Background="#3498db"
+                                CornerRadius="10"
+                                Width="12"
+                                Height="12"
+                                Margin="5,0,0,0"
+                                VerticalAlignment="Center"
+                                ToolTip="Remembers HP/FP/Stamina when saving position"
+                                ToolTipService.InitialShowDelay='100'>
+                            <TextBlock Text="i"
+                                       Foreground="White"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontWeight="Bold"
+                                       FontSize="10" />
+                        </Border>
+                    </StackPanel>
+
+                    <UniformGrid Grid.Row="1" Grid.Column="0" Rows="1" Columns="2">
+                        <Button Content="Save Pos 2"
+                                Click="SavePos_Click" CommandParameter="1"
+                                Margin="0,5,5,0"
+                                IsEnabled="{Binding AreOptionsEnabled}" />
+
+                        <Button Content="Restore Pos 2"
+                                Click="RestorePos_Click" CommandParameter="1"
+                                Margin="5,5,0,0">
+                            <Button.IsEnabled>
+                                <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                    <Binding Path="IsPos2Saved" />
+                                    <Binding Path="AreOptionsEnabled" />
+                                </MultiBinding>
+                            </Button.IsEnabled>
+                        </Button>
+                    </UniformGrid>
+
+                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="10,5,0,0"
+                                HorizontalAlignment="Left">
+                        <xctk:DoubleUpDown x:Name="PosXUpDown" Width="70" Margin="5,0,0,0"
+                                           Padding="0,0,5,0"
+                                           Value="{Binding PosX}" FormatString="F1"
+                                           Loaded="CoordinateUpDown_Loaded"
+                                           LostFocus="PosX_LostFocus" 
+                                           PreviewKeyDown="PosX_PreviewKeyDown"
+                                           IsEnabled="{Binding AreOptionsEnabled}" />
+                        <xctk:DoubleUpDown x:Name="PosYUpDown" Width="70" Margin="5,0,5,0"
+                                           Padding="0,0,5,0"
+                                           Value="{Binding PosY}" FormatString="F1"
+                                           Loaded="CoordinateUpDown_Loaded"
+                                           LostFocus="PosY_LostFocus"
+                                           PreviewKeyDown="PosY_PreviewKeyDown"
+                                           IsEnabled="{Binding AreOptionsEnabled}" />
+                        <xctk:DoubleUpDown x:Name="PosZUpDown" Width="70" Value="{Binding PosZ}" 
+                                           Padding="0,0,5,0"
+                                           FormatString="F1"
+                                           Loaded="CoordinateUpDown_Loaded"
+                                           LostFocus="PosZ_LostFocus"
+                                           PreviewKeyDown="PosZ_PreviewKeyDown"
+                                           IsEnabled="{Binding AreOptionsEnabled}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
 
             <Grid Grid.Row="2" Margin="0,0,0,10">
                 <Grid.ColumnDefinitions>
@@ -191,335 +202,371 @@
                 </StackPanel>
             </Grid>
 
-            <!-- <Grid Grid.Row="4"> -->
-            <!--     <Grid.ColumnDefinitions> -->
-            <!--         <ColumnDefinition Width="*" /> -->
-            <!--         <ColumnDefinition Width="*" /> -->
-            <!--     </Grid.ColumnDefinitions> -->
-            <!--     <StackPanel Grid.Column="0"> -->
-            <!--         <Grid Margin="0,2"> -->
-            <!--             <Grid.ColumnDefinitions> -->
-            <!--                 <ColumnDefinition Width="Auto" /> -->
-            <!--                 <ColumnDefinition Width="*" /> -->
-            <!--             </Grid.ColumnDefinitions> -->
-            <!--             <xctk:IntegerUpDown x:Name="VigorUpDown" -->
-            <!--                                 Value="{Binding Vigor}" -->
-            <!--                                 TextAlignment="Center" -->
-            <!--                                 Width="80" -->
-            <!--                                 Minimum="1" -->
-            <!--                                 Maximum="99" -->
-            <!--                                 Grid.Column="0" -->
-            <!--                                 PreviewKeyDown="StatUpDown_PreviewKeyDown" -->
-            <!--                                 LostFocus="Stat_LostFocus" -->
-            <!--                                 Loaded="StatUpDowns_Loaded" -->
-            <!--                                 IsEnabled="{Binding AreOptionsEnabled}" -->
-            <!--                                 BorderBrush="#3F3F46" -->
-            <!--                                 Tag="Vigor" /> -->
-            <!--             <TextBlock Text="Vigor" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" /> -->
-            <!--         </Grid> -->
-            <!-- -->
-            <!--         <Grid Margin="0,2"> -->
-            <!--             <Grid.ColumnDefinitions> -->
-            <!--                 <ColumnDefinition Width="Auto" /> -->
-            <!--                 <ColumnDefinition Width="*" /> -->
-            <!--             </Grid.ColumnDefinitions> -->
-            <!--             <xctk:IntegerUpDown x:Name="AttunementUpDown" -->
-            <!--                                 Value="{Binding Attunement}" -->
-            <!--                                 TextAlignment="Center" -->
-            <!--                                 Width="80" -->
-            <!--                                 Minimum="1" -->
-            <!--                                 Maximum="99" -->
-            <!--                                 Grid.Column="0" -->
-            <!--                                 PreviewKeyDown="StatUpDown_PreviewKeyDown" -->
-            <!--                                 LostFocus="Stat_LostFocus" -->
-            <!--                                 Loaded="StatUpDowns_Loaded" -->
-            <!--                                 Tag="Attunement" -->
-            <!--                                 IsEnabled="{Binding AreOptionsEnabled}" -->
-            <!--                                 BorderBrush="#3F3F46" /> -->
-            <!--             <TextBlock Text="Attunement" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" /> -->
-            <!--         </Grid> -->
-            <!-- -->
-            <!--         <Grid Margin="0,2"> -->
-            <!--             <Grid.ColumnDefinitions> -->
-            <!--                 <ColumnDefinition Width="Auto" /> -->
-            <!--                 <ColumnDefinition Width="*" /> -->
-            <!--             </Grid.ColumnDefinitions> -->
-            <!--             <xctk:IntegerUpDown x:Name="EnduranceUpDown" -->
-            <!--                                 Value="{Binding Endurance}" -->
-            <!--                                 TextAlignment="Center" -->
-            <!--                                 Width="80" -->
-            <!--                                 Minimum="1" -->
-            <!--                                 Maximum="99" -->
-            <!--                                 Grid.Column="0" -->
-            <!--                                 PreviewKeyDown="StatUpDown_PreviewKeyDown" -->
-            <!--                                 LostFocus="Stat_LostFocus" -->
-            <!--                                 Loaded="StatUpDowns_Loaded" -->
-            <!--                                 Tag="Endurance" -->
-            <!--                                 IsEnabled="{Binding AreOptionsEnabled}" -->
-            <!--                                 BorderBrush="#3F3F46" /> -->
-            <!--             <TextBlock Text="Endurance" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" /> -->
-            <!--         </Grid> -->
-            <!-- -->
-            <!--         <Grid Margin="0,2"> -->
-            <!--             <Grid.ColumnDefinitions> -->
-            <!--                 <ColumnDefinition Width="Auto" /> -->
-            <!--                 <ColumnDefinition Width="*" /> -->
-            <!--             </Grid.ColumnDefinitions> -->
-            <!--             <xctk:IntegerUpDown x:Name="StrengthUpDown" -->
-            <!--                                 Value="{Binding Strength}" -->
-            <!--                                 TextAlignment="Center" -->
-            <!--                                 Width="80" -->
-            <!--                                 Minimum="1" -->
-            <!--                                 Maximum="99" -->
-            <!--                                 Grid.Column="0" -->
-            <!--                                 PreviewKeyDown="StatUpDown_PreviewKeyDown" -->
-            <!--                                 LostFocus="Stat_LostFocus" -->
-            <!--                                 Loaded="StatUpDowns_Loaded" -->
-            <!--                                 Tag="Strength" -->
-            <!--                                 IsEnabled="{Binding AreOptionsEnabled}" -->
-            <!--                                 BorderBrush="#3F3F46" /> -->
-            <!--             <TextBlock Text="Strength" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" /> -->
-            <!--         </Grid> -->
-            <!-- -->
-            <!--         <Grid Margin="0,2"> -->
-            <!--             <Grid.ColumnDefinitions> -->
-            <!--                 <ColumnDefinition Width="Auto" /> -->
-            <!--                 <ColumnDefinition Width="*" /> -->
-            <!--             </Grid.ColumnDefinitions> -->
-            <!--             <xctk:IntegerUpDown x:Name="DexterityUpDown" -->
-            <!--                                 Value="{Binding Dexterity}" -->
-            <!--                                 TextAlignment="Center" -->
-            <!--                                 Width="80" -->
-            <!--                                 Minimum="1" -->
-            <!--                                 Maximum="99" -->
-            <!--                                 Grid.Column="0" -->
-            <!--                                 PreviewKeyDown="StatUpDown_PreviewKeyDown" -->
-            <!--                                 LostFocus="Stat_LostFocus" -->
-            <!--                                 Loaded="StatUpDowns_Loaded" -->
-            <!--                                 Tag="Dexterity" -->
-            <!--                                 IsEnabled="{Binding AreOptionsEnabled}" -->
-            <!--                                 BorderBrush="#3F3F46" /> -->
-            <!--             <TextBlock Text="Dexterity" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" /> -->
-            <!--         </Grid> -->
-            <!--     </StackPanel> -->
-            <!--     <StackPanel Grid.Column="1"> -->
-            <!--         <Grid Margin="0,2"> -->
-            <!--             <Grid.ColumnDefinitions> -->
-            <!--                 <ColumnDefinition Width="Auto" /> -->
-            <!--                 <ColumnDefinition Width="*" /> -->
-            <!--             </Grid.ColumnDefinitions> -->
-            <!--             <xctk:IntegerUpDown x:Name="IntelligenceUpDown" -->
-            <!--                                 Value="{Binding Intelligence}" -->
-            <!--                                 TextAlignment="Center" -->
-            <!--                                 Width="80" -->
-            <!--                                 Minimum="1" -->
-            <!--                                 Maximum="99" -->
-            <!--                                 Grid.Column="0" -->
-            <!--                                 PreviewKeyDown="StatUpDown_PreviewKeyDown" -->
-            <!--                                 LostFocus="Stat_LostFocus" -->
-            <!--                                 Loaded="StatUpDowns_Loaded" -->
-            <!--                                 Tag="Intelligence" -->
-            <!--                                 IsEnabled="{Binding AreOptionsEnabled}" -->
-            <!--                                 BorderBrush="#3F3F46" /> -->
-            <!--             <TextBlock Text="Intelligence" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" /> -->
-            <!--         </Grid> -->
-            <!-- -->
-            <!--         <Grid Margin="0,2"> -->
-            <!--             <Grid.ColumnDefinitions> -->
-            <!--                 <ColumnDefinition Width="Auto" /> -->
-            <!--                 <ColumnDefinition Width="*" /> -->
-            <!--             </Grid.ColumnDefinitions> -->
-            <!--             <xctk:IntegerUpDown x:Name="FaithUpDown" -->
-            <!--                                 Value="{Binding Faith}" -->
-            <!--                                 TextAlignment="Center" -->
-            <!--                                 Width="80" -->
-            <!--                                 Minimum="1" -->
-            <!--                                 Maximum="99" -->
-            <!--                                 Grid.Column="0" -->
-            <!--                                 PreviewKeyDown="StatUpDown_PreviewKeyDown" -->
-            <!--                                 LostFocus="Stat_LostFocus" -->
-            <!--                                 Loaded="StatUpDowns_Loaded" -->
-            <!--                                 Tag="Faith" -->
-            <!--                                 IsEnabled="{Binding AreOptionsEnabled}" -->
-            <!--                                 BorderBrush="#3F3F46" /> -->
-            <!--             <TextBlock Text="Faith" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" /> -->
-            <!--         </Grid> -->
-            <!-- -->
-            <!--         <Grid Margin="0,2"> -->
-            <!--             <Grid.ColumnDefinitions> -->
-            <!--                 <ColumnDefinition Width="Auto" /> -->
-            <!--                 <ColumnDefinition Width="*" /> -->
-            <!--             </Grid.ColumnDefinitions> -->
-            <!--             <xctk:IntegerUpDown x:Name="LuckUpDown" -->
-            <!--                                 Value="{Binding Luck}" -->
-            <!--                                 TextAlignment="Center" -->
-            <!--                                 Width="80" -->
-            <!--                                 Minimum="1" -->
-            <!--                                 Maximum="99" -->
-            <!--                                 Grid.Column="0" -->
-            <!--                                 PreviewKeyDown="StatUpDown_PreviewKeyDown" -->
-            <!--                                 LostFocus="Stat_LostFocus" -->
-            <!--                                 Loaded="StatUpDowns_Loaded" -->
-            <!--                                 Tag="Luck" -->
-            <!--                                 IsEnabled="{Binding AreOptionsEnabled}" -->
-            <!--                                 BorderBrush="#3F3F46" /> -->
-            <!--             <TextBlock Text="Luck" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" /> -->
-            <!--         </Grid> -->
-            <!-- -->
-            <!--         <Grid Margin="0,2"> -->
-            <!--             <Grid.ColumnDefinitions> -->
-            <!--                 <ColumnDefinition Width="Auto" /> -->
-            <!--                 <ColumnDefinition Width="*" /> -->
-            <!--             </Grid.ColumnDefinitions> -->
-            <!--             <xctk:IntegerUpDown x:Name="VitalityUpDown" -->
-            <!--                                 Value="{Binding Vitality}" -->
-            <!--                                 TextAlignment="Center" -->
-            <!--                                 Width="80" -->
-            <!--                                 Minimum="1" -->
-            <!--                                 Maximum="99" -->
-            <!--                                 Grid.Column="0" -->
-            <!--                                 PreviewKeyDown="StatUpDown_PreviewKeyDown" -->
-            <!--                                 LostFocus="Stat_LostFocus" -->
-            <!--                                 Loaded="StatUpDowns_Loaded" -->
-            <!--                                 Tag="Vitality" -->
-            <!--                                 IsEnabled="{Binding AreOptionsEnabled}" -->
-            <!--                                 BorderBrush="#3F3F46" /> -->
-            <!--             <TextBlock Text="Vitality" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" /> -->
-            <!--         </Grid> -->
-            <!-- -->
-            <!--         <Grid Margin="0,2"> -->
-            <!--             <Grid.ColumnDefinitions> -->
-            <!--                 <ColumnDefinition Width="Auto" /> -->
-            <!--                 <ColumnDefinition Width="*" /> -->
-            <!--             </Grid.ColumnDefinitions> -->
-            <!--             <Grid.RowDefinitions> -->
-            <!--                 <RowDefinition Height="Auto" /> -->
-            <!--                 <RowDefinition Height="Auto" /> -->
-            <!--             </Grid.RowDefinitions> -->
-            <!-- -->
-            <!--             <xctk:IntegerUpDown x:Name="SoulsUpDown" -->
-            <!--                                 Value="{Binding Souls}" -->
-            <!--                                 TextAlignment="Center" -->
-            <!--                                 Width="120" -->
-            <!--                                 Minimum="0" -->
-            <!--                                 Maximum="999999999" -->
-            <!--                                 Grid.Column="0" -->
-            <!--                                 Grid.Row="0" -->
-            <!--                                 PreviewKeyDown="StatUpDown_PreviewKeyDown" -->
-            <!--                                 LostFocus="Stat_LostFocus" -->
-            <!--                                 Loaded="StatUpDowns_Loaded" -->
-            <!--                                 GotFocus="PauseUpdates_GotFocus" -->
-            <!--                                 Tag="Souls" -->
-            <!--                                 IsEnabled="{Binding AreOptionsEnabled}" -->
-            <!--                                 BorderBrush="#3F3F46" /> -->
-            <!--             <TextBlock Text="Souls" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" -->
-            <!--                        Margin="10,0,0,0" /> -->
-            <!-- -->
-            <!--             <Button Content="Give 10k Souls" -->
-            <!--                     Click="GiveSouls_Click" -->
-            <!--                     IsEnabled="{Binding AreOptionsEnabled}" -->
-            <!--                     Grid.Column="0" -->
-            <!--                     Grid.Row="1" -->
-            <!--                     Margin="0,5,0,0" -->
-            <!--                     Width="120" -->
-            <!--                     Height="25" /> -->
-            <!--         </Grid> -->
-            <!--     </StackPanel> -->
-            <!-- </Grid> -->
-            <!-- <TextBlock Grid.Row="3" Text="{Binding SoulLevel, StringFormat='Soul Level: {0}'}" FontWeight="Bold" -->
-            <!--            Margin="0,0,0,5" /> -->
-            <!-- <Border Grid.Row="4" VerticalAlignment="Bottom" Margin="0,140,0,0"> -->
-            <!--     <Grid> -->
-            <!--         <Grid.ColumnDefinitions> -->
-            <!--             <ColumnDefinition Width="Auto" /> -->
-            <!--             <ColumnDefinition Width="*" /> -->
-            <!--         </Grid.ColumnDefinitions> -->
-            <!-- -->
-            <!--         <StackPanel Grid.Column="0" Width="180"> -->
-            <!--             <Grid Margin="0,2"> -->
-            <!--                 <Grid.ColumnDefinitions> -->
-            <!--                     <ColumnDefinition Width="Auto" /> -->
-            <!--                     <ColumnDefinition Width="*" /> -->
-            <!--                 </Grid.ColumnDefinitions> -->
-            <!--                 <xctk:DoubleUpDown x:Name="SpeedUpDown" -->
-            <!--                                    Value="{Binding PlayerSpeed}" -->
-            <!--                                    TextAlignment="Center" -->
-            <!--                                    Width="80" -->
-            <!--                                    Minimum="0" -->
-            <!--                                    Maximum="10" -->
-            <!--                                    Increment="0.50" -->
-            <!--                                    FormatString="F2" -->
-            <!--                                    Grid.Column="0" -->
-            <!-- -->
-            <!--                                    IsEnabled="{Binding AreOptionsEnabled}" -->
-            <!--                                    BorderBrush="#3F3F46" /> -->
-            <!--                 <TextBlock Text="Player Speed" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" /> -->
-            <!--             </Grid> -->
-            <!--             <Grid Margin="0,2"> -->
-            <!--                 <Grid.ColumnDefinitions> -->
-            <!--                     <ColumnDefinition Width="Auto" /> -->
-            <!--                     <ColumnDefinition Width="*" /> -->
-            <!--                 </Grid.ColumnDefinitions> -->
-            <!--                 <xctk:IntegerUpDown x:Name="NewGameUpDown" -->
-            <!--                                     Value="{Binding NewGame}" -->
-            <!--                                     TextAlignment="Center" -->
-            <!--                                     Width="80" -->
-            <!--                                     Minimum="0" -->
-            <!--                                     Maximum="7" -->
-            <!--                                     Grid.Column="0" -->
-            <!--                                     IsEnabled="{Binding AreOptionsEnabled}" -->
-            <!--                                     BorderBrush="#3F3F46" /> -->
-            <!--                 <TextBlock Text="New Game" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" /> -->
-            <!--             </Grid> -->
-            <!--         </StackPanel> -->
-            <!-- -->
-            <!--         <Border Grid.Column="1" -->
-            <!--                 BorderThickness="1" -->
-            <!--                 BorderBrush="#333" -->
-            <!--                 CornerRadius="3" -->
-            <!--                 Margin="5,30,0,0" -->
-            <!--                 Padding="10"> -->
-            <!--             <Grid> -->
-            <!--                 <Grid.ColumnDefinitions> -->
-            <!--                     <ColumnDefinition Width="*" /> -->
-            <!--                     <ColumnDefinition Width="*" /> -->
-            <!--                 </Grid.ColumnDefinitions> -->
-            <!-- -->
-            <!--                 <StackPanel Grid.Column="0"> -->
-            <!--                     <StackPanel Orientation="Horizontal"> -->
-            <!--                         <CheckBox Content="Auto set NG+7" -->
-            <!--                                   IsChecked="{Binding IsAutoSetNewGameSevenEnabled}" -->
-            <!--                                   Margin="0,2" /> -->
-            <!-- -->
-            <!--                         <Border -->
-            <!--                             Background="#3498db" -->
-            <!--                             CornerRadius="10" -->
-            <!--                             Width="12" -->
-            <!--                             Height="12" -->
-            <!--                             Margin="5,0,0,0" -->
-            <!--                             VerticalAlignment="Center" -->
-            <!--                             ToolTip="Automatically sets the game to New Game+7 when starting a new game" -->
-            <!--                             ToolTipService.InitialShowDelay='100'> -->
-            <!--                             <TextBlock Text="i" -->
-            <!--                                        Foreground="White" -->
-            <!--                                        HorizontalAlignment="Center" -->
-            <!--                                        VerticalAlignment="Center" -->
-            <!--                                        FontWeight="Bold" -->
-            <!--                                        FontSize="10" /> -->
-            <!--                         </Border> -->
-            <!--                     </StackPanel> -->
-            <!-- -->
-            <!--                     <CheckBox Content="Disable Roll" -->
-            <!--                               IsChecked="{Binding IsNoRollEnabled}" -->
-            <!--                               Margin="0,2" /> -->
-            <!-- -->
-            <!--                 </StackPanel> -->
-            <!-- -->
-            <!--                 <StackPanel Grid.Column="1" /> -->
-            <!--             </Grid> -->
-            <!--         </Border> -->
-            <!--     </Grid> -->
-            <!-- </Border> -->
+            <TextBlock Grid.Row="3" Text="{Binding SoulLevel, StringFormat='Soul Level: {0}'}" FontWeight="Bold"
+                       Margin="0,0,0,5" />
+            <Grid Grid.Row="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <Grid Margin="0,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <xctk:IntegerUpDown x:Name="VigorUpDown"
+                                            Value="{Binding Vigor}"
+                                            TextAlignment="Center"
+                                            Width="80"
+                                            Minimum="1"
+                                            Maximum="99"
+                                            Grid.Column="0"
+                                            PreviewKeyDown="StatUpDown_PreviewKeyDown"
+                                            LostFocus="Stat_LostFocus"
+                                            Loaded="StatUpDowns_Loaded"
+                                            IsEnabled="{Binding AreOptionsEnabled}"
+                                            BorderBrush="#3F3F46"
+                                            Tag="Vigor" />
+                        <TextBlock Text="Vigor" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" />
+                    </Grid>
+            
+                    <Grid Margin="0,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <xctk:IntegerUpDown x:Name="EnduranceUpDown"
+                                            Value="{Binding Endurance}"
+                                            TextAlignment="Center"
+                                            Width="80"
+                                            Minimum="1"
+                                            Maximum="99"
+                                            Grid.Column="0"
+                                            PreviewKeyDown="StatUpDown_PreviewKeyDown"
+                                            LostFocus="Stat_LostFocus"
+                                            Loaded="StatUpDowns_Loaded"
+                                            Tag="Endurance"
+                                            IsEnabled="{Binding AreOptionsEnabled}"
+                                            BorderBrush="#3F3F46" />
+                        <TextBlock Text="Endurance" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" />
+                    </Grid>
+                    
+                    <Grid Margin="0,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <xctk:IntegerUpDown x:Name="VitalityUpDown"
+                                            Value="{Binding Vitality}"
+                                            TextAlignment="Center"
+                                            Width="80"
+                                            Minimum="1"
+                                            Maximum="99"
+                                            Grid.Column="0"
+                                            PreviewKeyDown="StatUpDown_PreviewKeyDown"
+                                            LostFocus="Stat_LostFocus"
+                                            Loaded="StatUpDowns_Loaded"
+                                            Tag="Vitality"
+                                            IsEnabled="{Binding AreOptionsEnabled}"
+                                            BorderBrush="#3F3F46" />
+                        <TextBlock Text="Vitality" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" />
+                    </Grid>
+                    <Grid Margin="0,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <xctk:IntegerUpDown x:Name="AttunementUpDown"
+                                            Value="{Binding Attunement}"
+                                            TextAlignment="Center"
+                                            Width="80"
+                                            Minimum="1"
+                                            Maximum="99"
+                                            Grid.Column="0"
+                                            PreviewKeyDown="StatUpDown_PreviewKeyDown"
+                                            LostFocus="Stat_LostFocus"
+                                            Loaded="StatUpDowns_Loaded"
+                                            Tag="Attunement"
+                                            IsEnabled="{Binding AreOptionsEnabled}"
+                                            BorderBrush="#3F3F46" />
+                        <TextBlock Text="Attunement" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" />
+                    </Grid>
+            
+                    <Grid Margin="0,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <xctk:IntegerUpDown x:Name="StrengthUpDown"
+                                            Value="{Binding Strength}"
+                                            TextAlignment="Center"
+                                            Width="80"
+                                            Minimum="1"
+                                            Maximum="99"
+                                            Grid.Column="0"
+                                            PreviewKeyDown="StatUpDown_PreviewKeyDown"
+                                            LostFocus="Stat_LostFocus"
+                                            Loaded="StatUpDowns_Loaded"
+                                            Tag="Strength"
+                                            IsEnabled="{Binding AreOptionsEnabled}"
+                                            BorderBrush="#3F3F46" />
+                        <TextBlock Text="Strength" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" />
+                    </Grid>
+                    
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    
+                    <Grid Margin="0,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <xctk:IntegerUpDown x:Name="DexterityUpDown"
+                                            Value="{Binding Dexterity}"
+                                            TextAlignment="Center"
+                                            Width="80"
+                                            Minimum="1"
+                                            Maximum="99"
+                                            Grid.Column="0"
+                                            PreviewKeyDown="StatUpDown_PreviewKeyDown"
+                                            LostFocus="Stat_LostFocus"
+                                            Loaded="StatUpDowns_Loaded"
+                                            Tag="Dexterity"
+                                            IsEnabled="{Binding AreOptionsEnabled}"
+                                            BorderBrush="#3F3F46" />
+                        <TextBlock Text="Dexterity" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" />
+                    </Grid>
+                    
+                    
+                    <Grid Margin="0,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <xctk:IntegerUpDown x:Name="AdpUpDown"
+                                            Value="{Binding Adp}"
+                                            TextAlignment="Center"
+                                            Width="80"
+                                            Minimum="1"
+                                            Maximum="99"
+                                            Grid.Column="0"
+                                            PreviewKeyDown="StatUpDown_PreviewKeyDown"
+                                            LostFocus="Stat_LostFocus"
+                                            Loaded="StatUpDowns_Loaded"
+                                            Tag="Adp"
+                                            IsEnabled="{Binding AreOptionsEnabled}"
+                                            BorderBrush="#3F3F46" />
+                        <TextBlock Text="Adaptability" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" />
+                    </Grid>
+                    <Grid Margin="0,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <xctk:IntegerUpDown x:Name="IntelligenceUpDown"
+                                            Value="{Binding Intelligence}"
+                                            TextAlignment="Center"
+                                            Width="80"
+                                            Minimum="1"
+                                            Maximum="99"
+                                            Grid.Column="0"
+                                            PreviewKeyDown="StatUpDown_PreviewKeyDown"
+                                            LostFocus="Stat_LostFocus"
+                                            Loaded="StatUpDowns_Loaded"
+                                            Tag="Intelligence"
+                                            IsEnabled="{Binding AreOptionsEnabled}"
+                                            BorderBrush="#3F3F46" />
+                        <TextBlock Text="Intelligence" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" />
+                    </Grid>
+            
+                    <Grid Margin="0,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <xctk:IntegerUpDown x:Name="FaithUpDown"
+                                            Value="{Binding Faith}"
+                                            TextAlignment="Center"
+                                            Width="80"
+                                            Minimum="1"
+                                            Maximum="99"
+                                            Grid.Column="0"
+                                            PreviewKeyDown="StatUpDown_PreviewKeyDown"
+                                            LostFocus="Stat_LostFocus"
+                                            Loaded="StatUpDowns_Loaded"
+                                            Tag="Faith"
+                                            IsEnabled="{Binding AreOptionsEnabled}"
+                                            BorderBrush="#3F3F46" />
+                        <TextBlock Text="Faith" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" />
+                    </Grid>
+                    
+                    <Grid Margin="0,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+            
+                        <xctk:IntegerUpDown x:Name="SoulsUpDown"
+                                            Value="{Binding Souls}"
+                                            TextAlignment="Center"
+                                            Width="120"
+                                            Minimum="0"
+                                            Maximum="999999999"
+                                            Grid.Column="0"
+                                            Grid.Row="0"
+                                            PreviewKeyDown="StatUpDown_PreviewKeyDown"
+                                            LostFocus="Stat_LostFocus"
+                                            Loaded="StatUpDowns_Loaded"
+                                            GotFocus="PauseUpdates_GotFocus"
+                                            Tag="Souls"
+                                            IsEnabled="{Binding AreOptionsEnabled}"
+                                            BorderBrush="#3F3F46" />
+                        <TextBlock Text="Souls" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center"
+                                   Margin="10,0,0,0" />
+            
+                        <Button Content="Give 10k Souls"
+                                Click="GiveSouls_Click"
+                                IsEnabled="{Binding AreOptionsEnabled}"
+                                Grid.Column="0"
+                                Grid.Row="1"
+                                Margin="0,5,0,0"
+                                Width="120"
+                                Height="25" />
+                    </Grid>
+                </StackPanel>
+                <Border Grid.Column="2" BorderThickness="1" BorderBrush="#333" CornerRadius="3" Margin="10,0,0,0" Padding="10">
+                    <StackPanel>
+                        <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Agility:" FontWeight="Bold" Margin="0,0,10,0" />
+                            <TextBlock Grid.Column="1" Text="{Binding Agility}" />
+                        </Grid>
+                        
+                        <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Roll:" FontWeight="Bold" Margin="0,0,10,0" />
+                            <TextBlock Grid.Column="1" Text="{Binding RollIFrames}" />
+                        </Grid>
+                        
+                        <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Backstep:" FontWeight="Bold" Margin="0,0,10,0" />
+                            <TextBlock Grid.Column="1" Text="{Binding BackstepIFrames}" />
+                        </Grid>
+                        
+                        <TextBlock Text="{Binding NextBreakpoint}" 
+                                   TextWrapping="Wrap"
+                                   Margin="0,10,0,0" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+            <Border Grid.Row="5" VerticalAlignment="Bottom" Margin="0,10,0,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+            
+                    <StackPanel Grid.Column="0" Width="180">
+                        <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <xctk:DoubleUpDown x:Name="SpeedUpDown"
+                                               Value="{Binding PlayerSpeed}"
+                                               TextAlignment="Center"
+                                               Width="80"
+                                               Minimum="0"
+                                               Maximum="10"
+                                               Increment="0.50"
+                                               FormatString="F2"
+                                               Grid.Column="0"
+            
+                                               IsEnabled="{Binding AreOptionsEnabled}"
+                                               BorderBrush="#3F3F46" />
+                            <TextBlock Text="Player Speed" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        </Grid>
+                        <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <xctk:IntegerUpDown x:Name="NewGameUpDown"
+                                                Value="{Binding NewGame}"
+                                                TextAlignment="Center"
+                                                Width="80"
+                                                Minimum="0"
+                                                Maximum="7"
+                                                Grid.Column="0"
+                                                IsEnabled="{Binding AreOptionsEnabled}"
+                                                BorderBrush="#3F3F46" />
+                            <TextBlock Text="New Game" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        </Grid>
+                    </StackPanel>
+            
+                    <Border Grid.Column="1"
+                            BorderThickness="1"
+                            BorderBrush="#333"
+                            CornerRadius="3"
+                            Margin="5,30,0,0"
+                            Padding="10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+            
+                            <StackPanel Grid.Column="0">
+                                <StackPanel Orientation="Horizontal">
+                                    <CheckBox Content="Auto set NG+7"
+                                              IsChecked="{Binding IsAutoSetNewGameSevenEnabled}"
+                                              Margin="0,2" />
+            
+                                    <Border
+                                        Background="#3498db"
+                                        CornerRadius="10"
+                                        Width="12"
+                                        Height="12"
+                                        Margin="5,0,0,0"
+                                        VerticalAlignment="Center"
+                                        ToolTip="Automatically sets the game to New Game+7 when starting a new game"
+                                        ToolTipService.InitialShowDelay='100'>
+                                        <TextBlock Text="i"
+                                                   Foreground="White"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"
+                                                   FontWeight="Bold"
+                                                   FontSize="10" />
+                                    </Border>
+                                </StackPanel>
+            
+                                <CheckBox Content="Disable Roll"
+                                          IsChecked="{Binding IsNoRollEnabled}"
+                                          Margin="0,2" />
+            
+                            </StackPanel>
+            
+                            <StackPanel Grid.Column="1" />
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
         </Grid>
     </ScrollViewer>
 </UserControl>

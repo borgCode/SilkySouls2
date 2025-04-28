@@ -259,71 +259,130 @@ namespace SilkySouls2.Services
         //                public void SetMp(int val) => _memoryIo.WriteInt32(GetChrDataFieldPtr((int)WorldChrMan.ChrDataModule.Mp), val);
         //
         // public void SetSp(int val) => _memoryIo.WriteInt32(GetChrDataFieldPtr((int)WorldChrMan.ChrDataModule.Stam), val);
+        
         public void ToggleNoDeath(bool isNoDeathEnabled) =>
             _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.PlayerCtrlOffsets.MinHp),
                 isNoDeathEnabled ? 1 : -99999);
 
         public void ToggleNoDamage(bool isNoDamageEnabled)
         {
-            var code = CodeCaveOffsets.Base + CodeCaveOffsets.NoDamagePlayer;
-            var hookLoc = Hooks.HpWrite;
+            var dmgControlCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.DamageControlCode;
+            var noDamageFlag = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.PlayerNoDamageFlag;
+
             if (isNoDamageEnabled)
             {
-                var hpWriteBytes = AsmLoader.GetAsmBytes("NoDamage");
-                var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt64());
-                Array.Copy(bytes, 0, hpWriteBytes, 0x1 + 2, 8);
-                bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 6, code + 0x2C);
-                Array.Copy(bytes, 0, hpWriteBytes, 0x27 + 1, 4);
-
-                _memoryIo.WriteBytes(code, hpWriteBytes);
-                _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[]
-                    { 0x89, 0x83, 0x68, 0x01, 0x00, 0x00 });
+                if (!_hookManager.IsHookInstalled(dmgControlCode.ToInt64()))
+                {
+                    _hookManager.InstallHook(dmgControlCode.ToInt64(), Hooks.HpWrite, new byte[] { 0x89, 0x83, 0x68, 0x01, 0x00, 0x00 });
+                }
+        
+                _memoryIo.WriteByte(noDamageFlag, 1);
             }
-            else _hookManager.UninstallHook(code.ToInt64());
+            else
+            {
+                _memoryIo.WriteByte(noDamageFlag, 0);
+        
+                bool allFlagsOff = 
+                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.OneShotFlag) == 0 &&
+                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.DealNoDamageFlag) == 0 &&
+                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.FreezeTargetHpFlag) == 0;
+        
+                if (allFlagsOff && _hookManager.IsHookInstalled(dmgControlCode.ToInt64()))
+                {
+                    _hookManager.UninstallHook(dmgControlCode.ToInt64());
+                }
+            }
         }
 
         public void ToggleOneShot(bool isOneShotEnabled)
         {
-            var code = CodeCaveOffsets.Base + CodeCaveOffsets.OneShot;
-            var hookLoc = Hooks.OneShot;
+            var dmgControlCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.DamageControlCode;
+            var oneShot = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.OneShotFlag;
+
             if (isOneShotEnabled)
             {
+                if (!_hookManager.IsHookInstalled(dmgControlCode.ToInt64()))
+                {
+                    _hookManager.InstallHook(dmgControlCode.ToInt64(), Hooks.HpWrite, new byte[] { 0x89, 0x83, 0x68, 0x01, 0x00, 0x00 });
+                }
                 
-                var codeBytes = AsmLoader.GetAsmBytes("OneShot");
-                var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt64());
-                Array.Copy(bytes, 0, codeBytes, 0xA + 2, 8);
-                bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 9, code + 0x2F);
-                Array.Copy(bytes, 0, codeBytes, 0x2A + 1, 4);
-                _memoryIo.WriteBytes(code, codeBytes);
-                _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[]
-                    {  0x48, 0x8D, 0x44, 0x24, 0x30, 0x48, 0x0F, 0x4F, 0xC6 });
+                _memoryIo.WriteByte(oneShot, 1);
             }
             else
             {
-                _hookManager.UninstallHook(code.ToInt64());
+                _memoryIo.WriteByte(oneShot, 0);
+                
+                bool allFlagsOff = 
+                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.PlayerNoDamageFlag) == 0 &&
+                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.DealNoDamageFlag) == 0 &&
+                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.FreezeTargetHpFlag) == 0;
+                
+                if (allFlagsOff && _hookManager.IsHookInstalled(dmgControlCode.ToInt64()))
+                {
+                    _hookManager.UninstallHook(dmgControlCode.ToInt64());
+                }
             }
-            
         }
 
         public void ToggleDealNoDamage(bool isDealNoDamageEnabled)
         {
-            var code = CodeCaveOffsets.Base + CodeCaveOffsets.DealNoDamage;
-            var hookLoc = Hooks.OneShot;
+            var dmgControlCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.DamageControlCode;
+            var dealNoDamageFlag = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.DealNoDamageFlag;
+
             if (isDealNoDamageEnabled)
             {
-                var codeBytes = AsmLoader.GetAsmBytes("DealNoDamage");
-                var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt64());
-                Array.Copy(bytes, 0, codeBytes, 0xA + 2, 8);
-                bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 9, code + 0x31);
-                Array.Copy(bytes, 0, codeBytes, 0x2C + 1, 4);
-                _memoryIo.WriteBytes(code, codeBytes);
-                _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[]
-                    {  0x48, 0x8D, 0x44, 0x24, 0x30, 0x48, 0x0F, 0x4F, 0xC6  });
+                if (!_hookManager.IsHookInstalled(dmgControlCode.ToInt64()))
+                {
+                    _hookManager.InstallHook(dmgControlCode.ToInt64(), Hooks.HpWrite, new byte[] { 0x89, 0x83, 0x68, 0x01, 0x00, 0x00 });
+                }
+        
+                _memoryIo.WriteByte(dealNoDamageFlag, 1);
             }
             else
             {
-                _hookManager.UninstallHook(code.ToInt64());
+                _memoryIo.WriteByte(dealNoDamageFlag, 0);
+        
+                bool allFlagsOff = 
+                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.PlayerNoDamageFlag) == 0 &&
+                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.OneShotFlag) == 0 &&
+                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.FreezeTargetHpFlag) == 0;
+        
+                if (allFlagsOff && _hookManager.IsHookInstalled(dmgControlCode.ToInt64()))
+                {
+                    _hookManager.UninstallHook(dmgControlCode.ToInt64());
+                }
             }
+        }
+
+        public void ToggleInfiniteStamina(bool isInfiniteStaminaEnabled) =>
+            _memoryIo.WriteByte(Patches.InfiniteStam + 1, isInfiniteStaminaEnabled ? 0x82 : 0x83);
+
+        public int GetPlayerStat(int statOffset) => _memoryIo.ReadUInt8( GetStatPtr(statOffset));
+
+
+        private IntPtr GetStatPtr(int statOffset)
+        {
+            return _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+            {
+                GameManagerImp.Offsets.PlayerCtrl,
+                GameManagerImp.PlayerCtrlOffsets.StatsPtr,
+                statOffset
+            }, false);
+        }
+
+        public int GetSoulLevel() => _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.PlayerCtrlOffsets.Stats.SoulLevel));
+
+        public float GetPlayerSpeed() => _memoryIo.ReadFloat(GetSpeedPtr());
+
+        public void SetPlayerSpeed(float speed) => _memoryIo.WriteFloat(GetSpeedPtr(), speed);
+
+        private IntPtr GetSpeedPtr()
+        {
+            return _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+            {
+                GameManagerImp.Offsets.PlayerCtrl,
+                GameManagerImp.PlayerCtrlOffsets.Speed
+            }, false);
         }
     }
 }

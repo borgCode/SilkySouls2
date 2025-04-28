@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Text;
 using System.Timers;
+using SilkySouls2.Utilities;
 
 namespace SilkySouls2.Memory
 {
@@ -378,12 +379,32 @@ namespace SilkySouls2.Memory
         // {
         //     return Kernel32.QueryMemory(ProcessHandle, address).AllocationBase;
         // }
+    
 
-        public int GetMapId()
+        public void WriteDamageControlCode()
         {
-            var mapPtr = ReadInt64((IntPtr)ReadInt64(Offsets.GameManagerImp.Base) +
-                                   Offsets.GameManagerImp.Offsets.CameraManager);
-            return ReadInt32((IntPtr)mapPtr + Offsets.GameManagerImp.CameraManagerOffsets.MapId);
+            var dmgCtrlCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.DamageControlCode;
+            var playerNoDmgFlag = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.PlayerNoDamageFlag;
+            var oneShotFlag = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.OneShotFlag;
+            var dealNoDamageFlag = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.DealNoDamageFlag;
+            var freezeTargetFlag = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.FreezeTargetHpFlag;
+            var lockedTarget = CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr;
+            var hookLoc = Offsets.Hooks.HpWrite;
+
+            var codeBytes = AsmLoader.GetAsmBytes("DamageControl");
+            var bytes = BitConverter.GetBytes(Offsets.GameManagerImp.Base.ToInt64());
+            Array.Copy(bytes, 0, codeBytes, 0x1 + 2, 8);
+            AsmHelper.WriteRelativeOffsets(codeBytes, new []
+            {
+                (dmgCtrlCode.ToInt64() + 0x1C, playerNoDmgFlag.ToInt64(), 7, 0x1C + 2),
+                (dmgCtrlCode.ToInt64() + 0x2D, freezeTargetFlag.ToInt64(), 7, 0x2D + 2),
+                (dmgCtrlCode.ToInt64() + 0x36, lockedTarget.ToInt64(), 7, 0x36 + 3),
+                (dmgCtrlCode.ToInt64() + 0x4A, oneShotFlag.ToInt64(), 7, 0x4A + 2),
+                (dmgCtrlCode.ToInt64() + 0x5A, dealNoDamageFlag.ToInt64(), 7, 0x5A + 2),
+            });
+            bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 6, dmgCtrlCode + 0x77);
+            Array.Copy(bytes, 0, codeBytes, 0x72 + 1, 4);
+            WriteBytes(dmgCtrlCode, codeBytes);
         }
     }
 }

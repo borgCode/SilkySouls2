@@ -29,8 +29,7 @@ namespace SilkySouls2.Memory
             BonfireId = 0x190,
             WarpCode = 0x1A0,
             Coords = 0x1F0,
-            Angle = 0x230,
-            CoordWrite = 0x240,
+            CoordWrite = 0x230,
         }
         
         public const int LockedTargetPtr = 0x300;

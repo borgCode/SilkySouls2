@@ -58,7 +58,6 @@ namespace SilkySouls2.Services
         {
             var hook = Hooks.WarpCoordWrite;
             var coordsLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.BonfireWarp.Coords;
-            var angleLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.BonfireWarp.Angle;
             var code = CodeCaveOffsets.Base + (int)CodeCaveOffsets.BonfireWarp.CoordWrite;
             
             
@@ -71,22 +70,9 @@ namespace SilkySouls2.Services
             }
             _memoryIo.WriteBytes(coordsLoc, allCoordinateBytes);
             
-            byte[] angleBytes = new byte[4 * sizeof(float)];
-            
-            for (int i = 0; i < 4; i++)
-            {
-                byte[] floatBytes = BitConverter.GetBytes(location.Angle[i]);
-                Buffer.BlockCopy(floatBytes, 0, angleBytes, i * sizeof(float), sizeof(float));
-            }
-            
-            _memoryIo.WriteBytes(angleLoc, angleBytes);
-            
             var codeBytes = AsmLoader.GetAsmBytes("WarpCoordWrite");
-            AsmHelper.WriteAbsoluteAddresses(codeBytes, new []
-            {
-                (HkpPtrEntity.Base.ToInt64(), 0x8 + 2),
-                (GameManagerImp.Base.ToInt64(), 0x72 + 2)
-            });
+            var bytes = BitConverter.GetBytes(HkpPtrEntity.Base.ToInt64());
+            Array.Copy(bytes, 0, codeBytes, 0x8 + 2, 8);
 
             AsmHelper.WriteRelativeOffsets(codeBytes, new []
             {
@@ -94,10 +80,9 @@ namespace SilkySouls2.Services
                 (code.ToInt64() + 0x40, coordsLoc.ToInt64() + 0x10, 8, 0x40 + 4),
                 (code.ToInt64() + 0x4D, coordsLoc.ToInt64() + 0x20, 8, 0x4D + 4),
                 (code.ToInt64() + 0x5A, coordsLoc.ToInt64() + 0x30, 8, 0x5A + 4),
-                (code.ToInt64() + 0x6A, angleLoc.ToInt64(), 8, 0x6A + 4)
             });
-            var bytes = AsmHelper.GetJmpOriginOffsetBytes(hook, 7, code + 0xA3);
-            Array.Copy(bytes, 0, codeBytes, 0x9E + 1, 4);
+            bytes = AsmHelper.GetJmpOriginOffsetBytes(hook, 7, code + 0x7C);
+            Array.Copy(bytes, 0, codeBytes, 0x77 + 1, 4);
             _memoryIo.WriteBytes(code, codeBytes);
             
             {

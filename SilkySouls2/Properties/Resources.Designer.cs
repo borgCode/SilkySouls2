@@ -215,18 +215,11 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 2650,Things Betwixt,Fire Keeper&apos;s Dwelling
-        ///4650,Majula,Far Fire
-        ///10670,Forest of Fallen Giants,Crestfallen&apos;s Retreat
-        ///10655,Forest of Fallen Giants,Cardinal Tower
-        ///10660,Forest of Fallen Giants,Soldier&apos;s Rest
-        ///10675,Forest of Fallen Giants,The Place Unbeknownst
-        ///31650,Heide&apos;s Tower of Flame,Tower of Flame
-        ///31655,Heide&apos;s Tower of Flame,Heide&apos;s Ruin
-        ///31660,Heide&apos;s Tower of Flame,Cathedral of Blue
-        ///18650,No-man&apos;s Wharf,Unseen Path to Heide&apos;s
-        ///16650,The Lost Bastille,Straid&apos;s Cell
-        ///16655,The Lost Bastille,Exil [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to 10655,Boss,Last Giant,92.18|-40.43|-147.47|0.00|92.18|-40.43|-147.47|55.84|92.18|-40.43|-147.47|0.00|0.00|0.00|0.00|1.00
+        ///10655,Boss,Pursuer,139.12|10.05|-217.90|0.00|139.12|10.05|-217.90|58.79|139.12|10.05|-217.90|0.00|0.00|0.00|0.00|1.00
+        ///31650,Boss,Dragonrider,-6.91|-14.66|283.71|0.00|-6.91|-14.66|283.71|36.76|-6.91|-14.66|283.71|0.00|0.00|0.00|0.00|1.00
+        ///31660,Boss,Ornstein,-144.09|8.03|170.72|0.00|-144.09|8.03|170.72|45.42|-144.09|8.03|170.72|0.00|0.00|0.00|0.00|1.00
+        ///18650,Boss,Flexile,2.91|-65.35|514 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string WarpLocations {
             get {

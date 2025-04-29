@@ -9,12 +9,13 @@ namespace SilkySouls2.Services
     {
         private readonly MemoryIo _memoryIo;
         private readonly HookManager _hookManager;
+
         public UtilityService(MemoryIo memoryIo, HookManager hookManager)
         {
             _memoryIo = memoryIo;
             _hookManager = hookManager;
         }
-        
+
         public void SetEventOn(long gameId)
         {
             var eventFlagMan = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
@@ -25,24 +26,24 @@ namespace SilkySouls2.Services
 
             var setEventFunc = Funcs.SetEvent;
             var bytes = AsmLoader.GetAsmBytes("SetEventOn");
-            AsmHelper.WriteAbsoluteAddresses(bytes, new []
+            AsmHelper.WriteAbsoluteAddresses(bytes, new[]
             {
-                (eventFlagMan.ToInt64(), 0x0 +2),
-                (gameId, 0xA + 2), 
+                (eventFlagMan.ToInt64(), 0x0 + 2),
+                (gameId, 0xA + 2),
                 (setEventFunc, 0x1A + 2)
             });
-            
+
             _memoryIo.AllocateAndExecute(bytes);
         }
 
-       public void SetMultipleEventOn(long[] gameIds)
-       {
-           foreach (var gameId in gameIds)
-           {
-               SetEventOn(gameId);
-           }
-       }
-       
+        public void SetMultipleEventOn(long[] gameIds)
+        {
+            foreach (var gameId in gameIds)
+            {
+                SetEventOn(gameId);
+            }
+        }
+
         public void SetEventOff(long gameId)
         {
             var eventFlagMan = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
@@ -53,13 +54,13 @@ namespace SilkySouls2.Services
 
             var setEventFunc = Funcs.SetEvent;
             var bytes = AsmLoader.GetAsmBytes("SetEventOff");
-            AsmHelper.WriteAbsoluteAddresses(bytes, new []
+            AsmHelper.WriteAbsoluteAddresses(bytes, new[]
             {
-                (eventFlagMan.ToInt64(), 0x0 +2),
-                (gameId, 0xA + 2), 
+                (eventFlagMan.ToInt64(), 0x0 + 2),
+                (gameId, 0xA + 2),
                 (setEventFunc, 0x1A + 2)
             });
-            
+
             _memoryIo.AllocateAndExecute(bytes);
         }
 
@@ -79,6 +80,32 @@ namespace SilkySouls2.Services
             await Task.Delay(10);
             _memoryIo.WriteByte(forceSavePtr, 0x74);
             _memoryIo.WriteByte(forceSavePtr + 0x8, 0x76);
+        }
+
+        public void ToggleCreditSkip(bool isCreditSkipEnabled)
+        {
+            var code = CodeCaveOffsets.Base + (int)CodeCaveOffsets.CreditSkip.Code;
+            
+            if (isCreditSkipEnabled)
+            {
+                var hookLoc = Hooks.CreditSkip;
+                var modifyOnceFlag = CodeCaveOffsets.Base + (int)CodeCaveOffsets.CreditSkip.ModifyOnceFlag;
+                _memoryIo.WriteInt32(modifyOnceFlag, 0);
+                var codeBytes = AsmLoader.GetAsmBytes("CreditSkip");
+                AsmHelper.WriteRelativeOffsets(codeBytes, new[]
+                {
+                    (code.ToInt64() + 0x7, modifyOnceFlag.ToInt64(), 7, 0x7 + 2),
+                    (code.ToInt64() + 0x17, modifyOnceFlag.ToInt64(), 10, 0x17 + 2),
+                    (code.ToInt64() + 0x21, hookLoc + 7, 5, 0x21 + 1)
+                });
+                _memoryIo.WriteBytes(code, codeBytes);
+                _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[]
+                    { 0x48, 0x81, 0xEC, 0x20, 0x02, 0x00, 0x00 });
+            }
+            else
+            {
+                _hookManager.UninstallHook(code.ToInt64());
+            }
         }
     }
 }

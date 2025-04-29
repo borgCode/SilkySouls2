@@ -144,112 +144,121 @@ e9 00 00 00 00          jmp    1b &lt;original&gt;
 e9 00 00 00 00          jmp    25 &lt;original+0xa&gt;</value>
   </data>
   <data name="WarpLocations" xml:space="preserve">
-    <value>10655,Boss,Last Giant,92.18|-40.43|-147.47|0.00|92.18|-40.43|-147.47|55.84|92.18|-40.43|-147.47|0.00|0.00|0.00|0.00|1.00
-10655,Boss,Pursuer,139.12|10.05|-217.90|0.00|139.12|10.05|-217.90|58.79|139.12|10.05|-217.90|0.00|0.00|0.00|0.00|1.00
-31650,Boss,Dragonrider,-6.91|-14.66|283.71|0.00|-6.91|-14.66|283.71|36.76|-6.91|-14.66|283.71|0.00|0.00|0.00|0.00|1.00
-31660,Boss,Ornstein,-144.09|8.03|170.72|0.00|-144.09|8.03|170.72|45.42|-144.09|8.03|170.72|0.00|0.00|0.00|0.00|1.00
-18650,Boss,Flexile,2.91|-65.35|514.14|0.00|2.91|-65.35|514.14|44.90|2.91|-65.35|514.14|0.00|0.00|0.00|0.00|1.00
-16660,Boss,Ruin Sentinels,-142.18|11.41|538.97|0.00|-142.18|11.41|538.97|48.82|-142.18|11.41|538.97|0.00|0.00|0.00|0.00|1.00
-16685,Boss,Sinner,-122.87|-76.97|563.96|0.00|-122.87|-76.97|563.96|47.41|-122.87|-76.97|563.96|0.00|0.00|0.00|0.00|1.00
-16675,Boss,Belfry Gargoyles,-185.25|14.93|518.61|0.00|-185.25|14.93|518.61|58.12|-185.25|14.93|518.61|0.00|0.00|0.00|0.00|1.00
-23655,Boss,Chariot,-249.67|47.70|-30.20|0.00|-249.67|47.70|-30.20|36.29|-249.67|47.70|-30.20|0.00|0.00|0.00|0.00|1.00
-23660,Boss,Skeleton Lords,-404.14|35.35|225.87|0.00|-404.14|35.35|225.87|44.99|-404.14|35.35|225.87|0.00|0.00|0.00|0.00|1.00
-17650,Boss,Covetous,-537.04|52.61|525.46|0.00|-537.04|52.61|525.46|60.89|-537.04|52.61|525.46|0.00|0.00|0.00|0.00|1.00
-17675,Boss,Mytha,-562.06|86.06|530.41|0.00|-562.06|86.06|530.41|41.60|-562.06|86.06|530.41|0.00|0.00|0.00|0.00|1.00
-19650,Boss,Red Smelter Demon,-706.58|176.36|650.18|0.00|-706.58|176.36|650.18|40.83|-706.58|176.36|650.18|0.00|0.00|0.00|0.00|1.00
-19660,Boss,Old Iron King,-650.67|166.55|721.19|0.00|-650.67|166.55|721.19|34.74|-650.67|166.55|721.19|0.00|0.00|0.00|0.00|1.00
-32660,Boss,Najka,-460.01|84.05|-285.30|0.00|-460.01|84.05|-285.30|47.39|-460.01|84.05|-285.30|0.00|0.00|0.00|0.00|1.00
-14660,Boss,Congregation,-625.40|116.23|-53.77|0.00|-625.40|116.23|-53.77|58.04|-625.40|116.23|-53.77|0.00|0.00|0.00|0.00|1.00
-14655,Boss,Freja,-581.67|75.09|-139.77|0.00|-581.67|75.09|-139.77|48.42|-581.67|75.09|-139.77|0.00|0.00|0.00|0.00|1.00
-21660,Boss,Dragonriders,-463.06|108.87|-363.38|0.00|-463.06|108.87|-363.38|61.22|-463.06|108.87|-363.38|0.00|0.00|0.00|0.00|1.00
-21655,Boss,Mirror Knight,-632.53|103.20|-342.16|0.00|-632.53|103.20|-342.16|56.00|-632.53|103.20|-342.16|0.00|0.00|0.00|0.00|1.00
-11670,Boss,Demon of Song,-1066.01|-31.48|-170.87|0.00|-1066.01|-31.48|-170.87|44.17|-1066.01|-31.48|-170.87|0.00|0.00|0.00|0.00|1.00
-24655,Boss,Velstadt,-1004.70|-132.63|-72.88|0.00|-1004.70|-132.63|-72.88|35.29|-1004.70|-132.63|-72.88|0.00|0.00|0.00|0.00|1.00
-15655,Boss,Guardian Dragon,-746.30|80.42|-249.34|0.00|-746.30|80.42|-249.34|62.29|-746.30|80.42|-249.34|0.00|0.00|0.00|0.00|1.00
-27655,Boss,Ancient Dragon,-862.93|336.15|-670.19|0.00|-862.93|336.15|-670.19|33.42|-862.93|336.15|-670.19|0.00|0.00|0.00|0.00|1.00
-35655,Boss,Gank Squad,-7.41|18.61|115.72|0.00|-7.41|18.61|115.72|33.32|-7.41|18.61|115.72|0.00|0.00|0.00|0.00|1.00
-35680,Boss,Elana,-89.85|-71.60|-34.32|0.00|-89.85|-71.60|-34.32|51.99|-89.85|-71.60|-34.32|0.00|0.00|0.00|0.00|1.00
-36670,Boss,Fume Knight,-167.46|-59.14|385.48|0.00|-167.46|-59.14|385.48|56.50|-167.46|-59.14|385.48|0.00|0.00|0.00|0.00|1.00
-36665,Boss,Blue Smelter Demon,-253.99|-26.80|461.00|0.00|-253.99|-26.80|461.00|40.69|-253.99|-26.80|461.00|0.00|0.00|0.00|0.00|1.00
-37650,Boss,Aava,-89.58|-22.25|-31.02|0.00|-89.58|-22.25|-31.02|37.00|-89.58|-22.25|-31.02|0.00|0.00|0.00|0.00|1.00
-37670,Boss,Ivory King,203.59|-6.07|-53.48|0.00|203.59|-6.07|-53.48|56.08|203.59|-6.07|-53.48|0.00|0.00|0.00|0.00|1.00
-2650,Things Betwixt,Fire Keeper's Dwelling
-4650,Majula,Far Fire
-10670,Forest of Fallen Giants,Crestfallen's Retreat
-10655,Forest of Fallen Giants,Cardinal Tower
-10660,Forest of Fallen Giants,Soldier's Rest
-10675,Forest of Fallen Giants,The Place Unbeknownst
-31655,Heide's Tower of Flame,Heide's Ruin
-31650,Heide's Tower of Flame,Tower of Flame
-31660,Heide's Tower of Flame,Cathedral of Blue
-18650,No-man's Wharf,Unseen Path to Heide's
-16655,The Lost Bastille,Exile Holding Cells
-16670,The Lost Bastille,McDuff's Workshop
-16675,The Lost Bastille,Servant's Quarters
-16650,The Lost Bastille,Straid's Cell
-16660,The Lost Bastille,The Tower Apart
-16685,Sinners' Rise,The Saltfort
-16665,Belfry Luna,Upper Ramparts
-23650,Huntsman's Copse,Undead Refuge
-23655,Huntsman's Copse,Bridge Approach
-23660,Huntsman's Copse,Undead Lockaway
-23665,Undead Purgatory,Undead Purgatory
-17665,Harvest Valley,Poison Pool
-17650,Harvest Valley,The Mines
-17655,Earthen Peak,Lower Earthen Peak
-17670,Earthen Peak,Central Earthen Peak
-17675,Earthen Peak,Upper Earthen Peak
-19655,Iron Keep,Threshold Bridge
-19650,Iron Keep,Ironhearth Hall
-19660,Iron Keep,Eygil's Idol
-19665,Belfry Sol,Belfry Sol Approach
-29650,Shaded Woods,Old Akelarre
-32655,Shaded Woods,Ruined Fork Road
-32660,Shaded Woods,Shaded Ruins
-33655,Doors of Pharros,Gyrm's Respite
-33660,Doors of Pharros,Ordeal's End
-14655,Brightstone Cove Tseldora,Royal Army Campsite
-14660,Brightstone Cove Tseldora,Chapel Threshold
-14650,Brightstone Cove Tseldora,Lower Brightstone Cove
-34655,Grave of Saints,Harvel's Resting Place
-34650,Grave of Saints,Grave Entrance
-25665,The Gutter,Upper Gutter
-25655,The Gutter,Central Gutter
-25650,Black Gulch,Black Gulch Mouth
-25660,Black Gulch,Hidden Chamber
-21650,Drangleic Castle,King's Gate
-21660,Drangleic Castle,Forgotten Chamber
-21665,Drangleic Castle,Under Castle Drangleic
-21655,Drangleic Castle,Central Castle Drangleic
-11650,Shrine of Amana,Tower of Prayer
-11655,Shrine of Amana,Crumbled Ruins
-11660,Shrine of Amana,Rhoy's Resting Place
-11670,Shrine of Amana,Rise of the Dead
-24655,Undead Crypt,Undead Crypt Entrance
-24650,Undead Crypt,Undead Ditch
-15650,Aldia's Keep,Foregarden
-15655,Aldia's Keep,Ritual Site
-27650,Dragon Aerie,Dragon Aerie
-27655,Dragon Shrine,Shrine Entrance
-35650,Shulva - Sanctum City,Sanctum Walk
-35685,Shulva - Sanctum City,Tower of Prayer
-35655,Shulva - Sanctum City,Priestess's Chamber
-35670,Dragon's Sanctum,Hidden Sanctum Chamber
-35675,Dragon's Sanctum,Lair of the Imperfect
-35680,Dragon's Sanctum,Sanctum Interior
-35665,Dragon's Rest,Sanctum Nadir
-36650,Brume Tower,Throne Floor
-36660,Brume Tower,Upper Floor
-36655,Brume Tower,Foyer
-36670,Brume Tower,Lowermost Floor
-36675,Brume Tower,The Smelter Throne
-36665,Iron Passage,Iron Passage
-37650,Frozen Eleum Loyce,Outer Wall
-37660,Frozen Eleum Loyce,Abandoned Dwelling
-37685,Frozen Eleum Loyce,Inner Wall
-37665,Frozen Eleum Loyce,Lower Garrison			
-37675,Frozen Eleum Loyce,Expulsion Chamber
-37670,Grand Cathedral,Grand Cathedral
+    <value>10655,Boss,Last Giant,92.18|-40.43|-147.47|0.00|92.18|-40.43|-147.47|55.84|92.18|-40.43|-147.47|0.00|0.00|0.00|0.00|1.00,0
+10655,Boss,Pursuer,139.12|10.05|-217.90|0.00|139.12|10.05|-217.90|58.79|139.12|10.05|-217.90|0.00|0.00|0.00|0.00|1.00,0
+31650,Boss,Dragonrider,-6.91|-14.66|283.71|0.00|-6.91|-14.66|283.71|36.76|-6.91|-14.66|283.71|0.00|0.00|0.00|0.00|1.00,0
+31660,Boss,Ornstein,-144.09|8.03|170.72|0.00|-144.09|8.03|170.72|45.42|-144.09|8.03|170.72|0.00|0.00|0.00|0.00|1.00,0
+18650,Boss,Flexile,2.91|-65.35|514.14|0.00|2.91|-65.35|514.14|44.90|2.91|-65.35|514.14|0.00|0.00|0.00|0.00|1.00,0
+16660,Boss,Ruin Sentinels,-142.18|11.41|538.97|0.00|-142.18|11.41|538.97|48.82|-142.18|11.41|538.97|0.00|0.00|0.00|0.00|1.00,0
+16685,Boss,Sinner,-122.87|-76.97|563.96|0.00|-122.87|-76.97|563.96|47.41|-122.87|-76.97|563.96|0.00|0.00|0.00|0.00|1.00,0
+16675,Boss,Belfry Gargoyles,-185.25|14.93|518.61|0.00|-185.25|14.93|518.61|58.12|-185.25|14.93|518.61|0.00|0.00|0.00|0.00|1.00,0
+23655,Boss,Chariot,-249.67|47.70|-30.20|0.00|-249.67|47.70|-30.20|36.29|-249.67|47.70|-30.20|0.00|0.00|0.00|0.00|1.00,0
+23660,Boss,Skeleton Lords,-404.14|35.35|225.87|0.00|-404.14|35.35|225.87|44.99|-404.14|35.35|225.87|0.00|0.00|0.00|0.00|1.00,0
+17650,Boss,Covetous,-537.04|52.61|525.46|0.00|-537.04|52.61|525.46|60.89|-537.04|52.61|525.46|0.00|0.00|0.00|0.00|1.00,0
+17675,Boss,Mytha,-562.06|86.06|530.41|0.00|-562.06|86.06|530.41|41.60|-562.06|86.06|530.41|0.00|0.00|0.00|0.00|1.00,0
+19650,Boss,Red Smelter Demon,-706.58|176.36|650.18|0.00|-706.58|176.36|650.18|40.83|-706.58|176.36|650.18|0.00|0.00|0.00|0.00|1.00,0
+19660,Boss,Old Iron King,-650.67|166.55|721.19|0.00|-650.67|166.55|721.19|34.74|-650.67|166.55|721.19|0.00|0.00|0.00|0.00|1.00,0
+32660,Boss,Najka,-460.01|84.05|-285.30|0.00|-460.01|84.05|-285.30|47.39|-460.01|84.05|-285.30|0.00|0.00|0.00|0.00|1.00,0
+14660,Boss,Congregation,-625.40|116.23|-53.77|0.00|-625.40|116.23|-53.77|58.04|-625.40|116.23|-53.77|0.00|0.00|0.00|0.00|1.00,0
+14655,Boss,Freja,-581.67|75.09|-139.77|0.00|-581.67|75.09|-139.77|48.42|-581.67|75.09|-139.77|0.00|0.00|0.00|0.00|1.00,0
+21660,Boss,Dragonriders,-463.06|108.87|-363.38|0.00|-463.06|108.87|-363.38|61.22|-463.06|108.87|-363.38|0.00|0.00|0.00|0.00|1.00,0
+21655,Boss,Mirror Knight,-632.53|103.20|-342.16|0.00|-632.53|103.20|-342.16|56.00|-632.53|103.20|-342.16|0.00|0.00|0.00|0.00|1.00,0
+11670,Boss,Demon of Song,-1066.01|-31.48|-170.87|0.00|-1066.01|-31.48|-170.87|44.17|-1066.01|-31.48|-170.87|0.00|0.00|0.00|0.00|1.00,0
+24655,Boss,Velstadt,-1004.70|-132.63|-72.88|0.00|-1004.70|-132.63|-72.88|35.29|-1004.70|-132.63|-72.88|0.00|0.00|0.00|0.00|1.00,0
+15655,Boss,Guardian Dragon,-746.30|80.42|-249.34|0.00|-746.30|80.42|-249.34|62.29|-746.30|80.42|-249.34|0.00|0.00|0.00|0.00|1.00,0
+27655,Boss,Ancient Dragon,-862.93|336.15|-670.19|0.00|-862.93|336.15|-670.19|33.42|-862.93|336.15|-670.19|0.00|0.00|0.00|0.00|1.00,0
+35655,Boss,Gank Squad,-7.41|18.61|115.72|0.00|-7.41|18.61|115.72|33.32|-7.41|18.61|115.72|0.00|0.00|0.00|0.00|1.00,0
+35680,Boss,Elana,-89.85|-71.60|-34.32|0.00|-89.85|-71.60|-34.32|51.99|-89.85|-71.60|-34.32|0.00|0.00|0.00|0.00|1.00,0
+36670,Boss,Fume Knight,-167.46|-59.14|385.48|0.00|-167.46|-59.14|385.48|56.50|-167.46|-59.14|385.48|0.00|0.00|0.00|0.00|1.00,0
+36665,Boss,Blue Smelter Demon,-253.99|-26.80|461.00|0.00|-253.99|-26.80|461.00|40.69|-253.99|-26.80|461.00|0.00|0.00|0.00|0.00|1.00,0
+841220096,Boss,Alonne,-100.11|52.61|693.86|0.00|-100.11|52.61|693.86|34.74|-100.11|52.61|693.86|0.00|0.00|0.00|0.00|1.00,5300000
+37650,Boss,Aava,-89.58|-22.25|-31.02|0.00|-89.58|-22.25|-31.02|37.00|-89.58|-22.25|-31.02|0.00|0.00|0.00|0.00|1.00,0
+841285632,Boss,Lud &amp; Zallen,-380.55|-69.55|358.26|0.00|-380.55|-69.55|358.26|57.13|-380.55|-69.55|358.26|0.00|0.00|0.00|0.00|1.00,400000
+37670,Boss,Ivory King,203.59|-6.07|-53.48|0.00|203.59|-6.07|-53.48|56.08|203.59|-6.07|-53.48|0.00|0.00|0.00|0.00|1.00,0
+32660,Other,Grandahl (Shaded Woods),-454.42|57.99|-217.07|0.00|-454.42|57.99|-217.07|59.04|-454.42|57.99|-217.07|0.00|0.00|0.00|0.00|1.00,0
+25650,Other,Grandahl (Black Gulch),-194.45|-220.72|-111.33|0.00|-194.45|-220.72|-111.33|60.21|-194.45|-220.72|-111.33|0.00|0.00|0.00|0.00|1.00,0
+671285248,Other,Dark Chasm of Old (Shaded Woods),400010
+671285248,Other,Dark Chasm of Old (Black Gulch),400030
+671285248,Other,Dark Chasm of Old (Drangleic),400020
+2650,Things Betwixt,Fire Keeper's Dwelling,0
+4650,Majula,Far Fire,0
+10670,Forest of Fallen Giants,Crestfallen's Retreat,0
+10655,Forest of Fallen Giants,Cardinal Tower,0
+10660,Forest of Fallen Giants,Soldier's Rest,0
+10675,Forest of Fallen Giants,The Place Unbeknownst,0
+31655,Heide's Tower of Flame,Heide's Ruin,0
+31650,Heide's Tower of Flame,Tower of Flame,0
+31660,Heide's Tower of Flame,Cathedral of Blue,0
+18650,No-man's Wharf,Unseen Path to Heide's,0
+16655,The Lost Bastille,Exile Holding Cells,0
+16670,The Lost Bastille,McDuff's Workshop,0
+16675,The Lost Bastille,Servant's Quarters,0
+16650,The Lost Bastille,Straid's Cell,0
+16660,The Lost Bastille,The Tower Apart,0
+16685,Sinners' Rise,The Saltfort,0
+16665,Belfry Luna,Upper Ramparts,0
+23650,Huntsman's Copse,Undead Refuge,0
+23655,Huntsman's Copse,Bridge Approach,0
+23660,Huntsman's Copse,Undead Lockaway,0
+23665,Undead Purgatory,Undead Purgatory,0
+17665,Harvest Valley,Poison Pool,0
+17650,Harvest Valley,The Mines,0
+17655,Earthen Peak,Lower Earthen Peak,0
+17670,Earthen Peak,Central Earthen Peak,0
+17675,Earthen Peak,Upper Earthen Peak,0
+19655,Iron Keep,Threshold Bridge,0
+19650,Iron Keep,Ironhearth Hall,0
+19660,Iron Keep,Eygil's Idol,0
+19665,Belfry Sol,Belfry Sol Approach,0
+29650,Shaded Woods,Old Akelarre,0
+32655,Shaded Woods,Ruined Fork Road,0
+32660,Shaded Woods,Shaded Ruins,0
+33655,Doors of Pharros,Gyrm's Respite,0
+33660,Doors of Pharros,Ordeal's End,0
+14655,Brightstone Cove Tseldora,Royal Army Campsite,0
+14660,Brightstone Cove Tseldora,Chapel Threshold,0
+14650,Brightstone Cove Tseldora,Lower Brightstone Cove,0
+34655,Grave of Saints,Harvel's Resting Place,0
+34650,Grave of Saints,Grave Entrance,0
+25665,The Gutter,Upper Gutter,0
+25655,The Gutter,Central Gutter,0
+25650,Black Gulch,Black Gulch Mouth,0
+25660,Black Gulch,Hidden Chamber,0
+21650,Drangleic Castle,King's Gate,0
+21660,Drangleic Castle,Forgotten Chamber,0
+21665,Drangleic Castle,Under Castle Drangleic,0
+21655,Drangleic Castle,Central Castle Drangleic,0
+11650,Shrine of Amana,Tower of Prayer,0
+11655,Shrine of Amana,Crumbled Ruins,0
+11660,Shrine of Amana,Rhoy's Resting Place,0
+11670,Shrine of Amana,Rise of the Dead,0
+24655,Undead Crypt,Undead Crypt Entrance,0
+24650,Undead Crypt,Undead Ditch,0
+15650,Aldia's Keep,Foregarden,0
+15655,Aldia's Keep,Ritual Site,0
+27650,Dragon Aerie,Dragon Aerie,0
+27655,Dragon Shrine,Shrine Entrance,0
+35650,Shulva - Sanctum City,Sanctum Walk,0
+35685,Shulva - Sanctum City,Tower of Prayer,0
+35655,Shulva - Sanctum City,Priestess's Chamber,0
+35670,Dragon's Sanctum,Hidden Sanctum Chamber,0
+35675,Dragon's Sanctum,Lair of the Imperfect,0
+35680,Dragon's Sanctum,Sanctum Interior,0
+35665,Dragon's Rest,Sanctum Nadir,0
+36650,Brume Tower,Throne Floor,0
+36660,Brume Tower,Upper Floor,0
+36655,Brume Tower,Foyer,0
+36670,Brume Tower,Lowermost Floor,0
+36675,Brume Tower,The Smelter Throne,0
+841220096,Brume Tower,Memory of the Old Iron King,5300000
+36665,Iron Passage,Iron Passage,0
+37650,Frozen Eleum Loyce,Outer Wall,0
+37660,Frozen Eleum Loyce,Abandoned Dwelling,0
+37685,Frozen Eleum Loyce,Inner Wall,0
+37665,Frozen Eleum Loyce,Lower Garrison,0			
+37675,Frozen Eleum Loyce,Expulsion Chamber,0
+841285632,Frozen Eleum Loyce,Frigid Outskirts,400000
+37670,Grand Cathedral,Grand Cathedral,0
 </value>
   </data>
   <data name="BonfireWarp" xml:space="preserve">
@@ -258,10 +267,11 @@ e9 00 00 00 00          jmp    25 &lt;original+0xa&gt;</value>
 0f b7 15 00 00 00 00    movzx  edx,WORD PTR [rip+0x0]        # 12 &lt;_main+0x12&gt;
 41 b8 05 00 00 00       mov    r8d,0x5
 e8 00 00 00 00          call   1d &lt;_main+0x1d&gt;
+c7 40 04 00 00 00 00    mov    DWORD PTR [rax+0x4],0x0
 48 b9 00 00 00 00 00    movabs rcx,0x0
 00 00 00
-48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 2e &lt;_main+0x2e&gt;
-e8 00 00 00 00          call   33 &lt;_main+0x33&gt;
+48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 35 &lt;_main+0x35&gt;
+e8 00 00 00 00          call   3a &lt;_main+0x3a&gt;
 48 83 c4 60             add    rsp,0x60
 c3                      ret</value>
   </data>
@@ -367,5 +377,24 @@ eb 11                   jmp    6b &lt;exit&gt;
 59                      pop    rcx
 89 83 68 01 00 00       mov    DWORD PTR [rbx+0x168],eax
 e9 00 00 00 00          jmp    77 &lt;exit+0xc&gt;</value>
+  </data>
+  <data name="EventWarp" xml:space="preserve">
+    <value>48 81 ec 18 01 00 00    sub    rsp,0x118
+48 b9 00 00 00 00 00    movabs rcx,0x0
+00 00 00
+48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 18 &lt;_main+0x18&gt;
+e8 00 00 00 00          call   1d &lt;_main+0x1d&gt;
+48 81 c4 18 01 00 00    add    rsp,0x118
+c3                      ret</value>
+  </data>
+  <data name="CreditSkip" xml:space="preserve">
+    <value>48 81 ec 20 02 00 00    sub    rsp,0x220
+83 3d 00 00 00 00 00    cmp    DWORD PTR [rip+0x0],0x0        # e &lt;_main+0xe&gt;
+75 11                   jne    21 &lt;skip&gt;
+c7 41 28 07 00 00 00    mov    DWORD PTR [rcx+0x28],0x7
+c7 05 00 00 00 00 01    mov    DWORD PTR [rip+0x0],0x1        # 21 &lt;skip&gt;
+00 00 00
+000000000021 &lt;skip&gt;:
+e9 00 00 00 00          jmp    26 &lt;skip+0x5&gt;</value>
   </data>
 </root>

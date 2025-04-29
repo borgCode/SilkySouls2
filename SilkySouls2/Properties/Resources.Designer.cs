@@ -65,12 +65,12 @@ namespace SilkySouls2.Properties {
         ///0f b7 15 00 00 00 00    movzx  edx,WORD PTR [rip+0x0]        # 12 &lt;_main+0x12&gt;
         ///41 b8 05 00 00 00       mov    r8d,0x5
         ///e8 00 00 00 00          call   1d &lt;_main+0x1d&gt;
+        ///c7 40 04 00 00 00 00    mov    DWORD PTR [rax+0x4],0x0
         ///48 b9 00 00 00 00 00    movabs rcx,0x0
         ///00 00 00
-        ///48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 2e &lt;_main+0x2e&gt;
-        ///e8 00 00 00 00          call   33 &lt;_main+0x33&gt;
-        ///48 83 c4 60             add    rsp,0x60
-        ///c3                       [rest of string was truncated]&quot;;.
+        ///48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 35 &lt;_main+0x35&gt;
+        ///e8 00 00 00 00          call   3a &lt;_main+0x3a&gt;
+        ///48 83 c4  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string BonfireWarp {
             get {
@@ -98,6 +98,22 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 48 81 ec 20 02 00 00    sub    rsp,0x220
+        ///83 3d 00 00 00 00 00    cmp    DWORD PTR [rip+0x0],0x0        # e &lt;_main+0xe&gt;
+        ///75 11                   jne    21 &lt;skip&gt;
+        ///c7 41 28 07 00 00 00    mov    DWORD PTR [rcx+0x28],0x7
+        ///c7 05 00 00 00 00 01    mov    DWORD PTR [rip+0x0],0x1        # 21 &lt;skip&gt;
+        ///00 00 00
+        ///000000000021 &lt;skip&gt;:
+        ///e9 00 00 00 00          jmp    26 &lt;skip+0x5&gt;.
+        /// </summary>
+        internal static string CreditSkip {
+            get {
+                return ResourceManager.GetString("CreditSkip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 51                      push   rcx
         ///48 b9 00 00 00 00 00    movabs rcx,0x0
         ///00 00 00
@@ -114,6 +130,21 @@ namespace SilkySouls2.Properties {
         internal static string DamageControl {
             get {
                 return ResourceManager.GetString("DamageControl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 48 81 ec 18 01 00 00    sub    rsp,0x118
+        ///48 b9 00 00 00 00 00    movabs rcx,0x0
+        ///00 00 00
+        ///48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 18 &lt;_main+0x18&gt;
+        ///e8 00 00 00 00          call   1d &lt;_main+0x1d&gt;
+        ///48 81 c4 18 01 00 00    add    rsp,0x118
+        ///c3                      ret.
+        /// </summary>
+        internal static string EventWarp {
+            get {
+                return ResourceManager.GetString("EventWarp", resourceCulture);
             }
         }
         
@@ -215,11 +246,11 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 10655,Boss,Last Giant,92.18|-40.43|-147.47|0.00|92.18|-40.43|-147.47|55.84|92.18|-40.43|-147.47|0.00|0.00|0.00|0.00|1.00
-        ///10655,Boss,Pursuer,139.12|10.05|-217.90|0.00|139.12|10.05|-217.90|58.79|139.12|10.05|-217.90|0.00|0.00|0.00|0.00|1.00
-        ///31650,Boss,Dragonrider,-6.91|-14.66|283.71|0.00|-6.91|-14.66|283.71|36.76|-6.91|-14.66|283.71|0.00|0.00|0.00|0.00|1.00
-        ///31660,Boss,Ornstein,-144.09|8.03|170.72|0.00|-144.09|8.03|170.72|45.42|-144.09|8.03|170.72|0.00|0.00|0.00|0.00|1.00
-        ///18650,Boss,Flexile,2.91|-65.35|514 [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to 10655,Boss,Last Giant,92.18|-40.43|-147.47|0.00|92.18|-40.43|-147.47|55.84|92.18|-40.43|-147.47|0.00|0.00|0.00|0.00|1.00,0
+        ///10655,Boss,Pursuer,139.12|10.05|-217.90|0.00|139.12|10.05|-217.90|58.79|139.12|10.05|-217.90|0.00|0.00|0.00|0.00|1.00,0
+        ///31650,Boss,Dragonrider,-6.91|-14.66|283.71|0.00|-6.91|-14.66|283.71|36.76|-6.91|-14.66|283.71|0.00|0.00|0.00|0.00|1.00,0
+        ///31660,Boss,Ornstein,-144.09|8.03|170.72|0.00|-144.09|8.03|170.72|45.42|-144.09|8.03|170.72|0.00|0.00|0.00|0.00|1.00,0
+        ///18650,Boss,Flexile,2.91|-6 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string WarpLocations {
             get {

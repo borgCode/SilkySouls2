@@ -6,6 +6,7 @@
         public string MainArea { get; set; }
         public string LocationName { get; set; }
         public float[] Coordinates { get; set; }
+        public int EventObjId { get; set; }
 
         public bool HasCoordinates => Coordinates != null && Coordinates.Length == 16;
     }

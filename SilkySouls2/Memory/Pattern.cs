@@ -73,6 +73,14 @@ namespace SilkySouls2.Memory
         );
 
 
+        public static readonly Pattern CreditSkip = new Pattern(
+            new byte[] { 0x48, 0x81, 0xEC, 0x20, 0x02, 0x00, 0x00, 0x8B, 0x41 },
+            "xxxxxxxxx",
+            0,
+            None
+        );
+
+
         //Funcs
 
         public static readonly Pattern WarpPrep = new Pattern(

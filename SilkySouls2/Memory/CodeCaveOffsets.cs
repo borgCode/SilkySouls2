@@ -28,11 +28,23 @@ namespace SilkySouls2.Memory
             EmptySpace = 0x110,
             BonfireId = 0x190,
             WarpCode = 0x1A0,
-            Coords = 0x1F0,
-            CoordWrite = 0x230,
+            Coords = 0x200,
+            CoordWrite = 0x240,
         }
         
         public const int LockedTargetPtr = 0x300;
         public const int SaveLockedTarget = 0x310;
+
+        public enum EventWarp
+        {
+            Params = 0x320,
+            Code = 0x360
+        }
+
+        public enum CreditSkip
+        {
+            ModifyOnceFlag = 0x390,
+            Code = 0x3A0
+        }
     }
 }

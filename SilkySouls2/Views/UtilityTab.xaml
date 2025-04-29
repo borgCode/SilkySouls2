@@ -124,8 +124,8 @@
                                       IsChecked="{Binding IsIvorySkipEnabled}"
                                       VerticalAlignment="Center"
                                       Margin="0,0,20,0" />
-                            <CheckBox Content="100% Drop"
-                                      IsChecked="{Binding Is100DropEnabled}"
+                            <CheckBox Content="Skip Credits"
+                                      IsChecked="{Binding IsCreditSkipEnabled}"
                                       VerticalAlignment="Center"
                                       Margin="0,0,20,0" />
                             <Button Content="Force Save"

@@ -130,7 +130,7 @@ namespace SilkySouls2.Memory
             public static long OneShot; // Also Deal no damage 
             public static long WarpCoordWrite;
             public static long LockedTarget;
-
+            public static long CreditSkip;
         }
 
         public static class Funcs

@@ -8,7 +8,7 @@ namespace SilkySouls2.ViewModels
     {
         
         private bool _isIvorySkipEnabled;
-        
+        private bool _isCreditSkipEnabled;
         
         private bool _areButtonsEnabled;
         private readonly HotkeyManager _hotkeyManager;
@@ -39,6 +39,17 @@ namespace SilkySouls2.ViewModels
             set => SetProperty(ref _areButtonsEnabled, value);
         }
         
+        public bool IsCreditSkipEnabled
+        {
+            get => _isCreditSkipEnabled;
+            set
+            {
+                if (!SetProperty(ref _isCreditSkipEnabled, value)) return;
+                _utilityService.ToggleCreditSkip(_isCreditSkipEnabled);
+            }
+        }
+        
+        
         public bool IsIvorySkipEnabled
         {
             get => _isIvorySkipEnabled;
@@ -55,6 +66,7 @@ namespace SilkySouls2.ViewModels
         {
             
             if (IsIvorySkipEnabled) _utilityService.SetMultipleEventOn(GameIds.EventFlags.IvoryBlackKnights);
+            if (IsCreditSkipEnabled) _utilityService.ToggleCreditSkip(true);
             // if (IsHitboxEnabled) _utilityService.ToggleHitboxView(true);
             // if (IsSoundViewEnabled) _utilityService.ToggleSoundView(true);
             // if (IsDrawEventEnabled) _utilityService.ToggleEventDraw(true);

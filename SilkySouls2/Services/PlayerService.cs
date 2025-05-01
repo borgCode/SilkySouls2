@@ -31,6 +31,13 @@ namespace SilkySouls2.Services
 
         public void SetHp(int hp) =>
             _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.PlayerCtrlOffsets.Hp), hp);
+        
+        
+        public int GetSp() =>
+            _memoryIo.ReadInt32(GetPlayerCtrlField(GameManagerImp.PlayerCtrlOffsets.Stamina));
+
+        public void SetSp(int sp)=>
+            _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.PlayerCtrlOffsets.Stamina), sp);
 
         private IntPtr GetPlayerCtrlField(int fieldOffset) =>
             _memoryIo.FollowPointers(GameManagerImp.Base, new[] { GameManagerImp.Offsets.PlayerCtrl, fieldOffset },
@@ -259,7 +266,7 @@ namespace SilkySouls2.Services
         //                public void SetMp(int val) => _memoryIo.WriteInt32(GetChrDataFieldPtr((int)WorldChrMan.ChrDataModule.Mp), val);
         //
         // public void SetSp(int val) => _memoryIo.WriteInt32(GetChrDataFieldPtr((int)WorldChrMan.ChrDataModule.Stam), val);
-        
+
         public void ToggleNoDeath(bool isNoDeathEnabled) =>
             _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.PlayerCtrlOffsets.MinHp),
                 isNoDeathEnabled ? 1 : -99999);
@@ -273,20 +280,23 @@ namespace SilkySouls2.Services
             {
                 if (!_hookManager.IsHookInstalled(dmgControlCode.ToInt64()))
                 {
-                    _hookManager.InstallHook(dmgControlCode.ToInt64(), Hooks.HpWrite, new byte[] { 0x89, 0x83, 0x68, 0x01, 0x00, 0x00 });
+                    _hookManager.InstallHook(dmgControlCode.ToInt64(), Hooks.HpWrite,
+                        new byte[] { 0x89, 0x83, 0x68, 0x01, 0x00, 0x00 });
                 }
-        
+
                 _memoryIo.WriteByte(noDamageFlag, 1);
             }
             else
             {
                 _memoryIo.WriteByte(noDamageFlag, 0);
-        
-                bool allFlagsOff = 
+
+                bool allFlagsOff =
                     _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.OneShotFlag) == 0 &&
-                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.DealNoDamageFlag) == 0 &&
-                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.FreezeTargetHpFlag) == 0;
-        
+                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.DealNoDamageFlag) ==
+                    0 &&
+                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.FreezeTargetHpFlag) ==
+                    0;
+
                 if (allFlagsOff && _hookManager.IsHookInstalled(dmgControlCode.ToInt64()))
                 {
                     _hookManager.UninstallHook(dmgControlCode.ToInt64());
@@ -303,20 +313,24 @@ namespace SilkySouls2.Services
             {
                 if (!_hookManager.IsHookInstalled(dmgControlCode.ToInt64()))
                 {
-                    _hookManager.InstallHook(dmgControlCode.ToInt64(), Hooks.HpWrite, new byte[] { 0x89, 0x83, 0x68, 0x01, 0x00, 0x00 });
+                    _hookManager.InstallHook(dmgControlCode.ToInt64(), Hooks.HpWrite,
+                        new byte[] { 0x89, 0x83, 0x68, 0x01, 0x00, 0x00 });
                 }
-                
+
                 _memoryIo.WriteByte(oneShot, 1);
             }
             else
             {
                 _memoryIo.WriteByte(oneShot, 0);
-                
-                bool allFlagsOff = 
-                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.PlayerNoDamageFlag) == 0 &&
-                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.DealNoDamageFlag) == 0 &&
-                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.FreezeTargetHpFlag) == 0;
-                
+
+                bool allFlagsOff =
+                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.PlayerNoDamageFlag) ==
+                    0 &&
+                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.DealNoDamageFlag) ==
+                    0 &&
+                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.FreezeTargetHpFlag) ==
+                    0;
+
                 if (allFlagsOff && _hookManager.IsHookInstalled(dmgControlCode.ToInt64()))
                 {
                     _hookManager.UninstallHook(dmgControlCode.ToInt64());
@@ -333,20 +347,23 @@ namespace SilkySouls2.Services
             {
                 if (!_hookManager.IsHookInstalled(dmgControlCode.ToInt64()))
                 {
-                    _hookManager.InstallHook(dmgControlCode.ToInt64(), Hooks.HpWrite, new byte[] { 0x89, 0x83, 0x68, 0x01, 0x00, 0x00 });
+                    _hookManager.InstallHook(dmgControlCode.ToInt64(), Hooks.HpWrite,
+                        new byte[] { 0x89, 0x83, 0x68, 0x01, 0x00, 0x00 });
                 }
-        
+
                 _memoryIo.WriteByte(dealNoDamageFlag, 1);
             }
             else
             {
                 _memoryIo.WriteByte(dealNoDamageFlag, 0);
-        
-                bool allFlagsOff = 
-                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.PlayerNoDamageFlag) == 0 &&
+
+                bool allFlagsOff =
+                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.PlayerNoDamageFlag) ==
+                    0 &&
                     _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.OneShotFlag) == 0 &&
-                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.FreezeTargetHpFlag) == 0;
-        
+                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.FreezeTargetHpFlag) ==
+                    0;
+
                 if (allFlagsOff && _hookManager.IsHookInstalled(dmgControlCode.ToInt64()))
                 {
                     _hookManager.UninstallHook(dmgControlCode.ToInt64());
@@ -357,7 +374,7 @@ namespace SilkySouls2.Services
         public void ToggleInfiniteStamina(bool isInfiniteStaminaEnabled) =>
             _memoryIo.WriteByte(Patches.InfiniteStam + 1, isInfiniteStaminaEnabled ? 0x82 : 0x83);
 
-        public int GetPlayerStat(int statOffset) => _memoryIo.ReadUInt8( GetStatPtr(statOffset));
+        public int GetPlayerStat(int statOffset) => _memoryIo.ReadUInt8(GetStatPtr(statOffset));
 
 
         private IntPtr GetStatPtr(int statOffset)
@@ -383,6 +400,66 @@ namespace SilkySouls2.Services
                 GameManagerImp.Offsets.PlayerCtrl,
                 GameManagerImp.PlayerCtrlOffsets.Speed
             }, false);
+        }
+
+        public void ToggleNoGoodsConsume(bool isNoGoodsConsumeEnabled) =>
+            _memoryIo.WriteBytes(Patches.InfiniteGoods,
+                isNoGoodsConsumeEnabled
+                    ? new byte[] { 0x90, 0x90, 0x90, 0x90 }
+                    : new byte[] { 0x66, 0x29, 0x73, 0x20 });
+
+        public void ToggleInfiniteCasts(bool isInfiniteCastsEnabled) =>
+            _memoryIo.WriteBytes(Patches.InfiniteCasts,
+                isInfiniteCastsEnabled
+                    ? new byte[] { 0x90, 0x90, 0x90 }
+                    : new byte[] { 0x88, 0x4D, 0x20 });
+
+        public void ToggleInfiniteDurability(bool isInfiniteDuraEnabled)=>
+            _memoryIo.WriteBytes(Patches.InfiniteDurability,
+                isInfiniteDuraEnabled
+                    ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 }
+                    : new byte[] { 0xF3, 0x0F, 0x11, 0xB4, 0xC3, 0x94, 0x00, 0x00, 0x00 });
+
+        public void SavePos(int index)
+        {
+            byte[] positionBytes = _memoryIo.ReadBytes(GetPositionPtr(), 0x40);
+            if (index == 0) _memoryIo.WriteBytes(CodeCaveOffsets.Base + (int)CodeCaveOffsets.SavedPos.Pos1, positionBytes);
+            else _memoryIo.WriteBytes(CodeCaveOffsets.Base + (int)CodeCaveOffsets.SavedPos.Pos2, positionBytes);
+        }
+
+        public void RestorePos(int index)
+        {
+            byte[] positionBytes;
+            if (index == 0) positionBytes = _memoryIo.ReadBytes(CodeCaveOffsets.Base + (int)CodeCaveOffsets.SavedPos.Pos1, 0x40);
+            else positionBytes = _memoryIo.ReadBytes(CodeCaveOffsets.Base + (int)CodeCaveOffsets.SavedPos.Pos2, 0x40);
+            _memoryIo.WriteBytes(GetPositionPtr(), positionBytes);
+            
+        }
+
+        private IntPtr GetPositionPtr() =>
+            _memoryIo.FollowPointers(HkHardwareInfo.Base, new[]
+            {
+                HkHardwareInfo.HkpWorld,
+                HkHardwareInfo.HkpChrRigidBodyPtr,
+                HkHardwareInfo.HkpChrRigidBody,
+                HkHardwareInfo.HkpRigidBodyPtr,
+                HkHardwareInfo.HkpRigidBody.PlayerCoords
+            }, false);
+
+        public (float x, float y, float z) GetCoords()
+        {
+            var xyzPtr = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+            {
+                GameManagerImp.Offsets.PlayerCtrl,
+                GameManagerImp.PlayerCtrlOffsets.ChrPhysicsCtrlPtr,
+                GameManagerImp.PlayerCtrlOffsets.ChrPhysicsCtrl.Xyz
+            }, false);
+
+            var coordBytes = _memoryIo.ReadBytes(xyzPtr, 12);
+            float x = BitConverter.ToSingle(coordBytes, 0);
+            float z = BitConverter.ToSingle(coordBytes, 4);
+            float y = BitConverter.ToSingle(coordBytes, 8);
+            return (x, y, z);
         }
     }
 }

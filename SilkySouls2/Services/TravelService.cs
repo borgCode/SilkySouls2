@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using SilkySouls2.Memory;
 using SilkySouls2.Models;
 using SilkySouls2.Utilities;
@@ -11,23 +12,24 @@ namespace SilkySouls2.Services
     {
         private readonly MemoryIo _memoryIo;
         private readonly HookManager _hookManager;
+        private readonly UtilityService _utilityService;
 
-        public TravelService(MemoryIo memoryIo, HookManager hookManager)
+        public TravelService(MemoryIo memoryIo, HookManager hookManager, UtilityService utilityService)
         {
             _memoryIo = memoryIo;
             _hookManager = hookManager;
+            _utilityService = utilityService;
         }
 
         public void Warp(WarpLocation location)
         {
-  
             var actualWarp = Funcs.BonfireWarp;
             var eventWarpEntity = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
             {
                 GameManagerImp.Offsets.EventManager,
                 GameManagerImp.EventManagerOffsets.WarpEventEntity
             }, true);
-            
+
             IntPtr codeLoc;
             byte[] warpBytes;
             if (location.EventObjId == 0)
@@ -37,7 +39,7 @@ namespace SilkySouls2.Services
                 var emptySpace = CodeCaveOffsets.Base + (int)CodeCaveOffsets.BonfireWarp.EmptySpace;
                 var bonfireIdLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.BonfireWarp.BonfireId;
                 codeLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.BonfireWarp.WarpCode;
-                
+
                 _memoryIo.WriteInt32(bonfireIdLoc, location.BonfireId);
 
                 warpBytes = AsmLoader.GetAsmBytes("BonfireWarp");
@@ -52,7 +54,6 @@ namespace SilkySouls2.Services
                     (codeLoc.ToInt64() + 0x2E, emptySpace.ToInt64(), 7, 0x2E + 3),
                     (codeLoc.ToInt64() + 0x35, actualWarp, 5, 0x35 + 1)
                 });
-                
             }
             else
             {
@@ -60,20 +61,20 @@ namespace SilkySouls2.Services
                 _memoryIo.WriteInt32(paramsLoc, 4);
                 _memoryIo.WriteInt32(paramsLoc + 0x8, location.BonfireId);
                 _memoryIo.WriteInt32(paramsLoc + 0xC, -1);
+                _memoryIo.WriteInt32(paramsLoc + 0x14, 3);
                 _memoryIo.WriteInt32(paramsLoc + 0x18, location.EventObjId);
-                
+
                 codeLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.EventWarp.Code;
                 warpBytes = AsmLoader.GetAsmBytes("EventWarp");
                 var bytes = BitConverter.GetBytes(eventWarpEntity.ToInt64());
                 Array.Copy(bytes, 0, warpBytes, 0x7 + 2, 8);
-               AsmHelper.WriteRelativeOffsets(warpBytes, new []
-               {
-                   (codeLoc.ToInt64() + 0x11, paramsLoc.ToInt64(), 7, 0x11 + 3),
-                   (codeLoc.ToInt64() + 0x18, actualWarp, 5, 0x18 + 1)
-               });
-               
+                AsmHelper.WriteRelativeOffsets(warpBytes, new[]
+                {
+                    (codeLoc.ToInt64() + 0x11, paramsLoc.ToInt64(), 7, 0x11 + 3),
+                    (codeLoc.ToInt64() + 0x18, actualWarp, 5, 0x18 + 1)
+                });
             }
-            
+
             _memoryIo.WriteBytes(codeLoc, warpBytes);
             _memoryIo.RunThread(codeLoc);
 
@@ -98,7 +99,7 @@ namespace SilkySouls2.Services
             _memoryIo.WriteBytes(coordsLoc, allCoordinateBytes);
 
             var codeBytes = AsmLoader.GetAsmBytes("WarpCoordWrite");
-            var bytes = BitConverter.GetBytes(HkpPtrEntity.Base.ToInt64());
+            var bytes = BitConverter.GetBytes(HkHardwareInfo.Base.ToInt64());
             Array.Copy(bytes, 0, codeBytes, 0x8 + 2, 8);
 
             AsmHelper.WriteRelativeOffsets(codeBytes, new[]
@@ -126,7 +127,11 @@ namespace SilkySouls2.Services
                 while (IsLoadingScreen() && Environment.TickCount - start < 10000)
                     Thread.Sleep(50);
             }
+            if (location.LocationName == "Darklurker") _utilityService.SetEventOn(GameIds.EventFlags.ClearedDrangelicDungeon);
+            Task.Delay(200).Wait();
             _hookManager.UninstallHook(code.ToInt64());
+            
+                
         }
 
         public bool IsLoadingScreen() =>

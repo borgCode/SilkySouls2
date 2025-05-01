@@ -128,27 +128,18 @@
 
                     <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="10,5,0,0"
                                 HorizontalAlignment="Left">
-                        <xctk:DoubleUpDown x:Name="PosXUpDown" Width="70" Margin="5,0,0,0"
+                        <xctk:DoubleUpDown  Width="70" Margin="5,0,0,0"
                                            Padding="0,0,5,0"
                                            Value="{Binding PosX}" FormatString="F1"
-                                           Loaded="CoordinateUpDown_Loaded"
-                                           LostFocus="PosX_LostFocus" 
-                                           PreviewKeyDown="PosX_PreviewKeyDown"
-                                           IsEnabled="{Binding AreOptionsEnabled}" />
-                        <xctk:DoubleUpDown x:Name="PosYUpDown" Width="70" Margin="5,0,5,0"
+                                           IsEnabled="False" />
+                        <xctk:DoubleUpDown  Width="70" Margin="5,0,5,0"
                                            Padding="0,0,5,0"
                                            Value="{Binding PosY}" FormatString="F1"
-                                           Loaded="CoordinateUpDown_Loaded"
-                                           LostFocus="PosY_LostFocus"
-                                           PreviewKeyDown="PosY_PreviewKeyDown"
-                                           IsEnabled="{Binding AreOptionsEnabled}" />
-                        <xctk:DoubleUpDown x:Name="PosZUpDown" Width="70" Value="{Binding PosZ}" 
+                                           IsEnabled="False" />
+                        <xctk:DoubleUpDown  Width="70" Value="{Binding PosZ}" 
                                            Padding="0,0,5,0"
                                            FormatString="F1"
-                                           Loaded="CoordinateUpDown_Loaded"
-                                           LostFocus="PosZ_LostFocus"
-                                           PreviewKeyDown="PosZ_PreviewKeyDown"
-                                           IsEnabled="{Binding AreOptionsEnabled}" />
+                                           IsEnabled="False" />
                     </StackPanel>
                 </Grid>
             </Border>
@@ -169,11 +160,11 @@
                     <CheckBox Content="Infinite Stamina"
                               IsChecked="{Binding IsInfiniteStaminaEnabled}"
                               Margin="0,2" />
-                    <CheckBox Content="No Goods Consume"
+                    <CheckBox Content="No Goods / Arrow Consume"
                               IsChecked="{Binding IsNoGoodsConsumeEnabled}"
                               Margin="0,2" />
-                    <CheckBox Content="Infinite FP"
-                              IsChecked="{Binding IsInfiniteFpEnabled}"
+                    <CheckBox Content="Infinite Casts"
+                              IsChecked="{Binding IsInfiniteCastsEnabled}"
                               Margin="0,2" />
                     <CheckBox Content="Infinite Durability"
                               IsChecked="{Binding IsInfiniteDurabilityEnabled}"
@@ -187,16 +178,13 @@
                     <CheckBox Content="Deal No Damage"
                               IsChecked="{Binding IsDealNoDamageEnabled}"
                               Margin="0,2" />
-                    <CheckBox Content="Invisible"
+                    <CheckBox Content="Invisible todo"
                               IsChecked="{Binding IsInvisibleEnabled}"
                               Margin="0,2" />
-                    <CheckBox Content="Silent"
+                    <CheckBox Content="Silent todo"
                               IsChecked="{Binding IsSilentEnabled}"
                               Margin="0,2" />
-                    <CheckBox Content="No Ammo Consume"
-                              IsChecked="{Binding IsNoAmmoConsumeEnabled}"
-                              Margin="0,2" />
-                    <CheckBox Content="Infinite Poise"
+                    <CheckBox Content="Infinite Poise todo"
                               IsChecked="{Binding IsInfinitePoiseEnabled}"
                               Margin="0,2" />
                 </StackPanel>

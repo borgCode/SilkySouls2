@@ -1,4 +1,5 @@
-﻿using static SilkySouls2.Memory.RipType;
+﻿using System.Diagnostics.Tracing;
+using static SilkySouls2.Memory.RipType;
 
 namespace SilkySouls2.Memory
 {
@@ -80,6 +81,23 @@ namespace SilkySouls2.Memory
             None
         );
 
+        // public static readonly Pattern DropRate = new Pattern(
+        //     new byte[] { 0xF3, 0x41, 0x0F, 0x10, 0x04, 0x07 },
+        //     "xxxxxx",
+        //     0,
+        //     None
+        // );
+
+        public static readonly Pattern NumOfDrops = new Pattern(
+            new byte[] { 0x41, 0x0F, 0xB6, 0x47, 0x01, 0xFF },
+            "xxxxxx",
+            0,
+            None
+        );
+
+        
+
+
 
         //Funcs
 
@@ -120,5 +138,41 @@ namespace SilkySouls2.Memory
             0,
             None
         );
+
+        public static readonly Pattern InfiniteGoods = new Pattern(
+            new byte[] { 0x66, 0x29, 0x73, 0x20 },
+            "xxxx",
+            0,
+            None
+        );
+
+        public static readonly Pattern HideChrModels = new Pattern(
+            new byte[] { 0x74, 0x05, 0x80, 0xC9, 0x08 },
+            "xxxxx",
+            0,
+            None
+        );
+
+        public static readonly Pattern InfiniteCasts = new Pattern(
+            new byte[] { 0x88, 0x4D, 0x20, 0x49 },
+            "xxxx",
+            0,
+            None
+        );
+
+        public static readonly Pattern InfiniteDurability = new Pattern(
+            new byte[] { 0xF3, 0x0F, 0x11, 0xB4, 0xC3 },
+            "xxxxx",
+            0,
+            None
+        );
+
+        public static readonly Pattern DropRate = new Pattern(
+            new byte[] { 0x41, 0xF7, 0xF2, 0x41, 0x3B, 0xD1 },
+            "xxxxxx",
+            0,
+            None
+        );
+
     }
 }

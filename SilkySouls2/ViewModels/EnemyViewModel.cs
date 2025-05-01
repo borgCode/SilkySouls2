@@ -653,8 +653,6 @@ namespace SilkySouls2.ViewModels
                 _enemyService.ToggleTargetHook(true);
                 _targetOptionsTimer.Start();
             }
-
-            if (IsAllDisableAiEnabled) _enemyService.ToggleDisableAi(true);
             // if (IsAllRepeatActEnabled) _enemyService.ToggleAllRepeatAct(true);
             AreOptionsEnabled = true;
         }
@@ -666,6 +664,11 @@ namespace SilkySouls2.ViewModels
             LastAct = 0;
             // ForceAct = 0;
             AreOptionsEnabled = false;
+        }
+
+        public void TryApplyDisableAi()
+        {
+            if (IsAllDisableAiEnabled) _enemyService.ToggleDisableAi(true);
         }
     }
 }

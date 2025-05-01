@@ -28,8 +28,8 @@ namespace SilkySouls2
 
         private readonly UtilityViewModel _utilityViewModel;
         private readonly EnemyViewModel _enemyViewModel;
-
-        // private readonly ItemViewModel _itemViewModel;
+        private readonly EventViewModel _eventViewModel;
+        private readonly ItemViewModel _itemViewModel;
         private readonly SettingsViewModel _settingsViewModel;
         public MainWindow()
         {
@@ -52,31 +52,34 @@ namespace SilkySouls2
             var hotkeyManager = new HotkeyManager(_memoryIo);
    
             var playerService = new PlayerService(_memoryIo, _hookManager);
-            var travelService = new TravelService(_memoryIo, _hookManager);
             var utilityService = new UtilityService(_memoryIo, _hookManager);
+            var travelService = new TravelService(_memoryIo, _hookManager, utilityService);
             var enemyService = new EnemyService(_memoryIo, _hookManager);
-            // var itemService = new ItemService(_memoryIo, _hookManager);
+            var itemService = new ItemService(_memoryIo, _hookManager);
             var settingsService = new SettingsService(_memoryIo);
  
             _playerViewModel = new PlayerViewModel(playerService, hotkeyManager);
             _travelViewModel = new TravelViewModel(travelService, hotkeyManager);
+            _eventViewModel = new EventViewModel(utilityService);
             _utilityViewModel = new UtilityViewModel(utilityService, hotkeyManager);
             _enemyViewModel = new EnemyViewModel(enemyService, hotkeyManager);
-            // _itemViewModel = new ItemViewModel(itemService);
+            _itemViewModel = new ItemViewModel(itemService);
             _settingsViewModel = new SettingsViewModel(settingsService, hotkeyManager);
             
             var playerTab = new PlayerTab(_playerViewModel);
             var travelTab = new TravelTab(_travelViewModel);
+            var eventTab = new EventTab(_eventViewModel);
             var utilityTab = new UtilityTab(_utilityViewModel);
             var enemyTab = new EnemyTab(_enemyViewModel);
-            // var itemTab = new ItemTab(_itemViewModel);
+            var itemTab = new ItemTab(_itemViewModel);
             var settingsTab = new SettingsTab(_settingsViewModel);
             
             MainTabControl.Items.Add(new TabItem { Header = "Player", Content = playerTab });
             MainTabControl.Items.Add(new TabItem { Header = "Travel", Content = travelTab });
+            MainTabControl.Items.Add(new TabItem { Header = "Event", Content = eventTab });
             MainTabControl.Items.Add(new TabItem { Header = "Utility", Content = utilityTab });
             MainTabControl.Items.Add(new TabItem { Header = "Enemies", Content = enemyTab });
-            // MainTabControl.Items.Add(new TabItem { Header = "Items", Content = itemTab });
+            MainTabControl.Items.Add(new TabItem { Header = "Items", Content = itemTab });
             MainTabControl.Items.Add(new TabItem { Header = "Settings", Content = settingsTab });
             
             _settingsViewModel.ApplyStartUpOptions();
@@ -110,10 +113,10 @@ namespace SilkySouls2
             {
                 IsAttachedText.Text = "Attached to game";
                 IsAttachedText.Foreground = (SolidColorBrush)Application.Current.Resources["AttachedBrush"];
-
-
+                
                 // LaunchGameButton.IsEnabled = false;
-
+                
+                
                 if (!_hasScanned)
                 {
                     _aobScanner.Scan();
@@ -138,7 +141,12 @@ namespace SilkySouls2
                 
                 if (_memoryIo.IsGameLoaded())
                 {
-                    if (_loaded) return;
+                    
+                    if (_loaded)
+                    {
+                        _enemyViewModel.TryApplyDisableAi(); // Has to be applied later than the other features as it's reset to 0 very  late
+                        return;
+                    }
                     _loaded = true;
                 TryEnableFeatures();
                 // TrySetGameStartPrefs();
@@ -170,6 +178,7 @@ namespace SilkySouls2
         private void ApplyOneTimeFeatures()
         {
             _playerViewModel.TryApplyOneTimeFeatures();
+            _utilityViewModel.TryApplyOneTimeFeatures();
         }
 
         private void TryEnableFeatures()

@@ -53,6 +53,7 @@ namespace SilkySouls2.Memory
                 public const int ChrParamPtr = 0x38;
                 public const int PlayerActionCtrlPtr = 0xE0;
                 public const int Coords = 0x90;
+                public const int ChrFlagsPtr = 0xD8;
                 public const int ChrPhysicsCtrlPtr = 0x100;
                 public const int Hp = 0x168;
                 public const int MinHp = 0x16C;
@@ -82,10 +83,22 @@ namespace SilkySouls2.Memory
                     public const int BossAttackCtrlPtr = 0x170;
                 }
 
+                
                 public static class BossAttackCtrl
                 {
                     public const int LastAttackPtr = 0x10;
                     public const int LastAttack = 0xEC;
+                }
+
+                public static class ChrFlags
+                {
+                    public const int Invincible = 0;
+                    public const int HideModel = 6;
+                }
+
+                public static class ChrPhysicsCtrl
+                {
+                    public const int Xyz = 0x1C0; //Read only
                 }
                 
                 public static class Stats
@@ -104,14 +117,20 @@ namespace SilkySouls2.Memory
             }
         }
 
-        public static class HkpPtrEntity
+        public static class HkHardwareInfo
         {
             public static IntPtr Base;
-            public const int Ptr1 = 0x58;
-            public const int Ptr2 = 0x1F8;
-            public const int Ptr3 = 0x18;
-            public const int Ptr4 = 0x8;
-            public const int Offset = 0x150;
+            public const int HkpWorld = 0x58;
+            public const int HkpChrRigidBodyPtr = 0x1F8;
+            public const int HkpChrRigidBody = 0x18;
+            public const int HkpRigidBodyPtr = 0x8;
+            
+
+            public static class HkpRigidBody
+            {
+                public const int PlayerIdentifier = 0x150;
+                public const int PlayerCoords = 0x1A0;
+            }
         }
         
 
@@ -119,6 +138,11 @@ namespace SilkySouls2.Memory
         {
             public static IntPtr InfiniteStam;
             public static IntPtr ForceSave;
+            public static IntPtr InfiniteGoods;
+            public static IntPtr HideChrModels; // Set JE to JNE
+            public static IntPtr InfiniteCasts;
+            public static IntPtr InfiniteDurability;
+            public static IntPtr DropRate;
         }
         
         
@@ -131,6 +155,7 @@ namespace SilkySouls2.Memory
             public static long WarpCoordWrite;
             public static long LockedTarget;
             public static long CreditSkip;
+            public static long NumOfDrops;
         }
 
         public static class Funcs

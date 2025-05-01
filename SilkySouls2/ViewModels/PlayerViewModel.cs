@@ -28,7 +28,7 @@ namespace SilkySouls2.ViewModels
         private bool _isNoDamageEnabled;
         private bool _isInfiniteStaminaEnabled;
         private bool _isNoGoodsConsumeEnabled;
-        private bool _isInfiniteFpEnabled;
+        private bool _isInfiniteCastsEnabled;
         private bool _isInfiniteDurabilityEnabled;
         private bool _isOneShotEnabled;
         private bool _isDealNoDamageEnabled;
@@ -71,7 +71,7 @@ namespace SilkySouls2.ViewModels
             _hotkeyManager = hotkeyManager;
 
 
-            // RegisterHotkeys();
+            RegisterHotkeys();
 
             _timer = new DispatcherTimer
             {
@@ -86,10 +86,10 @@ namespace SilkySouls2.ViewModels
                 // Souls = _playerService.GetPlayerStat(Offsets.GameManagerImp.PlayerCtrlOffsets.Stats.Souls);
                 PlayerSpeed = _playerService.GetPlayerSpeed();
                 int newSoulLevel = _playerService.GetSoulLevel();
-                // _coords = _playerService.GetCoords();
-                // PosX = _coords.x;
-                // PosY = _coords.y;
-                // PosZ = _coords.z;
+                _coords = _playerService.GetCoords();
+                PosX = _coords.x;
+                PosY = _coords.y;
+                PosZ = _coords.z;
                 if (_currentSoulLevel == newSoulLevel) return;
                 SoulLevel = newSoulLevel;
                 _currentSoulLevel = newSoulLevel;
@@ -98,20 +98,20 @@ namespace SilkySouls2.ViewModels
             _timer.Start();
         }
 
-        // private void RegisterHotkeys()
-        // {
-        //     _hotkeyManager.RegisterAction("SavePos1", () => SavePos(0));
-        //     _hotkeyManager.RegisterAction("SavePos2", () => SavePos(1));
-        //     _hotkeyManager.RegisterAction("RestorePos1", () => RestorePos(0));
-        //     _hotkeyManager.RegisterAction("RestorePos2", () => RestorePos(1));
-        //     _hotkeyManager.RegisterAction("RTSR", () => SetHp(1));
-        //     _hotkeyManager.RegisterAction("NoDeath", () => { IsNoDeathEnabled = !IsNoDeathEnabled; });
-        //     _hotkeyManager.RegisterAction("OneShot", () => { IsOneShotEnabled = !IsOneShotEnabled; });
-        //     _hotkeyManager.RegisterAction("PlayerNoDamage", () => { IsNoDamageEnabled = !IsNoDamageEnabled; });
-        //     _hotkeyManager.RegisterAction("TogglePlayerSpeed", ToggleSpeed);
-        //     _hotkeyManager.RegisterAction("IncreasePlayerSpeed", () => SetSpeed(Math.Min(10, PlayerSpeed + 0.25f)));
-        //     _hotkeyManager.RegisterAction("DecreasePlayerSpeed", () => SetSpeed(Math.Max(0, PlayerSpeed - 0.25f)));
-        // }
+        private void RegisterHotkeys()
+        {
+            _hotkeyManager.RegisterAction("SavePos1", () => SavePos(0));
+            _hotkeyManager.RegisterAction("SavePos2", () => SavePos(1));
+            _hotkeyManager.RegisterAction("RestorePos1", () => RestorePos(0));
+            _hotkeyManager.RegisterAction("RestorePos2", () => RestorePos(1));
+            _hotkeyManager.RegisterAction("RTSR", () => SetHp(1));
+            _hotkeyManager.RegisterAction("NoDeath", () => { IsNoDeathEnabled = !IsNoDeathEnabled; });
+            // _hotkeyManager.RegisterAction("OneShot", () => { IsOneShotEnabled = !IsOneShotEnabled; });
+            // _hotkeyManager.RegisterAction("PlayerNoDamage", () => { IsNoDamageEnabled = !IsNoDamageEnabled; });
+            _hotkeyManager.RegisterAction("TogglePlayerSpeed", ToggleSpeed);
+            _hotkeyManager.RegisterAction("IncreasePlayerSpeed", () => SetSpeed(Math.Min(10, PlayerSpeed + 0.25f)));
+            _hotkeyManager.RegisterAction("DecreasePlayerSpeed", () => SetSpeed(Math.Max(0, PlayerSpeed - 0.25f)));
+        }
 
         private void LoadStats()
         {
@@ -171,87 +171,47 @@ namespace SilkySouls2.ViewModels
             _playerService.SetHp(CurrentMaxHp);
         }
 
-        // public bool IsPos1Saved
-        // {
-        //     get => _isPos1Saved;
-        //     set => SetProperty(ref _isPos1Saved, value);
-        // }
-        //
-        // public bool IsPos2Saved
-        // {
-        //     get => _isPos2Saved;
-        //     set => SetProperty(ref _isPos2Saved, value);
-        // }
-        //
-        // public void SavePos(int index)
-        // {
-        //     var state = index == 0 ? _saveState1 : _saveState2;
-        //     if (index == 0) IsPos1Saved = true;
-        //     else IsPos2Saved = true;
-        //
-        //     if (IsStateIncluded)
-        //     {
-        //         state.Hp = CurrentHp;
-        //         state.Mp = _playerService.GetMp();
-        //         state.Sp = _playerService.GetSp();
-        //     }
-        //     _playerService.SavePos(index);
-        // }
-        //
-        // public void RestorePos(int index)
-        // {
-        //     _playerService.RestorePos(index);
-        //     if (!IsStateIncluded) return;
-        //
-        //     var state = index == 0 ? _saveState1 : _saveState2;
-        //     _playerService.SetHp(state.Hp);
-        //     _playerService.SetMp(state.Mp);
-        //     _playerService.SetSp(state.Sp);
-        // }
-        //
-        // public bool IsStateIncluded
-        // {
-        //     get => _isStateIncluded;
-        //     set => SetProperty(ref _isStateIncluded, value);
-        // }
-        //
-        // public float PosX
-        // {
-        //     get => _posX;
-        //     set
-        //     {
-        //         if (SetProperty(ref _posX, value))
-        //         {
-        //             _playerService.SetAxis(WorldChrMan.ChrPhysicsModule.X, value);
-        //         }
-        //     }
-        // }
-        //
-        // public float PosZ
-        // {
-        //     get => _posZ;
-        //     set
-        //     {
-        //         if (SetProperty(ref _posZ, value))
-        //         {
-        //             _playerService.SetAxis(WorldChrMan.ChrPhysicsModule.Z, value);
-        //         }
-        //     }
-        // }
-        //
-        // public float PosY
-        // {
-        //     get => _posY;
-        //     set
-        //     {
-        //         if (SetProperty(ref _posY, value))
-        //         {
-        //             _playerService.SetAxis(WorldChrMan.ChrPhysicsModule.Y, value);
-        //         }
-        //     }
-        // }
-
-        //
+        public bool IsPos1Saved
+        {
+            get => _isPos1Saved;
+            set => SetProperty(ref _isPos1Saved, value);
+        }
+        
+        public bool IsPos2Saved
+        {
+            get => _isPos2Saved;
+            set => SetProperty(ref _isPos2Saved, value);
+        }
+        
+        public void SavePos(int index)
+        {
+            var state = index == 0 ? _saveState1 : _saveState2;
+            if (index == 0) IsPos1Saved = true;
+            else IsPos2Saved = true;
+        
+            if (IsStateIncluded)
+            {
+                state.Hp = CurrentHp;
+                state.Sp = _playerService.GetSp();
+            }
+            _playerService.SavePos(index);
+        }
+        
+        public void RestorePos(int index)
+        {
+            _playerService.RestorePos(index);
+            if (!IsStateIncluded) return;
+        
+            var state = index == 0 ? _saveState1 : _saveState2;
+            _playerService.SetHp(state.Hp);
+            _playerService.SetSp(state.Sp);
+        }
+        
+        public bool IsStateIncluded
+        {
+            get => _isStateIncluded;
+            set => SetProperty(ref _isStateIncluded, value);
+        }
         public bool IsNoDeathEnabled
         {
             get => _isNoDeathEnabled;
@@ -262,6 +222,24 @@ namespace SilkySouls2.ViewModels
                     _playerService.ToggleNoDeath(_isNoDeathEnabled);
                 }
             }
+        }
+        
+        public float PosX
+        {
+            get => _posX;
+            set => SetProperty(ref _posX, value);
+        }
+
+        public float PosY
+        {
+            get => _posY;
+            set => SetProperty(ref _posY, value);
+        }
+
+        public float PosZ
+        {
+            get => _posZ;
+            set => SetProperty(ref _posZ, value);
         }
 
         public bool IsNoDamageEnabled
@@ -287,44 +265,44 @@ namespace SilkySouls2.ViewModels
                 }
             }
         }
-        //
-        // public bool IsNoGoodsConsumeEnabled
-        // {
-        //     get => _isNoGoodsConsumeEnabled;
-        //     set
-        //     {
-        //         if (SetProperty(ref _isNoGoodsConsumeEnabled, value))
-        //         {
-        //             _playerService.ToggleNoGoodsConsume(_isNoGoodsConsumeEnabled);
-        //         }
-        //     }
-        // }
-        //
-        // public bool IsInfiniteDurabilityEnabled
-        // {
-        //     get => _isInfiniteDurabilityEnabled;
-        //     set
-        //     {
-        //         if (SetProperty(ref _isInfiniteDurabilityEnabled, value))
-        //         {
-        //             _playerService.ToggleInfiniteDurability(_isInfiniteDurabilityEnabled);
-        //         }
-        //     }
-        // }
-        //
-        //
-        // public bool IsInfiniteFpEnabled
-        // {
-        //     get => _isInfiniteFpEnabled;
-        //     set
-        //     {
-        //         if (SetProperty(ref _isInfiniteFpEnabled, value))
-        //         {
-        //             _playerService.ToggleDebugFlag(DebugFlags.InfiniteFp, _isInfiniteFpEnabled ? 1 : 0);
-        //         }
-        //     }
-        // }
-        //
+        
+        public bool IsNoGoodsConsumeEnabled
+        {
+            get => _isNoGoodsConsumeEnabled;
+            set
+            {
+                if (SetProperty(ref _isNoGoodsConsumeEnabled, value))
+                {
+                    _playerService.ToggleNoGoodsConsume(_isNoGoodsConsumeEnabled);
+                }
+            }
+        }
+        
+        public bool IsInfiniteDurabilityEnabled
+        {
+            get => _isInfiniteDurabilityEnabled;
+            set
+            {
+                if (SetProperty(ref _isInfiniteDurabilityEnabled, value))
+                {
+                    _playerService.ToggleInfiniteDurability(_isInfiniteDurabilityEnabled);
+                }
+            }
+        }
+        
+        
+        public bool IsInfiniteCastsEnabled
+        {
+            get => _isInfiniteCastsEnabled;
+            set
+            {
+                if (SetProperty(ref _isInfiniteCastsEnabled, value))
+                {
+                    _playerService.ToggleInfiniteCasts(_isInfiniteCastsEnabled);
+                }
+            }
+        }
+        
 
         public bool IsDealNoDamageEnabled
         {
@@ -358,68 +336,9 @@ namespace SilkySouls2.ViewModels
             }
         }
 
-        public void SavePos(int index)
-        {
-            // var state = index == 0 ? _saveState1 : _saveState2;
-            // if (index == 0) IsPos1Saved = true;
-            // else IsPos2Saved = true;
-            //
-            // if (IsStateIncluded)
-            // {
-            //     state.Hp = CurrentHp;
-            //     state.Mp = _playerService.GetMp();
-            //     state.Sp = _playerService.GetSp();
-            // }
-            //
-            // _playerService.SavePos(index);
-        }
-
-        public void RestorePos(int index)
-        {
-            // _playerService.RestorePos(index);
-            // if (!IsStateIncluded) return;
-            //
-            // var state = index == 0 ? _saveState1 : _saveState2;
-            // _playerService.SetHp(state.Hp);
-            // _playerService.SetMp(state.Mp);
-            // _playerService.SetSp(state.Sp);
-        }
-
-        public float PosX
-        {
-            get => _posX;
-            set => SetProperty(ref _posX, value);
-        }
-
-        public float PosY
-        {
-            get => _posY;
-            set => SetProperty(ref _posY, value);
-        }
-
-        public float PosZ
-        {
-            get => _posZ;
-            set => SetProperty(ref _posZ, value);
-        }
-
-        public void SetPosX(float value)
-        {
-            // _playerService.SetAxis(WorldChrMan.ChrPhysicsModule.X, value);
-            // PosX = value;
-        }
-
-        public void SetPosY(float value)
-        {
-            // _playerService.SetAxis(WorldChrMan.ChrPhysicsModule.Y, value);
-            // PosY = value;
-        }
-
-        public void SetPosZ(float value)
-        {
-            // _playerService.SetAxis(WorldChrMan.ChrPhysicsModule.Z, value);
-            // PosZ = value;
-        }
+        
+       
+        
 
         //
         // public bool IsInvisibleEnabled
@@ -491,11 +410,8 @@ namespace SilkySouls2.ViewModels
             if (IsOneShotEnabled) _playerService.ToggleOneShot(true);
             if (IsDealNoDamageEnabled) _playerService.ToggleDealNoDamage(true);
             if (IsInfiniteStaminaEnabled) _playerService.ToggleInfiniteStamina(true);
-
-            // if (IsNoGoodsConsumeEnabled)
-            //     _playerService.ToggleNoGoodsConsume(true);
-            // if (_isInfiniteFpEnabled)
-            //     _playerService.ToggleDebugFlag(DebugFlags.InfiniteFp, 1);
+            if (IsNoGoodsConsumeEnabled) _playerService.ToggleNoGoodsConsume(true);
+            if (IsInfiniteCastsEnabled) _playerService.ToggleInfiniteCasts(true);
             // if (IsInvisibleEnabled)
             //     _playerService.ToggleDebugFlag(DebugFlags.Invisible, 1);
             // if (IsSilentEnabled)
@@ -504,8 +420,7 @@ namespace SilkySouls2.ViewModels
             //     _playerService.ToggleDebugFlag(DebugFlags.InfiniteArrows, 1);
             // if (IsInfinitePoiseEnabled)
             //     _playerService.ToggleInfinitePoise(true);
-            // if (IsInfiniteDurabilityEnabled)
-            //     _playerService.ToggleInfiniteDurability(true);
+            if (IsInfiniteDurabilityEnabled) _playerService.ToggleInfiniteDurability(true);
             // if (IsNoRollEnabled)
             //     _playerService.ToggleNoRoll(true);
             AreOptionsEnabled = true;

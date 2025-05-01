@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using SilkySouls2.Models;
 using SilkySouls2.Services;
 using SilkySouls2.Utilities;
@@ -158,6 +159,6 @@ namespace SilkySouls2.ViewModels
             SelectedWarpLocation = AreaLocations.FirstOrDefault();
         }
 
-        public void Warp() => _travelService.Warp(SelectedWarpLocation);
+        public void Warp() => Task.Run(() => _travelService.Warp(SelectedWarpLocation));
     }
 }

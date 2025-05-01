@@ -134,6 +134,16 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to b8 0a 00 00 00          mov    eax,0xa
+        ///e9 00 00 00 00          jmp    a &lt;_main+0xa&gt;.
+        /// </summary>
+        internal static string DropCount {
+            get {
+                return ResourceManager.GetString("DropCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 81 ec 18 01 00 00    sub    rsp,0x118
         ///48 b9 00 00 00 00 00    movabs rcx,0x0
         ///00 00 00

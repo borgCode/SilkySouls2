@@ -33,7 +33,7 @@ namespace SilkySouls2.Memory
 
             //
             Offsets.GameManagerImp.Base = FindAddressByPattern(Patterns.GameManagerImp);
-            Offsets.HkpPtrEntity.Base = FindAddressByPattern(Patterns.HkpPtrEntity);
+            Offsets.HkHardwareInfo.Base = FindAddressByPattern(Patterns.HkpPtrEntity);
             // Offsets.GameMan.Base = FindAddressByPattern(Patterns.GameMan);
             // Offsets.LuaEventMan.Base = FindAddressByPattern(Patterns.LuaEventMan);
             // Offsets.SoloParamRepo.Base = FindAddressByPattern(Patterns.SoloParamRepo);
@@ -56,12 +56,14 @@ namespace SilkySouls2.Memory
             TryPatternWithFallback("InfiniteStam", Patterns.InfiniteStam, addr => Offsets.Patches.InfiniteStam = addr, saved);
             TryPatternWithFallback("ForceSave", Patterns.ForceSave,
                 addr => Offsets.Patches.ForceSave = addr, saved);
-            // TryPatternWithFallback("RepeatAct", Patterns.RepeatAct, addr => Offsets.Patches.RepeatAct = addr, saved);
-            // TryPatternWithFallback("GameSpeed", Patterns.GameSpeed, addr => Offsets.Patches.GameSpeed = addr, saved);
-            // TryPatternWithFallback("InfiniteDurability", Patterns.InfiniteDurability,
-            //     addr => Offsets.Patches.InfiniteDurability = addr, saved);
-            // TryPatternWithFallback("PlayerSoundView", Patterns.PlayerSoundView,
-            //     addr => Offsets.Patches.PlayerSoundView = addr, saved);
+            TryPatternWithFallback("InfiniteGoods", Patterns.InfiniteGoods, addr => Offsets.Patches.InfiniteGoods = addr, saved);
+            TryPatternWithFallback("HideChrModels", Patterns.HideChrModels, addr => Offsets.Patches.HideChrModels = addr, saved);
+            TryPatternWithFallback("InfiniteCasts", Patterns.InfiniteCasts,
+                addr => Offsets.Patches.InfiniteCasts = addr, saved);
+            TryPatternWithFallback("InfiniteDurability", Patterns.InfiniteDurability,
+                addr => Offsets.Patches.InfiniteDurability = addr, saved);
+            TryPatternWithFallback("DropRate", Patterns.DropRate,
+                addr => Offsets.Patches.DropRate = addr, saved);
             // TryPatternWithFallback("DebugFont", Patterns.DebugFont, addr => Offsets.Patches.DebugFont = addr, saved);
             // TryPatternWithFallback("NoRoll", Patterns.NoRoll, addr => Offsets.Patches.NoRoll = addr, saved);
             // TryPatternWithFallback("TargetingView", Patterns.DbgDrawFlag, addr => Offsets.Patches.DbgDrawFlag = addr,
@@ -89,6 +91,9 @@ namespace SilkySouls2.Memory
                 addr => Offsets.Hooks.LockedTarget = addr.ToInt64(), saved);
             TryPatternWithFallback("CreditSkip", Patterns.CreditSkip,
                 addr => Offsets.Hooks.CreditSkip = addr.ToInt64(), saved);
+            TryPatternWithFallback("NumOfDrops", Patterns.NumOfDrops,
+                addr => Offsets.Hooks.NumOfDrops = addr.ToInt64(), saved);
+            
             // TryPatternWithFallback("ItemLotBase", Patterns.ItemLotBase,
             //     addr => Offsets.Hooks.ItemLotBase = addr.ToInt64(), saved);
             //
@@ -133,7 +138,7 @@ namespace SilkySouls2.Memory
 
 #if DEBUG
             Console.WriteLine($"GameManagerImp.Base: 0x{Offsets.GameManagerImp.Base.ToInt64():X}");
-            Console.WriteLine($"HkpPtrEntity.Base: 0x{Offsets.HkpPtrEntity.Base.ToInt64():X}");
+            Console.WriteLine($"HkpPtrEntity.Base: 0x{Offsets.HkHardwareInfo.Base.ToInt64():X}");
             // Console.WriteLine($"LuaEventMan.Base: 0x{Offsets.LuaEventMan.Base.ToInt64():X}");
             // Console.WriteLine($"EventFlagMan.Base: 0x{Offsets.EventFlagMan.Base.ToInt64():X}");
             // Console.WriteLine($"SoloParamRepo.Base: 0x{Offsets.SoloParamRepo.Base.ToInt64():X}");
@@ -153,10 +158,11 @@ namespace SilkySouls2.Memory
             //
             Console.WriteLine($"Patches.InfiniteStam: 0x{Offsets.Patches.InfiniteStam.ToInt64():X}");
             Console.WriteLine($"Patches.ForceSave: 0x{Offsets.Patches.ForceSave.ToInt64():X}");
-            // Console.WriteLine($"Patches.RepeatAct: 0x{Offsets.Patches.RepeatAct.ToInt64():X}");
-            // Console.WriteLine($"Patches.GameSpeed: 0x{Offsets.Patches.GameSpeed.ToInt64():X}");
-            // Console.WriteLine($"Patches.InfiniteDurability: 0x{Offsets.Patches.InfiniteDurability.ToInt64():X}");
-            // Console.WriteLine($"Patches.PlayerSoundView: 0x{Offsets.Patches.PlayerSoundView.ToInt64():X}");
+            Console.WriteLine($"Patches.InfiniteGoods: 0x{Offsets.Patches.InfiniteGoods.ToInt64():X}");
+            Console.WriteLine($"Patches.HideChrModels: 0x{Offsets.Patches.HideChrModels.ToInt64():X}");
+            Console.WriteLine($"Patches.InfiniteCasts: 0x{Offsets.Patches.InfiniteCasts.ToInt64():X}");
+            Console.WriteLine($"Patches.InfiniteDurability: 0x{Offsets.Patches.InfiniteDurability.ToInt64():X}");
+            Console.WriteLine($"Patches.DropRate: 0x{Offsets.Patches.DropRate.ToInt64():X}");
             // Console.WriteLine($"Patches.DebugFont: 0x{Offsets.Patches.DebugFont.ToInt64():X}");
             // Console.WriteLine($"Patches.NoRoll: 0x{Offsets.Patches.NoRoll.ToInt64():X}");
             // Console.WriteLine($"Patches.TargetingView: 0x{Offsets.Patches.DbgDrawFlag.ToInt64():X}");
@@ -170,8 +176,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Hooks.WarpCoordWrite: 0x{Offsets.Hooks.WarpCoordWrite:X}");
             Console.WriteLine($"Hooks.LockedTarget: 0x{Offsets.Hooks.LockedTarget:X}");
             Console.WriteLine($"Hooks.CreditSkip: 0x{Offsets.Hooks.CreditSkip:X}");
-            // Console.WriteLine($"Hooks.InAirTimer: 0x{Offsets.Hooks.InAirTimer:X}");
-            // Console.WriteLine($"Hooks.NoClipKeyboard: 0x{Offsets.Hooks.NoClipKeyboard:X}");
+            Console.WriteLine($"Hooks.NumOfDrops: 0x{Offsets.Hooks.NumOfDrops:X}");
             // Console.WriteLine($"Hooks.NoClipTriggers: 0x{Offsets.Hooks.NoClipTriggers:X}");
             // Console.WriteLine($"Hooks.NoClipTriggers2: 0x{Offsets.Hooks.NoClipTriggers2:X}");
             // Console.WriteLine($"Hooks.NoClipUpdateCoords: 0x{Offsets.Hooks.NoClipUpdateCoords:X}");

@@ -128,15 +128,14 @@
                                       IsChecked="{Binding IsCreditSkipEnabled}"
                                       VerticalAlignment="Center"
                                       Margin="0,0,20,0" />
+                            <CheckBox Content="100% Drop Rate"
+                                      IsChecked="{Binding Is100DropEnabled}"
+                                      VerticalAlignment="Center"
+                                      Margin="0,0,20,0" />
                             <Button Content="Force Save"
                                     IsEnabled="{Binding AreButtonsEnabled}"
                                     Padding="5,3"
                                     Click="ForceSave_Click"
-                                    Margin="0,0,20,0" />
-                            <Button Content="Restore Objects"
-                         
-                                    IsEnabled="{Binding AreButtonsEnabled}"
-                                    Padding="5,3"
                                     Margin="0,0,20,0" />
                         </StackPanel>
 

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using SilkySouls2.Memory;
 using SilkySouls2.Utilities;
 using static SilkySouls2.Memory.Offsets;
@@ -85,7 +86,7 @@ namespace SilkySouls2.Services
         public void ToggleCreditSkip(bool isCreditSkipEnabled)
         {
             var code = CodeCaveOffsets.Base + (int)CodeCaveOffsets.CreditSkip.Code;
-            
+
             if (isCreditSkipEnabled)
             {
                 var hookLoc = Hooks.CreditSkip;
@@ -105,6 +106,31 @@ namespace SilkySouls2.Services
             else
             {
                 _hookManager.UninstallHook(code.ToInt64());
+            }
+        }
+
+        public void Toggle100Drop(bool is100DropEnabled)
+        {
+            var dropCountHook = Hooks.NumOfDrops;
+            var dropCountCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.Drop100.DropCount;
+
+            if (is100DropEnabled)
+            {
+                _memoryIo.WriteBytes(Patches.DropRate, new byte[] { 0x90, 0x90, 0x90 });
+
+                var codeBytes = AsmLoader.GetAsmBytes("DropCount");
+                var bytes = AsmHelper.GetJmpOriginOffsetBytes(dropCountHook, 5, dropCountCode + 0xA);
+                Array.Copy(bytes, 0, codeBytes, 0x5 + 1, 4);
+                _memoryIo.WriteBytes(dropCountCode, codeBytes);
+
+
+                _hookManager.InstallHook(dropCountCode.ToInt64(), dropCountHook, new byte[]
+                    { 0x41, 0x0F, 0xB6, 0x47, 0x01 });
+            }
+            else
+            {
+                _memoryIo.WriteBytes(Patches.DropRate, new byte[] { 0x41, 0xF7, 0xF2 });
+                _hookManager.UninstallHook(dropCountCode.ToInt64());
             }
         }
     }

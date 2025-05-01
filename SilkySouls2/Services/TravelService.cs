@@ -130,8 +130,6 @@ namespace SilkySouls2.Services
             if (location.LocationName == "Darklurker") _utilityService.SetEventOn(GameIds.EventFlags.ClearedDrangelicDungeon);
             Task.Delay(200).Wait();
             _hookManager.UninstallHook(code.ToInt64());
-            
-                
         }
 
         public bool IsLoadingScreen() =>

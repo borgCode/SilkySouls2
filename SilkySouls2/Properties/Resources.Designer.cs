@@ -114,18 +114,17 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 51                      push   rcx
+        ///   Looks up a localized string similar to 0f 29 74 24 20          movaps XMMWORD PTR [rsp+0x20],xmm6
+        ///41 83 78 34 00          cmp    DWORD PTR [r8+0x34],0x0
+        ///74 5e                   je     6a &lt;skip&gt;
+        ///51                      push   rcx
         ///48 b9 00 00 00 00 00    movabs rcx,0x0
         ///00 00 00
         ///48 8b 09                mov    rcx,QWORD PTR [rcx]
         ///48 8b 89 d0 00 00 00    mov    rcx,QWORD PTR [rcx+0xd0]
-        ///48 39 d9                cmp    rcx,rbx
-        ///74 02                   je     1c &lt;is_player&gt;
-        ///eb 11                   jmp    2d &lt;check_target&gt;
-        ///00000000001c &lt;is_player&gt;:
-        ///80 3d 00 00 00 00 00    cmp    BYTE PTR [rip+0x0],0x0        # 23 &lt;is_player+0x7&gt;
-        ///74 46                   je     6b &lt;exit&gt;
-        ///8b 81 68 01 00 00       mov  [rest of string was truncated]&quot;;.
+        ///48 39 c1                cmp    rcx,rax
+        ///74 43                   je     69 &lt;exit&gt;
+        ///80 3d 00 00 00 00 00    cmp    BYTE PTR [rip+0x0],0x0        # 2d &lt;_main+0x2d [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DamageControl {
             get {
@@ -159,12 +158,52 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Emerald Herald,104020,103520,0
+        ///Gilligan,104050,103550,103551
+        ///Saulden,104140,103640,0
+        ///Cale,104180,103680,103682
+        ///Melentia,104210,103710,102521
+        ///Maughlin,104250,103750,0
+        ///Chloanne,104260,103760,103761
+        ///Rosabeth,104270,103770,102640
+        ///Lenigrast,104280,103780,102661
+        ///Carhillion,104300,103800,103801
+        ///Licia,104320,103820,0
+        ///Shalquoir,104370,103870,0.
+        /// </summary>
+        internal static string NPC {
+            get {
+                return ResourceManager.GetString("NPC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 8b 05 00 00 00 00       mov    eax,DWORD PTR [rip+0x0]        # 6 &lt;_main+0x6&gt;
         ///e9 00 00 00 00          jmp    b &lt;_main+0xb&gt;.
         /// </summary>
         internal static string OverrideGeneratorStartPositionRandom {
             get {
                 return ResourceManager.GetString("OverrideGeneratorStartPositionRandom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 51                      push   rcx
+        ///48 b9 00 00 00 00 00    movabs rcx,0x0
+        ///00 00 00
+        ///48 8b 09                mov    rcx,QWORD PTR [rcx]
+        ///48 8b 89 d0 00 00 00    mov    rcx,QWORD PTR [rcx+0xd0]
+        ///48 39 d9                cmp    rcx,rbx
+        ///75 06                   jne    20 &lt;exit&gt;
+        ///8b 81 68 01 00 00       mov    eax,DWORD PTR [rcx+0x168]
+        ///000000000020 &lt;exit&gt;:
+        ///59                      pop    rcx
+        ///89 83 68 01 00 00       mov    DWORD PTR [rbx+0x168],eax
+        ///e9 00 00 00 00          jmp    2c &lt;exit+0xc&gt;.
+        /// </summary>
+        internal static string PlayerNoDamage {
+            get {
+                return ResourceManager.GetString("PlayerNoDamage", resourceCulture);
             }
         }
         

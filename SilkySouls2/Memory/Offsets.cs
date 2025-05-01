@@ -156,6 +156,7 @@ namespace SilkySouls2.Memory
             public static long LockedTarget;
             public static long CreditSkip;
             public static long NumOfDrops;
+            public static long DamageControl;
         }
 
         public static class Funcs

@@ -11,7 +11,7 @@ namespace SilkySouls2.Services
         private readonly MemoryIo _memoryIo;
         private readonly HookManager _hookManager;
 
-        public EnemyService(MemoryIo memoryIo, HookManager hookManager)
+        public EnemyService(MemoryIo memoryIo, HookManager hookManager, DamageControlService damageControlService)
         {
             _memoryIo = memoryIo;
             _hookManager = hookManager;
@@ -116,40 +116,7 @@ namespace SilkySouls2.Services
 
             return position;
         }
-
-        public void ToggleFreezeTargetHp(bool isFreezeTargetHpEnabled)
-        {
-            var dmgControlCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.DamageControlCode;
-            var freezeTargetHpFlag = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.FreezeTargetHpFlag;
-
-            if (isFreezeTargetHpEnabled)
-            {
-                if (!_hookManager.IsHookInstalled(dmgControlCode.ToInt64()))
-                {
-                    _hookManager.InstallHook(dmgControlCode.ToInt64(), Hooks.HpWrite,
-                        new byte[] { 0x89, 0x83, 0x68, 0x01, 0x00, 0x00 });
-                }
-
-                _memoryIo.WriteByte(freezeTargetHpFlag, 1);
-            }
-            else
-            {
-                _memoryIo.WriteByte(freezeTargetHpFlag, 0);
-
-                bool allFlagsOff =
-                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.PlayerNoDamageFlag) ==
-                    0 &&
-                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.OneShotFlag) == 0 &&
-                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.DealNoDamageFlag) ==
-                    0;
-
-                if (allFlagsOff && _hookManager.IsHookInstalled(dmgControlCode.ToInt64()))
-                {
-                    _hookManager.UninstallHook(dmgControlCode.ToInt64());
-                }
-            }
-        }
-
+        
         public void ToggleDisableAi(bool isAllDisableAiEnabled)
         {
             var disableAiPtr = _memoryIo.FollowPointers(Base, new[]

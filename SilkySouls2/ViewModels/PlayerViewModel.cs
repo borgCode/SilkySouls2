@@ -63,11 +63,14 @@ namespace SilkySouls2.ViewModels
         private readonly DispatcherTimer _timer;
 
         private readonly PlayerService _playerService;
+        private readonly DamageControlService _damageControlService;
         private readonly HotkeyManager _hotkeyManager;
 
-        public PlayerViewModel(PlayerService playerService, HotkeyManager hotkeyManager)
+        public PlayerViewModel(PlayerService playerService, HotkeyManager hotkeyManager,
+            DamageControlService damageControlService)
         {
             _playerService = playerService;
+            _damageControlService = damageControlService;
             _hotkeyManager = hotkeyManager;
 
 
@@ -312,11 +315,11 @@ namespace SilkySouls2.ViewModels
                 if (!SetProperty(ref _isDealNoDamageEnabled, value)) return;
                 if (IsOneShotEnabled && _isDealNoDamageEnabled)
                 {
-                    _playerService.ToggleOneShot(false);
+                    _damageControlService.ToggleOneShot(false);
                     IsOneShotEnabled = false;
                 }
 
-                _playerService.ToggleDealNoDamage(_isDealNoDamageEnabled);
+                _damageControlService.ToggleDealNoDamage(_isDealNoDamageEnabled);
             }
         }
 
@@ -328,11 +331,11 @@ namespace SilkySouls2.ViewModels
                 if (!SetProperty(ref _isOneShotEnabled, value)) return;
                 if (IsDealNoDamageEnabled && _isOneShotEnabled)
                 {
-                    _playerService.ToggleDealNoDamage(false);
+                    _damageControlService.ToggleDealNoDamage(false);
                     IsDealNoDamageEnabled = false;
                 }
 
-                _playerService.ToggleOneShot(_isOneShotEnabled);
+                _damageControlService.ToggleOneShot(_isOneShotEnabled);
             }
         }
 
@@ -407,8 +410,8 @@ namespace SilkySouls2.ViewModels
         //
         public void TryEnableFeatures()
         {
-            if (IsOneShotEnabled) _playerService.ToggleOneShot(true);
-            if (IsDealNoDamageEnabled) _playerService.ToggleDealNoDamage(true);
+            if (IsOneShotEnabled) _damageControlService.ToggleOneShot(true);
+            if (IsDealNoDamageEnabled) _damageControlService.ToggleDealNoDamage(true);
             if (IsInfiniteStaminaEnabled) _playerService.ToggleInfiniteStamina(true);
             if (IsNoGoodsConsumeEnabled) _playerService.ToggleNoGoodsConsume(true);
             if (IsInfiniteCastsEnabled) _playerService.ToggleInfiniteCasts(true);

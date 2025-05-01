@@ -16,7 +16,6 @@ namespace SilkySouls2.Memory
 
         public enum DamageControl
         {
-            PlayerNoDamageFlag = 0x70,
             OneShotFlag = 0x71,
             DealNoDamageFlag = 0x72,
             FreezeTargetHpFlag = 0x73,
@@ -55,8 +54,10 @@ namespace SilkySouls2.Memory
         
         public enum Drop100
         {
-            DropRate = 0x450,
             DropCount = 0x460,
         }
+
+        public const int PlayerNoDamage = 0x470;
+
     }
 }

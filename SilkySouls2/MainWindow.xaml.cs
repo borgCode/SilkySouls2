@@ -31,6 +31,8 @@ namespace SilkySouls2
         private readonly EventViewModel _eventViewModel;
         private readonly ItemViewModel _itemViewModel;
         private readonly SettingsViewModel _settingsViewModel;
+        private readonly DamageControlService _damageControlService;
+        
         public MainWindow()
         {
             _memoryIo = new MemoryIo();
@@ -51,18 +53,19 @@ namespace SilkySouls2
             _aobScanner = new AoBScanner(_memoryIo);
             var hotkeyManager = new HotkeyManager(_memoryIo);
    
+            _damageControlService = new DamageControlService(_memoryIo, _hookManager);
             var playerService = new PlayerService(_memoryIo, _hookManager);
             var utilityService = new UtilityService(_memoryIo, _hookManager);
             var travelService = new TravelService(_memoryIo, _hookManager, utilityService);
-            var enemyService = new EnemyService(_memoryIo, _hookManager);
+            var enemyService = new EnemyService(_memoryIo, _hookManager, _damageControlService);
             var itemService = new ItemService(_memoryIo, _hookManager);
             var settingsService = new SettingsService(_memoryIo);
  
-            _playerViewModel = new PlayerViewModel(playerService, hotkeyManager);
+            _playerViewModel = new PlayerViewModel(playerService, hotkeyManager, _damageControlService);
             _travelViewModel = new TravelViewModel(travelService, hotkeyManager);
             _eventViewModel = new EventViewModel(utilityService);
             _utilityViewModel = new UtilityViewModel(utilityService, hotkeyManager);
-            _enemyViewModel = new EnemyViewModel(enemyService, hotkeyManager);
+            _enemyViewModel = new EnemyViewModel(enemyService, hotkeyManager, _damageControlService);
             _itemViewModel = new ItemViewModel(itemService);
             _settingsViewModel = new SettingsViewModel(settingsService, hotkeyManager);
             
@@ -136,7 +139,7 @@ namespace SilkySouls2
                     _memoryIo.AllocCodeCave();
                     Console.WriteLine($"Code cave: 0x{CodeCaveOffsets.Base.ToInt64():X}");
                     _hasAllocatedMemory = true;
-                    _memoryIo.WriteDamageControlCode();
+                    _damageControlService.WriteDamageControlCode();
                 }
                 
                 if (_memoryIo.IsGameLoaded())
@@ -191,6 +194,8 @@ namespace SilkySouls2
         private void DisableFeatures()
         {
             _playerViewModel.DisableFeatures();
+            _enemyViewModel.DisableFeatures();
+            
         }
 
         private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

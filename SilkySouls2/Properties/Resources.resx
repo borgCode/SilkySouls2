@@ -346,41 +346,39 @@ c3                      ret
 e9 00 00 00 00          jmp    13 &lt;_main+0x13&gt;</value>
   </data>
   <data name="DamageControl" xml:space="preserve">
-    <value>51                      push   rcx
+    <value>0f 29 74 24 20          movaps XMMWORD PTR [rsp+0x20],xmm6
+41 83 78 34 00          cmp    DWORD PTR [r8+0x34],0x0
+74 5e                   je     6a &lt;skip&gt;
+51                      push   rcx
 48 b9 00 00 00 00 00    movabs rcx,0x0
 00 00 00
 48 8b 09                mov    rcx,QWORD PTR [rcx]
 48 8b 89 d0 00 00 00    mov    rcx,QWORD PTR [rcx+0xd0]
-48 39 d9                cmp    rcx,rbx
-74 02                   je     1c &lt;is_player&gt;
-eb 11                   jmp    2d &lt;check_target&gt;
-00000000001c &lt;is_player&gt;:
-80 3d 00 00 00 00 00    cmp    BYTE PTR [rip+0x0],0x0        # 23 &lt;is_player+0x7&gt;
-74 46                   je     6b &lt;exit&gt;
-8b 81 68 01 00 00       mov    eax,DWORD PTR [rcx+0x168]
-eb 3e                   jmp    6b &lt;exit&gt;
-00000000002d &lt;check_target&gt;:
-80 3d 00 00 00 00 00    cmp    BYTE PTR [rip+0x0],0x0        # 34 &lt;check_target+0x7&gt;
-74 14                   je     4a &lt;check_oneshot&gt;
-48 8b 0d 00 00 00 00    mov    rcx,QWORD PTR [rip+0x0]        # 3d &lt;check_target+0x10&gt;
-48 39 d9                cmp    rcx,rbx
-75 08                   jne    4a &lt;check_oneshot&gt;
-8b 81 68 01 00 00       mov    eax,DWORD PTR [rcx+0x168]
-eb 21                   jmp    6b &lt;exit&gt;
-00000000004a &lt;check_oneshot&gt;:
-80 3d 00 00 00 00 00    cmp    BYTE PTR [rip+0x0],0x0        # 51 &lt;check_oneshot+0x7&gt;
-74 07                   je     5a &lt;check_nodamage&gt;
-b8 00 00 00 00          mov    eax,0x0
-eb 11                   jmp    6b &lt;exit&gt;
-00000000005a &lt;check_nodamage&gt;:
-80 3d 00 00 00 00 00    cmp    BYTE PTR [rip+0x0],0x0        # 61 &lt;check_nodamage+0x7&gt;
-74 08                   je     6b &lt;exit&gt;
-8b 8b 68 01 00 00       mov    ecx,DWORD PTR [rbx+0x168]
-89 c8                   mov    eax,ecx
-00000000006b &lt;exit&gt;:
+48 39 c1                cmp    rcx,rax
+74 43                   je     69 &lt;exit&gt;
+80 3d 00 00 00 00 00    cmp    BYTE PTR [rip+0x0],0x0        # 2d &lt;_main+0x2d&gt;
+74 16                   je     45 &lt;check_oneshot&gt;
+48 8b 0d 00 00 00 00    mov    rcx,QWORD PTR [rip+0x0]        # 36 &lt;_main+0x36&gt;
+48 39 c1                cmp    rcx,rax
+75 0a                   jne    45 &lt;check_oneshot&gt;
+41 c7 40 34 00 00 00    mov    DWORD PTR [r8+0x34],0x0
+00
+eb 24                   jmp    69 &lt;exit&gt;
+000000000045 &lt;check_oneshot&gt;:
+80 3d 00 00 00 00 00    cmp    BYTE PTR [rip+0x0],0x0        # 4c &lt;check_oneshot+0x7&gt;
+74 0a                   je     58 &lt;check_dealNoDamage&gt;
+41 c7 40 34 7f 96 98    mov    DWORD PTR [r8+0x34],0x98967f
+00
+eb 11                   jmp    69 &lt;exit&gt;
+000000000058 &lt;check_dealNoDamage&gt;:
+80 3d 00 00 00 00 00    cmp    BYTE PTR [rip+0x0],0x0        # 5f &lt;check_dealNoDamage+0x7&gt;
+74 08                   je     69 &lt;exit&gt;
+41 c7 40 34 00 00 00    mov    DWORD PTR [r8+0x34],0x0
+00
+000000000069 &lt;exit&gt;:
 59                      pop    rcx
-89 83 68 01 00 00       mov    DWORD PTR [rbx+0x168],eax
-e9 00 00 00 00          jmp    77 &lt;exit+0xc&gt;</value>
+00000000006a &lt;skip&gt;:
+e9 00 00 00 00          jmp    6f &lt;skip+0x5&gt;</value>
   </data>
   <data name="EventWarp" xml:space="preserve">
     <value>48 81 ec 18 01 00 00    sub    rsp,0x118
@@ -404,5 +402,33 @@ e9 00 00 00 00          jmp    26 &lt;skip+0x5&gt;</value>
   <data name="DropCount" xml:space="preserve">
     <value>b8 0a 00 00 00          mov    eax,0xa
 e9 00 00 00 00          jmp    a &lt;_main+0xa&gt;</value>
+  </data>
+  <data name="NPC" xml:space="preserve">
+    <value>Emerald Herald,104020,103520,0
+Gilligan,104050,103550,103551
+Saulden,104140,103640,0
+Cale,104180,103680,103682
+Melentia,104210,103710,102521
+Maughlin,104250,103750,0
+Chloanne,104260,103760,103761
+Rosabeth,104270,103770,102640
+Lenigrast,104280,103780,102661
+Carhillion,104300,103800,103801
+Licia,104320,103820,0
+Shalquoir,104370,103870,0</value>
+  </data>
+  <data name="PlayerNoDamage" xml:space="preserve">
+    <value>51                      push   rcx
+48 b9 00 00 00 00 00    movabs rcx,0x0
+00 00 00
+48 8b 09                mov    rcx,QWORD PTR [rcx]
+48 8b 89 d0 00 00 00    mov    rcx,QWORD PTR [rcx+0xd0]
+48 39 d9                cmp    rcx,rbx
+75 06                   jne    20 &lt;exit&gt;
+8b 81 68 01 00 00       mov    eax,DWORD PTR [rcx+0x168]
+000000000020 &lt;exit&gt;:
+59                      pop    rcx
+89 83 68 01 00 00       mov    DWORD PTR [rbx+0x168],eax
+e9 00 00 00 00          jmp    2c &lt;exit+0xc&gt;</value>
   </data>
 </root>

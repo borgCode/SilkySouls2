@@ -90,9 +90,11 @@
         <Compile Include="Converters\InverseBooleanConverter.cs" />
         <Compile Include="Converters\InverseBooleanToVisibilityConverter.cs" />
         <Compile Include="Converters\StringToVisibilityConverter.cs" />
+        <Compile Include="Models\NpcInfo.cs" />
         <Compile Include="Models\WarpLocation.cs" />
         <Compile Include="Models\CharacterState.cs" />
         <Compile Include="Models\Forlorn.cs" />
+        <Compile Include="Services\DamageControlService.cs" />
         <Compile Include="Services\EnemyService.cs" />
         <Compile Include="Services\ItemService.cs" />
         <Compile Include="Services\PlayerService.cs" />

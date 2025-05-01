@@ -7,12 +7,12 @@
              xmlns:converters="clr-namespace:SilkySouls2.Converters"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="500">
-    
+
     <UserControl.Resources>
         <converters:BooleanAndConverter x:Key="BooleanAndConverter" />
-        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
     </UserControl.Resources>
-    
+
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -31,7 +31,7 @@
                 <TextBlock Text="Event Flags"
                            FontWeight="Bold"
                            Margin="0,0,0,10" />
-                
+
                 <Grid Margin="10,0,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -44,57 +44,58 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    
-                    <CheckBox Content="Boss Flags" 
-                              Grid.Column="0" Grid.Row="0" 
+
+                    <CheckBox Content="Boss Flags"
+                              Grid.Column="0" Grid.Row="0"
                               IsChecked="{Binding IsBossFlagsEnabled}"
                               Margin="0,2" />
-                    
-                    <CheckBox Content="NPC Flags" 
-                              Grid.Column="0" Grid.Row="1" 
+
+                    <CheckBox Content="NPC Flags"
+                              Grid.Column="0" Grid.Row="1"
                               IsChecked="{Binding IsNpcFlagsEnabled}"
                               Margin="0,2" />
-                    
-                    <CheckBox Content="Item Flags" 
-                              Grid.Column="0" Grid.Row="2" 
+
+                    <CheckBox Content="Item Flags"
+                              Grid.Column="0" Grid.Row="2"
                               IsChecked="{Binding IsItemFlagsEnabled}"
                               Margin="0,2" />
-                    
-                    <CheckBox Content="Area Flags" 
-                              Grid.Column="1" Grid.Row="0" 
+
+                    <CheckBox Content="Area Flags"
+                              Grid.Column="1" Grid.Row="0"
                               IsChecked="{Binding IsAreaFlagsEnabled}"
                               Margin="0,2" />
-                    
-                    <CheckBox Content="Quest Flags" 
-                              Grid.Column="1" Grid.Row="1" 
+
+                    <CheckBox Content="Quest Flags"
+                              Grid.Column="1" Grid.Row="1"
                               IsChecked="{Binding IsQuestFlagsEnabled}"
                               Margin="0,2" />
-                    
-                    <CheckBox Content="Event Flags" 
-                              Grid.Column="1" Grid.Row="2" 
+
+                    <CheckBox Content="Event Flags"
+                              Grid.Column="1" Grid.Row="2"
                               IsChecked="{Binding IsEventFlagsEnabled}"
                               Margin="0,2" />
                 </Grid>
-                
+
                 <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
                     <TextBlock Text="Flag ID:" VerticalAlignment="Center" Margin="0,0,10,0" />
                     <TextBox Width="100" Text="{Binding FlagId}" Margin="0,0,10,0" />
-                    <CheckBox Content="Enabled" IsChecked="{Binding IsFlagEnabled}" VerticalAlignment="Center" Margin="0,0,10,0" />
+                    <CheckBox Content="Enabled" IsChecked="{Binding IsFlagEnabled}" VerticalAlignment="Center"
+                              Margin="0,0,10,0" />
                     <Button Content="Set Flag" IsEnabled="{Binding AreButtonsEnabled}" Padding="10,3" Margin="10,0,0,0" />
                 </StackPanel>
             </StackPanel>
         </Border>
-        
+
         <Border Grid.Row="1"
                 BorderThickness="1"
                 BorderBrush="#333"
                 CornerRadius="3"
                 Margin="0,0,0,10">
             <StackPanel Margin="10">
-                <TextBlock Text="Quest Progression"
+                <TextBlock Text="NPC"
                            FontWeight="Bold"
                            Margin="0,0,0,10" />
-                
+
                 <Grid Margin="10,0,0,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -106,34 +107,34 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    
+
                     <TextBlock Text="NPC:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,3,10,3" />
-                    <ComboBox Grid.Row="0" Grid.Column="1" Margin="0,3" 
+                    <ComboBox Grid.Row="0" Grid.Column="1" Margin="0,3,0,10" 
                               ItemsSource="{Binding NpcList}"
+                              DisplayMemberPath="Name"
                               SelectedItem="{Binding SelectedNpc}" />
-                    <Button Grid.Row="0" Grid.Column="2" Content="Reset" Padding="10,3" Margin="10,3,0,3" 
-                            IsEnabled="{Binding AreButtonsEnabled}" />
                     
-                    <TextBlock Text="Quest:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,3,10,3" />
-                    <ComboBox Grid.Row="1" Grid.Column="1" Margin="0,3" 
-                              ItemsSource="{Binding QuestStages}"
-                              SelectedItem="{Binding SelectedQuestStage}" />
-                    <Button Grid.Row="1" Grid.Column="2" Content="Set Stage" Padding="10,3" Margin="10,3,0,3" 
-                            IsEnabled="{Binding AreButtonsEnabled}" />
-                    
-                    <TextBlock Text="State:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,3,10,3" />
-                    <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" Margin="0,3">
-                        <RadioButton Content="Alive" GroupName="NpcState" IsChecked="{Binding IsNpcAlive}" Margin="0,0,15,0" />
-                        <RadioButton Content="Dead" GroupName="NpcState" IsChecked="{Binding IsNpcDead}" Margin="0,0,15,0" />
-                        <RadioButton Content="Hostile" GroupName="NpcState" IsChecked="{Binding IsNpcHostile}" Margin="0,0,15,0" />
-                    </StackPanel>
-                    <Button Grid.Row="2" Grid.Column="2" Content="Apply" Padding="10,3" Margin="10,3,0,3" 
-                            IsEnabled="{Binding AreButtonsEnabled}" />
+                    <WrapPanel Grid.Row="1" Grid.Column="1" Margin="0,3,0,0">
+                        <Button Content="Set Alive"  Padding="10,5" Margin="0,0,5,0"
+                                IsEnabled="{Binding AreButtonsEnabled}"
+                                Click="SetAlive_Click"/>
+                        <Button Content="Set Dead"  Padding="10,5" Margin="0,0,5,0"
+                                IsEnabled="{Binding AreButtonsEnabled}"
+                                Click="SetDead_Click"/>
+                        <Button Content="Set Friendly"  Padding="10,5" Margin="0,0,5,0"
+                                IsEnabled="{Binding AreButtonsEnabled}"
+                                Click="SetFriendly_Click"/>
+                        <Button Content="Set Hostile"  Padding="10,5" Margin="0,0,5,0"
+                                IsEnabled="{Binding AreButtonsEnabled}"
+                                Click="SetHostile_Click"/>
+                        <Button Content="Move to Majula"  Padding="10,5" Margin="0,0,5,0"
+                                IsEnabled="{Binding CanMoveToMajula}"
+                                Click="MovetoMajula_Click"/>
+                    </WrapPanel>
                 </Grid>
             </StackPanel>
         </Border>
 
-        <!-- Third Section -->
         <Border Grid.Row="2"
                 BorderThickness="1"
                 BorderBrush="#333"
@@ -143,46 +144,95 @@
                 <TextBlock Text="Game Progression"
                            FontWeight="Bold"
                            Margin="0,0,0,10" />
-                
-                <WrapPanel Margin="10,0,0,0" HorizontalAlignment="Center">
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                    <Button Content="Unlock Darklurker"
-                            Width="110"
-                            Height="24"
-                            Margin="3"
-                            IsEnabled="{Binding AreButtonsEnabled}"
-                            Click="Unlock_Darklurker"/>
-                    <Border
-                        Background="#3498db"
-                        CornerRadius="10"
-                        Width="12"
-                        Height="12"
-                        Margin="5,0,10,0"
-                        VerticalAlignment="Center"
-                        ToolTip="Completes all three Chasms"
-                        ToolTipService.InitialShowDelay='100'>
-                        <TextBlock Text="i"
-                                   Foreground="White"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   FontWeight="Bold"
-                                   FontSize="10" />
-                    </Border>
-                    </StackPanel>
 
-                    <Button Content="Post-Lords" Width="110" Height="24" Margin="3" IsEnabled="{Binding AreButtonsEnabled}" />
-                    <Button Content="End Game" Width="110" Height="24" Margin="3" IsEnabled="{Binding AreButtonsEnabled}" />
-                    <Button Content="All Bonfires" Width="110" Height="24" Margin="3" IsEnabled="{Binding AreButtonsEnabled}" />
-                    <Button Content="All Shortcuts" Width="110" Height="24" Margin="3" IsEnabled="{Binding AreButtonsEnabled}" />
-                    <Button Content="All NPCs" Width="110" Height="24" Margin="3" IsEnabled="{Binding AreButtonsEnabled}" />
-                    <Button Content="Complete DLC1" Width="110" Height="24" Margin="3" IsEnabled="{Binding AreButtonsEnabled}" />
-                    <Button Content="Complete DLC2" Width="110" Height="24" Margin="3" IsEnabled="{Binding AreButtonsEnabled}" />
-                </WrapPanel>
-                
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Column="0" Grid.Row="0" Margin="0,0,5,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Button Content="Unlock Darklurker" Height="32" IsEnabled="{Binding AreButtonsEnabled}"
+                                Click="Unlock_Darklurker" />
+                        <Border Grid.Column="1" Background="#3498db" CornerRadius="10" Width="18" Height="18"
+                                Margin="7,0,0,0"
+                                ToolTip="Completes all three Chasms" ToolTipService.InitialShowDelay='100'>
+                            <TextBlock Text="i" Foreground="White" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" FontWeight="Bold" FontSize="10" />
+                        </Border>
+                    </Grid>
+
+                    <Grid Grid.Column="1" Grid.Row="0" Margin="5,0,5,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Button Content="Unlock Nashandra" Height="32" IsEnabled="{Binding AreButtonsEnabled}"
+                                Click="UnlockNash_Click" />
+                        <Border Grid.Column="1" Background="#3498db" CornerRadius="10" Width="18" Height="18"
+                                Margin="7,0,0,0"
+                                ToolTip="Makes Nashandra available by marking Giant Lord as defeated"
+                                ToolTipService.InitialShowDelay='100'>
+                            <TextBlock Text="i" Foreground="White" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" FontWeight="Bold" FontSize="10" />
+                        </Border>
+                    </Grid>
+
+                    <Grid Grid.Column="2" Grid.Row="0" Margin="5,0,0,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Button Content="Unlock Aldia" Height="32" IsEnabled="{Binding AreButtonsEnabled}"
+                                Click="UnlockAldia_Click" />
+                        <Border Grid.Column="1" Background="#3498db" CornerRadius="10" Width="18" Height="18"
+                                Margin="7,0,0,0"
+                                ToolTip="Sets all flags needed to encounter Aldia"
+                                ToolTipService.InitialShowDelay='100'>
+                            <TextBlock Text="i" Foreground="White" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" FontWeight="Bold" FontSize="10" />
+                        </Border>
+                    </Grid>
+
+                    <Button Grid.Column="0" Grid.Row="1" Content="Visible Aava" Height="32" Margin="0,0,5,5"
+                            IsEnabled="{Binding AreButtonsEnabled}" Click="VisibleAava_Click" />
+
+                    <Button Grid.Column="1" Grid.Row="1" Content="Break Eleum Loyce Ice" Height="32" Margin="5,0,5,5"
+                            IsEnabled="{Binding AreButtonsEnabled}" Click="BreakIce_Click" />
+
+                    <Button Grid.Column="2" Grid.Row="1" Content="Rescue Ivory Knights" Height="32" Margin="5,0,0,5"
+                            IsEnabled="{Binding AreButtonsEnabled}" Click="RescueKnights_Click" />
+
+                    <Grid Grid.Column="0" Grid.Row="2" Margin="0,0,5,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Button Content="King's Ring" Height="32" IsEnabled="{Binding AreButtonsEnabled}"
+                                Click="KingsRingAcquired_Click" />
+                        <Border Grid.Column="1" Background="#3498db" CornerRadius="10" Width="18" Height="18"
+                                Margin="7,0,0,0"
+                                ToolTip="Sets the flag that enables Forlorn to spawn in Forest (Game sets it when you acquire King's ring)&#x0a;I don't know what other things are affected by this flag so use at your own risk. " ToolTipService.InitialShowDelay='100'>
+                            <TextBlock Text="i" Foreground="White" HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" FontWeight="Bold" FontSize="10" />
+                        </Border>
+                    </Grid>
+                </Grid>
+
                 <StackPanel Orientation="Horizontal" Margin="10,10,0,0" HorizontalAlignment="Center">
-                    <Button Content="Reset All Flags" Width="150" Height="24" Margin="0,0,20,0" 
+                    <Button Content="Reset All Flags" Width="150" Height="24" Margin="0,0,20,0"
                             Foreground="Red" IsEnabled="{Binding AreButtonsEnabled}" />
-                    <Button Content="Save Current State" Width="150" Height="24" 
+                    <Button Content="Save Current State" Width="150" Height="24"
                             IsEnabled="{Binding AreButtonsEnabled}" />
                 </StackPanel>
             </StackPanel>

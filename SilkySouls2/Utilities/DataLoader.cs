@@ -72,5 +72,43 @@ namespace SilkySouls2.Utilities
 
             return warpDict;
         }
+        
+        
+        public static List<NpcInfo> GetNpcs()
+        {
+            List<NpcInfo> npcList = new List<NpcInfo>();
+            string csvData = Properties.Resources.NPC;
+            
+            if (string.IsNullOrWhiteSpace(csvData))
+                return npcList;
+                
+            using (StringReader reader = new StringReader(csvData))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#")) continue;
+                    
+                    string[] parts = line.Split(',');
+                    if (parts.Length < 4) continue;
+                    
+                    string npcName = parts[0].Trim();
+                    int deathFlag = int.Parse(parts[1], NumberStyles.Integer, CultureInfo.InvariantCulture);
+                    int hostileFlag = int.Parse(parts[2], NumberStyles.Integer, CultureInfo.InvariantCulture);
+                    int majulaFlag = int.Parse(parts[3], NumberStyles.Integer, CultureInfo.InvariantCulture);
+                    
+                    NpcInfo npc = new NpcInfo(
+                        npcName,
+                        deathFlag,
+                        hostileFlag,
+                        majulaFlag
+                    );
+                    
+                    npcList.Add(npc);
+                }
+            }
+            
+            return npcList;
+        }
     }
 }

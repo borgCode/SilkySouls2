@@ -72,11 +72,14 @@ namespace SilkySouls2.ViewModels
 
 
         private readonly EnemyService _enemyService;
+        private readonly DamageControlService _damageControlService;
         private readonly HotkeyManager _hotkeyManager;
 
-        public EnemyViewModel(EnemyService enemyService, HotkeyManager hotkeyManager)
+        public EnemyViewModel(EnemyService enemyService, HotkeyManager hotkeyManager,
+            DamageControlService damageControlService)
         {
             _enemyService = enemyService;
+            _damageControlService = damageControlService;
             _hotkeyManager = hotkeyManager;
             RegisterHotkeys();
             
@@ -383,7 +386,7 @@ namespace SilkySouls2.ViewModels
             set
             {
                 SetProperty(ref _isFreezeHealthEnabled, value);
-                _enemyService.ToggleFreezeTargetHp(_isFreezeHealthEnabled);
+                _damageControlService.ToggleFreezeTargetHp(_isFreezeHealthEnabled);
             }
         }
         //

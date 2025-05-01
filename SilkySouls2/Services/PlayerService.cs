@@ -273,103 +273,28 @@ namespace SilkySouls2.Services
 
         public void ToggleNoDamage(bool isNoDamageEnabled)
         {
-            var dmgControlCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.DamageControlCode;
-            var noDamageFlag = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.PlayerNoDamageFlag;
+            
+            var hookLoc = Hooks.HpWrite;
+            var code = CodeCaveOffsets.Base + CodeCaveOffsets.PlayerNoDamage;
 
             if (isNoDamageEnabled)
             {
-                if (!_hookManager.IsHookInstalled(dmgControlCode.ToInt64()))
-                {
-                    _hookManager.InstallHook(dmgControlCode.ToInt64(), Hooks.HpWrite,
-                        new byte[] { 0x89, 0x83, 0x68, 0x01, 0x00, 0x00 });
-                }
-
-                _memoryIo.WriteByte(noDamageFlag, 1);
+                var codeBytes = AsmLoader.GetAsmBytes("PlayerNoDamage");
+                var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt64());
+                Array.Copy(bytes, 0, codeBytes, 0x1 + 2, 8);
+                bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 6, code + 0x2C);
+                Array.Copy(bytes, 0, codeBytes, 0x27 + 1, 4);
+                _memoryIo.WriteBytes(code, codeBytes);
+                
+                _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[] { 0x89, 0x83, 0x68, 0x01, 0x00, 0x00 });
             }
             else
             {
-                _memoryIo.WriteByte(noDamageFlag, 0);
-
-                bool allFlagsOff =
-                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.OneShotFlag) == 0 &&
-                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.DealNoDamageFlag) ==
-                    0 &&
-                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.FreezeTargetHpFlag) ==
-                    0;
-
-                if (allFlagsOff && _hookManager.IsHookInstalled(dmgControlCode.ToInt64()))
-                {
-                    _hookManager.UninstallHook(dmgControlCode.ToInt64());
-                }
+                _hookManager.UninstallHook(code.ToInt64());
             }
+            
         }
-
-        public void ToggleOneShot(bool isOneShotEnabled)
-        {
-            var dmgControlCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.DamageControlCode;
-            var oneShot = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.OneShotFlag;
-
-            if (isOneShotEnabled)
-            {
-                if (!_hookManager.IsHookInstalled(dmgControlCode.ToInt64()))
-                {
-                    _hookManager.InstallHook(dmgControlCode.ToInt64(), Hooks.HpWrite,
-                        new byte[] { 0x89, 0x83, 0x68, 0x01, 0x00, 0x00 });
-                }
-
-                _memoryIo.WriteByte(oneShot, 1);
-            }
-            else
-            {
-                _memoryIo.WriteByte(oneShot, 0);
-
-                bool allFlagsOff =
-                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.PlayerNoDamageFlag) ==
-                    0 &&
-                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.DealNoDamageFlag) ==
-                    0 &&
-                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.FreezeTargetHpFlag) ==
-                    0;
-
-                if (allFlagsOff && _hookManager.IsHookInstalled(dmgControlCode.ToInt64()))
-                {
-                    _hookManager.UninstallHook(dmgControlCode.ToInt64());
-                }
-            }
-        }
-
-        public void ToggleDealNoDamage(bool isDealNoDamageEnabled)
-        {
-            var dmgControlCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.DamageControlCode;
-            var dealNoDamageFlag = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.DealNoDamageFlag;
-
-            if (isDealNoDamageEnabled)
-            {
-                if (!_hookManager.IsHookInstalled(dmgControlCode.ToInt64()))
-                {
-                    _hookManager.InstallHook(dmgControlCode.ToInt64(), Hooks.HpWrite,
-                        new byte[] { 0x89, 0x83, 0x68, 0x01, 0x00, 0x00 });
-                }
-
-                _memoryIo.WriteByte(dealNoDamageFlag, 1);
-            }
-            else
-            {
-                _memoryIo.WriteByte(dealNoDamageFlag, 0);
-
-                bool allFlagsOff =
-                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.PlayerNoDamageFlag) ==
-                    0 &&
-                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.OneShotFlag) == 0 &&
-                    _memoryIo.ReadUInt8(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DamageControl.FreezeTargetHpFlag) ==
-                    0;
-
-                if (allFlagsOff && _hookManager.IsHookInstalled(dmgControlCode.ToInt64()))
-                {
-                    _hookManager.UninstallHook(dmgControlCode.ToInt64());
-                }
-            }
-        }
+        
 
         public void ToggleInfiniteStamina(bool isInfiniteStaminaEnabled) =>
             _memoryIo.WriteByte(Patches.InfiniteStam + 1, isInfiniteStaminaEnabled ? 0x82 : 0x83);

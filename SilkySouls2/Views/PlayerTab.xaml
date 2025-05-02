@@ -500,7 +500,7 @@
                                                 TextAlignment="Center"
                                                 Width="80"
                                                 Minimum="0"
-                                                Maximum="7"
+                                                Maximum="8"
                                                 Grid.Column="0"
                                                 IsEnabled="{Binding AreOptionsEnabled}"
                                                 BorderBrush="#3F3F46" />

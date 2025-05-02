@@ -386,5 +386,17 @@ namespace SilkySouls2.Services
             float y = BitConverter.ToSingle(coordBytes, 8);
             return (x, y, z);
         }
+
+        public void SetNewGame(int value) => _memoryIo.WriteByte(GetNewGamePtr(), value);
+
+        public int GetNewGame() => _memoryIo.ReadUInt8(GetNewGamePtr());
+
+        private IntPtr GetNewGamePtr() =>
+            _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+            {
+                GameManagerImp.Offsets.GameDataManager,
+                GameManagerImp.GameDataManagerOffsets.NewGamePtr,
+                GameManagerImp.GameDataManagerOffsets.NewGame
+            }, false);
     }
 }

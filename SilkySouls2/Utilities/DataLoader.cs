@@ -78,36 +78,54 @@ namespace SilkySouls2.Utilities
         {
             List<NpcInfo> npcList = new List<NpcInfo>();
             string csvData = Properties.Resources.NPC;
-            
+    
             if (string.IsNullOrWhiteSpace(csvData))
                 return npcList;
-                
+        
             using (StringReader reader = new StringReader(csvData))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
                     if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#")) continue;
-                    
+            
                     string[] parts = line.Split(',');
                     if (parts.Length < 4) continue;
-                    
+            
                     string npcName = parts[0].Trim();
                     int deathFlag = int.Parse(parts[1], NumberStyles.Integer, CultureInfo.InvariantCulture);
                     int hostileFlag = int.Parse(parts[2], NumberStyles.Integer, CultureInfo.InvariantCulture);
-                    int majulaFlag = int.Parse(parts[3], NumberStyles.Integer, CultureInfo.InvariantCulture);
                     
+                    List<int> majulaFlags = new List<int>();
+                    string majulaFlagStr = parts[3].Trim();
+            
+                    if (majulaFlagStr.Contains("|"))
+                    {
+                        string[] flagParts = majulaFlagStr.Split('|');
+                        foreach (string flagPart in flagParts)
+                        {
+                            if (int.TryParse(flagPart, NumberStyles.Integer, CultureInfo.InvariantCulture, out int flagValue))
+                            {
+                                majulaFlags.Add(flagValue);
+                            }
+                        }
+                    }
+                    else if (int.TryParse(majulaFlagStr, NumberStyles.Integer, CultureInfo.InvariantCulture, out int singleFlag))
+                    {
+                        majulaFlags.Add(singleFlag);
+                    }
+            
                     NpcInfo npc = new NpcInfo(
                         npcName,
                         deathFlag,
                         hostileFlag,
-                        majulaFlag
+                        majulaFlags.ToArray()
                     );
-                    
+            
                     npcList.Add(npc);
                 }
             }
-            
+    
             return npcList;
         }
     }

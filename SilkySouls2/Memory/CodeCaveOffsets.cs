@@ -59,5 +59,11 @@ namespace SilkySouls2.Memory
 
         public const int PlayerNoDamage = 0x470;
 
+        public enum NoClip
+        {
+            InAirTimer = 0x4A0,
+            
+        }
+
     }
 }

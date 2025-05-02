@@ -95,7 +95,9 @@ namespace SilkySouls2.Memory
                 addr => Offsets.Hooks.NumOfDrops = addr.ToInt64(), saved);
             
             TryPatternWithFallback("DamageControl", Patterns.DamageControl,
-                addr => Offsets.Hooks.DamageControl = addr.ToInt64(), saved);
+                addr => Offsets.Hooks.DamageControl = addr.ToInt64(), saved);  
+            TryPatternWithFallback("InAirTimer", Patterns.InAirTimer,
+                addr => Offsets.Hooks.InAirTimer = addr.ToInt64(), saved);
             //
             // var triggers = FindAddressesByPattern(Patterns.NoClipTriggers, 2);
             // if (triggers[0] == IntPtr.Zero && saved.TryGetValue("NoClipTriggers", out var value))
@@ -178,7 +180,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Hooks.CreditSkip: 0x{Offsets.Hooks.CreditSkip:X}");
             Console.WriteLine($"Hooks.NumOfDrops: 0x{Offsets.Hooks.NumOfDrops:X}");
             Console.WriteLine($"Hooks.DamageControl: 0x{Offsets.Hooks.DamageControl:X}");
-            // Console.WriteLine($"Hooks.NoClipTriggers2: 0x{Offsets.Hooks.NoClipTriggers2:X}");
+            Console.WriteLine($"Hooks.InAirTimer: 0x{Offsets.Hooks.InAirTimer:X}");
             // Console.WriteLine($"Hooks.NoClipUpdateCoords: 0x{Offsets.Hooks.NoClipUpdateCoords:X}");
             // Console.WriteLine($"Hooks.CameraUpLimit: 0x{Offsets.Hooks.CameraUpLimit:X}");
             // Console.WriteLine($"Hooks.ItemLotBase: 0x{Offsets.Hooks.ItemLotBase:X}");

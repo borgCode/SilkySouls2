@@ -68,6 +68,7 @@ namespace SilkySouls2.Memory
                 public const int BleedMax = 0x1D8;
                 public const int ToxicCurrent = 0x200;
                 public const int ToxicMax = 0x208;
+                public const int ChrCullingGroupCtrlPtr = 0x240;
                 public const int Speed = 0x2A8;
                 
                 public const int StatsPtr = 0x490;
@@ -99,6 +100,11 @@ namespace SilkySouls2.Memory
                 public static class ChrPhysicsCtrl
                 {
                     public const int Xyz = 0x1C0; //Read only
+                }
+
+                public static class ChrCullingGroupCtrl
+                {
+                    public const int InAirTimerEntity = 0x90;
                 }
                 
                 public static class Stats
@@ -157,6 +163,7 @@ namespace SilkySouls2.Memory
             public static long CreditSkip;
             public static long NumOfDrops;
             public static long DamageControl;
+            public static long InAirTimer;
         }
 
         public static class Funcs

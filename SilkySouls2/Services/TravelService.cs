@@ -61,7 +61,7 @@ namespace SilkySouls2.Services
                 _memoryIo.WriteInt32(paramsLoc, 4);
                 _memoryIo.WriteInt32(paramsLoc + 0x8, location.BonfireId);
                 _memoryIo.WriteInt32(paramsLoc + 0xC, -1);
-                _memoryIo.WriteInt32(paramsLoc + 0x14, 3);
+                
                 _memoryIo.WriteInt32(paramsLoc + 0x18, location.EventObjId);
 
                 codeLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.EventWarp.Code;
@@ -127,7 +127,6 @@ namespace SilkySouls2.Services
                 while (IsLoadingScreen() && Environment.TickCount - start < 10000)
                     Thread.Sleep(50);
             }
-            if (location.LocationName == "Darklurker") _utilityService.SetEventOn(GameIds.EventFlags.ClearedDrangelicDungeon);
             Task.Delay(200).Wait();
             _hookManager.UninstallHook(code.ToInt64());
         }

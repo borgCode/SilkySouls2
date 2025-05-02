@@ -158,11 +158,29 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 50                      push   rax
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
+        ///48 39 f8                cmp    rax,rdi
+        ///75 03                   jne    13 &lt;exit&gt;
+        ///0f 57 c9                xorps  xmm1,xmm1
+        ///000000000013 &lt;exit&gt;:
+        ///58                      pop    rax
+        ///f3 0f 11 4f 10          movss  DWORD PTR [rdi+0x10],xmm1
+        ///e9 00 00 00 00          jmp    1e &lt;exit+0xb&gt;.
+        /// </summary>
+        internal static string NoClip_InAirTimer {
+            get {
+                return ResourceManager.GetString("NoClip_InAirTimer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Emerald Herald,104020,103520,0
         ///Gilligan,104050,103550,103551
         ///Saulden,104140,103640,0
         ///Cale,104180,103680,103682
-        ///Melentia,104210,103710,102521
+        ///Melentia,104210,103710,203803|203802|203801|203800|102521
         ///Maughlin,104250,103750,0
         ///Chloanne,104260,103760,103761
         ///Rosabeth,104270,103770,102640

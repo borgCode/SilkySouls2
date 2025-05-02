@@ -20,8 +20,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-
-        <!-- First Section -->
+        
         <Border Grid.Row="0"
                 BorderThickness="1"
                 BorderBrush="#333"
@@ -45,43 +44,52 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <CheckBox Content="Boss Flags"
-                              Grid.Column="0" Grid.Row="0"
-                              IsChecked="{Binding IsBossFlagsEnabled}"
-                              Margin="0,2" />
-
-                    <CheckBox Content="NPC Flags"
-                              Grid.Column="0" Grid.Row="1"
-                              IsChecked="{Binding IsNpcFlagsEnabled}"
-                              Margin="0,2" />
-
-                    <CheckBox Content="Item Flags"
-                              Grid.Column="0" Grid.Row="2"
-                              IsChecked="{Binding IsItemFlagsEnabled}"
-                              Margin="0,2" />
-
-                    <CheckBox Content="Area Flags"
-                              Grid.Column="1" Grid.Row="0"
-                              IsChecked="{Binding IsAreaFlagsEnabled}"
-                              Margin="0,2" />
-
-                    <CheckBox Content="Quest Flags"
-                              Grid.Column="1" Grid.Row="1"
-                              IsChecked="{Binding IsQuestFlagsEnabled}"
-                              Margin="0,2" />
-
-                    <CheckBox Content="Event Flags"
-                              Grid.Column="1" Grid.Row="2"
-                              IsChecked="{Binding IsEventFlagsEnabled}"
-                              Margin="0,2" />
+                    <!-- <CheckBox Content="Boss Flags" -->
+                    <!--           Grid.Column="0" Grid.Row="0" -->
+                    <!--           IsChecked="{Binding IsBossFlagsEnabled}" -->
+                    <!--           Margin="0,2" /> -->
+                    <!-- -->
+                    <!-- <CheckBox Content="NPC Flags" -->
+                    <!--           Grid.Column="0" Grid.Row="1" -->
+                    <!--           IsChecked="{Binding IsNpcFlagsEnabled}" -->
+                    <!--           Margin="0,2" /> -->
+                    <!-- -->
+                    <!-- <CheckBox Content="Item Flags" -->
+                    <!--           Grid.Column="0" Grid.Row="2" -->
+                    <!--           IsChecked="{Binding IsItemFlagsEnabled}" -->
+                    <!--           Margin="0,2" /> -->
+                    <!-- -->
+                    <!-- <CheckBox Content="Area Flags" -->
+                    <!--           Grid.Column="1" Grid.Row="0" -->
+                    <!--           IsChecked="{Binding IsAreaFlagsEnabled}" -->
+                    <!--           Margin="0,2" /> -->
+                    <!-- -->
+                    <!-- <CheckBox Content="Quest Flags" -->
+                    <!--           Grid.Column="1" Grid.Row="1" -->
+                    <!--           IsChecked="{Binding IsQuestFlagsEnabled}" -->
+                    <!--           Margin="0,2" /> -->
+                    <!-- -->
+                    <!-- <CheckBox Content="Event Flags" -->
+                    <!--           Grid.Column="1" Grid.Row="2" -->
+                    <!--           IsChecked="{Binding IsEventFlagsEnabled}" -->
+                    <!--           Margin="0,2" /> -->
                 </Grid>
 
                 <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
                     <TextBlock Text="Flag ID:" VerticalAlignment="Center" Margin="0,0,10,0" />
                     <TextBox Width="100" Text="{Binding FlagId}" Margin="0,0,10,0" />
-                    <CheckBox Content="Enabled" IsChecked="{Binding IsFlagEnabled}" VerticalAlignment="Center"
-                              Margin="0,0,10,0" />
-                    <Button Content="Set Flag" IsEnabled="{Binding AreButtonsEnabled}" Padding="10,3" Margin="10,0,0,0" />
+                    
+                    <TextBlock Text="State:" VerticalAlignment="Center" Margin="0,0,10,0" />
+                    <ComboBox Width="70" SelectedIndex="{Binding FlagStateIndex}" Margin="0,0,10,0">
+                        <ComboBoxItem Content="ON" />
+                        <ComboBoxItem Content="OFF" />
+                    </ComboBox>
+                    
+                    <Button Content="Set Flag" 
+                            IsEnabled="{Binding AreButtonsEnabled}" 
+                            Padding="10,3" 
+                            Margin="10,0,0,0"
+                            Click="SetFlag_Click" />
                 </StackPanel>
             </StackPanel>
         </Border>
@@ -162,11 +170,11 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Button Content="Unlock Darklurker" Height="32" IsEnabled="{Binding AreButtonsEnabled}"
+                        <Button Content="Light Chasms" Height="32" IsEnabled="{Binding AreButtonsEnabled}"
                                 Click="Unlock_Darklurker" />
                         <Border Grid.Column="1" Background="#3498db" CornerRadius="10" Width="18" Height="18"
                                 Margin="7,0,0,0"
-                                ToolTip="Completes all three Chasms" ToolTipService.InitialShowDelay='100'>
+                                ToolTip="Completes all three Darklurker Chasms" ToolTipService.InitialShowDelay='100'>
                             <TextBlock Text="i" Foreground="White" HorizontalAlignment="Center"
                                        VerticalAlignment="Center" FontWeight="Bold" FontSize="10" />
                         </Border>
@@ -227,14 +235,10 @@
                                        VerticalAlignment="Center" FontWeight="Bold" FontSize="10" />
                         </Border>
                     </Grid>
+                    <Button Grid.Column="1" Grid.Row="2" Content="Activate Brume Tower" Height="32" Margin="5,0,0,5"
+                            IsEnabled="{Binding AreButtonsEnabled}" Click="ActivateBrume_Click" />
                 </Grid>
-
-                <StackPanel Orientation="Horizontal" Margin="10,10,0,0" HorizontalAlignment="Center">
-                    <Button Content="Reset All Flags" Width="150" Height="24" Margin="0,0,20,0"
-                            Foreground="Red" IsEnabled="{Binding AreButtonsEnabled}" />
-                    <Button Content="Save Current State" Width="150" Height="24"
-                            IsEnabled="{Binding AreButtonsEnabled}" />
-                </StackPanel>
+                
             </StackPanel>
         </Border>
     </Grid>

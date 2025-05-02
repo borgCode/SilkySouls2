@@ -15,6 +15,12 @@ namespace SilkySouls2.ViewModels
         private readonly HotkeyManager _hotkeyManager;
         private readonly UtilityService _utilityService;
         
+        private const float DefaultNoclipMultiplier = 0.25f;
+        private const uint BaseXSpeedHex = 0x3e4ccccd;
+        private const uint BaseYSpeedHex = 0x3e19999a;
+        private float _noClipSpeedMultiplier = DefaultNoclipMultiplier;
+        private bool _isNoClipEnabled;
+        
         public UtilityViewModel(UtilityService utilityService, HotkeyManager hotkeyManager)
         {
 
@@ -69,6 +75,33 @@ namespace SilkySouls2.ViewModels
             {
                 if (!SetProperty(ref _is100DropEnabled, value)) return;
                 _utilityService.Toggle100Drop(_is100DropEnabled);
+            }
+        }
+        
+        public bool IsNoClipEnabled
+        {
+            get => _isNoClipEnabled;
+            set
+            {
+                if (!SetProperty(ref _isNoClipEnabled, value)) return;
+
+                if (_isNoClipEnabled)
+                {
+                    // IsFreeCamEnabled = false;
+                    _utilityService.ToggleNoClip(_isNoClipEnabled);
+                    // _wasNoDeathEnabled = _playerViewModel.IsNoDeathEnabled;
+                    // _playerViewModel.IsNoDeathEnabled = true;
+                    // _playerViewModel.IsSilentEnabled = true;
+                    // _playerViewModel.IsInvisibleEnabled = true;
+                }
+                else
+                {
+                    _utilityService.ToggleNoClip(_isNoClipEnabled);
+                    // _playerViewModel.IsNoDeathEnabled = _wasNoDeathEnabled;
+                    // _playerViewModel.IsSilentEnabled = false;
+                    // _playerViewModel.IsInvisibleEnabled = false;
+                    // NoClipSpeed = DefaultNoclipMultiplier;
+                }
             }
         }
         

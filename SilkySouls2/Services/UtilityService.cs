@@ -133,5 +133,37 @@ namespace SilkySouls2.Services
                 _hookManager.UninstallHook(dropCountCode.ToInt64());
             }
         }
+
+        public void ToggleNoClip(bool isNoClipEnabled)
+        {
+            
+            var inAirTimerCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.InAirTimer;
+
+            if (isNoClipEnabled)
+            {
+                var inAirTimerHook = Hooks.InAirTimer;
+                
+                var codeBytes = AsmLoader.GetAsmBytes("NoClip_InAirTimer");
+                var playerIdentifier = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+                {
+                    GameManagerImp.Offsets.PlayerCtrl,
+                    GameManagerImp.PlayerCtrlOffsets.ChrCullingGroupCtrlPtr,
+                    GameManagerImp.PlayerCtrlOffsets.ChrCullingGroupCtrl.InAirTimerEntity
+                }, false);
+
+                var bytes = BitConverter.GetBytes(playerIdentifier.ToInt64());
+                Array.Copy(bytes, 0, codeBytes, 0x1 + 2, 8);
+                bytes = AsmHelper.GetJmpOriginOffsetBytes(inAirTimerHook, 5, inAirTimerCode + 0x1E);
+                Array.Copy(bytes, 0, codeBytes, 0x19 + 1, 4);
+                _memoryIo.WriteBytes(inAirTimerCode, codeBytes);
+                _hookManager.InstallHook(inAirTimerCode.ToInt64(), inAirTimerHook, new byte[]
+                    { 0xF3, 0x0F, 0x11, 0x4F, 0x10 });
+            }
+            else
+            {
+                _hookManager.UninstallHook(inAirTimerCode.ToInt64());
+            }
+            
+        }
     }
 }

@@ -34,5 +34,9 @@ namespace SilkySouls2.Views
         private void SetFriendly_Click(object sender, RoutedEventArgs e) => _eventViewModel.SetNpcFriendly();
         private void SetHostile_Click(object sender, RoutedEventArgs e) => _eventViewModel.SetNpcHostile();
         private void MovetoMajula_Click(object sender, RoutedEventArgs e) => _eventViewModel.MoveNpcToMajula();
+
+        private void SetFlag_Click(object sender, RoutedEventArgs e) => _eventViewModel.SetFlag();
+
+        private void ActivateBrume_Click(object sender, RoutedEventArgs e) => _eventViewModel.ActivateBrume();
     }
 }

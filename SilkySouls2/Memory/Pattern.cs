@@ -52,6 +52,14 @@ namespace SilkySouls2.Memory
             None
         );
 
+        public static readonly Pattern InAirTimer = new Pattern(
+            new byte[] { 0xF3, 0x0F, 0x11, 0x4F, 0x10, 0x49 },
+            "xxxxxx",
+            0,
+            None
+        );
+
+        
 
         public static readonly Pattern WarpCoordWrite = new Pattern(
             new byte[] { 0x0F, 0x5C, 0xC2, 0x0F, 0x29, 0x47, 0x50 },

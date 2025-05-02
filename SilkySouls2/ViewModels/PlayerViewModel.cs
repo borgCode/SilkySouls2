@@ -129,8 +129,8 @@ namespace SilkySouls2.ViewModels
             Faith = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Fth);
             SoulLevel = _playerService.GetSoulLevel();
             // Souls = _playerService.GetPlayerStat(Offsets.GameManagerImp.PlayerCtrlOffsets.Stats.Souls);
-            // NewGame = _playerService.GetNewGame();
-            // PlayerSpeed = _playerService.GetPlayerSpeed();
+            NewGame = _playerService.GetNewGame();
+            PlayerSpeed = _playerService.GetPlayerSpeed();
             UpdateAgilityAndIFrames();
         }
 
@@ -503,17 +503,17 @@ namespace SilkySouls2.ViewModels
         //     set => SetProperty(ref _souls, value);
         // }
         //
-        // public int NewGame
-        // {
-        //     get => _newGame;
-        //     set
-        //     {
-        //         if (SetProperty(ref _newGame, value))
-        //         {
-        //             _playerService.SetNewGame(value);
-        //         }
-        //     }
-        // }
+        public int NewGame
+        {
+            get => _newGame;
+            set
+            {
+                if (SetProperty(ref _newGame, value))
+                {
+                    _playerService.SetNewGame(value);
+                }
+            }
+        }
 
         private int _agility;
 

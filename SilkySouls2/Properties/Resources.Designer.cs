@@ -65,12 +65,12 @@ namespace SilkySouls2.Properties {
         ///0f b7 15 00 00 00 00    movzx  edx,WORD PTR [rip+0x0]        # 12 &lt;_main+0x12&gt;
         ///41 b8 05 00 00 00       mov    r8d,0x5
         ///e8 00 00 00 00          call   1d &lt;_main+0x1d&gt;
-        ///c7 40 04 00 00 00 00    mov    DWORD PTR [rax+0x4],0x0
         ///48 b9 00 00 00 00 00    movabs rcx,0x0
         ///00 00 00
-        ///48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 35 &lt;_main+0x35&gt;
-        ///e8 00 00 00 00          call   3a &lt;_main+0x3a&gt;
-        ///48 83 c4  [rest of string was truncated]&quot;;.
+        ///48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 2e &lt;_main+0x2e&gt;
+        ///e8 00 00 00 00          call   33 &lt;_main+0x33&gt;
+        ///48 83 c4 60             add    rsp,0x60
+        ///c3                       [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string BonfireWarp {
             get {

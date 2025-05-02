@@ -44,24 +44,24 @@ namespace SilkySouls2.Services
 
                 warpBytes = AsmLoader.GetAsmBytes("BonfireWarp");
                 var bytes = BitConverter.GetBytes(eventWarpEntity.ToInt64());
-                Array.Copy(bytes, 0, warpBytes, 0x24 + 2, 8);
+                Array.Copy(bytes, 0, warpBytes, 0x1D + 2, 8);
 
                 AsmHelper.WriteRelativeOffsets(warpBytes, new[]
                 {
                     (codeLoc.ToInt64() + 0x4, emptySpace.ToInt64(), 7, 0x4 + 3),
                     (codeLoc.ToInt64() + 0xB, bonfireIdLoc.ToInt64(), 7, 0xB + 3),
                     (codeLoc.ToInt64() + 0x18, warpPrep, 5, 0x18 + 1),
-                    (codeLoc.ToInt64() + 0x2E, emptySpace.ToInt64(), 7, 0x2E + 3),
-                    (codeLoc.ToInt64() + 0x35, actualWarp, 5, 0x35 + 1)
+                    (codeLoc.ToInt64() + 0x27, emptySpace.ToInt64(), 7, 0x27 + 3),
+                    (codeLoc.ToInt64() + 0x2E, actualWarp, 5, 0x2E + 1)
                 });
             }
             else
             {
                 var paramsLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.EventWarp.Params;
                 _memoryIo.WriteInt32(paramsLoc, 4);
+                _memoryIo.WriteInt32(paramsLoc +0x4, 5); // Deload map, unfortunately makes fade out necessary
                 _memoryIo.WriteInt32(paramsLoc + 0x8, location.BonfireId);
                 _memoryIo.WriteInt32(paramsLoc + 0xC, -1);
-                
                 _memoryIo.WriteInt32(paramsLoc + 0x18, location.EventObjId);
 
                 codeLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.EventWarp.Code;

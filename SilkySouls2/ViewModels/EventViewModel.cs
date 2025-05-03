@@ -120,14 +120,8 @@ namespace SilkySouls2.ViewModels
             if (!long.TryParse(trimmedFlagId, out long flagIdValue) || flagIdValue <= 0)
                 return;
             
-            if (FlagStateIndex == 0) 
-            {
-                _utilityService.SetEventOff(flagIdValue);
-            }
-            else 
-            {
-                _utilityService.SetEventOn(flagIdValue);
-            }
+            if (FlagStateIndex == 0) _utilityService.SetEventOn(flagIdValue);
+            else _utilityService.SetEventOff(flagIdValue);
         }
     }
 }

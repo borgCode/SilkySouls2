@@ -189,10 +189,16 @@ namespace SilkySouls2.Services
                 var updateCoordsPIdentifier = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
                 {
                     GameManagerImp.Offsets.PlayerCtrl,
-                    // GameManagerImp.PlayerCtrlOffsets.ChrMotionCtrlPtr,
-                    // GameManagerImp.PlayerCtrlOffsets.ChrMotionCtrl.MorphemeMotionCtrl,
-                    // GameManagerImp.PlayerCtrlOffsets.ChrMotionCtrl.MorphemeChrCtrl
                 }, true);
+                
+                var rigidBodyCoords = _memoryIo.FollowPointers(HkHardwareInfo.Base, new[]
+                {
+                    HkHardwareInfo.HkpWorld,
+                    HkHardwareInfo.HkpChrRigidBodyPtr,
+                    HkHardwareInfo.HkpChrRigidBody,
+                    HkHardwareInfo.HkpRigidBodyPtr,
+                    HkHardwareInfo.HkpRigidBody.PlayerIdentifier,
+                } ,false);
                 
                 var movement = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
                 {
@@ -226,7 +232,7 @@ namespace SilkySouls2.Services
                 _memoryIo.WriteBytes(coordsCode, codeBytes);
                 
                 _memoryIo.WriteByte(GetGravityPtr(), 1);
-                _memoryIo.WriteByte(GetCollisionPtr(), 1);
+                // _memoryIo.WriteByte(GetCollisionPtr(), 1);
                 
                 _hookManager.InstallHook(inAirTimerCode.ToInt64(), inAirTimerHook, new byte[]
                     { 0xF3, 0x0F, 0x11, 0x4F, 0x10 });
@@ -245,7 +251,7 @@ namespace SilkySouls2.Services
                 _hookManager.UninstallHook(triggersAndSpaceCode.ToInt64());
                 _hookManager.UninstallHook(ctrlCode.ToInt64());
                 _hookManager.UninstallHook(inAirTimerCode.ToInt64());
-                _memoryIo.WriteByte(GetCollisionPtr(), 0);
+                // _memoryIo.WriteByte(GetCollisionPtr(), 0);
             }
             
         }

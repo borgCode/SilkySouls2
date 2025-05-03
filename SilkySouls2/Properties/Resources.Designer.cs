@@ -230,17 +230,19 @@ namespace SilkySouls2.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to Emerald Herald,104020,103520,0
-        ///Gilligan,104050,103550,103551
+        ///Gilligan,104050,103550,102165
         ///Saulden,104140,103640,0
-        ///Cale,104180,103680,103682
-        ///Melentia,104210,103710,203803|203802|203801|203800|102521
+        ///Melentia,104210,103710,100971|102521
         ///Maughlin,104250,103750,0
-        ///Chloanne,104260,103760,103761
-        ///Rosabeth,104270,103770,102640
-        ///Lenigrast,104280,103780,102661
-        ///Carhillion,104300,103800,103801
-        ///Licia,104320,103820,0
-        ///Shalquoir,104370,103870,0.
+        ///Chloanne,104260,103760,102625
+        ///Rosabeth,104270,103770,102650
+        ///Lenigrast,104280,103780,0
+        ///Carhillion,104300,103800,102722
+        ///Licia,104320,103820,102765
+        ///Shalquoir,104370,103870,0
+        ///
+        ///
+        ///.
         /// </summary>
         internal static string NPC {
             get {

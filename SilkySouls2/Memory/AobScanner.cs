@@ -104,6 +104,8 @@ namespace SilkySouls2.Memory
                 addr => Offsets.Hooks.Ctrl = addr.ToInt64(), saved);
             TryPatternWithFallback("NoClipUpdateCoords", Patterns.NoClipUpdateCoords,
                 addr => Offsets.Hooks.NoClipUpdateCoords = addr.ToInt64(), saved);
+            TryPatternWithFallback("NoClipGravity", Patterns.NoClipGravity,
+                addr => Offsets.Hooks.NoClipGravity = addr.ToInt64(), saved);
             
             using (var writer = new StreamWriter(savePath))
             {
@@ -176,7 +178,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Hooks.TriggersAndSpace: 0x{Offsets.Hooks.TriggersAndSpace:X}");
             Console.WriteLine($"Hooks.Ctrl: 0x{Offsets.Hooks.Ctrl:X}");
             Console.WriteLine($"Hooks.NoClipUpdateCoords: 0x{Offsets.Hooks.NoClipUpdateCoords:X}");
-            // Console.WriteLine($"Hooks.CameraUpLimit: 0x{Offsets.Hooks.CameraUpLimit:X}");
+            Console.WriteLine($"Hooks.NoClipGravity: 0x{Offsets.Hooks.NoClipGravity:X}");
             // Console.WriteLine($"Hooks.ItemLotBase: 0x{Offsets.Hooks.ItemLotBase:X}");
             //
             Console.WriteLine($"Funcs.WarpPrep: 0x{Offsets.Funcs.WarpPrep:X}");

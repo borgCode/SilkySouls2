@@ -171,6 +171,27 @@ namespace SilkySouls2.Properties {
         ///   Looks up a localized string similar to 50                      push   rax
         ///48 b8 00 00 00 00 00    movabs rax,0x0
         ///00 00 00
+        ///48 39 d8                cmp    rax,rbx
+        ///75 0e                   jne    1e &lt;original&gt;
+        ///0f 28 43 70             movaps xmm0,XMMWORD PTR [rbx+0x70]
+        ///0f 29 43 50             movaps XMMWORD PTR [rbx+0x50],xmm0
+        ///58                      pop    rax
+        ///e9 00 00 00 00          jmp    1e &lt;original&gt;
+        ///00000000001e &lt;original&gt;:
+        ///58                      pop    rax
+        ///0f 5c c2                subps  xmm0,xmm2
+        ///0f 29 43 50             movaps XMM [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string NoClip_Gravity {
+            get {
+                return ResourceManager.GetString("NoClip_Gravity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 50                      push   rax
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
         ///48 39 f8                cmp    rax,rdi
         ///75 03                   jne    13 &lt;exit&gt;
         ///0f 57 c9                xorps  xmm1,xmm1
@@ -206,19 +227,19 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 0f 5c c2                subps  xmm0,xmm2
+        ///   Looks up a localized string similar to f3 0f 11 54 24 14       movss  DWORD PTR [rsp+0x14],xmm2
         ///50                      push   rax
         ///48 b8 00 00 00 00 00    movabs rax,0x0
         ///00 00 00
-        ///48 39 f8                cmp    rax,rdi
-        ///0f 85 c6 00 00 00       jne    dd &lt;original&gt;
-        ///66 0f 6f 47 50          movdqa xmm0,XMMWORD PTR [rdi+0x50]
+        ///48 39 f0                cmp    rax,rsi
+        ///0f 85 bc 00 00 00       jne    d6 &lt;original&gt;
+        ///66 0f 6f 7e 20          movdqa xmm7,XMMWORD PTR [rsi+0x20]
         ///48 b8 00 00 00 00 00    movabs rax,0x0
         ///00 00 00
         ///f3 44 0f 10 78 78       movss  xmm15,DWORD PTR [rax+0x78]
         ///45 0f c6 ff 00          shufps xmm15,xmm15,0x0
         ///b8 cd cc 4c 3e          mov    eax,0x3e4ccccd
-        ///66 44 0f 6e f0          movd   xmm [rest of string was truncated]&quot;;.
+        ///66 44 0f 6e f0     [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string NoClip_UpdateCoords {
             get {

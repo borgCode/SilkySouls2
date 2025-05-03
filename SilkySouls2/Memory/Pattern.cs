@@ -74,11 +74,19 @@ namespace SilkySouls2.Memory
         );
 
         public static readonly Pattern NoClipUpdateCoords = new Pattern(
-            new byte[] { 0x0F, 0x29, 0x47, 0x70, 0x8B },
-            "xxxxx",
+            new byte[] { 0xF3, 0x0F, 0x11, 0x54, 0x24, 0x20, 0x0F, 0x29 },
+            "xxxxxxxx",
             0,
             None
         );
+
+        public static readonly Pattern NoClipGravity = new Pattern(
+            new byte[] { 0x0F, 0x5C, 0xC2, 0x0F, 0x29, 0x43, 0x50, 0x0F },
+            "xxxxxxxx",
+            0,
+            None
+        );
+
 
         
         public static readonly Pattern WarpCoordWrite = new Pattern(

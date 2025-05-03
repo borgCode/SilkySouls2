@@ -66,6 +66,7 @@ namespace SilkySouls2.Memory
             TriggersAndSpaceCheck = 0x4D0,
             CtrlCheck = 0x530,
             UpdateCoords = 0x540,
+            Gravity = 0x640,
         }
 
     }

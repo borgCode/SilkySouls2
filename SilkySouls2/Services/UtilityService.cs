@@ -141,8 +141,7 @@ namespace SilkySouls2.Services
             var triggersAndSpaceCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.TriggersAndSpaceCheck;
             var ctrlCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.CtrlCheck;
             var coordsCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.UpdateCoords;
-      
-            
+            var gravityCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.Gravity;
 
             if (isNoClipEnabled)
             {
@@ -150,6 +149,7 @@ namespace SilkySouls2.Services
                 var triggersAndSpaceHook = Hooks.TriggersAndSpace;
                 var ctrlHook = Hooks.Ctrl;
                 var coordsHook = Hooks.NoClipUpdateCoords;
+                var gravityHook = Hooks.NoClipGravity;
                 
                 var zDirectionLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.ZDirection;
                 var codeBytes = AsmLoader.GetAsmBytes("NoClip_InAirTimer");
@@ -185,8 +185,9 @@ namespace SilkySouls2.Services
                 });
                 
                 _memoryIo.WriteBytes(ctrlCode, codeBytes);
-
-                var updateCoordsPIdentifier = _memoryIo.FollowPointers(HkHardwareInfo.Base, new[]
+                
+                
+                var gravityPIdentifier = _memoryIo.FollowPointers(HkHardwareInfo.Base, new[]
                 {
                     HkHardwareInfo.HkpWorld,
                     HkHardwareInfo.HkpChrRigidBodyPtr,
@@ -194,6 +195,27 @@ namespace SilkySouls2.Services
                     HkHardwareInfo.HkpRigidBodyPtr,
                     HkHardwareInfo.HkpRigidBody.PlayerIdentifier,
                 } ,false);
+                
+                codeBytes = AsmLoader.GetAsmBytes("NoClip_Gravity");
+                bytes = BitConverter.GetBytes(gravityPIdentifier.ToInt64());
+                Array.Copy(bytes, 0, codeBytes, 0x1 + 2, 8);
+                AsmHelper.WriteRelativeOffsets(codeBytes, new []
+                {
+                    (gravityCode.ToInt64() + 0x19, gravityHook + 7, 5, 0x19 + 1),
+                    (gravityCode.ToInt64() + 0x26, gravityHook + 7, 5, 0x26 + 1),
+                });
+                
+                _memoryIo.WriteBytes(gravityCode, codeBytes);
+                
+                
+                
+                var updateCoordsPIdentifier = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+                {
+                    GameManagerImp.Offsets.PlayerCtrl,
+                    GameManagerImp.PlayerCtrlOffsets.ChrMotionCtrlPtr,
+                    GameManagerImp.PlayerCtrlOffsets.ChrMotionCtrl.MorphemeMotionCtrl,
+                    GameManagerImp.PlayerCtrlOffsets.ChrMotionCtrl.MorphemeChrCtrl
+                }, true);
                 
                 var movement = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
                 {
@@ -209,22 +231,23 @@ namespace SilkySouls2.Services
                 codeBytes = AsmLoader.GetAsmBytes("NoClip_UpdateCoords");
                 AsmHelper.WriteAbsoluteAddresses(codeBytes, new []
                 {
-                    (updateCoordsPIdentifier.ToInt64(), 0x4 + 2),
-                    (movement.ToInt64(), 0x1C + 2),
-                    (cam, 0x44 + 2),
-                    (movement.ToInt64(), 0x57 + 2),
-                    (cam, 0x7F +2)
+                    (updateCoordsPIdentifier.ToInt64(), 0x7 + 2),
+                    (movement.ToInt64(), 0x1F + 2),
+                    (cam, 0x47 + 2),
+                    (movement.ToInt64(), 0x5A + 2),
+                    (cam, 0x82 +2)
                 });
                 
                 AsmHelper.WriteRelativeOffsets(codeBytes, new []
                 {
-                    (coordsCode.ToInt64() + 0x91, zDirectionLoc.ToInt64(), 6, 0x91 + 2),
-                    (coordsCode.ToInt64() + 0xB9, zDirectionLoc.ToInt64(), 7, 0xB9 + 2),
-                    (coordsCode.ToInt64() + 0xD8, coordsHook + 0x7, 5, 0xD8 + 1),
-                    (coordsCode.ToInt64() + 0xE2, coordsHook + 0x7, 5, 0xE2 + 1)
+                    (coordsCode.ToInt64() + 0x94, zDirectionLoc.ToInt64(), 6, 0x94 + 2),
+                    (coordsCode.ToInt64() + 0xBC, zDirectionLoc.ToInt64(), 7, 0xBC + 2),
+                    (coordsCode.ToInt64() + 0xD1, coordsHook + 0xA, 5, 0xD1 + 1),
+                    (coordsCode.ToInt64() + 0xDB, coordsHook + 0xA, 5, 0xDB + 1)
                 });
                 
                 _memoryIo.WriteBytes(coordsCode, codeBytes);
+                
                 
                 _hookManager.InstallHook(inAirTimerCode.ToInt64(), inAirTimerHook, new byte[]
                     { 0xF3, 0x0F, 0x11, 0x4F, 0x10 });
@@ -232,8 +255,10 @@ namespace SilkySouls2.Services
                     { 0x4C, 0x8B, 0x7C, 0x24, 0x70, 0x48, 0x8B, 0x43, 0x08 });
                 _hookManager.InstallHook(ctrlCode.ToInt64(), ctrlHook, new byte[]
                     { 0x81, 0x8B, 0x28, 0x02, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00 });
+                // _hookManager.InstallHook(gravityCode.ToInt64(), gravityHook, new byte[]
+                //     { 0x0F, 0x5C, 0xC2, 0x0F, 0x29, 0x43, 0x50 });
                 _hookManager.InstallHook(coordsCode.ToInt64(), coordsHook, 
-                new byte[] { 0x0F, 0x5C, 0xC2, 0x0F, 0x29, 0x47, 0x50 });
+                new byte[] { 0xF3, 0x0F, 0x11, 0x54, 0x24, 0x14, 0x0F, 0x29, 0x7E, 0x20 });
     
             }
             else
@@ -241,6 +266,7 @@ namespace SilkySouls2.Services
                 _hookManager.UninstallHook(inAirTimerCode.ToInt64());
                 _hookManager.UninstallHook(triggersAndSpaceCode.ToInt64());
                 _hookManager.UninstallHook(ctrlCode.ToInt64());
+                _hookManager.UninstallHook(gravityCode.ToInt64());
                 _hookManager.UninstallHook(coordsCode.ToInt64());
             }
             

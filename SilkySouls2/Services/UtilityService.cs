@@ -225,6 +225,7 @@ namespace SilkySouls2.Services
                 
                 _memoryIo.WriteBytes(coordsCode, codeBytes);
                 
+                // _memoryIo.WriteByte(GetGravityPtr(), 1);
                 
                 _hookManager.InstallHook(inAirTimerCode.ToInt64(), inAirTimerHook, new byte[]
                     { 0xF3, 0x0F, 0x11, 0x4F, 0x10 });
@@ -238,6 +239,7 @@ namespace SilkySouls2.Services
             }
             else
             {
+                // _memoryIo.WriteByte(GetGravityPtr(), 0);
                 _hookManager.UninstallHook(inAirTimerCode.ToInt64());
                 _hookManager.UninstallHook(triggersAndSpaceCode.ToInt64());
                 _hookManager.UninstallHook(ctrlCode.ToInt64());
@@ -245,5 +247,12 @@ namespace SilkySouls2.Services
             }
             
         }
+
+        private IntPtr GetGravityPtr() => _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+        {
+            GameManagerImp.Offsets.PlayerCtrl,
+            GameManagerImp.PlayerCtrlOffsets.ChrPhysicsCtrlPtr,
+            GameManagerImp.PlayerCtrlOffsets.ChrPhysicsCtrl.Gravity
+        }, false);
     }
 }

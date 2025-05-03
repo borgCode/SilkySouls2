@@ -114,6 +114,7 @@ namespace SilkySouls2.Memory
 
                 public static class ChrPhysicsCtrl
                 {
+                    public const int Gravity = 0x134;
                     public const int Xyz = 0x1C0; //Read only
                 }
 

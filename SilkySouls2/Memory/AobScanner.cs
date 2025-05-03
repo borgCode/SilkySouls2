@@ -98,21 +98,13 @@ namespace SilkySouls2.Memory
                 addr => Offsets.Hooks.DamageControl = addr.ToInt64(), saved);  
             TryPatternWithFallback("InAirTimer", Patterns.InAirTimer,
                 addr => Offsets.Hooks.InAirTimer = addr.ToInt64(), saved);
-            //
-            // var triggers = FindAddressesByPattern(Patterns.NoClipTriggers, 2);
-            // if (triggers[0] == IntPtr.Zero && saved.TryGetValue("NoClipTriggers", out var value))
-            // {
-            //     Offsets.Hooks.NoClipTriggers = value;
-            //     Offsets.Hooks.NoClipTriggers2 = saved["NoClipTriggers2"];
-            // }
-            // else if (triggers[0] != IntPtr.Zero)
-            // {
-            //     Offsets.Hooks.NoClipTriggers = triggers[0].ToInt64();
-            //     Offsets.Hooks.NoClipTriggers2 = triggers[1].ToInt64();
-            //     saved["NoClipTriggers"] = triggers[0].ToInt64();
-            //     saved["NoClipTriggers2"] = triggers[1].ToInt64();
-            // }
-            //
+            TryPatternWithFallback("TriggersAndSpace", Patterns.TriggersAndSpace,
+                addr => Offsets.Hooks.TriggersAndSpace = addr.ToInt64(), saved);
+            TryPatternWithFallback("Ctrl", Patterns.Ctrl,
+                addr => Offsets.Hooks.Ctrl = addr.ToInt64(), saved);
+            TryPatternWithFallback("NoClipUpdateCoords", Patterns.NoClipUpdateCoords,
+                addr => Offsets.Hooks.NoClipUpdateCoords = addr.ToInt64(), saved);
+            
             using (var writer = new StreamWriter(savePath))
             {
                 foreach (var pair in saved)
@@ -181,7 +173,9 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Hooks.NumOfDrops: 0x{Offsets.Hooks.NumOfDrops:X}");
             Console.WriteLine($"Hooks.DamageControl: 0x{Offsets.Hooks.DamageControl:X}");
             Console.WriteLine($"Hooks.InAirTimer: 0x{Offsets.Hooks.InAirTimer:X}");
-            // Console.WriteLine($"Hooks.NoClipUpdateCoords: 0x{Offsets.Hooks.NoClipUpdateCoords:X}");
+            Console.WriteLine($"Hooks.TriggersAndSpace: 0x{Offsets.Hooks.TriggersAndSpace:X}");
+            Console.WriteLine($"Hooks.Ctrl: 0x{Offsets.Hooks.Ctrl:X}");
+            Console.WriteLine($"Hooks.NoClipUpdateCoords: 0x{Offsets.Hooks.NoClipUpdateCoords:X}");
             // Console.WriteLine($"Hooks.CameraUpLimit: 0x{Offsets.Hooks.CameraUpLimit:X}");
             // Console.WriteLine($"Hooks.ItemLotBase: 0x{Offsets.Hooks.ItemLotBase:X}");
             //

@@ -20,6 +20,7 @@ namespace SilkySouls2.Memory
                 public const int StateActManager = 0xA0;
                 public const int GameDataManager = 0xA8;
                 public const int PlayerCtrl = 0xD0;
+                public const int CamStuff = 0x1158;
                 public const int MenuKick = 0x24B1;
                 public const int LoadingFlag = 0x24BC;
             }
@@ -54,6 +55,8 @@ namespace SilkySouls2.Memory
                 public const int PlayerActionCtrlPtr = 0xE0;
                 public const int Coords = 0x90;
                 public const int ChrFlagsPtr = 0xD8;
+                public const int PlayerOperatorPtr = 0xE8;
+                public const int ChrMotionCtrlPtr = 0xF8;
                 public const int ChrPhysicsCtrlPtr = 0x100;
                 public const int Hp = 0x168;
                 public const int MinHp = 0x16C;
@@ -95,6 +98,18 @@ namespace SilkySouls2.Memory
                 {
                     public const int Invincible = 0;
                     public const int HideModel = 6;
+                }
+
+                public static class PlayerOperator
+                {
+                    public const int ChrPadMan = 0x18;
+                    public const int MovementEntity = 0x98;
+                }
+
+                public static class ChrMotionCtrl
+                {
+                    public const int MorphemeMotionCtrl = 0x28;
+                    public const int MorphemeChrCtrl = 0x30;
                 }
 
                 public static class ChrPhysicsCtrl
@@ -164,6 +179,9 @@ namespace SilkySouls2.Memory
             public static long NumOfDrops;
             public static long DamageControl;
             public static long InAirTimer;
+            public static long TriggersAndSpace;
+            public static long Ctrl;
+            public static long NoClipUpdateCoords;
         }
 
         public static class Funcs

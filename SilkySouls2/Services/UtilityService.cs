@@ -138,30 +138,110 @@ namespace SilkySouls2.Services
         {
             
             var inAirTimerCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.InAirTimer;
+            var triggersAndSpaceCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.TriggersAndSpaceCheck;
+            var ctrlCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.CtrlCheck;
+            var coordsCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.UpdateCoords;
+      
+            
 
             if (isNoClipEnabled)
             {
                 var inAirTimerHook = Hooks.InAirTimer;
+                var triggersAndSpaceHook = Hooks.TriggersAndSpace;
+                var ctrlHook = Hooks.Ctrl;
+                var coordsHook = Hooks.NoClipUpdateCoords;
                 
+                var zDirectionLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.ZDirection;
                 var codeBytes = AsmLoader.GetAsmBytes("NoClip_InAirTimer");
-                var playerIdentifier = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+                var inAirPlayerIdentifier = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
                 {
                     GameManagerImp.Offsets.PlayerCtrl,
                     GameManagerImp.PlayerCtrlOffsets.ChrCullingGroupCtrlPtr,
                     GameManagerImp.PlayerCtrlOffsets.ChrCullingGroupCtrl.InAirTimerEntity
                 }, false);
 
-                var bytes = BitConverter.GetBytes(playerIdentifier.ToInt64());
+                var bytes = BitConverter.GetBytes(inAirPlayerIdentifier.ToInt64());
                 Array.Copy(bytes, 0, codeBytes, 0x1 + 2, 8);
                 bytes = AsmHelper.GetJmpOriginOffsetBytes(inAirTimerHook, 5, inAirTimerCode + 0x1E);
                 Array.Copy(bytes, 0, codeBytes, 0x19 + 1, 4);
                 _memoryIo.WriteBytes(inAirTimerCode, codeBytes);
+
+
+                codeBytes = AsmLoader.GetAsmBytes("NoClip_TriggersAndSpace");
+                AsmHelper.WriteRelativeOffsets(codeBytes, new []
+                {
+                    (triggersAndSpaceCode.ToInt64() + 0x1C, zDirectionLoc.ToInt64(), 7, 0x1C + 2),
+                    (triggersAndSpaceCode.ToInt64() + 0x35, zDirectionLoc.ToInt64(), 7, 0x35 + 2),
+                    (triggersAndSpaceCode.ToInt64() + 0x4E, zDirectionLoc.ToInt64(), 7, 0x4E + 2),
+                    (triggersAndSpaceCode.ToInt64() + 0x56, triggersAndSpaceHook + 0x9, 5, 0x56 + 1),
+                });
+                _memoryIo.WriteBytes(triggersAndSpaceCode, codeBytes);
+
+                codeBytes = AsmLoader.GetAsmBytes("NoClip_CtrlCheck");
+                AsmHelper.WriteRelativeOffsets(codeBytes, new []
+                {
+                    (ctrlCode.ToInt64(), zDirectionLoc.ToInt64(), 7, 0x0 + 2),
+                    (ctrlCode.ToInt64() + 0x7, ctrlHook + 0xA, 5, 0x7 + 1)
+                });
+                
+                _memoryIo.WriteBytes(ctrlCode, codeBytes);
+
+                var updateCoordsPIdentifier = _memoryIo.FollowPointers(HkHardwareInfo.Base, new[]
+                {
+                    HkHardwareInfo.HkpWorld,
+                    HkHardwareInfo.HkpChrRigidBodyPtr,
+                    HkHardwareInfo.HkpChrRigidBody,
+                    HkHardwareInfo.HkpRigidBodyPtr,
+                    HkHardwareInfo.HkpRigidBody.PlayerIdentifier,
+                } ,false);
+                
+                var movement = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+                {
+                    GameManagerImp.Offsets.PlayerCtrl,
+                    GameManagerImp.PlayerCtrlOffsets.PlayerOperatorPtr,
+                    GameManagerImp.PlayerCtrlOffsets.PlayerOperator.ChrPadMan,
+                    GameManagerImp.PlayerCtrlOffsets.PlayerOperator.MovementEntity
+                }, true);
+
+                var cam = _memoryIo.ReadInt64((IntPtr)_memoryIo.ReadInt64(GameManagerImp.Base) +
+                                              GameManagerImp.Offsets.CamStuff);
+
+                codeBytes = AsmLoader.GetAsmBytes("NoClip_UpdateCoords");
+                AsmHelper.WriteAbsoluteAddresses(codeBytes, new []
+                {
+                    (updateCoordsPIdentifier.ToInt64(), 0x1 + 2),
+                    (movement.ToInt64(), 0x19 + 2),
+                    (cam, 0x41 + 2),
+                    (movement.ToInt64(), 0x54 + 2),
+                    (cam, 0x7C +2)
+                });
+                
+                AsmHelper.WriteRelativeOffsets(codeBytes, new []
+                {
+                    (coordsCode.ToInt64() + 0x8E, zDirectionLoc.ToInt64(), 6, 0x8E + 2),
+                    (coordsCode.ToInt64() + 0xB6, zDirectionLoc.ToInt64(), 7, 0xB6 + 2),
+                    (coordsCode.ToInt64() + 0xCE, coordsHook + 0x7, 5, 0xCE + 1),
+                    (coordsCode.ToInt64() + 0xDB, coordsHook + 0x7, 5, 0xDB + 1)
+                });
+                
+                _memoryIo.WriteBytes(coordsCode, codeBytes);
+                
                 _hookManager.InstallHook(inAirTimerCode.ToInt64(), inAirTimerHook, new byte[]
                     { 0xF3, 0x0F, 0x11, 0x4F, 0x10 });
+                _hookManager.InstallHook(triggersAndSpaceCode.ToInt64(), triggersAndSpaceHook, new byte[]
+                    { 0x4C, 0x8B, 0x7C, 0x24, 0x70, 0x48, 0x8B, 0x43, 0x08 });
+                _hookManager.InstallHook(ctrlCode.ToInt64(), ctrlHook, new byte[]
+                    { 0x81, 0x8B, 0x28, 0x02, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00 });
+                _hookManager.InstallHook(coordsCode.ToInt64(), coordsHook, new byte[]
+                    { 0x0F, 0x29, 0x47, 0x70, 0x8B, 0x40, 0x0C });
+    
             }
             else
             {
                 _hookManager.UninstallHook(inAirTimerCode.ToInt64());
+                _hookManager.UninstallHook(triggersAndSpaceCode.ToInt64());
+                _hookManager.UninstallHook(ctrlCode.ToInt64());
+                _hookManager.UninstallHook(coordsCode.ToInt64());
             }
             
         }

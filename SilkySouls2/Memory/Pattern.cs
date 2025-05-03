@@ -59,8 +59,28 @@ namespace SilkySouls2.Memory
             None
         );
 
-        
+        public static readonly Pattern TriggersAndSpace = new Pattern(
+            new byte[] { 0x4C, 0x8B, 0x7C, 0x24, 0x70, 0x48, 0x8B, 0x43 },
+            "xxxxxxxx",
+            0,
+            None
+        );
 
+        public static readonly Pattern Ctrl = new Pattern(
+            new byte[] { 0x74, 0x0A, 0x81, 0x8B, 0x28, 0x02, 0x00, 0x00, 0x00, 0x02 },
+            "xxxxxxxxxx",
+            0x2,
+            None
+        );
+
+        public static readonly Pattern NoClipUpdateCoords = new Pattern(
+            new byte[] { 0x0F, 0x29, 0x47, 0x70, 0x8B },
+            "xxxxx",
+            0,
+            None
+        );
+
+        
         public static readonly Pattern WarpCoordWrite = new Pattern(
             new byte[] { 0x0F, 0x5C, 0xC2, 0x0F, 0x29, 0x47, 0x50 },
             "xxxxxxx",

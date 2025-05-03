@@ -62,7 +62,10 @@ namespace SilkySouls2.Memory
         public enum NoClip
         {
             InAirTimer = 0x4A0,
-            
+            ZDirection = 0x4C0,
+            TriggersAndSpaceCheck = 0x4D0,
+            CtrlCheck = 0x530,
+            UpdateCoords = 0x540,
         }
 
     }

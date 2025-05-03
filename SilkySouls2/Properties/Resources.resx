@@ -443,4 +443,90 @@ e9 00 00 00 00          jmp    2c &lt;exit+0xc&gt;</value>
 f3 0f 11 4f 10          movss  DWORD PTR [rdi+0x10],xmm1
 e9 00 00 00 00          jmp    1e &lt;exit+0xb&gt;</value>
   </data>
+  <data name="NoClip_TriggersAndSpace" xml:space="preserve">
+    <value>4c 8b 7c 24 70          mov    r15,QWORD PTR [rsp+0x70]
+48 8b 43 08             mov    rax,QWORD PTR [rbx+0x8]
+52                      push   rdx
+48 89 c2                mov    rdx,rax
+48 81 e2 00 20 00 00    and    rdx,0x2000
+74 0d                   je     23 &lt;check_rt&gt;
+48 2d 00 20 00 00       sub    rax,0x2000
+c6 05 00 00 00 00 02    mov    BYTE PTR [rip+0x0],0x2        # 23 &lt;check_rt&gt;
+000000000023 &lt;check_rt&gt;:
+48 89 c2                mov    rdx,rax
+48 81 e2 00 02 00 00    and    rdx,0x200
+74 0d                   je     3c &lt;check_lt&gt;
+48 2d 00 02 00 00       sub    rax,0x200
+c6 05 00 00 00 00 02    mov    BYTE PTR [rip+0x0],0x2        # 3c &lt;check_lt&gt;
+00000000003c &lt;check_lt&gt;:
+48 89 c2                mov    rdx,rax
+48 81 e2 00 01 00 00    and    rdx,0x100
+74 0d                   je     55 &lt;exit&gt;
+48 2d 00 01 00 00       sub    rax,0x100
+c6 05 00 00 00 00 01    mov    BYTE PTR [rip+0x0],0x1        # 55 &lt;exit&gt;
+000000000055 &lt;exit&gt;:
+5a                      pop    rdx
+e9 00 00 00 00          jmp    5b &lt;exit+0x6&gt;</value>
+  </data>
+  <data name="NoClip_CtrlCheck" xml:space="preserve">
+    <value>c6 05 00 00 00 00 01    mov    BYTE PTR [rip+0x0],0x1        # 7 &lt;_main+0x7&gt;
+e9 00 00 00 00          jmp    c &lt;_main+0xc&gt;</value>
+  </data>
+  <data name="NoClip_UpdateCoords" xml:space="preserve">
+    <value>50                      push   rax
+48 b8 00 00 00 00 00    movabs rax,0x0
+00 00 00
+48 39 f8                cmp    rax,rdi
+0f 85 bf 00 00 00       jne    d3 &lt;original&gt;
+66 0f 6f 47 70          movdqa xmm0,XMMWORD PTR [rdi+0x70]
+48 b8 00 00 00 00 00    movabs rax,0x0
+00 00 00
+f3 44 0f 10 78 78       movss  xmm15,DWORD PTR [rax+0x78]
+45 0f c6 ff 00          shufps xmm15,xmm15,0x0
+b8 cd cc 4c 3e          mov    eax,0x3e4ccccd
+66 44 0f 6e f0          movd   xmm14,eax
+45 0f c6 f6 00          shufps xmm14,xmm14,0x0
+45 0f 59 fe             mulps  xmm15,xmm14
+48 b8 00 00 00 00 00    movabs rax,0x0
+00 00 00
+44 0f 59 78 20          mulps  xmm15,XMMWORD PTR [rax+0x20]
+41 0f 58 c7             addps  xmm0,xmm15
+48 b8 00 00 00 00 00    movabs rax,0x0
+00 00 00
+f3 44 0f 10 78 74       movss  xmm15,DWORD PTR [rax+0x74]
+45 0f c6 ff 00          shufps xmm15,xmm15,0x0
+b8 9a 99 19 3e          mov    eax,0x3e19999a
+66 44 0f 6e f0          movd   xmm14,eax
+45 0f c6 f6 00          shufps xmm14,xmm14,0x0
+45 0f 59 fe             mulps  xmm15,xmm14
+48 b8 00 00 00 00 00    movabs rax,0x0
+00 00 00
+44 0f 59 38             mulps  xmm15,XMMWORD PTR [rax]
+41 0f 58 c7             addps  xmm0,xmm15
+8a 05 00 00 00 00       mov    al,BYTE PTR [rip+0x0]        # 94 &lt;_main+0x94&gt;
+3c 01                   cmp    al,0x1
+75 07                   jne    9f &lt;check_up&gt;
+b8 cd cc 4c be          mov    eax,0xbe4ccccd
+eb 09                   jmp    a8 &lt;coord_update&gt;
+00000000009f &lt;check_up&gt;:
+3c 02                   cmp    al,0x2
+75 05                   jne    a8 &lt;coord_update&gt;
+b8 cd cc 4c 3e          mov    eax,0x3e4ccccd
+0000000000a8 &lt;coord_update&gt;:
+66 44 0f 6e f8          movd   xmm15,eax
+45 0f c6 ff e1          shufps xmm15,xmm15,0xe1
+41 0f 58 c7             addps  xmm0,xmm15
+c6 05 00 00 00 00 00    mov    BYTE PTR [rip+0x0],0x0        # bd &lt;coord_update+0x15&gt;
+66 0f 7f 47 70          movdqa XMMWORD PTR [rdi+0x70],xmm0
+45 0f 57 f6             xorps  xmm14,xmm14
+45 0f 57 ff             xorps  xmm15,xmm15
+58                      pop    rax
+8b 40 0c                mov    eax,DWORD PTR [rax+0xc]
+e9 00 00 00 00          jmp    d3 &lt;original&gt;
+0000000000d3 &lt;original&gt;:
+58                      pop    rax
+0f 29 47 70             movaps XMMWORD PTR [rdi+0x70],xmm0
+8b 40 0c                mov    eax,DWORD PTR [rax+0xc]
+e9 00 00 00 00          jmp    e0 &lt;original+0xd&gt;</value>
+  </data>
 </root>

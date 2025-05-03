@@ -158,6 +158,16 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to c6 05 00 00 00 00 01    mov    BYTE PTR [rip+0x0],0x1        # 7 &lt;_main+0x7&gt;
+        ///e9 00 00 00 00          jmp    c &lt;_main+0xc&gt;.
+        /// </summary>
+        internal static string NoClip_CtrlCheck {
+            get {
+                return ResourceManager.GetString("NoClip_CtrlCheck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 50                      push   rax
         ///48 b8 00 00 00 00 00    movabs rax,0x0
         ///00 00 00
@@ -172,6 +182,47 @@ namespace SilkySouls2.Properties {
         internal static string NoClip_InAirTimer {
             get {
                 return ResourceManager.GetString("NoClip_InAirTimer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 4c 8b 7c 24 70          mov    r15,QWORD PTR [rsp+0x70]
+        ///48 8b 43 08             mov    rax,QWORD PTR [rbx+0x8]
+        ///52                      push   rdx
+        ///48 89 c2                mov    rdx,rax
+        ///48 81 e2 00 20 00 00    and    rdx,0x2000
+        ///74 0d                   je     23 &lt;check_rt&gt;
+        ///48 2d 00 20 00 00       sub    rax,0x2000
+        ///c6 05 00 00 00 00 02    mov    BYTE PTR [rip+0x0],0x2        # 23 &lt;check_rt&gt;
+        ///000000000023 &lt;check_rt&gt;:
+        ///48 89 c2                mov    rdx,rax
+        ///48 81 e2 00 02 00 00    and    rdx,0x200
+        ///74 0d [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string NoClip_TriggersAndSpace {
+            get {
+                return ResourceManager.GetString("NoClip_TriggersAndSpace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 50                      push   rax
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
+        ///48 39 f8                cmp    rax,rdi
+        ///0f 85 bf 00 00 00       jne    d3 &lt;original&gt;
+        ///66 0f 6f 47 70          movdqa xmm0,XMMWORD PTR [rdi+0x70]
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
+        ///f3 44 0f 10 78 78       movss  xmm15,DWORD PTR [rax+0x78]
+        ///45 0f c6 ff 00          shufps xmm15,xmm15,0x0
+        ///b8 cd cc 4c 3e          mov    eax,0x3e4ccccd
+        ///66 44 0f 6e f0          movd   xmm14,eax
+        ///45 0f c6 f6 00          shufps xmm [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string NoClip_UpdateCoords {
+            get {
+                return ResourceManager.GetString("NoClip_UpdateCoords", resourceCulture);
             }
         }
         

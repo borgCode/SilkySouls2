@@ -54,6 +54,7 @@ namespace SilkySouls2.Memory
                 public const int ChrParamPtr = 0x38;
                 public const int PlayerActionCtrlPtr = 0xE0;
                 public const int Coords = 0x90;
+                public const int CollisionPtr = 0xB8;
                 public const int ChrFlagsPtr = 0xD8;
                 public const int PlayerOperatorPtr = 0xE8;
                 public const int ChrMotionCtrlPtr = 0xF8;
@@ -92,6 +93,11 @@ namespace SilkySouls2.Memory
                 {
                     public const int LastAttackPtr = 0x10;
                     public const int LastAttack = 0xEC;
+                }
+
+                public static class Collision
+                {
+                    public const int CollisionFlag = 0x62C;
                 }
 
                 public static class ChrFlags

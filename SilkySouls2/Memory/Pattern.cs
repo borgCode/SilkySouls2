@@ -74,8 +74,8 @@ namespace SilkySouls2.Memory
         );
 
         public static readonly Pattern NoClipUpdateCoords = new Pattern(
-            new byte[] { 0xF3, 0x0F, 0x11, 0x54, 0x24, 0x20, 0x0F, 0x29 },
-            "xxxxxxxx",
+            new byte[] { 0x66, 0x0F, 0x7F, 0xB8, 0x90 },
+            "xxxxx",
             0,
             None
         );

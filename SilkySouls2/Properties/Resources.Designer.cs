@@ -206,20 +206,21 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to f3 0f 11 54 24 20       movss  DWORD PTR [rsp+0x20],xmm2
-        ///50                      push   rax
-        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///   Looks up a localized string similar to 52                      push   rdx
+        ///48 ba 00 00 00 00 00    movabs rdx,0x0
         ///00 00 00
-        ///48 39 f0                cmp    rax,rsi
-        ///0f 85 c2 00 00 00       jne    dc &lt;original&gt;
-        ///66 0f 6f 7e 20          movdqa xmm7,XMMWORD PTR [rsi+0x20]
-        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///48 39 c2                cmp    rdx,rax
+        ///0f 85 ca 00 00 00       jne    de &lt;original&gt;
+        ///66 0f 6f b8 90 00 00    movdqa xmm7,XMMWORD PTR [rax+0x90]
+        ///00
+        ///48 ba 00 00 00 00 00    movabs rdx,0x0
         ///00 00 00
-        ///f3 44 0f 10 b8 48 03    movss  xmm15,DWORD PTR [rax+0x348]
+        ///f3 44 0f 10 ba 48 03    movss  xmm15,DWORD PTR [rdx+0x348]
         ///00 00
         ///45 0f c6 ff 00          shufps xmm15,xmm15,0x0
-        ///b8 cd cc 4c 3e          mov    eax,0x3e4ccccd
-        ///66 44 0f 6 [rest of string was truncated]&quot;;.
+        ///ba cd cc 4c 3e          mov    edx,0x3e4ccccd
+        ///66 44 0f 6e f2          movd   xmm14,edx
+        ///45 0f c6 f6 00         [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string NoClip_UpdateCoords {
             get {

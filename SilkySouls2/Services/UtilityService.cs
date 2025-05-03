@@ -189,9 +189,9 @@ namespace SilkySouls2.Services
                 var updateCoordsPIdentifier = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
                 {
                     GameManagerImp.Offsets.PlayerCtrl,
-                    GameManagerImp.PlayerCtrlOffsets.ChrMotionCtrlPtr,
-                    GameManagerImp.PlayerCtrlOffsets.ChrMotionCtrl.MorphemeMotionCtrl,
-                    GameManagerImp.PlayerCtrlOffsets.ChrMotionCtrl.MorphemeChrCtrl
+                    // GameManagerImp.PlayerCtrlOffsets.ChrMotionCtrlPtr,
+                    // GameManagerImp.PlayerCtrlOffsets.ChrMotionCtrl.MorphemeMotionCtrl,
+                    // GameManagerImp.PlayerCtrlOffsets.ChrMotionCtrl.MorphemeChrCtrl
                 }, true);
                 
                 var movement = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
@@ -208,24 +208,25 @@ namespace SilkySouls2.Services
                 codeBytes = AsmLoader.GetAsmBytes("NoClip_UpdateCoords");
                 AsmHelper.WriteAbsoluteAddresses(codeBytes, new []
                 {
-                    (updateCoordsPIdentifier.ToInt64(), 0x7 + 2),
-                    (movement.ToInt64(), 0x1F + 2),
-                    (cam, 0x4A + 2),
-                    (movement.ToInt64(), 0x5D + 2),
-                    (cam, 0x88 +2)
+                    (updateCoordsPIdentifier.ToInt64(), 0x1 + 2),
+                    (movement.ToInt64(), 0x1C + 2),
+                    (cam, 0x47 + 2),
+                    (movement.ToInt64(), 0x5A + 2),
+                    (cam, 0x85 +2)
                 });
                 
                 AsmHelper.WriteRelativeOffsets(codeBytes, new []
                 {
-                    (coordsCode.ToInt64() + 0x9A, zDirectionLoc.ToInt64(), 6, 0x9A + 2),
-                    (coordsCode.ToInt64() + 0xC2, zDirectionLoc.ToInt64(), 7, 0xC2 + 2),
-                    (coordsCode.ToInt64() + 0xD7, coordsHook + 0xA, 5, 0xD7 + 1),
-                    (coordsCode.ToInt64() + 0xE1, coordsHook + 0xA, 5, 0xE1 + 1)
+                    (coordsCode.ToInt64() + 0x97, zDirectionLoc.ToInt64(), 6, 0x97 + 2),
+                    (coordsCode.ToInt64() + 0xC1, zDirectionLoc.ToInt64(), 7, 0xC1 + 2),
+                    (coordsCode.ToInt64() + 0xD9, coordsHook + 0x8, 5, 0xD9 + 1),
+                    (coordsCode.ToInt64() + 0xE7, coordsHook + 0x8, 5, 0xE7 + 1)
                 });
                 
                 _memoryIo.WriteBytes(coordsCode, codeBytes);
                 
-                // _memoryIo.WriteByte(GetGravityPtr(), 1);
+                _memoryIo.WriteByte(GetGravityPtr(), 1);
+                _memoryIo.WriteByte(GetCollisionPtr(), 1);
                 
                 _hookManager.InstallHook(inAirTimerCode.ToInt64(), inAirTimerHook, new byte[]
                     { 0xF3, 0x0F, 0x11, 0x4F, 0x10 });
@@ -234,16 +235,17 @@ namespace SilkySouls2.Services
                 _hookManager.InstallHook(ctrlCode.ToInt64(), ctrlHook, new byte[]
                     { 0x81, 0x8B, 0x28, 0x02, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00 });
                 _hookManager.InstallHook(coordsCode.ToInt64(), coordsHook, 
-                new byte[] { 0xF3, 0x0F, 0x11, 0x54, 0x24, 0x14, 0x0F, 0x29, 0x7E, 0x20 });
+                new byte[] { 0x66, 0x0F, 0x7F, 0xB8, 0x90, 0x00, 0x00, 0x00 });
     
             }
             else
             {
-                // _memoryIo.WriteByte(GetGravityPtr(), 0);
-                _hookManager.UninstallHook(inAirTimerCode.ToInt64());
+                _hookManager.UninstallHook(coordsCode.ToInt64());
+                _memoryIo.WriteByte(GetGravityPtr(), 0);
                 _hookManager.UninstallHook(triggersAndSpaceCode.ToInt64());
                 _hookManager.UninstallHook(ctrlCode.ToInt64());
-                _hookManager.UninstallHook(coordsCode.ToInt64());
+                _hookManager.UninstallHook(inAirTimerCode.ToInt64());
+                _memoryIo.WriteByte(GetCollisionPtr(), 0);
             }
             
         }
@@ -254,5 +256,13 @@ namespace SilkySouls2.Services
             GameManagerImp.PlayerCtrlOffsets.ChrPhysicsCtrlPtr,
             GameManagerImp.PlayerCtrlOffsets.ChrPhysicsCtrl.Gravity
         }, false);
+
+        private IntPtr GetCollisionPtr() => _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+        {
+            GameManagerImp.Offsets.PlayerCtrl,
+            GameManagerImp.PlayerCtrlOffsets.CollisionPtr,
+            GameManagerImp.PlayerCtrlOffsets.Collision.CollisionFlag
+        }, false);
     }
+    
 }

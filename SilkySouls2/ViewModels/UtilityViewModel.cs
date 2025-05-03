@@ -37,6 +37,7 @@ namespace SilkySouls2.ViewModels
                 if (!AreButtonsEnabled) return;
                 _ = _utilityService.ForceSave();
             });
+            _hotkeyManager.RegisterAction("NoClip", () => { IsNoClipEnabled = !IsNoClipEnabled; });
         }
         
         

@@ -1,4 +1,5 @@
-﻿using SilkySouls2.Memory;
+﻿using System;
+using SilkySouls2.Memory;
 using SilkySouls2.Services;
 using SilkySouls2.Utilities;
 
@@ -14,16 +15,18 @@ namespace SilkySouls2.ViewModels
         private bool _areButtonsEnabled;
         private readonly HotkeyManager _hotkeyManager;
         private readonly UtilityService _utilityService;
+        private readonly PlayerViewModel _playerViewModel;
         
-        private const float DefaultNoclipMultiplier = 0.25f;
+        private const float DefaultNoclipMultiplier = 1f;
         private const uint BaseXSpeedHex = 0x3e4ccccd;
         private const uint BaseYSpeedHex = 0x3e19999a;
         private float _noClipSpeedMultiplier = DefaultNoclipMultiplier;
         private bool _isNoClipEnabled;
+        private bool _wasNoDeathEnabled;
         
-        public UtilityViewModel(UtilityService utilityService, HotkeyManager hotkeyManager)
+        public UtilityViewModel(UtilityService utilityService, HotkeyManager hotkeyManager, PlayerViewModel playerViewModel)
         {
-
+            _playerViewModel = playerViewModel;
             _utilityService = utilityService;
             _hotkeyManager = hotkeyManager;
            
@@ -88,24 +91,51 @@ namespace SilkySouls2.ViewModels
 
                 if (_isNoClipEnabled)
                 {
-                    // IsFreeCamEnabled = false;
                     _utilityService.ToggleNoClip(_isNoClipEnabled);
-                    // _wasNoDeathEnabled = _playerViewModel.IsNoDeathEnabled;
-                    // _playerViewModel.IsNoDeathEnabled = true;
-                    // _playerViewModel.IsSilentEnabled = true;
-                    // _playerViewModel.IsInvisibleEnabled = true;
+                    _wasNoDeathEnabled = _playerViewModel.IsNoDeathEnabled;
+                    _playerViewModel.IsNoDeathEnabled = true;
+          
                 }
                 else
                 {
                     _utilityService.ToggleNoClip(_isNoClipEnabled);
-                    // _playerViewModel.IsNoDeathEnabled = _wasNoDeathEnabled;
-                    // _playerViewModel.IsSilentEnabled = false;
-                    // _playerViewModel.IsInvisibleEnabled = false;
-                    // NoClipSpeed = DefaultNoclipMultiplier;
+                    _playerViewModel.IsNoDeathEnabled = _wasNoDeathEnabled;
+                    NoClipSpeed = DefaultNoclipMultiplier;
                 }
             }
         }
         
+        public float NoClipSpeed
+        {
+            get => _noClipSpeedMultiplier;
+            set
+            {
+                if (SetProperty(ref _noClipSpeedMultiplier, value))
+                {
+                    SetNoClipSpeed(value);
+                }
+            }
+        }
+        
+        public void SetNoClipSpeed(float multiplier)
+        {
+            if (!IsNoClipEnabled) return;
+            if (multiplier < 0.05f) multiplier = 0.05f;
+            else if (multiplier > 5.0f) multiplier = 5.0f;
+
+            SetProperty(ref _noClipSpeedMultiplier, multiplier);
+
+            float baseXFloat = BitConverter.ToSingle(BitConverter.GetBytes(BaseXSpeedHex), 0);
+            float baseYFloat = BitConverter.ToSingle(BitConverter.GetBytes(BaseYSpeedHex), 0);
+
+            float newXFloat = baseXFloat * multiplier;
+            float newYFloat = baseYFloat * multiplier;
+
+            byte[] xBytes = BitConverter.GetBytes(newXFloat);
+            byte[] yBytes = BitConverter.GetBytes(newYFloat);
+
+            _utilityService.SetNoClipSpeed(xBytes, yBytes);
+        }
         
         public void TryEnableFeatures()
         {
@@ -145,6 +175,12 @@ namespace SilkySouls2.ViewModels
             // GameSpeed = _utilityService.GetGameSpeed();
             // CameraFov = _utilityService.GetCameraFov();
             AreButtonsEnabled = true;
+        }
+        
+        public void DisableFeatures()
+        {
+            IsNoClipEnabled = false;
+            AreButtonsEnabled = false;
         }
 
         public void ForceSave() => _ = _utilityService.ForceSave();

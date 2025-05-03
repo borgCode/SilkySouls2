@@ -64,7 +64,7 @@ namespace SilkySouls2
             _playerViewModel = new PlayerViewModel(playerService, hotkeyManager, _damageControlService);
             _travelViewModel = new TravelViewModel(travelService, hotkeyManager);
             _eventViewModel = new EventViewModel(utilityService);
-            _utilityViewModel = new UtilityViewModel(utilityService, hotkeyManager);
+            _utilityViewModel = new UtilityViewModel(utilityService, hotkeyManager, _playerViewModel);
             _enemyViewModel = new EnemyViewModel(enemyService, hotkeyManager, _damageControlService);
             _itemViewModel = new ItemViewModel(itemService);
             _settingsViewModel = new SettingsViewModel(settingsService, hotkeyManager);
@@ -193,9 +193,9 @@ namespace SilkySouls2
 
         private void DisableFeatures()
         {
+            _utilityViewModel.DisableFeatures();
             _playerViewModel.DisableFeatures();
             _enemyViewModel.DisableFeatures();
-            
         }
 
         private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

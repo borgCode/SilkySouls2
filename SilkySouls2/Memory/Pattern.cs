@@ -116,12 +116,13 @@ namespace SilkySouls2.Memory
             None
         );
 
-        // public static readonly Pattern DropRate = new Pattern(
-        //     new byte[] { 0xF3, 0x41, 0x0F, 0x10, 0x04, 0x07 },
-        //     "xxxxxx",
-        //     0,
-        //     None
-        // );
+        public static readonly Pattern GiveSouls = new Pattern(
+            new byte[] { 0x74, 0x23, 0x48, 0x8B, 0x80 },
+            "xxxxx",
+            -0xA,
+            None
+        );
+
 
         public static readonly Pattern NumOfDrops = new Pattern(
             new byte[] { 0x41, 0x0F, 0xB6, 0x47, 0x01, 0xFF },

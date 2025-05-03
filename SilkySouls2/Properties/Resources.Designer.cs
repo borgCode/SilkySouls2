@@ -158,6 +158,24 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 48 b9 00 00 00 00 00    movabs rcx,0x0
+        ///00 00 00
+        ///48 ba 00 00 00 00 00    movabs rdx,0x0
+        ///00 00 00
+        ///48 83 ec 48             sub    rsp,0x48
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
+        ///ff d0                   call   rax
+        ///48 83 c4 48             add    rsp,0x48
+        ///c3                      ret.
+        /// </summary>
+        internal static string GiveSouls {
+            get {
+                return ResourceManager.GetString("GiveSouls", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to c6 05 00 00 00 00 01    mov    BYTE PTR [rip+0x0],0x1        # 7 &lt;_main+0x7&gt;
         ///e9 00 00 00 00          jmp    c &lt;_main+0xc&gt;.
         /// </summary>

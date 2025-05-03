@@ -117,7 +117,7 @@ namespace SilkySouls2.Memory
             // Offsets.Funcs.BreakAllObjects = FindAddressByPattern(Patterns.BreakAllObjects).ToInt64();
             // Offsets.Funcs.RestoreAllObjects = FindAddressByPattern(Patterns.RestoreAllObjects).ToInt64();
             Offsets.Funcs.SetEvent = FindAddressByPattern(Patterns.SetEvent).ToInt64();
-            // Offsets.Funcs.Travel = FindAddressByPattern(Patterns.TravelFunc).ToInt64();
+            Offsets.Funcs.GiveSouls = FindAddressByPattern(Patterns.GiveSouls).ToInt64();
             // Offsets.Funcs.LevelUp = Offsets.Funcs.Travel - 0x720;
             // Offsets.Funcs.ReinforceWeapon = Offsets.Funcs.Travel - 0x1620;
             // Offsets.Funcs.InfuseWeapon = Offsets.Funcs.Travel - 0x1CB0;
@@ -180,7 +180,7 @@ namespace SilkySouls2.Memory
             //
             Console.WriteLine($"Funcs.WarpPrep: 0x{Offsets.Funcs.WarpPrep:X}");
             Console.WriteLine($"Funcs.BonfireWarp: 0x{Offsets.Funcs.BonfireWarp:X}");
-            // Console.WriteLine($"Funcs.ItemSpawn: 0x{Offsets.Funcs.ItemSpawn:X}");
+            Console.WriteLine($"Funcs.GiveSouls: 0x{Offsets.Funcs.GiveSouls:X}");
             Console.WriteLine($"Funcs.SetEvent: 0x{Offsets.Funcs.SetEvent:X}");
             // Console.WriteLine($"Funcs.Travel: 0x{Offsets.Funcs.Travel:X}");
             // Console.WriteLine($"Funcs.ReinforceWeapon: 0x{Offsets.Funcs.ReinforceWeapon:X}");

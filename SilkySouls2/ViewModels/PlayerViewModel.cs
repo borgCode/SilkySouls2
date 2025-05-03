@@ -49,7 +49,8 @@ namespace SilkySouls2.ViewModels
         private int _adp;
         private int _vitality;
         private int _soulLevel;
-        private int _souls;
+        private int _soulMemory;
+        private int _souls = 10000; 
         private int _newGame;
         private float _playerSpeed;
         private int _currentSoulLevel;
@@ -89,6 +90,7 @@ namespace SilkySouls2.ViewModels
                 // Souls = _playerService.GetPlayerStat(Offsets.GameManagerImp.PlayerCtrlOffsets.Stats.Souls);
                 PlayerSpeed = _playerService.GetPlayerSpeed();
                 int newSoulLevel = _playerService.GetSoulLevel();
+                SoulMemory = _playerService.GetSoulMemory();
                 _coords = _playerService.GetCoords();
                 PosX = _coords.x;
                 PosY = _coords.y;
@@ -128,7 +130,6 @@ namespace SilkySouls2.ViewModels
             Intelligence = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Int);
             Faith = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Fth);
             SoulLevel = _playerService.GetSoulLevel();
-            // Souls = _playerService.GetPlayerStat(Offsets.GameManagerImp.PlayerCtrlOffsets.Stats.Souls);
             NewGame = _playerService.GetNewGame();
             PlayerSpeed = _playerService.GetPlayerSpeed();
             UpdateAgilityAndIFrames();
@@ -490,6 +491,12 @@ namespace SilkySouls2.ViewModels
             get => _soulLevel;
             private set => SetProperty(ref _soulLevel, value);
         }
+        
+        public int SoulMemory
+        {
+            get => _soulMemory;
+            private set => SetProperty(ref _soulMemory, value);
+        }
         //
         // public void SetStat(string statName, int value)
         // {
@@ -497,12 +504,12 @@ namespace SilkySouls2.ViewModels
         //     _playerService.SetPlayerStat(stat, value);
         // }
         //
-        // public int Souls
-        // {
-        //     get => _souls;
-        //     set => SetProperty(ref _souls, value);
-        // }
-        //
+        public int Souls
+        {
+            get => _souls;
+            set => SetProperty(ref _souls, value);
+        }
+        
         public int NewGame
         {
             get => _newGame;
@@ -640,10 +647,7 @@ namespace SilkySouls2.ViewModels
         //     NewGame = _playerService.GetNewGame();
         // }
         //
-        // public void GiveSouls()
-        // {
-        //     _playerService.GiveSouls();
-        // }
+    
         public void TryApplyOneTimeFeatures()
         {
             if (IsNoDeathEnabled) _playerService.ToggleNoDeath(true);
@@ -661,9 +665,6 @@ namespace SilkySouls2.ViewModels
             // throw new NotImplementedException();
         }
 
-        public void GiveSouls()
-        {
-            // throw new NotImplementedException();
-        }
+        public void GiveSouls() => _playerService.GiveSouls(Souls);
     }
 }

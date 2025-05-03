@@ -20,6 +20,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition />
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
@@ -190,8 +191,14 @@
                 </StackPanel>
             </Grid>
 
-            <TextBlock Grid.Row="3" Text="{Binding SoulLevel, StringFormat='Soul Level: {0}'}" FontWeight="Bold"
-                       Margin="0,0,0,5" />
+            <Grid Grid.Row="3" Margin="0,0,0,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding SoulLevel, StringFormat='Soul Level: {0}'}" FontWeight="Bold" />
+                <TextBlock Grid.Column="1" Text="{Binding SoulMemory, StringFormat='Soul Memory: {0}'}" FontWeight="Bold" Margin="15,0,0,0" />
+            </Grid>
             <Grid Grid.Row="4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -389,44 +396,6 @@
                                             BorderBrush="#3F3F46" />
                         <TextBlock Text="Faith" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" />
                     </Grid>
-                    
-                    <Grid Margin="0,2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-            
-                        <xctk:IntegerUpDown x:Name="SoulsUpDown"
-                                            Value="{Binding Souls}"
-                                            TextAlignment="Center"
-                                            Width="120"
-                                            Minimum="0"
-                                            Maximum="999999999"
-                                            Grid.Column="0"
-                                            Grid.Row="0"
-                                            PreviewKeyDown="StatUpDown_PreviewKeyDown"
-                                            LostFocus="Stat_LostFocus"
-                                            Loaded="StatUpDowns_Loaded"
-                                            GotFocus="PauseUpdates_GotFocus"
-                                            Tag="Souls"
-                                            IsEnabled="{Binding AreOptionsEnabled}"
-                                            BorderBrush="#3F3F46" />
-                        <TextBlock Text="Souls" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center"
-                                   Margin="10,0,0,0" />
-            
-                        <Button Content="Give 10k Souls"
-                                Click="GiveSouls_Click"
-                                IsEnabled="{Binding AreOptionsEnabled}"
-                                Grid.Column="0"
-                                Grid.Row="1"
-                                Margin="0,5,0,0"
-                                Width="120"
-                                Height="25" />
-                    </Grid>
                 </StackPanel>
                 <Border Grid.Column="2" BorderThickness="1" BorderBrush="#333" CornerRadius="3" Margin="10,0,0,0" Padding="10">
                     <StackPanel>
@@ -463,7 +432,41 @@
                     </StackPanel>
                 </Border>
             </Grid>
-            <Border Grid.Row="5" VerticalAlignment="Bottom" Margin="0,10,0,0">
+            
+            <Grid Grid.Row="5" Margin="0,10,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+    
+                <TextBlock Grid.Column="0" Text="Souls to give:" VerticalAlignment="Center" />
+    
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="10,0,0,0">
+                    <xctk:IntegerUpDown x:Name="SoulsUpDown"
+                                        Value="{Binding Souls}"
+                                        TextAlignment="Center"
+                                        Width="120"
+                                        Minimum="0"
+                                        Maximum="999999999"
+                                        DefaultValue="10000"
+                                        PreviewKeyDown="StatUpDown_PreviewKeyDown"
+                                        LostFocus="Stat_LostFocus"
+                                        Loaded="StatUpDowns_Loaded"
+                                        GotFocus="PauseUpdates_GotFocus"
+                                        Tag="Souls"
+                                        IsEnabled="{Binding AreOptionsEnabled}"
+                                        BorderBrush="#3F3F46" />
+                           
+                    <Button Content="Give Souls"
+                            Click="GiveSouls_Click"
+                            IsEnabled="{Binding AreOptionsEnabled}"
+                            Margin="10,0,0,0"
+                            Width="100"
+                            Height="25" />
+                </StackPanel>
+            </Grid>
+            
+            <Border Grid.Row="6" VerticalAlignment="Bottom" Margin="0,10,0,0">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />

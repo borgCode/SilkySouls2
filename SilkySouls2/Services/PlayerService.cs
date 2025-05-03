@@ -398,5 +398,26 @@ namespace SilkySouls2.Services
                 GameManagerImp.GameDataManagerOffsets.NewGamePtr,
                 GameManagerImp.GameDataManagerOffsets.NewGame
             }, false);
+
+        public void GiveSouls(int souls)
+        {
+            var codeBytes = AsmLoader.GetAsmBytes("GiveSouls");
+            var giveSoulsFunc = Funcs.GiveSouls;
+            var statsEntity = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+            {
+                GameManagerImp.Offsets.PlayerCtrl,
+                GameManagerImp.PlayerCtrlOffsets.StatsPtr
+            }, true);
+            
+            AsmHelper.WriteAbsoluteAddresses(codeBytes, new []
+            {
+                (statsEntity.ToInt64(), 0x0 + 2),
+                (souls, 0x0A + 2),
+                (giveSoulsFunc, 0x18 + 2)
+            });
+            _memoryIo.AllocateAndExecute(codeBytes);
+        }
+
+        public int GetSoulMemory() => _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.PlayerCtrlOffsets.Stats.SoulMemory));
     }
 }

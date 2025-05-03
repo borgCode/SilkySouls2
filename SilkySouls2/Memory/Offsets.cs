@@ -141,6 +141,7 @@ namespace SilkySouls2.Memory
                     public const int Fth = 0x16;
                     public const int Adp = 0x18;
                     public const int SoulLevel = 0xD0;
+                    public const int SoulMemory = 0xF4;
                 }
             }
         }
@@ -196,6 +197,7 @@ namespace SilkySouls2.Memory
             public static long WarpPrep;
             public static long BonfireWarp;
             public static long SetEvent;
+            public static long GiveSouls;
         }
     }
 }

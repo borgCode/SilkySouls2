@@ -473,16 +473,17 @@ e9 00 00 00 00          jmp    5b &lt;exit+0x6&gt;</value>
 e9 00 00 00 00          jmp    c &lt;_main+0xc&gt;</value>
   </data>
   <data name="NoClip_UpdateCoords" xml:space="preserve">
-    <value>f3 0f 11 54 24 14       movss  DWORD PTR [rsp+0x14],xmm2
+    <value>f3 0f 11 54 24 20       movss  DWORD PTR [rsp+0x20],xmm2
 50                      push   rax
 48 b8 00 00 00 00 00    movabs rax,0x0
 00 00 00
 48 39 f0                cmp    rax,rsi
-0f 85 bc 00 00 00       jne    d6 &lt;original&gt;
+0f 85 c2 00 00 00       jne    dc &lt;original&gt;
 66 0f 6f 7e 20          movdqa xmm7,XMMWORD PTR [rsi+0x20]
 48 b8 00 00 00 00 00    movabs rax,0x0
 00 00 00
-f3 44 0f 10 78 78       movss  xmm15,DWORD PTR [rax+0x78]
+f3 44 0f 10 b8 48 03    movss  xmm15,DWORD PTR [rax+0x348]
+00 00
 45 0f c6 ff 00          shufps xmm15,xmm15,0x0
 b8 cd cc 4c 3e          mov    eax,0x3e4ccccd
 66 44 0f 6e f0          movd   xmm14,eax
@@ -494,7 +495,8 @@ b8 cd cc 4c 3e          mov    eax,0x3e4ccccd
 41 0f 58 ff             addps  xmm7,xmm15
 48 b8 00 00 00 00 00    movabs rax,0x0
 00 00 00
-f3 44 0f 10 78 74       movss  xmm15,DWORD PTR [rax+0x74]
+f3 44 0f 10 b8 44 03    movss  xmm15,DWORD PTR [rax+0x344]
+00 00
 45 0f c6 ff 00          shufps xmm15,xmm15,0x0
 b8 9a 99 19 3e          mov    eax,0x3e19999a
 66 44 0f 6e f0          movd   xmm14,eax
@@ -504,44 +506,28 @@ b8 9a 99 19 3e          mov    eax,0x3e19999a
 00 00 00
 44 0f 59 38             mulps  xmm15,XMMWORD PTR [rax]
 41 0f 58 ff             addps  xmm7,xmm15
-8a 05 00 00 00 00       mov    al,BYTE PTR [rip+0x0]        # 9a &lt;_main+0x9a&gt;
+8a 05 00 00 00 00       mov    al,BYTE PTR [rip+0x0]        # a0 &lt;_main+0xa0&gt;
 3c 01                   cmp    al,0x1
-75 07                   jne    a5 &lt;check_up&gt;
+75 07                   jne    ab &lt;check_up&gt;
 b8 cd cc 4c be          mov    eax,0xbe4ccccd
-eb 09                   jmp    ae &lt;coord_update&gt;
-0000000000a5 &lt;check_up&gt;:
+eb 09                   jmp    b4 &lt;coord_update&gt;
+0000000000ab &lt;check_up&gt;:
 3c 02                   cmp    al,0x2
-75 05                   jne    ae &lt;coord_update&gt;
+75 05                   jne    b4 &lt;coord_update&gt;
 b8 cd cc 4c 3e          mov    eax,0x3e4ccccd
-0000000000ae &lt;coord_update&gt;:
+0000000000b4 &lt;coord_update&gt;:
 66 44 0f 6e f8          movd   xmm15,eax
 45 0f c6 ff e1          shufps xmm15,xmm15,0xe1
 41 0f 58 ff             addps  xmm7,xmm15
-c6 05 00 00 00 00 00    mov    BYTE PTR [rip+0x0],0x0        # c3 &lt;coord_update+0x15&gt;
+c6 05 00 00 00 00 00    mov    BYTE PTR [rip+0x0],0x0        # c9 &lt;coord_update+0x15&gt;
 66 0f 7f 7e 20          movdqa XMMWORD PTR [rsi+0x20],xmm7
 45 0f 57 f6             xorps  xmm14,xmm14
 45 0f 57 ff             xorps  xmm15,xmm15
 58                      pop    rax
-e9 00 00 00 00          jmp    d6 &lt;original&gt;
-0000000000d6 &lt;original&gt;:
+e9 00 00 00 00          jmp    dc &lt;original&gt;
+0000000000dc &lt;original&gt;:
 58                      pop    rax
 0f 29 7e 20             movaps XMMWORD PTR [rsi+0x20],xmm7
-e9 00 00 00 00          jmp    e0 &lt;original+0xa&gt;</value>
-  </data>
-  <data name="NoClip_Gravity" xml:space="preserve">
-    <value>50                      push   rax
-48 b8 00 00 00 00 00    movabs rax,0x0
-00 00 00
-48 39 d8                cmp    rax,rbx
-75 0e                   jne    1e &lt;original&gt;
-0f 28 43 70             movaps xmm0,XMMWORD PTR [rbx+0x70]
-0f 29 43 50             movaps XMMWORD PTR [rbx+0x50],xmm0
-58                      pop    rax
-e9 00 00 00 00          jmp    1e &lt;original&gt;
-00000000001e &lt;original&gt;:
-58                      pop    rax
-0f 5c c2                subps  xmm0,xmm2
-0f 29 43 50             movaps XMMWORD PTR [rbx+0x50],xmm0
-e9 00 00 00 00          jmp    2b &lt;original+0xd&gt;   </value>
+e9 00 00 00 00          jmp    e6 &lt;original+0xa&gt;</value>
   </data>
 </root>

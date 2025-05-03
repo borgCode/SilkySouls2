@@ -182,7 +182,6 @@ namespace SilkySouls2.Memory
             public static long TriggersAndSpace;
             public static long Ctrl;
             public static long NoClipUpdateCoords;
-            public static long NoClipGravity;
         }
 
         public static class Funcs

@@ -218,15 +218,16 @@ namespace SilkySouls2.Services
                     (movement.ToInt64(), 0x1C + 2),
                     (cam, 0x47 + 2),
                     (movement.ToInt64(), 0x5A + 2),
-                    (cam, 0x85 +2)
+                    (cam, 0x85 +2),
+                    (rigidBodyCoords.ToInt64(), 0xD0 + 2)
                 });
                 
                 AsmHelper.WriteRelativeOffsets(codeBytes, new []
                 {
                     (coordsCode.ToInt64() + 0x97, zDirectionLoc.ToInt64(), 6, 0x97 + 2),
                     (coordsCode.ToInt64() + 0xC1, zDirectionLoc.ToInt64(), 7, 0xC1 + 2),
-                    (coordsCode.ToInt64() + 0xD9, coordsHook + 0x8, 5, 0xD9 + 1),
-                    (coordsCode.ToInt64() + 0xE7, coordsHook + 0x8, 5, 0xE7 + 1)
+                    (coordsCode.ToInt64() + 0x134, coordsHook + 0x8, 5, 0x134 + 1),
+                    (coordsCode.ToInt64() + 0x142, coordsHook + 0x8, 5, 0x142 + 1)
                 });
                 
                 _memoryIo.WriteBytes(coordsCode, codeBytes);

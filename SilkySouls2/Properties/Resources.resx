@@ -479,7 +479,7 @@ e9 00 00 00 00          jmp    c &lt;_main+0xc&gt;</value>
 48 ba 00 00 00 00 00    movabs rdx,0x0
 00 00 00
 48 39 c2                cmp    rdx,rax
-0f 85 ca 00 00 00       jne    de &lt;original&gt;
+0f 85 25 01 00 00       jne    139 &lt;original&gt;
 66 0f 6f b8 90 00 00    movdqa xmm7,XMMWORD PTR [rax+0x90]
 00
 48 ba 00 00 00 00 00    movabs rdx,0x0
@@ -524,14 +524,31 @@ ba cd cc 4c 3e          mov    edx,0x3e4ccccd
 c6 05 00 00 00 00 00    mov    BYTE PTR [rip+0x0],0x0        # c8 &lt;coord_update+0x15&gt;
 66 0f 7f b8 90 00 00    movdqa XMMWORD PTR [rax+0x90],xmm7
 00
+48 ba 00 00 00 00 00    movabs rdx,0x0
+00 00 00
+f3 44 0f 10 b0 90 00    movss  xmm14,DWORD PTR [rax+0x90]
+00 00
+f3 44 0f 11 72 50       movss  DWORD PTR [rdx+0x50],xmm14
+f3 44 0f 11 72 60       movss  DWORD PTR [rdx+0x60],xmm14
+f3 44 0f 11 72 70       movss  DWORD PTR [rdx+0x70],xmm14
+f3 44 0f 10 b0 94 00    movss  xmm14,DWORD PTR [rax+0x94]
+00 00
+f3 44 0f 11 72 54       movss  DWORD PTR [rdx+0x54],xmm14
+f3 44 0f 11 72 64       movss  DWORD PTR [rdx+0x64],xmm14
+f3 44 0f 11 72 74       movss  DWORD PTR [rdx+0x74],xmm14
+f3 44 0f 10 b0 98 00    movss  xmm14,DWORD PTR [rax+0x98]
+00 00
+f3 44 0f 11 72 58       movss  DWORD PTR [rdx+0x58],xmm14
+f3 44 0f 11 72 68       movss  DWORD PTR [rdx+0x68],xmm14
+f3 44 0f 11 72 78       movss  DWORD PTR [rdx+0x78],xmm14
 45 0f 57 f6             xorps  xmm14,xmm14
 45 0f 57 ff             xorps  xmm15,xmm15
 5a                      pop    rdx
-e9 00 00 00 00          jmp    de &lt;original&gt;
-0000000000de &lt;original&gt;:
+e9 00 00 00 00          jmp    139 &lt;original&gt;
+00000139 &lt;original&gt;:
 5a                      pop    rdx
 66 0f 7f b8 90 00 00    movdqa XMMWORD PTR [rax+0x90],xmm7
 00
-e9 00 00 00 00          jmp    ec &lt;original+0xe&gt;</value>
+e9 00 00 00 00          jmp    147 &lt;original+0xe&gt;</value>
   </data>
 </root>

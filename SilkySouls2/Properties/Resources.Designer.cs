@@ -210,7 +210,7 @@ namespace SilkySouls2.Properties {
         ///48 ba 00 00 00 00 00    movabs rdx,0x0
         ///00 00 00
         ///48 39 c2                cmp    rdx,rax
-        ///0f 85 ca 00 00 00       jne    de &lt;original&gt;
+        ///0f 85 25 01 00 00       jne    139 &lt;original&gt;
         ///66 0f 6f b8 90 00 00    movdqa xmm7,XMMWORD PTR [rax+0x90]
         ///00
         ///48 ba 00 00 00 00 00    movabs rdx,0x0
@@ -220,7 +220,7 @@ namespace SilkySouls2.Properties {
         ///45 0f c6 ff 00          shufps xmm15,xmm15,0x0
         ///ba cd cc 4c 3e          mov    edx,0x3e4ccccd
         ///66 44 0f 6e f2          movd   xmm14,edx
-        ///45 0f c6 f6 00         [rest of string was truncated]&quot;;.
+        ///45 0f c6 f6 00        [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string NoClip_UpdateCoords {
             get {

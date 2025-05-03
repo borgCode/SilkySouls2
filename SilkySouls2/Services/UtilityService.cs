@@ -209,19 +209,19 @@ namespace SilkySouls2.Services
                 codeBytes = AsmLoader.GetAsmBytes("NoClip_UpdateCoords");
                 AsmHelper.WriteAbsoluteAddresses(codeBytes, new []
                 {
-                    (updateCoordsPIdentifier.ToInt64(), 0x1 + 2),
-                    (movement.ToInt64(), 0x19 + 2),
-                    (cam, 0x41 + 2),
-                    (movement.ToInt64(), 0x54 + 2),
-                    (cam, 0x7C +2)
+                    (updateCoordsPIdentifier.ToInt64(), 0x4 + 2),
+                    (movement.ToInt64(), 0x1C + 2),
+                    (cam, 0x44 + 2),
+                    (movement.ToInt64(), 0x57 + 2),
+                    (cam, 0x7F +2)
                 });
                 
                 AsmHelper.WriteRelativeOffsets(codeBytes, new []
                 {
-                    (coordsCode.ToInt64() + 0x8E, zDirectionLoc.ToInt64(), 6, 0x8E + 2),
-                    (coordsCode.ToInt64() + 0xB6, zDirectionLoc.ToInt64(), 7, 0xB6 + 2),
-                    (coordsCode.ToInt64() + 0xCE, coordsHook + 0x7, 5, 0xCE + 1),
-                    (coordsCode.ToInt64() + 0xDB, coordsHook + 0x7, 5, 0xDB + 1)
+                    (coordsCode.ToInt64() + 0x91, zDirectionLoc.ToInt64(), 6, 0x91 + 2),
+                    (coordsCode.ToInt64() + 0xB9, zDirectionLoc.ToInt64(), 7, 0xB9 + 2),
+                    (coordsCode.ToInt64() + 0xD8, coordsHook + 0x7, 5, 0xD8 + 1),
+                    (coordsCode.ToInt64() + 0xE2, coordsHook + 0x7, 5, 0xE2 + 1)
                 });
                 
                 _memoryIo.WriteBytes(coordsCode, codeBytes);
@@ -232,8 +232,8 @@ namespace SilkySouls2.Services
                     { 0x4C, 0x8B, 0x7C, 0x24, 0x70, 0x48, 0x8B, 0x43, 0x08 });
                 _hookManager.InstallHook(ctrlCode.ToInt64(), ctrlHook, new byte[]
                     { 0x81, 0x8B, 0x28, 0x02, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00 });
-                _hookManager.InstallHook(coordsCode.ToInt64(), coordsHook, new byte[]
-                    { 0x0F, 0x29, 0x47, 0x70, 0x8B, 0x40, 0x0C });
+                _hookManager.InstallHook(coordsCode.ToInt64(), coordsHook, 
+                new byte[] { 0x0F, 0x5C, 0xC2, 0x0F, 0x29, 0x47, 0x50 });
     
             }
             else

@@ -206,19 +206,19 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 50                      push   rax
+        ///   Looks up a localized string similar to 0f 5c c2                subps  xmm0,xmm2
+        ///50                      push   rax
         ///48 b8 00 00 00 00 00    movabs rax,0x0
         ///00 00 00
         ///48 39 f8                cmp    rax,rdi
-        ///0f 85 bf 00 00 00       jne    d3 &lt;original&gt;
-        ///66 0f 6f 47 70          movdqa xmm0,XMMWORD PTR [rdi+0x70]
+        ///0f 85 c6 00 00 00       jne    dd &lt;original&gt;
+        ///66 0f 6f 47 50          movdqa xmm0,XMMWORD PTR [rdi+0x50]
         ///48 b8 00 00 00 00 00    movabs rax,0x0
         ///00 00 00
         ///f3 44 0f 10 78 78       movss  xmm15,DWORD PTR [rax+0x78]
         ///45 0f c6 ff 00          shufps xmm15,xmm15,0x0
         ///b8 cd cc 4c 3e          mov    eax,0x3e4ccccd
-        ///66 44 0f 6e f0          movd   xmm14,eax
-        ///45 0f c6 f6 00          shufps xmm [rest of string was truncated]&quot;;.
+        ///66 44 0f 6e f0          movd   xmm [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string NoClip_UpdateCoords {
             get {

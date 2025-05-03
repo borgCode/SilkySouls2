@@ -473,12 +473,13 @@ e9 00 00 00 00          jmp    5b &lt;exit+0x6&gt;</value>
 e9 00 00 00 00          jmp    c &lt;_main+0xc&gt;</value>
   </data>
   <data name="NoClip_UpdateCoords" xml:space="preserve">
-    <value>50                      push   rax
+    <value>0f 5c c2                subps  xmm0,xmm2
+50                      push   rax
 48 b8 00 00 00 00 00    movabs rax,0x0
 00 00 00
 48 39 f8                cmp    rax,rdi
-0f 85 bf 00 00 00       jne    d3 &lt;original&gt;
-66 0f 6f 47 70          movdqa xmm0,XMMWORD PTR [rdi+0x70]
+0f 85 c6 00 00 00       jne    dd &lt;original&gt;
+66 0f 6f 47 50          movdqa xmm0,XMMWORD PTR [rdi+0x50]
 48 b8 00 00 00 00 00    movabs rax,0x0
 00 00 00
 f3 44 0f 10 78 78       movss  xmm15,DWORD PTR [rax+0x78]
@@ -503,30 +504,30 @@ b8 9a 99 19 3e          mov    eax,0x3e19999a
 00 00 00
 44 0f 59 38             mulps  xmm15,XMMWORD PTR [rax]
 41 0f 58 c7             addps  xmm0,xmm15
-8a 05 00 00 00 00       mov    al,BYTE PTR [rip+0x0]        # 94 &lt;_main+0x94&gt;
+8a 05 00 00 00 00       mov    al,BYTE PTR [rip+0x0]        # 97 &lt;_main+0x97&gt;
 3c 01                   cmp    al,0x1
-75 07                   jne    9f &lt;check_up&gt;
+75 07                   jne    a2 &lt;check_up&gt;
 b8 cd cc 4c be          mov    eax,0xbe4ccccd
-eb 09                   jmp    a8 &lt;coord_update&gt;
-00000000009f &lt;check_up&gt;:
+eb 09                   jmp    ab &lt;coord_update&gt;
+0000000000a2 &lt;check_up&gt;:
 3c 02                   cmp    al,0x2
-75 05                   jne    a8 &lt;coord_update&gt;
+75 05                   jne    ab &lt;coord_update&gt;
 b8 cd cc 4c 3e          mov    eax,0x3e4ccccd
-0000000000a8 &lt;coord_update&gt;:
+0000000000ab &lt;coord_update&gt;:
 66 44 0f 6e f8          movd   xmm15,eax
 45 0f c6 ff e1          shufps xmm15,xmm15,0xe1
 41 0f 58 c7             addps  xmm0,xmm15
-c6 05 00 00 00 00 00    mov    BYTE PTR [rip+0x0],0x0        # bd &lt;coord_update+0x15&gt;
+c6 05 00 00 00 00 00    mov    BYTE PTR [rip+0x0],0x0        # c0 &lt;coord_update+0x15&gt;
+66 0f 7f 47 50          movdqa XMMWORD PTR [rdi+0x50],xmm0
+66 0f 7f 47 60          movdqa XMMWORD PTR [rdi+0x60],xmm0
 66 0f 7f 47 70          movdqa XMMWORD PTR [rdi+0x70],xmm0
 45 0f 57 f6             xorps  xmm14,xmm14
 45 0f 57 ff             xorps  xmm15,xmm15
 58                      pop    rax
-8b 40 0c                mov    eax,DWORD PTR [rax+0xc]
-e9 00 00 00 00          jmp    d3 &lt;original&gt;
-0000000000d3 &lt;original&gt;:
+e9 00 00 00 00          jmp    dd &lt;original&gt;
+0000000000dd &lt;original&gt;:
 58                      pop    rax
-0f 29 47 70             movaps XMMWORD PTR [rdi+0x70],xmm0
-8b 40 0c                mov    eax,DWORD PTR [rax+0xc]
-e9 00 00 00 00          jmp    e0 &lt;original+0xd&gt;</value>
+0f 29 47 50             movaps XMMWORD PTR [rdi+0x50],xmm0
+e9 00 00 00 00          jmp    e7 &lt;original+0xa&gt;</value>
   </data>
 </root>

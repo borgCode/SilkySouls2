@@ -269,6 +269,34 @@ namespace SilkySouls2.Services
             GameManagerImp.PlayerCtrlOffsets.ChrPhysicsCtrlPtr,
             GameManagerImp.PlayerCtrlOffsets.ChrPhysicsCtrl.Gravity
         }, false);
+        
+        public void ToggleKillboxHook(bool isEnabled)
+        {
+            var code = CodeCaveOffsets.Base + CodeCaveOffsets.Killbox;
+
+            if (isEnabled)
+            {
+                var hookLoc = Hooks.KillboxFlagSet;
+                var playerCtrl = _memoryIo.ReadInt64((IntPtr)_memoryIo.ReadInt64(GameManagerImp.Base) +
+                                                     GameManagerImp.Offsets.PlayerCtrl);
+                
+                var codeBytes = AsmLoader.GetAsmBytes("Killbox");
+                var bytes = BitConverter.GetBytes(playerCtrl);
+                Array.Copy(bytes, 0, codeBytes, 0x1 + 2, 8);
+                AsmHelper.WriteRelativeOffsets(codeBytes, new[]
+                {
+                    (code.ToInt64() + 0x21, hookLoc + 0xA, 5, 0x21 + 1)
+                });
+                
+                _memoryIo.WriteBytes(code, codeBytes);
+                _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[]
+                    { 0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00 });
+            }
+            else
+            {
+                _hookManager.UninstallHook(code.ToInt64());
+            }
+        }
     }
     
 }

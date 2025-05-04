@@ -64,7 +64,6 @@ namespace SilkySouls2.Memory
                 addr => Offsets.Patches.InfiniteDurability = addr, saved);
             TryPatternWithFallback("DropRate", Patterns.DropRate,
                 addr => Offsets.Patches.DropRate = addr, saved);
-            // TryPatternWithFallback("DebugFont", Patterns.DebugFont, addr => Offsets.Patches.DebugFont = addr, saved);
             // TryPatternWithFallback("NoRoll", Patterns.NoRoll, addr => Offsets.Patches.NoRoll = addr, saved);
             // TryPatternWithFallback("TargetingView", Patterns.DbgDrawFlag, addr => Offsets.Patches.DbgDrawFlag = addr,
             //     saved);
@@ -93,6 +92,8 @@ namespace SilkySouls2.Memory
                 addr => Offsets.Hooks.CreditSkip = addr.ToInt64(), saved);
             TryPatternWithFallback("NumOfDrops", Patterns.NumOfDrops,
                 addr => Offsets.Hooks.NumOfDrops = addr.ToInt64(), saved);
+            TryPatternWithFallback("KillboxFlagSet", Patterns.KillboxFlagSet,
+                addr => Offsets.Hooks.KillboxFlagSet = addr.ToInt64(), saved);
             
             TryPatternWithFallback("DamageControl", Patterns.DamageControl,
                 addr => Offsets.Hooks.DamageControl = addr.ToInt64(), saved);  
@@ -157,7 +158,6 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Patches.InfiniteCasts: 0x{Offsets.Patches.InfiniteCasts.ToInt64():X}");
             Console.WriteLine($"Patches.InfiniteDurability: 0x{Offsets.Patches.InfiniteDurability.ToInt64():X}");
             Console.WriteLine($"Patches.DropRate: 0x{Offsets.Patches.DropRate.ToInt64():X}");
-            // Console.WriteLine($"Patches.DebugFont: 0x{Offsets.Patches.DebugFont.ToInt64():X}");
             // Console.WriteLine($"Patches.NoRoll: 0x{Offsets.Patches.NoRoll.ToInt64():X}");
             // Console.WriteLine($"Patches.TargetingView: 0x{Offsets.Patches.DbgDrawFlag.ToInt64():X}");
             // Console.WriteLine($"Patches.FreeCam: 0x{Offsets.Patches.FreeCam.ToInt64():X}");
@@ -176,7 +176,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Hooks.TriggersAndSpace: 0x{Offsets.Hooks.TriggersAndSpace:X}");
             Console.WriteLine($"Hooks.Ctrl: 0x{Offsets.Hooks.Ctrl:X}");
             Console.WriteLine($"Hooks.NoClipUpdateCoords: 0x{Offsets.Hooks.NoClipUpdateCoords:X}");
-            // Console.WriteLine($"Hooks.ItemLotBase: 0x{Offsets.Hooks.ItemLotBase:X}");
+            Console.WriteLine($"Hooks.KillboxFlagSet: 0x{Offsets.Hooks.KillboxFlagSet:X}");
             //
             Console.WriteLine($"Funcs.WarpPrep: 0x{Offsets.Funcs.WarpPrep:X}");
             Console.WriteLine($"Funcs.BonfireWarp: 0x{Offsets.Funcs.BonfireWarp:X}");

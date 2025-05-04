@@ -68,5 +68,6 @@ namespace SilkySouls2.Memory
             UpdateCoords = 0x540,
         }
 
+        public const int Killbox = 0x690;
     }
 }

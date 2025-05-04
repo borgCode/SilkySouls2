@@ -41,6 +41,17 @@ namespace SilkySouls2.ViewModels
                 _ = _utilityService.ForceSave();
             });
             _hotkeyManager.RegisterAction("NoClip", () => { IsNoClipEnabled = !IsNoClipEnabled; });
+            _hotkeyManager.RegisterAction("IncreaseNoClipSpeed", () =>
+            {
+                if (IsNoClipEnabled)
+                    NoClipSpeed = Math.Min(5, NoClipSpeed + 0.50f);
+            });
+
+            _hotkeyManager.RegisterAction("DecreaseNoClipSpeed", () =>
+            {
+                if (IsNoClipEnabled)
+                    NoClipSpeed = Math.Max(0.05f, NoClipSpeed - 0.50f);
+            });
         }
         
         
@@ -94,13 +105,14 @@ namespace SilkySouls2.ViewModels
                     _utilityService.ToggleNoClip(_isNoClipEnabled);
                     _wasNoDeathEnabled = _playerViewModel.IsNoDeathEnabled;
                     _playerViewModel.IsNoDeathEnabled = true;
-          
+                    _utilityService.ToggleKillboxHook(true);
                 }
                 else
                 {
                     _utilityService.ToggleNoClip(_isNoClipEnabled);
                     _playerViewModel.IsNoDeathEnabled = _wasNoDeathEnabled;
                     NoClipSpeed = DefaultNoclipMultiplier;
+                    _utilityService.ToggleKillboxHook(false);
                 }
             }
         }
@@ -139,7 +151,6 @@ namespace SilkySouls2.ViewModels
         
         public void TryEnableFeatures()
         {
-            
             if (IsIvorySkipEnabled) _utilityService.SetMultipleEventOn(GameIds.EventFlags.IvoryBlackKnights);
             if (IsCreditSkipEnabled) _utilityService.ToggleCreditSkip(true);
             // if (IsHitboxEnabled) _utilityService.ToggleHitboxView(true);

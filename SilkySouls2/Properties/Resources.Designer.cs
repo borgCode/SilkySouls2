@@ -176,6 +176,27 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 53                      push   rbx
+        ///48 bb 00 00 00 00 00    movabs rbx,0x0
+        ///00 00 00
+        ///48 39 c3                cmp    rbx,rax
+        ///75 06                   jne    16 &lt;do_normal&gt;
+        ///5b                      pop    rbx
+        ///48 83 c4 68             add    rsp,0x68
+        ///c3                      ret
+        ///000000000016 &lt;do_normal&gt;:
+        ///48 b8 00 00 00 00 00    movabs rax,0x8000000000000
+        ///00 08 00
+        ///5b                      pop    rbx
+        ///e9 00 00 00 00          jmp    26 &lt;do_normal+0x10&gt;.
+        /// </summary>
+        internal static string Killbox {
+            get {
+                return ResourceManager.GetString("Killbox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to c6 05 00 00 00 00 01    mov    BYTE PTR [rip+0x0],0x1        # 7 &lt;_main+0x7&gt;
         ///e9 00 00 00 00          jmp    c &lt;_main+0xc&gt;.
         /// </summary>

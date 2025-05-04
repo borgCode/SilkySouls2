@@ -516,7 +516,7 @@ ba cd cc 4c be          mov    edx,0xbe4ccccd
 eb 0a                   jmp    b3 &lt;coord_update&gt;
 0000000000a9 &lt;check_up&gt;:
 80 fa 02                cmp    dl,0x2
-75 05                   jne    b3 &lt;coord_update&gt;
+75 1a                   jne
 ba cd cc 4c 3e          mov    edx,0x3e4ccccd
 0000000000b3 &lt;coord_update&gt;:
 66 44 0f 6e fa          movd   xmm15,edx
@@ -563,5 +563,20 @@ e9 00 00 00 00          jmp    147 &lt;original+0xe&gt;</value>
 ff d0                   call   rax
 48 83 c4 48             add    rsp,0x48
 c3                      ret</value>
+  </data>
+  <data name="Killbox" xml:space="preserve">
+    <value>53                      push   rbx
+48 bb 00 00 00 00 00    movabs rbx,0x0
+00 00 00
+48 39 c3                cmp    rbx,rax
+75 06                   jne    16 &lt;do_normal&gt;
+5b                      pop    rbx
+48 83 c4 68             add    rsp,0x68
+c3                      ret
+000000000016 &lt;do_normal&gt;:
+48 b8 00 00 00 00 00    movabs rax,0x8000000000000
+00 08 00
+5b                      pop    rbx
+e9 00 00 00 00          jmp    26 &lt;do_normal+0x10&gt;</value>
   </data>
 </root>

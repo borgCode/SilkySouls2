@@ -27,7 +27,11 @@ namespace SilkySouls2.Memory
             
             public static class CameraManagerOffsets
             {
+                //TODO 0x18 FREE CAMERA 
+                public const int IngameCameraOperatorPtr = 0x28;
+                public const int CamLeaveChr= 0x450; // TODO Maybe free cam?
                 public const int MapId = 0x45C;
+                
             }
 
             public static class AiManagerOffsets
@@ -44,6 +48,7 @@ namespace SilkySouls2.Memory
             public static class GameDataManagerOffsets
             {
                 public const int NewGamePtr = 0xC0;
+                public const int LotsOfFlagsMaybe = 0xC8;
                 public const int NewGame = 0x68; 
                 
             }
@@ -76,6 +81,8 @@ namespace SilkySouls2.Memory
                 public const int Speed = 0x2A8;
                 
                 public const int StatsPtr = 0x490;
+                
+                //TODO 4c0 flags
 
                 public static class ChrParam
                 {
@@ -190,6 +197,7 @@ namespace SilkySouls2.Memory
             public static long TriggersAndSpace;
             public static long Ctrl;
             public static long NoClipUpdateCoords;
+            public static long KillboxFlagSet;
         }
 
         public static class Funcs

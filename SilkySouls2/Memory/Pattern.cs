@@ -174,6 +174,19 @@ namespace SilkySouls2.Memory
             0,
             None
         );
+        
+        public static readonly Pattern KillboxFlagSet = new Pattern(
+            new byte[]
+            {
+                0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00, 0x48, 0x09, 0x81, 0xC0, 0x04, 0x00, 0x00,
+                0x84
+            },
+            "xxxxxxxxxxxxxxxxxx",
+            0,
+            None
+        );
+
+
 
         public static readonly Pattern InfiniteGoods = new Pattern(
             new byte[] { 0x66, 0x29, 0x73, 0x20 },

@@ -5,6 +5,7 @@ using System.Windows.Threading;
 using SilkySouls2.Models;
 using SilkySouls2.Services;
 using SilkySouls2.Utilities;
+using SilkySouls2.Views;
 using static SilkySouls2.Memory.Offsets;
 
 namespace SilkySouls2.ViewModels
@@ -54,6 +55,9 @@ namespace SilkySouls2.ViewModels
         private int _newGame;
         private float _playerSpeed;
         private int _currentSoulLevel;
+
+        private HealthWindow _healthWindow;
+        private bool _isHealthWindowOpen;
 
         private float _playerDesiredSpeed = -1f;
         private const float DefaultSpeed = 1f;
@@ -173,6 +177,28 @@ namespace SilkySouls2.ViewModels
         public void SetMaxHp()
         {
             _playerService.SetHp(CurrentMaxHp);
+        }
+        
+        public bool IsHealthWindowOpen
+        {
+            get => _isHealthWindowOpen;
+            set
+            {
+                if (!SetProperty(ref _isHealthWindowOpen, value)) return;
+                if (value)
+                {
+                    if (_healthWindow != null && _healthWindow.IsVisible) return;
+                    _healthWindow = new HealthWindow { DataContext = this };
+                    _healthWindow.Closed += (sender, args) => _isHealthWindowOpen = false;
+                    _healthWindow.Show();
+                }
+                else
+                {
+                    if (_healthWindow == null || !_healthWindow.IsVisible) return;
+                    _healthWindow.Close();
+                    _healthWindow = null;
+                }
+            }
         }
 
         public bool IsPos1Saved

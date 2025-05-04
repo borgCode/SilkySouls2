@@ -106,6 +106,7 @@
         <Compile Include="Utilities\DataLoader.cs" />
         <Compile Include="Utilities\HotkeyManager.cs" />
         <Compile Include="Utilities\SettingsManager.cs" />
+        <Compile Include="Utilities\User32.cs" />
         <Compile Include="ViewModels\BaseViewModel.cs" />
         <Compile Include="ViewModels\EnemyViewModel.cs" />
         <Compile Include="ViewModels\EventViewModel.cs" />
@@ -119,6 +120,9 @@
         </Compile>
         <Compile Include="Views\EventTab.xaml.cs">
           <DependentUpon>EventTab.xaml</DependentUpon>
+        </Compile>
+        <Compile Include="Views\HealthWindow.xaml.cs">
+          <DependentUpon>HealthWindow.xaml</DependentUpon>
         </Compile>
         <Compile Include="Views\ItemTab.xaml.cs">
           <DependentUpon>ItemTab.xaml</DependentUpon>
@@ -149,6 +153,7 @@
         </Compile>
         <Page Include="Views\EnemyTab.xaml" />
         <Page Include="Views\EventTab.xaml" />
+        <Page Include="Views\HealthWindow.xaml" />
         <Page Include="Views\ItemTab.xaml" />
         <Page Include="Views\PlayerTab.xaml" />
         <Page Include="Views\SettingsTab.xaml" />

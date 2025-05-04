@@ -20,6 +20,8 @@ namespace SilkySouls2.Utilities
         public double ResistancesWindowWidth { get; set; }
         public double ResistancesWindowLeft { get; set; }
         public double ResistancesWindowTop { get; set; }
+        public double HealthWindowLeft { get; set; }
+        public double HealthWindowTop { get; set; }
 
         private static string SettingsPath => Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -46,6 +48,8 @@ namespace SilkySouls2.Utilities
                     $"ResistancesWindowWidth={ResistancesWindowWidth}",
                     $"ResistancesWindowLeft={ResistancesWindowLeft}",
                     $"ResistancesWindowTop={ResistancesWindowTop}",
+                    $"HealthWindowLeft={HealthWindowLeft}",
+                    $"HealthWindowTop={HealthWindowTop}",
                 };
 
                 File.WriteAllLines(SettingsPath, lines);
@@ -115,6 +119,14 @@ namespace SilkySouls2.Utilities
                                 case "ResistancesWindowWidth":
                                     double.TryParse(value, out double rww);
                                     settings.ResistancesWindowWidth = rww;
+                                    break;
+                                case "HealthWindowLeft":
+                                    double.TryParse(value, out double hwl);
+                                    settings.HealthWindowLeft = hwl;
+                                    break;
+                                case "HealthWindowTop":
+                                    double.TryParse(value, out double hwt);
+                                    settings.HealthWindowTop = hwt;
                                     break;
                             }
                         }

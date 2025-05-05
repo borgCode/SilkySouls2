@@ -579,4 +579,17 @@ c3                      ret
 5b                      pop    rbx
 e9 00 00 00 00          jmp    26 &lt;do_normal+0x10&gt;</value>
   </data>
+  <data name="RestoreSpellcasts" xml:space="preserve">
+    <value>48 b9 00 00 00 00 00    movabs rcx,0x0
+00 00 00
+41 b8 01 00 00 00       mov    r8d,0x1
+b8 00 00 c8 42          mov    eax,0x42c80000
+66 0f 6e c8             movd   xmm1,eax
+48 81 ec 38 01 00 00    sub    rsp,0x138
+48 b8 00 00 00 00 00    movabs rax,0x0
+00 00 00
+ff d0                   call   rax
+48 81 c4 38 01 00 00    add    rsp,0x138
+c3                      ret</value>
+  </data>
 </root>

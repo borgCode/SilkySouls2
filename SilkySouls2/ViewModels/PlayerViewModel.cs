@@ -692,5 +692,7 @@ namespace SilkySouls2.ViewModels
         }
 
         public void GiveSouls() => _playerService.GiveSouls(Souls);
+
+        public void RestoreSpellcasts() => _playerService.RestoreSpellcasts();
     }
 }

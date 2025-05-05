@@ -419,5 +419,25 @@ namespace SilkySouls2.Services
         }
 
         public int GetSoulMemory() => _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.PlayerCtrlOffsets.Stats.SoulMemory));
+
+        public void RestoreSpellcasts()
+        {
+            var inventoryBag = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+            {
+                GameManagerImp.Offsets.GameDataManager,
+                GameManagerImp.GameDataManagerOffsets.InventoryPtr,
+                GameManagerImp.GameDataManagerOffsets.Inventory.ItemInventory2BagList
+            }, true);
+            var func = Funcs.RestoreSpellcasts;
+
+            var codeBytes = AsmLoader.GetAsmBytes("RestoreSpellcasts");
+            AsmHelper.WriteAbsoluteAddresses(codeBytes, new []
+            {
+                (inventoryBag.ToInt64(), 0x0 + 2),
+                (func, 0x20 + 2)
+            });
+            
+            _memoryIo.AllocateAndExecute(codeBytes);
+        }
     }
 }

@@ -47,10 +47,15 @@ namespace SilkySouls2.Memory
 
             public static class GameDataManagerOffsets
             {
+                public const int InventoryPtr = 0x10;
                 public const int NewGamePtr = 0xC0;
-                public const int LotsOfFlagsMaybe = 0xC8;
-                public const int NewGame = 0x68; 
-                
+                public const int NewGame = 0x68;
+
+
+                public static class Inventory
+                {
+                    public const int ItemInventory2BagList = 0xD0;
+                }
             }
 
             public static class PlayerCtrlOffsets
@@ -206,6 +211,7 @@ namespace SilkySouls2.Memory
             public static long BonfireWarp;
             public static long SetEvent;
             public static long GiveSouls;
+            public static long RestoreSpellcasts;
         }
     }
 }

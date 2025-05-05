@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -223,5 +224,7 @@ namespace SilkySouls2
             SettingsManager.Default.WindowTop = Top;
             SettingsManager.Default.Save();
         }
+
+        private void LaunchGame_Click(object sender, RoutedEventArgs e) => Task.Run(GameLauncher.LaunchDarkSouls2);
     }
 }

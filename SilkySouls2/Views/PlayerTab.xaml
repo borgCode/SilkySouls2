@@ -119,7 +119,7 @@
                                 Height="12"
                                 Margin="5,0,0,0"
                                 VerticalAlignment="Center"
-                                ToolTip="Remembers HP/FP/Stamina when saving position"
+                                ToolTip="Remembers HP/Stamina when saving position"
                                 ToolTipService.InitialShowDelay='100'>
                             <TextBlock Text="i"
                                        Foreground="White"
@@ -200,15 +200,14 @@
                     <CheckBox Content="Deal No Damage"
                               IsChecked="{Binding IsDealNoDamageEnabled}"
                               Margin="0,2" />
-                    <CheckBox Content="Invisible todo"
-                              IsChecked="{Binding IsInvisibleEnabled}"
-                              Margin="0,2" />
-                    <CheckBox Content="Silent todo"
-                              IsChecked="{Binding IsSilentEnabled}"
-                              Margin="0,2" />
                     <CheckBox Content="Infinite Poise todo"
                               IsChecked="{Binding IsInfinitePoiseEnabled}"
                               Margin="0,2" />
+                    <Button Content="Restore Spellcasts"
+                            Width="150"
+                            Margin="0, 15, 0,0"
+                            Click="RestoreSpellcasts_Click">
+                    </Button>
                 </StackPanel>
             </Grid>
 

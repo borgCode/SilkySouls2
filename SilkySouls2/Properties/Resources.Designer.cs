@@ -320,6 +320,25 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 48 b9 00 00 00 00 00    movabs rcx,0x0
+        ///00 00 00
+        ///41 b8 01 00 00 00       mov    r8d,0x1
+        ///b8 00 00 c8 42          mov    eax,0x42c80000
+        ///66 0f 6e c8             movd   xmm1,eax
+        ///48 81 ec 38 01 00 00    sub    rsp,0x138
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
+        ///ff d0                   call   rax
+        ///48 81 c4 38 01 00 00    add    rsp,0x138
+        ///c3                      ret.
+        /// </summary>
+        internal static string RestoreSpellcasts {
+            get {
+                return ResourceManager.GetString("RestoreSpellcasts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 89 3d 00 00 00 00    mov    QWORD PTR [rip+0x0],rdi        # 7 &lt;_main+0x7&gt;
         ///48 89 bb c0 00 00 00    mov    QWORD PTR [rbx+0xc0],rdi
         ///e9 00 00 00 00          jmp    13 &lt;_main+0x13&gt;.

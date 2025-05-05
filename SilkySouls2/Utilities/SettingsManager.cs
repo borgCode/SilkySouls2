@@ -37,7 +37,6 @@ namespace SilkySouls2.Utilities
                 var lines = new[]
                 {
                     $"HotkeyActionIds={HotkeyActionIds}",
-                    $"HotkeyValues={HotkeyValues}",
                     $"EnableHotkeys={EnableHotkeys}",
                     $"StutterFix={StutterFix}",
                     $"AlwaysOnTop={AlwaysOnTop}",
@@ -79,7 +78,6 @@ namespace SilkySouls2.Utilities
                             switch (key)
                             {
                                 case "HotkeyActionIds": settings.HotkeyActionIds = value; break;
-                                case "HotkeyValues": settings.HotkeyValues = value; break;
                                 case "EnableHotkeys":
                                     bool.TryParse(value, out bool eh);
                                     settings.EnableHotkeys = eh;

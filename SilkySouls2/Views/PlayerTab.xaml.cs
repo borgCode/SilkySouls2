@@ -178,5 +178,7 @@ namespace SilkySouls2.Views
         {
             _playerViewModel.GiveSouls();
         }
+
+        private void RestoreSpellcasts_Click(object sender, RoutedEventArgs e) => _playerViewModel.RestoreSpellcasts();
     }
 }

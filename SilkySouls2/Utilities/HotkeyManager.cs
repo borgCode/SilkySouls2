@@ -107,17 +107,15 @@ namespace SilkySouls2.Utilities
         {
             try
             {
-                SettingsManager.Default.HotkeyActionIds = "";
-                SettingsManager.Default.HotkeyValues = "";
-                
-                if (_hotkeyMappings.Count > 0)
+                var mappingPairs = new List<string>();
+        
+                foreach (var mapping in _hotkeyMappings)
                 {
-                    SettingsManager.Default.HotkeyActionIds = string.Join(";", _hotkeyMappings.Keys);
-                    
-                    var hotkeyStrings = _hotkeyMappings.Values.Select(k => k.ToString());
-                    SettingsManager.Default.HotkeyValues = string.Join(";", hotkeyStrings);
+                    mappingPairs.Add($"{mapping.Key}={mapping.Value}");
                 }
                 
+                SettingsManager.Default.HotkeyActionIds = string.Join(";", mappingPairs);
+        
                 SettingsManager.Default.Save();
             }
             catch (Exception ex)
@@ -125,25 +123,28 @@ namespace SilkySouls2.Utilities
                 Console.WriteLine($"Error saving hotkeys: {ex.Message}");
             }
         }
-        
+
         public void LoadHotkeys()
         {
             try
             {
-                string actionIdsString = SettingsManager.Default.HotkeyActionIds;
-                string hotkeyValuesString = SettingsManager.Default.HotkeyValues;
-                
-                if (!string.IsNullOrEmpty(actionIdsString) && !string.IsNullOrEmpty(hotkeyValuesString))
+                _hotkeyMappings.Clear();
+        
+                string mappingsString = SettingsManager.Default.HotkeyActionIds;
+        
+                if (!string.IsNullOrEmpty(mappingsString))
                 {
-                    string[] actionIds = actionIdsString.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                    string[] hotkeyStrings = hotkeyValuesString.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                    
-                    if (actionIds.Length == hotkeyStrings.Length)
+                    string[] pairs = mappingsString.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            
+                    foreach (string pair in pairs)
                     {
-                        
-                        for (int i = 0; i < actionIds.Length; i++)
+                        int separatorIndex = pair.IndexOf('=');
+                        if (separatorIndex > 0)
                         {
-                            _hotkeyMappings[actionIds[i]] = Keys.Parse(hotkeyStrings[i]);
+                            string actionId = pair.Substring(0, separatorIndex);
+                            string keyValue = pair.Substring(separatorIndex + 1);
+                    
+                            _hotkeyMappings[actionId] = Keys.Parse(keyValue);
                         }
                     }
                 }

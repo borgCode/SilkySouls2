@@ -158,6 +158,13 @@ namespace SilkySouls2.Memory
             None
         );
 
+        public static readonly Pattern RestoreSpellcasts = new Pattern(
+            new byte[] { 0x40, 0x55, 0x53, 0x41, 0x54, 0x41, 0x55, 0x48, 0x8D, 0x6C },
+            "xxxxxxxxxx",
+            0,
+            None
+        );
+
 
         // Patches
 

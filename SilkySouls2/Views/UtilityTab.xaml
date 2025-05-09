@@ -52,13 +52,13 @@
                     </Grid.RowDefinitions>
 
 
-                    <CheckBox Content="Hitbox View"
-                              IsChecked="{Binding IsHitboxEnabled}"
+                    <CheckBox Content="Test Render"
+                              IsChecked="{Binding IsTestRenderEnabled}"
                               Grid.Column="0" Grid.Row="0"
                               Margin="0,2" />
 
-                    <CheckBox Content="Player Sound View"
-                              IsChecked="{Binding IsSoundViewEnabled}"
+                    <Button Content="Inject"
+                              Click="Inject_Dll"
                               Grid.Column="0" Grid.Row="1"
                               Margin="0,2" />
 

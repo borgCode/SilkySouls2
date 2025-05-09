@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using SilkySouls2.Memory;
+using SilkySouls2.Memory.Draw;
 using SilkySouls2.Utilities;
 using static SilkySouls2.Memory.Offsets;
 
@@ -10,11 +12,13 @@ namespace SilkySouls2.Services
     {
         private readonly MemoryIo _memoryIo;
         private readonly HookManager _hookManager;
+        private readonly DrawManager _drawManager;
 
-        public UtilityService(MemoryIo memoryIo, HookManager hookManager)
+        public UtilityService(MemoryIo memoryIo, HookManager hookManager, DrawManager drawManager)
         {
             _memoryIo = memoryIo;
             _hookManager = hookManager;
+            _drawManager = drawManager;
         }
 
         public void SetEventOn(long gameId)
@@ -209,7 +213,7 @@ namespace SilkySouls2.Services
                 }, true);
 
                 var cam = _memoryIo.ReadInt64((IntPtr)_memoryIo.ReadInt64(GameManagerImp.Base) +
-                                              GameManagerImp.Offsets.CamStuff);
+                                              GameManagerImp.Offsets.ViewMatrixPtr);
 
                 codeBytes = AsmLoader.GetAsmBytes("NoClip_UpdateCoords");
                 AsmHelper.WriteAbsoluteAddresses(codeBytes, new []
@@ -296,6 +300,23 @@ namespace SilkySouls2.Services
             {
                 _hookManager.UninstallHook(code.ToInt64());
             }
+        }
+
+        public void DrawTriangle(bool isTestRenderEnabled)
+        {
+            _drawManager.ToggleRender(DrawType.Event, isTestRenderEnabled);
+        }
+
+        public void Inject()
+        {
+            _drawManager.SetAddress(SharedMemAddr.GameManagerImp, GameManagerImp.Base.ToInt64());
+            _drawManager.SetAddress(SharedMemAddr.ParamLookUp, Funcs.ParamLookUp);
+            _drawManager.SetAddress(SharedMemAddr.SetRenderTargets, Funcs.SetRenderTargets);
+            
+            string dllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "Dll4.dll");
+            Console.WriteLine($"Injecting DLL from: {dllPath}");
+            bool success = _memoryIo.InjectDll(dllPath);
+            Console.WriteLine($"Injection {(success ? "successful" : "failed")}");
         }
     }
     

@@ -151,6 +151,30 @@ namespace SilkySouls2.Memory
             None
         );
 
+        public static readonly Pattern DrawFe = new Pattern(
+            new byte[] { 0x80, 0xB9, 0x68, 0x11 },
+            "xxxx",
+            -0xA,
+            None
+        );
+
+        public static readonly Pattern SetRenderTargetsWrapper = new Pattern(
+            new byte[] { 0x40, 0x53, 0x48, 0x83, 0xEC, 0x60, 0x41, 0x8B },
+            "xxxxxxxx",
+            0,
+            None
+        );
+
+
+
+        public static readonly Pattern ParamLookUp = new Pattern(
+            new byte[] { 0x48, 0x89, 0x5C, 0x24, 0x08, 0x4C, 0x8B, 0x59, 0x10 },
+            "xxxxxxxxx",
+            0,
+            None
+        );
+
+
         public static readonly Pattern SetEvent = new Pattern(
             new byte[] { 0x45, 0x0F, 0xB6, 0xD8, 0xB8 },
             "xxxxx",

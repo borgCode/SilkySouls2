@@ -11,6 +11,7 @@ namespace SilkySouls2.ViewModels
         private bool _isIvorySkipEnabled;
         private bool _isCreditSkipEnabled;
         private bool _is100DropEnabled;
+        private bool _isTestRenderEnabled;
         
         private bool _areButtonsEnabled;
         private readonly HotkeyManager _hotkeyManager;
@@ -59,6 +60,16 @@ namespace SilkySouls2.ViewModels
         {
             get => _areButtonsEnabled;
             set => SetProperty(ref _areButtonsEnabled, value);
+        }
+        
+        public bool IsTestRenderEnabled
+        {
+            get => _isTestRenderEnabled;
+            set
+            {
+                if (!SetProperty(ref _isTestRenderEnabled, value)) return;
+                _utilityService.DrawTriangle(_isTestRenderEnabled);
+            }
         }
         
         public bool IsCreditSkipEnabled
@@ -190,6 +201,7 @@ namespace SilkySouls2.ViewModels
         
         public void DisableFeatures()
         {
+            
             IsNoClipEnabled = false;
             AreButtonsEnabled = false;
         }
@@ -200,5 +212,7 @@ namespace SilkySouls2.ViewModels
         {
             if (Is100DropEnabled) _utilityService.Toggle100Drop(true);
         }
+
+        public void Inject() => _utilityService.Inject();
     }
 }

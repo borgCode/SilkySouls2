@@ -20,7 +20,9 @@ namespace SilkySouls2.Memory
                 public const int StateActManager = 0xA0;
                 public const int GameDataManager = 0xA8;
                 public const int PlayerCtrl = 0xD0;
-                public const int CamStuff = 0x1158;
+                public const int ViewMatrixPtr = 0x1158;
+                public const int ProjectionMatrixPtr = 0x16F0;
+                public const int ProjectionMatrix = 0x170;
                 public const int MenuKick = 0x24B1;
                 public const int LoadingFlag = 0x24BC;
             }
@@ -212,6 +214,9 @@ namespace SilkySouls2.Memory
             public static long SetEvent;
             public static long GiveSouls;
             public static long RestoreSpellcasts;
+            public static long ParamLookUp;
+            public static long DrawFe;
+            public static long SetRenderTargets;
         }
     }
 }

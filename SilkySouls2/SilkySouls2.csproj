@@ -90,6 +90,9 @@
         <Compile Include="Converters\InverseBooleanConverter.cs" />
         <Compile Include="Converters\InverseBooleanToVisibilityConverter.cs" />
         <Compile Include="Converters\StringToVisibilityConverter.cs" />
+        <Compile Include="Memory\Draw\DrawManager.cs" />
+        <Compile Include="Memory\Draw\DrawType.cs" />
+        <Compile Include="Memory\Draw\SharedMemAddr.cs" />
         <Compile Include="Models\NpcInfo.cs" />
         <Compile Include="Models\WarpLocation.cs" />
         <Compile Include="Models\CharacterState.cs" />
@@ -185,8 +188,13 @@
         </EmbeddedResource>
     </ItemGroup>
     <ItemGroup>
-        <None Include="App.config"/>
+        <None Include="App.config" />
         <None Include="packages.config" />
+    </ItemGroup>
+    <ItemGroup>
+      <Content Include="Resources\DLL\Dll4.dll">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
 </Project>

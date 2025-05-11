@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using SilkySouls2.Memory;
-using SilkySouls2.Memory.Draw;
+using SilkySouls2.Memory.DLLShared;
 using SilkySouls2.Utilities;
 using static SilkySouls2.Memory.Offsets;
 
@@ -12,13 +12,13 @@ namespace SilkySouls2.Services
     {
         private readonly MemoryIo _memoryIo;
         private readonly HookManager _hookManager;
-        private readonly DrawManager _drawManager;
+        private readonly DllManager _dllManager;
 
-        public UtilityService(MemoryIo memoryIo, HookManager hookManager, DrawManager drawManager)
+        public UtilityService(MemoryIo memoryIo, HookManager hookManager, DllManager dllManager)
         {
             _memoryIo = memoryIo;
             _hookManager = hookManager;
-            _drawManager = drawManager;
+            _dllManager = dllManager;
         }
 
         public void SetEventOn(long gameId)
@@ -302,22 +302,26 @@ namespace SilkySouls2.Services
             }
         }
 
-        public void DrawTriangle(bool isTestRenderEnabled)
+        public void ToggleDrawHitbox(bool isDrawHitboxEnabled)
         {
-            _drawManager.ToggleRender(DrawType.Event, isTestRenderEnabled);
+            _dllManager.ToggleRender(DrawType.Hitbox, isDrawHitboxEnabled);
         }
 
         public void Inject()
         {
-            _drawManager.SetAddress(SharedMemAddr.GameManagerImp, GameManagerImp.Base.ToInt64());
-            _drawManager.SetAddress(SharedMemAddr.ParamLookUp, Funcs.ParamLookUp);
-            _drawManager.SetAddress(SharedMemAddr.SetRenderTargets, Funcs.SetRenderTargets);
-            
-            string dllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "Dll4.dll");
-            Console.WriteLine($"Injecting DLL from: {dllPath}");
-            bool success = _memoryIo.InjectDll(dllPath);
-            Console.WriteLine($"Injection {(success ? "successful" : "failed")}");
+            _dllManager.Inject();
         }
+
+        public void ToggleDrawEvent(bool isDrawEventEnabled)
+        {
+            _dllManager.ToggleRender(DrawType.Event, isDrawEventEnabled);
+        }
+
+        // public void SetGameSpeed(float value)
+        // {
+        //     _dllManager.ToggleFeature(FeatureType.Speedhack, value != 1.0f);
+        //     _dllManager.SetSpeedhackFactor(value);
+        // }
     }
     
 }

@@ -116,10 +116,10 @@ namespace SilkySouls2.Memory
             Offsets.Funcs.BonfireWarp = FindAddressByPattern(Patterns.BonfireWarp).ToInt64();
             Offsets.Funcs.RestoreSpellcasts = FindAddressByPattern(Patterns.RestoreSpellcasts).ToInt64();
             Offsets.Funcs.ParamLookUp = FindAddressByPattern(Patterns.ParamLookUp).ToInt64();
-            Offsets.Funcs.DrawFe = FindAddressByPattern(Patterns.DrawFe).ToInt64();
             Offsets.Funcs.SetEvent = FindAddressByPattern(Patterns.SetEvent).ToInt64();
             Offsets.Funcs.GiveSouls = FindAddressByPattern(Patterns.GiveSouls).ToInt64();
             Offsets.Funcs.SetRenderTargets = FindAddressByPattern(Patterns.SetRenderTargetsWrapper).ToInt64();
+            Offsets.Funcs.DamageCollide = FindAddressByPattern(Patterns.DamageCollide).ToInt64();
             // Offsets.Funcs.LevelUp = Offsets.Funcs.Travel - 0x720;
             // Offsets.Funcs.ReinforceWeapon = Offsets.Funcs.Travel - 0x1620;
             // Offsets.Funcs.InfuseWeapon = Offsets.Funcs.Travel - 0x1CB0;
@@ -185,7 +185,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Funcs.SetEvent: 0x{Offsets.Funcs.SetEvent:X}");
             Console.WriteLine($"Funcs.RestoreSpellcasts: 0x{Offsets.Funcs.RestoreSpellcasts:X}");
             Console.WriteLine($"Funcs.ParamLookUp: 0x{Offsets.Funcs.ParamLookUp:X}");
-            Console.WriteLine($"Funcs.DrawFe: 0x{Offsets.Funcs.DrawFe:X}");
+            Console.WriteLine($"Funcs.DamageCollide: 0x{Offsets.Funcs.DamageCollide:X}");
             Console.WriteLine($"Funcs.SetRenderTargets: 0x{Offsets.Funcs.SetRenderTargets:X}");
             // Console.WriteLine($"Funcs.RegularShop: 0x{Offsets.Funcs.RegularShop:X}");
             // Console.WriteLine($"Funcs.Transpose: 0x{Offsets.Funcs.Transpose:X}");

@@ -8,7 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using SilkySouls2.Memory;
-using SilkySouls2.Memory.Draw;
+using SilkySouls2.Memory.DLLShared;
 using SilkySouls2.Services;
 using SilkySouls2.Utilities;
 using SilkySouls2.ViewModels;
@@ -35,7 +35,7 @@ namespace SilkySouls2
         private readonly ItemViewModel _itemViewModel;
         private readonly SettingsViewModel _settingsViewModel;
         private readonly DamageControlService _damageControlService;
-        private readonly DrawManager _drawManager;
+        private readonly DllManager _dllManager;
         
         public MainWindow()
         {
@@ -55,12 +55,12 @@ namespace SilkySouls2
             
             _hookManager = new HookManager(_memoryIo);
             _aobScanner = new AoBScanner(_memoryIo);
-            _drawManager = new DrawManager();
+            _dllManager = new DllManager(_memoryIo);
             var hotkeyManager = new HotkeyManager(_memoryIo);
    
             _damageControlService = new DamageControlService(_memoryIo, _hookManager);
             var playerService = new PlayerService(_memoryIo, _hookManager);
-            var utilityService = new UtilityService(_memoryIo, _hookManager, _drawManager);
+            var utilityService = new UtilityService(_memoryIo, _hookManager, _dllManager);
             var travelService = new TravelService(_memoryIo, _hookManager, utilityService);
             var enemyService = new EnemyService(_memoryIo, _hookManager, _damageControlService);
             var itemService = new ItemService(_memoryIo, _hookManager);
@@ -145,7 +145,7 @@ namespace SilkySouls2
                     Console.WriteLine($"Code cave: 0x{CodeCaveOffsets.Base.ToInt64():X}");
                     _hasAllocatedMemory = true;
                     _damageControlService.WriteDamageControlCode();
-                    _drawManager.AllocateDllVars();
+                    _dllManager.AllocateDllVars();
                 }
                 
                 if (_memoryIo.IsGameLoaded())

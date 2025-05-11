@@ -1,8 +1,8 @@
-﻿namespace SilkySouls2.Memory.Draw
+﻿namespace SilkySouls2.Memory.DLLShared
 {
     public enum DrawType
     {
-        Triangle = 0,
+        Hitbox = 0,
         Event = 1,
         Placeholder1 = 2,
         Placeholder2 = 3,

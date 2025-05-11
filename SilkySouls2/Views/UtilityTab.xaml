@@ -52,8 +52,8 @@
                     </Grid.RowDefinitions>
 
 
-                    <CheckBox Content="Test Render"
-                              IsChecked="{Binding IsTestRenderEnabled}"
+                    <CheckBox Content="Draw hitbox"
+                              IsChecked="{Binding IsDrawHitboxEnabled}"
                               Grid.Column="0" Grid.Row="0"
                               Margin="0,2" />
 
@@ -148,7 +148,6 @@
                                                Maximum="10"
                                                Increment="0.50"
                                                FormatString="F2"
-                                               IsEnabled="{Binding AreButtonsEnabled}"
                                                BorderBrush="#3F3F46" />
                             <TextBlock Text="Game Speed" VerticalAlignment="Center" Margin="10,0,0,0" />
                         </StackPanel>

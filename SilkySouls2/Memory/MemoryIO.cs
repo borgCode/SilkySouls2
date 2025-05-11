@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO.MemoryMappedFiles;
 using System.Text;
 using System.Timers;
-using SilkySouls2.Memory.Draw;
 using SilkySouls2.Utilities;
 
 namespace SilkySouls2.Memory

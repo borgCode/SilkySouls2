@@ -151,13 +151,17 @@ namespace SilkySouls2.Memory
             None
         );
 
-        public static readonly Pattern DrawFe = new Pattern(
-            new byte[] { 0x80, 0xB9, 0x68, 0x11 },
-            "xxxx",
-            -0xA,
+        public static readonly Pattern DamageCollide = new Pattern(
+            new byte[]
+            {
+                0x48, 0x8D, 0xAC, 0x24, 0x90, 0xFE, 0xFF, 0xFF, 0x48, 0x81, 0xEC, 0x70, 0x02, 0x00, 0x00, 0x0F
+            },
+            "xxxxxxxxxxxxxxxx",
+            -0xB,
             None
         );
 
+        
         public static readonly Pattern SetRenderTargetsWrapper = new Pattern(
             new byte[] { 0x40, 0x53, 0x48, 0x83, 0xEC, 0x60, 0x41, 0x8B },
             "xxxxxxxx",

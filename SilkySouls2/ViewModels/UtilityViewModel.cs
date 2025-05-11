@@ -11,12 +11,15 @@ namespace SilkySouls2.ViewModels
         private bool _isIvorySkipEnabled;
         private bool _isCreditSkipEnabled;
         private bool _is100DropEnabled;
-        private bool _isTestRenderEnabled;
+        private bool _hitboxTest;
+        private bool _isDrawEventEnabled;
         
         private bool _areButtonsEnabled;
         private readonly HotkeyManager _hotkeyManager;
         private readonly UtilityService _utilityService;
         private readonly PlayerViewModel _playerViewModel;
+        
+        private float _gameSpeed;
         
         private const float DefaultNoclipMultiplier = 1f;
         private const uint BaseXSpeedHex = 0x3e4ccccd;
@@ -53,6 +56,8 @@ namespace SilkySouls2.ViewModels
                 if (IsNoClipEnabled)
                     NoClipSpeed = Math.Max(0.05f, NoClipSpeed - 0.50f);
             });
+            _hotkeyManager.RegisterAction("IncreaseGameSpeed", () => SetSpeed(Math.Min(10, GameSpeed + 0.50f)));
+            _hotkeyManager.RegisterAction("DecreaseGameSpeed", () => SetSpeed(Math.Max(0, GameSpeed - 0.50f)));
         }
         
         
@@ -62,13 +67,23 @@ namespace SilkySouls2.ViewModels
             set => SetProperty(ref _areButtonsEnabled, value);
         }
         
-        public bool IsTestRenderEnabled
+        public bool IsDrawHitboxEnabled
         {
-            get => _isTestRenderEnabled;
+            get => _hitboxTest;
             set
             {
-                if (!SetProperty(ref _isTestRenderEnabled, value)) return;
-                _utilityService.DrawTriangle(_isTestRenderEnabled);
+                if (!SetProperty(ref _hitboxTest, value)) return;
+                _utilityService.ToggleDrawHitbox(_hitboxTest);
+            }
+        }
+        
+        public bool IsDrawEventEnabled
+        {
+            get => _isDrawEventEnabled;
+            set
+            {
+                if (!SetProperty(ref _isDrawEventEnabled, value)) return;
+                _utilityService.ToggleDrawEvent(_isDrawEventEnabled);
             }
         }
         
@@ -159,6 +174,20 @@ namespace SilkySouls2.ViewModels
 
             _utilityService.SetNoClipSpeed(xBytes, yBytes);
         }
+        
+        public float GameSpeed
+        {
+            get => _gameSpeed;
+            set
+            {
+                if (SetProperty(ref _gameSpeed, value))
+                {
+                    // _utilityService.SetGameSpeed(value);
+                }
+            }
+        }
+        
+        public void SetSpeed(float value) => GameSpeed = value;
         
         public void TryEnableFeatures()
         {

@@ -5,6 +5,5 @@
         GameManagerImp = 0,
         ParamLookUp = 1,
         SetRenderTargets = 2,
-        
     }
 }

@@ -215,8 +215,8 @@ namespace SilkySouls2.Memory
             public static long GiveSouls;
             public static long RestoreSpellcasts;
             public static long ParamLookUp;
-            public static long DrawFe;
             public static long SetRenderTargets;
+            public static long DamageCollide;
         }
     }
 }

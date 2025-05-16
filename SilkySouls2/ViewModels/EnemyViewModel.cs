@@ -668,8 +668,8 @@ namespace SilkySouls2.ViewModels
             // ForceAct = 0;
             AreOptionsEnabled = false;
         }
-
-        public void TryApplyDisableAi()
+        
+        public void TrryApplyOneTimeFeatures()
         {
             if (IsAllDisableAiEnabled) _enemyService.ToggleDisableAi(true);
         }

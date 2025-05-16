@@ -25,7 +25,7 @@ namespace SilkySouls2.Memory.DLLShared
         public DllManager(MemoryIo memoryIo)
         {
             _memoryIo = memoryIo;
-            _dllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "Dll4.dll");
+            _dllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "SilkyDll.dll");
         }
         
         public void Inject()
@@ -35,6 +35,7 @@ namespace SilkySouls2.Memory.DLLShared
             SetAddress(SharedMemAddr.GameManagerImp, Offsets.GameManagerImp.Base.ToInt64());
             SetAddress(SharedMemAddr.ParamLookUp, Offsets.Funcs.ParamLookUp);
             SetAddress(SharedMemAddr.SetRenderTargets, Offsets.Funcs.SetRenderTargets);
+            SetAddress(SharedMemAddr.CreateSoundEvent, Offsets.Funcs.CreateSoundEvent);
             
             Console.WriteLine($"Injecting DLL from: {_dllPath}");
             _isInjected = _memoryIo.InjectDll(_dllPath);

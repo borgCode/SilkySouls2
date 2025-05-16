@@ -64,10 +64,10 @@ namespace SilkySouls2.Memory
             {
 
                 public const int ChrParamPtr = 0x38;
-                public const int PlayerActionCtrlPtr = 0xE0;
                 public const int Coords = 0x90;
                 public const int CollisionPtr = 0xB8;
                 public const int ChrFlagsPtr = 0xD8;
+                public const int PlayerActionCtrlPtr = 0xE0;
                 public const int PlayerOperatorPtr = 0xE8;
                 public const int ChrMotionCtrlPtr = 0xF8;
                 public const int ChrPhysicsCtrlPtr = 0x100;
@@ -186,6 +186,7 @@ namespace SilkySouls2.Memory
             public static IntPtr InfiniteCasts;
             public static IntPtr InfiniteDurability;
             public static IntPtr DropRate;
+            public static IntPtr DisableAi;
         }
         
         
@@ -217,6 +218,7 @@ namespace SilkySouls2.Memory
             public static long ParamLookUp;
             public static long SetRenderTargets;
             public static long DamageCollide;
+            public static long CreateSoundEvent;
         }
     }
 }

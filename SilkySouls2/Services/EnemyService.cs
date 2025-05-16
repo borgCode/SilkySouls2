@@ -116,16 +116,9 @@ namespace SilkySouls2.Services
 
             return position;
         }
-        
-        public void ToggleDisableAi(bool isAllDisableAiEnabled)
-        {
-            var disableAiPtr = _memoryIo.FollowPointers(Base, new[]
-            {
-                GameManagerImp.Offsets.AiManager,
-                AiManagerOffsets.DisableAi
-            }, false);
-            _memoryIo.WriteByte(disableAiPtr, isAllDisableAiEnabled ? 1 : 0);
-        }
+
+        public void ToggleDisableAi(bool isAllDisableAiEnabled) =>
+            _memoryIo.WriteByte(Patches.DisableAi, isAllDisableAiEnabled ? 0xEB : 0x7F );
 
         public int GetLastAct()
         {

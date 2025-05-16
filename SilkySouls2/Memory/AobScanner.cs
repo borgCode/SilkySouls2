@@ -64,7 +64,7 @@ namespace SilkySouls2.Memory
                 addr => Offsets.Patches.InfiniteDurability = addr, saved);
             TryPatternWithFallback("DropRate", Patterns.DropRate,
                 addr => Offsets.Patches.DropRate = addr, saved);
-            // TryPatternWithFallback("NoRoll", Patterns.NoRoll, addr => Offsets.Patches.NoRoll = addr, saved);
+            TryPatternWithFallback("DisableAi", Patterns.DisableAi, addr => Offsets.Patches.DisableAi = addr, saved);
             // TryPatternWithFallback("TargetingView", Patterns.DbgDrawFlag, addr => Offsets.Patches.DbgDrawFlag = addr,
             //     saved);
             // TryPatternWithFallback("FreeCam", Patterns.FreeCamPatch, addr => Offsets.Patches.FreeCam = addr, saved);
@@ -118,8 +118,16 @@ namespace SilkySouls2.Memory
             Offsets.Funcs.ParamLookUp = FindAddressByPattern(Patterns.ParamLookUp).ToInt64();
             Offsets.Funcs.SetEvent = FindAddressByPattern(Patterns.SetEvent).ToInt64();
             Offsets.Funcs.GiveSouls = FindAddressByPattern(Patterns.GiveSouls).ToInt64();
-            Offsets.Funcs.SetRenderTargets = FindAddressByPattern(Patterns.SetRenderTargetsWrapper).ToInt64();
-            Offsets.Funcs.DamageCollide = FindAddressByPattern(Patterns.DamageCollide).ToInt64();
+            
+            TryPatternWithFallback("SetRenderTargets",
+                Patterns.SetRenderTargetsWrapper,
+                addr => Offsets.Funcs.SetRenderTargets = addr.ToInt64(), saved);
+            TryPatternWithFallback("DamageCollide",
+                Patterns.DamageCollide,
+                addr => Offsets.Funcs.DamageCollide = addr.ToInt64(), saved);
+            TryPatternWithFallback("CreateSoundEvent",
+                Patterns.CreateSoundEvent,
+                addr => Offsets.Funcs.CreateSoundEvent = addr.ToInt64(), saved);
             // Offsets.Funcs.LevelUp = Offsets.Funcs.Travel - 0x720;
             // Offsets.Funcs.ReinforceWeapon = Offsets.Funcs.Travel - 0x1620;
             // Offsets.Funcs.InfuseWeapon = Offsets.Funcs.Travel - 0x1CB0;
@@ -159,7 +167,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Patches.InfiniteCasts: 0x{Offsets.Patches.InfiniteCasts.ToInt64():X}");
             Console.WriteLine($"Patches.InfiniteDurability: 0x{Offsets.Patches.InfiniteDurability.ToInt64():X}");
             Console.WriteLine($"Patches.DropRate: 0x{Offsets.Patches.DropRate.ToInt64():X}");
-            // Console.WriteLine($"Patches.NoRoll: 0x{Offsets.Patches.NoRoll.ToInt64():X}");
+            Console.WriteLine($"Patches.DisableAi: 0x{Offsets.Patches.DisableAi.ToInt64():X}");
             // Console.WriteLine($"Patches.TargetingView: 0x{Offsets.Patches.DbgDrawFlag.ToInt64():X}");
             // Console.WriteLine($"Patches.FreeCam: 0x{Offsets.Patches.FreeCam.ToInt64():X}");
             //
@@ -187,7 +195,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Funcs.ParamLookUp: 0x{Offsets.Funcs.ParamLookUp:X}");
             Console.WriteLine($"Funcs.DamageCollide: 0x{Offsets.Funcs.DamageCollide:X}");
             Console.WriteLine($"Funcs.SetRenderTargets: 0x{Offsets.Funcs.SetRenderTargets:X}");
-            // Console.WriteLine($"Funcs.RegularShop: 0x{Offsets.Funcs.RegularShop:X}");
+            Console.WriteLine($"Funcs.CreateSoundEvent: 0x{Offsets.Funcs.CreateSoundEvent:X}");
             // Console.WriteLine($"Funcs.Transpose: 0x{Offsets.Funcs.Transpose:X}");
             // Console.WriteLine($"Funcs.CombineMenuFlagAndEventFlag: 0x{Offsets.Funcs.CombineMenuFlagAndEventFlag:X}");
             // Console.WriteLine($"Funcs.BreakAllObjects: 0x{Offsets.Funcs.BreakAllObjects:X}");

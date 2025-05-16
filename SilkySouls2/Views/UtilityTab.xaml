@@ -67,8 +67,8 @@
                               Grid.Column="0" Grid.Row="2"
                               Margin="0,2" />
 
-                    <CheckBox Content="Enemy Targeting View"
-                              IsChecked="{Binding IsTargetingViewEnabled}"
+                    <CheckBox Content="Player Sound"
+                              IsChecked="{Binding IsDrawSoundEnabled}"
                               Grid.Column="0" Grid.Row="3"
                               Margin="0,2" />
 

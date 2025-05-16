@@ -4,7 +4,7 @@
     {
         Hitbox = 0,
         Event = 1,
-        Placeholder1 = 2,
+        Sound = 2,
         Placeholder2 = 3,
         Placeholder3 = 4,
         Placeholder4 = 5,

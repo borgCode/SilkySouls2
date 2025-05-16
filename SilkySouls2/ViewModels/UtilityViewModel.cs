@@ -13,6 +13,7 @@ namespace SilkySouls2.ViewModels
         private bool _is100DropEnabled;
         private bool _hitboxTest;
         private bool _isDrawEventEnabled;
+        private bool _isDrawSoundEnabled;
         
         private bool _areButtonsEnabled;
         private readonly HotkeyManager _hotkeyManager;
@@ -84,6 +85,16 @@ namespace SilkySouls2.ViewModels
             {
                 if (!SetProperty(ref _isDrawEventEnabled, value)) return;
                 _utilityService.ToggleDrawEvent(_isDrawEventEnabled);
+            }
+        }
+        
+        public bool IsDrawSoundEnabled
+        {
+            get => _isDrawSoundEnabled;
+            set
+            {
+                if (!SetProperty(ref _isDrawSoundEnabled, value)) return;
+                _utilityService.ToggleDrawSound(_isDrawSoundEnabled);
             }
         }
         

@@ -317,6 +317,8 @@ namespace SilkySouls2.Services
             _dllManager.ToggleRender(DrawType.Event, isDrawEventEnabled);
         }
 
+        public void ToggleDrawSound(bool isDrawSoundEnabled) =>
+            _dllManager.ToggleRender(DrawType.Sound, isDrawSoundEnabled);
         // public void SetGameSpeed(float value)
         // {
         //     _dllManager.ToggleFeature(FeatureType.Speedhack, value != 1.0f);

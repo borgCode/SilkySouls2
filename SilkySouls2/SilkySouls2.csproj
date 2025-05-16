@@ -193,7 +193,7 @@
         <None Include="packages.config" />
     </ItemGroup>
     <ItemGroup>
-      <Content Include="Resources\DLL\Dll4.dll">
+      <Content Include="Resources\DLL\SilkyDll.dll">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
     </ItemGroup>

@@ -36,7 +36,7 @@ namespace SilkySouls2
         private readonly SettingsViewModel _settingsViewModel;
         private readonly DamageControlService _damageControlService;
         private readonly DllManager _dllManager;
-        
+
         public MainWindow()
         {
             _memoryIo = new MemoryIo();
@@ -51,13 +51,13 @@ namespace SilkySouls2
                 Top = SettingsManager.Default.WindowTop;
             }
             else WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            
-            
+
+
             _hookManager = new HookManager(_memoryIo);
             _aobScanner = new AoBScanner(_memoryIo);
             _dllManager = new DllManager(_memoryIo);
             var hotkeyManager = new HotkeyManager(_memoryIo);
-   
+
             _damageControlService = new DamageControlService(_memoryIo, _hookManager);
             var playerService = new PlayerService(_memoryIo, _hookManager);
             var utilityService = new UtilityService(_memoryIo, _hookManager, _dllManager);
@@ -65,7 +65,7 @@ namespace SilkySouls2
             var enemyService = new EnemyService(_memoryIo, _hookManager, _damageControlService);
             var itemService = new ItemService(_memoryIo, _hookManager);
             var settingsService = new SettingsService(_memoryIo);
- 
+
             _playerViewModel = new PlayerViewModel(playerService, hotkeyManager, _damageControlService);
             _travelViewModel = new TravelViewModel(travelService, hotkeyManager);
             _eventViewModel = new EventViewModel(utilityService);
@@ -73,7 +73,7 @@ namespace SilkySouls2
             _enemyViewModel = new EnemyViewModel(enemyService, hotkeyManager, _damageControlService);
             _itemViewModel = new ItemViewModel(itemService);
             _settingsViewModel = new SettingsViewModel(settingsService, hotkeyManager);
-            
+
             var playerTab = new PlayerTab(_playerViewModel);
             var travelTab = new TravelTab(_travelViewModel);
             var eventTab = new EventTab(_eventViewModel);
@@ -81,7 +81,7 @@ namespace SilkySouls2
             var enemyTab = new EnemyTab(_enemyViewModel);
             var itemTab = new ItemTab(_itemViewModel);
             var settingsTab = new SettingsTab(_settingsViewModel);
-            
+
             MainTabControl.Items.Add(new TabItem { Header = "Player", Content = playerTab });
             MainTabControl.Items.Add(new TabItem { Header = "Travel", Content = travelTab });
             MainTabControl.Items.Add(new TabItem { Header = "Event", Content = eventTab });
@@ -89,7 +89,7 @@ namespace SilkySouls2
             MainTabControl.Items.Add(new TabItem { Header = "Enemies", Content = enemyTab });
             MainTabControl.Items.Add(new TabItem { Header = "Items", Content = itemTab });
             MainTabControl.Items.Add(new TabItem { Header = "Settings", Content = settingsTab });
-            
+
             _settingsViewModel.ApplyStartUpOptions();
             Closing += MainWindow_Closing;
 
@@ -113,7 +113,7 @@ namespace SilkySouls2
         private bool _hasAppliedNoLogo;
 
         private bool _appliedOneTimeFeatures;
-        
+
 
         private void Timer_Tick(object sender, EventArgs e)
         {
@@ -121,17 +121,17 @@ namespace SilkySouls2
             {
                 IsAttachedText.Text = "Attached to game";
                 IsAttachedText.Foreground = (SolidColorBrush)Application.Current.Resources["AttachedBrush"];
-                
+
                 // LaunchGameButton.IsEnabled = false;
-                
-                
+
+
                 if (!_hasScanned)
                 {
                     _aobScanner.Scan();
                     _hasScanned = true;
                     Console.WriteLine($"Base: 0x{_memoryIo.BaseAddress.ToInt64():X}");
                 }
-         
+
                 //
                 // if (!_hasAppliedNoLogo)
                 // {
@@ -147,21 +147,16 @@ namespace SilkySouls2
                     _damageControlService.WriteDamageControlCode();
                     _dllManager.AllocateDllVars();
                 }
-                
+
                 if (_memoryIo.IsGameLoaded())
                 {
-                    
-                    if (_loaded)
-                    {
-                        _enemyViewModel.TryApplyDisableAi(); // Has to be applied later than the other features as it's reset to 0 very  late
-                        return;
-                    }
+                    if (_loaded) return;
                     _loaded = true;
-                TryEnableFeatures();
-                // TrySetGameStartPrefs();
-                if (_appliedOneTimeFeatures) return;
-                ApplyOneTimeFeatures();
-                _appliedOneTimeFeatures = true;
+                    TryEnableFeatures();
+                    // TrySetGameStartPrefs();
+                    if (_appliedOneTimeFeatures) return;
+                    ApplyOneTimeFeatures();
+                    _appliedOneTimeFeatures = true;
                 }
                 else if (_loaded)
                 {
@@ -188,6 +183,7 @@ namespace SilkySouls2
         {
             _playerViewModel.TryApplyOneTimeFeatures();
             _utilityViewModel.TryApplyOneTimeFeatures();
+            _enemyViewModel.TrryApplyOneTimeFeatures();
         }
 
         private void TryEnableFeatures()
@@ -221,16 +217,15 @@ namespace SilkySouls2
 
         private void MinimizeButton_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
         private void CloseButton_Click(object sender, RoutedEventArgs e) => Close();
-        
+
         private void MainWindow_Closing(object sender, CancelEventArgs e)
         {
-      
             SettingsManager.Default.WindowLeft = Left;
             SettingsManager.Default.WindowTop = Top;
             SettingsManager.Default.Save();
         }
 
-        
+
         // private void LaunchGame_Click(object sender, RoutedEventArgs e)
         // {
         //     string dllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "Dll4.dll");

@@ -320,6 +320,24 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 83 89 50 03 00 00 01    or     DWORD PTR [rcx+0x350],0x1
+        ///50                      push   rax
+        ///48 8b 05 00 00 00 00    mov    rax,QWORD PTR [rip+0x0]        # f &lt;_main+0xf&gt;
+        ///48 8b 80 e8 00 00 00    mov    rax,QWORD PTR [rax+0xe8]
+        ///48 8b 40 18             mov    rax,QWORD PTR [rax+0x18]
+        ///48 8b 40 20             mov    rax,QWORD PTR [rax+0x20]
+        ///48 39 c8                cmp    rax,rcx
+        ///75 23                   jne    46 &lt;normal&gt;
+        ///80 3d 00 00 00 00 01    cmp    BYTE PTR [rip+0x0],0x1        # 2a &lt;_main+0x2a&gt;
+        ///75 0 [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string RepeatAct {
+            get {
+                return ResourceManager.GetString("RepeatAct", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 b9 00 00 00 00 00    movabs rcx,0x0
         ///00 00 00
         ///41 b8 01 00 00 00       mov    r8d,0x1

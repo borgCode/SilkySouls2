@@ -5,7 +5,7 @@
         Hitbox = 0,
         Event = 1,
         Sound = 2,
-        Placeholder2 = 3,
+        TargetingView = 3,
         Placeholder3 = 4,
         Placeholder4 = 5,
     }

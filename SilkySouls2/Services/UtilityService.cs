@@ -324,6 +324,8 @@ namespace SilkySouls2.Services
         //     _dllManager.ToggleFeature(FeatureType.Speedhack, value != 1.0f);
         //     _dllManager.SetSpeedhackFactor(value);
         // }
+        public void ToggleTargetingView(bool isTargetingViewEnabled) =>
+            _dllManager.ToggleRender(DrawType.TargetingView, isTargetingViewEnabled);
     }
     
 }

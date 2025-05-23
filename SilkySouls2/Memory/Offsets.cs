@@ -60,6 +60,14 @@ namespace SilkySouls2.Memory
                 }
             }
 
+            //For locked target
+            public static class CharacterCtrlOffsets
+            {
+                public const int Operator = 0xE8;
+                public const int ChrAiManip = 0x18;
+                public const int ChrAi = 0x20;
+            }
+
             public static class PlayerCtrlOffsets
             {
 
@@ -206,6 +214,8 @@ namespace SilkySouls2.Memory
             public static long Ctrl;
             public static long NoClipUpdateCoords;
             public static long KillboxFlagSet;
+            public static long SetCurrectAct;
+            public static long SetCurrectAct2;
         }
 
         public static class Funcs
@@ -217,7 +227,6 @@ namespace SilkySouls2.Memory
             public static long RestoreSpellcasts;
             public static long ParamLookUp;
             public static long SetRenderTargets;
-            public static long DamageCollide;
             public static long CreateSoundEvent;
         }
     }

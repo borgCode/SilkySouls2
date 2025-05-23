@@ -6,5 +6,6 @@
         ParamLookUp = 1,
         SetRenderTargets = 2,
         CreateSoundEvent = 3,
+        CollisionCheck = 4,
     }
 }

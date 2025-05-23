@@ -71,12 +71,15 @@
                               IsChecked="{Binding IsDrawSoundEnabled}"
                               Grid.Column="0" Grid.Row="3"
                               Margin="0,2" />
-
-
-                    <CheckBox Content="Hide Map"
-                              IsChecked="{Binding IsHideMapEnabled}"
+                    <CheckBox Content="Enemy Targeting View"
+                              IsChecked="{Binding IsTargetingViewEnabled}"
                               Grid.Column="1" Grid.Row="0"
                               Margin="0,2" />
+
+                    <!-- <CheckBox Content="Hide Map" -->
+                    <!--           IsChecked="{Binding IsHideMapEnabled}" -->
+                    <!--           Grid.Column="1" Grid.Row="0" -->
+                    <!--           Margin="0,2" /> -->
 
                     <CheckBox Content="Hide Objects"
                               IsChecked="{Binding IsHideObjectsEnabled}"

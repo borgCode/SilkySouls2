@@ -106,6 +106,20 @@ namespace SilkySouls2.Memory
             TryPatternWithFallback("NoClipUpdateCoords", Patterns.NoClipUpdateCoords,
                 addr => Offsets.Hooks.NoClipUpdateCoords = addr.ToInt64(), saved);
             
+            var setCurrectActLocs = FindAddressesByPattern(Patterns.SetCurrectAct, 2);
+            if (setCurrectActLocs[0] == IntPtr.Zero && saved.TryGetValue("SetCurrectAct", out var value))
+            {
+                Offsets.Hooks.SetCurrectAct = value;
+                Offsets.Hooks.SetCurrectAct2 = saved["SetCurrectAct2"];
+            }
+            else if (setCurrectActLocs[0] != IntPtr.Zero)
+            {
+                Offsets.Hooks.SetCurrectAct = setCurrectActLocs[0].ToInt64();
+                Offsets.Hooks.SetCurrectAct2 = setCurrectActLocs[1].ToInt64();
+                saved["SetCurrectAct"] = setCurrectActLocs[0].ToInt64();
+                saved["SetCurrectAct2"] = setCurrectActLocs[1].ToInt64();
+            }
+            
             using (var writer = new StreamWriter(savePath))
             {
                 foreach (var pair in saved)
@@ -122,9 +136,6 @@ namespace SilkySouls2.Memory
             TryPatternWithFallback("SetRenderTargets",
                 Patterns.SetRenderTargetsWrapper,
                 addr => Offsets.Funcs.SetRenderTargets = addr.ToInt64(), saved);
-            TryPatternWithFallback("DamageCollide",
-                Patterns.DamageCollide,
-                addr => Offsets.Funcs.DamageCollide = addr.ToInt64(), saved);
             TryPatternWithFallback("CreateSoundEvent",
                 Patterns.CreateSoundEvent,
                 addr => Offsets.Funcs.CreateSoundEvent = addr.ToInt64(), saved);
@@ -186,6 +197,8 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Hooks.Ctrl: 0x{Offsets.Hooks.Ctrl:X}");
             Console.WriteLine($"Hooks.NoClipUpdateCoords: 0x{Offsets.Hooks.NoClipUpdateCoords:X}");
             Console.WriteLine($"Hooks.KillboxFlagSet: 0x{Offsets.Hooks.KillboxFlagSet:X}");
+            Console.WriteLine($"Hooks.SetCurrectAct: 0x{Offsets.Hooks.SetCurrectAct:X}");
+            Console.WriteLine($"Hooks.SetCurrectAct2: 0x{Offsets.Hooks.SetCurrectAct2:X}");
             //
             Console.WriteLine($"Funcs.WarpPrep: 0x{Offsets.Funcs.WarpPrep:X}");
             Console.WriteLine($"Funcs.BonfireWarp: 0x{Offsets.Funcs.BonfireWarp:X}");
@@ -193,7 +206,6 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Funcs.SetEvent: 0x{Offsets.Funcs.SetEvent:X}");
             Console.WriteLine($"Funcs.RestoreSpellcasts: 0x{Offsets.Funcs.RestoreSpellcasts:X}");
             Console.WriteLine($"Funcs.ParamLookUp: 0x{Offsets.Funcs.ParamLookUp:X}");
-            Console.WriteLine($"Funcs.DamageCollide: 0x{Offsets.Funcs.DamageCollide:X}");
             Console.WriteLine($"Funcs.SetRenderTargets: 0x{Offsets.Funcs.SetRenderTargets:X}");
             Console.WriteLine($"Funcs.CreateSoundEvent: 0x{Offsets.Funcs.CreateSoundEvent:X}");
             // Console.WriteLine($"Funcs.Transpose: 0x{Offsets.Funcs.Transpose:X}");

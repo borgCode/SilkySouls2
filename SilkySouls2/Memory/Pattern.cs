@@ -44,6 +44,13 @@ namespace SilkySouls2.Memory
             0x6,
             None
         );
+        
+        public static readonly Pattern SetCurrectAct = new Pattern(
+            new byte[] { 0x83, 0x89, 0x50, 0x03, 0x00, 0x00, 0x01 },
+            "xxxxxxx",
+            0,
+            None
+        );
 
         public static readonly Pattern DamageControl = new Pattern(
             new byte[] { 0x0F, 0x29, 0x74, 0x24, 0x20, 0x48, 0x8B, 0xB0 },
@@ -150,16 +157,7 @@ namespace SilkySouls2.Memory
             0,
             None
         );
-
-        public static readonly Pattern DamageCollide = new Pattern(
-            new byte[]
-            {
-                0x48, 0x8D, 0xAC, 0x24, 0x90, 0xFE, 0xFF, 0xFF, 0x48, 0x81, 0xEC, 0x70, 0x02, 0x00, 0x00, 0x0F
-            },
-            "xxxxxxxxxxxxxxxx",
-            -0xB,
-            None
-        );
+        
 
         public static readonly Pattern CreateSoundEvent = new Pattern(
             new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x84, 0xC0, 0x74, 0x4C, 0x48, 0x8B, 0x83 },

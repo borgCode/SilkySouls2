@@ -157,7 +157,15 @@ namespace SilkySouls2.Memory
             0,
             None
         );
-        
+
+
+        public static readonly Pattern ChrCtrlUpdate = new Pattern(
+            new byte[] { 0x48, 0x8B, 0x89, 0xE0, 0x00, 0x00, 0x00, 0xF3 },
+            "xxxxxxxx",
+            -0x41,
+            None
+        );
+
 
         public static readonly Pattern CreateSoundEvent = new Pattern(
             new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x84, 0xC0, 0x74, 0x4C, 0x48, 0x8B, 0x83 },
@@ -213,6 +221,7 @@ namespace SilkySouls2.Memory
             0,
             None
         );
+        
 
         public static readonly Pattern DisableAi = new Pattern(
             new byte[] { 0x7F, 0x59, 0x48, 0x8D },
@@ -247,6 +256,14 @@ namespace SilkySouls2.Memory
             0,
             None
         );
+
+        public static readonly Pattern HideMap = new Pattern(
+            new byte[] { 0x48, 0x8B, 0x4B, 0x20, 0x48, 0x98 },
+            "xxxxxx",
+            -0x6,
+            None
+        );
+
 
         public static readonly Pattern InfiniteCasts = new Pattern(
             new byte[] { 0x88, 0x4D, 0x20, 0x49 },

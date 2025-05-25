@@ -327,7 +327,7 @@ namespace SilkySouls2.Properties {
         ///48 8b 40 18             mov    rax,QWORD PTR [rax+0x18]
         ///48 8b 40 20             mov    rax,QWORD PTR [rax+0x20]
         ///48 39 c8                cmp    rax,rcx
-        ///75 23                   jne    46 &lt;normal&gt;
+        ///75 1d                   jne    40 &lt;normal&gt;
         ///80 3d 00 00 00 00 01    cmp    BYTE PTR [rip+0x0],0x1        # 2a &lt;_main+0x2a&gt;
         ///75 0 [rest of string was truncated]&quot;;.
         /// </summary>

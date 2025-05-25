@@ -120,17 +120,7 @@ namespace SilkySouls2.Services
         public void ToggleDisableAi(bool isAllDisableAiEnabled) =>
             _memoryIo.WriteByte(Patches.DisableAi, isAllDisableAiEnabled ? 0xEB : 0x7F );
 
-        public int GetLastAct()
-        {
-            var lastActPtr = _memoryIo.FollowPointers(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr, new[]
-            {
-                PlayerCtrlOffsets.PlayerActionCtrlPtr,
-                PlayerCtrlOffsets.ChrActionCtrl.BossAttackCtrlPtr,
-                PlayerCtrlOffsets.BossAttackCtrl.LastAttackPtr,
-                PlayerCtrlOffsets.BossAttackCtrl.LastAttack
-            }, false);
-            return _memoryIo.ReadInt32(lastActPtr);
-        }
+        public int GetLastAct() => _memoryIo.ReadInt32(CodeCaveOffsets.Base + (int)CodeCaveOffsets.RepeatAct.AttackId);
 
         public (bool PoisonToxic, bool Bleed) GetImmunities()
         {
@@ -149,11 +139,56 @@ namespace SilkySouls2.Services
                 _memoryIo.ReadFloat(
                     (IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
                     offset);
+        
 
-
-        public void FreezeTarget(bool isFreezeTargetEnabled)
+        public void ToggleCurrentActHook(bool isEnabled)
         {
-         
+           
+            var code = CodeCaveOffsets.Base + (int)CodeCaveOffsets.RepeatAct.Code;
+            var code2 = CodeCaveOffsets.Base + (int)CodeCaveOffsets.RepeatAct.Code2;
+
+            if (isEnabled)
+            {
+                var repeatFlagLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.RepeatAct.RepeatFlag;
+                var attackId = CodeCaveOffsets.Base + (int)CodeCaveOffsets.RepeatAct.AttackId;
+                var lockedTargetPtr = CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr;
+                var currectActOrigin = Hooks.SetCurrectAct;
+                var currectActOrigin2 = Hooks.SetCurrectAct2;
+
+                var codeBytes = AsmLoader.GetAsmBytes("RepeatAct");
+                AsmHelper.WriteRelativeOffsets(codeBytes, new []
+                {
+                    (code.ToInt64() + 0x8, lockedTargetPtr.ToInt64(), 7, 0x8 + 3),
+                    (code.ToInt64() + 0x23, repeatFlagLoc.ToInt64(), 7, 0x23 + 2),
+                    (code.ToInt64() + 0x2C, attackId.ToInt64(), 6, 0x2C + 2),
+                    (code.ToInt64() + 0x3A, attackId.ToInt64(), 6, 0x3A + 2),
+                });
+                
+                _memoryIo.WriteBytes(code, codeBytes);
+                AsmHelper.WriteRelativeOffsets(codeBytes, new []
+                {
+                    (code2.ToInt64() + 0x8, lockedTargetPtr.ToInt64(), 7, 0x8 + 3),
+                    (code2.ToInt64() + 0x23, repeatFlagLoc.ToInt64(), 7, 0x23 + 2),
+                    (code2.ToInt64() + 0x2C, attackId.ToInt64(), 6, 0x2C + 2),
+                    (code2.ToInt64() + 0x3A, attackId.ToInt64(), 6, 0x3A + 2),
+                });
+                
+                _memoryIo.WriteBytes(code2, codeBytes);
+
+                _hookManager.InstallHook(code.ToInt64(), currectActOrigin, new byte[]
+                    { 0x83, 0x89, 0x50, 0x03, 0x00, 0x00, 0x01 });
+                _hookManager.InstallHook(code2.ToInt64(), currectActOrigin2, new byte[]
+                    { 0x83, 0x89, 0x50, 0x03, 0x00, 0x00, 0x01 });
+            }
+            else
+            {
+                _hookManager.UninstallHook(code.ToInt64());
+                _hookManager.UninstallHook(code2.ToInt64());
+            }
         }
+
+        public void ToggleRepeatAct(bool isRepeatActEnabled) =>
+            _memoryIo.WriteByte(CodeCaveOffsets.Base + (int)CodeCaveOffsets.RepeatAct.RepeatFlag,
+                isRepeatActEnabled ? 1 : 0);
     }
 }

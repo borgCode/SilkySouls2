@@ -145,7 +145,8 @@ namespace SilkySouls2
                     Console.WriteLine($"Code cave: 0x{CodeCaveOffsets.Base.ToInt64():X}");
                     _hasAllocatedMemory = true;
                     _damageControlService.WriteDamageControlCode();
-                    _dllManager.AllocateDllVars();
+                    _dllManager.CreateDrawSharedMem();
+                    _dllManager.CreateSpeedSharedMem();
                 }
 
                 if (_memoryIo.IsGameLoaded())

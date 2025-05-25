@@ -69,5 +69,14 @@ namespace SilkySouls2.Memory
         }
 
         public const int Killbox = 0x690;
+
+        public enum RepeatAct
+        {
+            RepeatFlag = 0x6C0,
+            AttackId = 0x6C4,
+            Code = 0x6D0,
+            Code2 = 0x720
+        }
+        
     }
 }

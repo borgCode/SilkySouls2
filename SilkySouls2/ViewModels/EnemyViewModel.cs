@@ -249,11 +249,13 @@ namespace SilkySouls2.ViewModels
                 {
                     _enemyService.ToggleTargetHook(true);
                     _targetOptionsTimer.Start();
+                    _enemyService.ToggleCurrentActHook(true);
                     // ShowAllResistances = true;
                 }
                 else
                 {
                     _targetOptionsTimer.Stop();
+                    _enemyService.ToggleCurrentActHook(false);
                     // IsRepeatActEnabled = false;
                     ShowAllResistances = false;
                     // IsResistancesWindowOpen = false;
@@ -321,29 +323,16 @@ namespace SilkySouls2.ViewModels
         //     _resistancesWindowWindow = null;
         // }
     
-        // public bool IsRepeatActEnabled
-        // {
-        //     get => _isRepeatActEnabled;
-        //     set
-        //     {
-        //         if (!SetProperty(ref _isRepeatActEnabled, value)) return;
-        //
-        //         bool isRepeating = _enemyService.IsTargetRepeating();
-        //
-        //         switch (value)
-        //         {
-        //             case true when !isRepeating:
-        //                 _enemyService.ToggleTargetRepeatAct(true);
-        //                 ForceAct = _enemyService.GetLastAct();
-        //                 break;
-        //             case false when isRepeating:
-        //                 _enemyService.ToggleTargetRepeatAct(false);
-        //                 ForceAct = 0;
-        //                 break;
-        //         }
-        //     }
-        // }
-        //
+        public bool IsRepeatActEnabled
+        {
+            get => _isRepeatActEnabled;
+            set
+            {
+                if (!SetProperty(ref _isRepeatActEnabled, value)) return;
+                _enemyService.ToggleRepeatAct(_isRepeatActEnabled);
+            }
+        }
+        
         public int LastAct
         {
             get => _lastAct;
@@ -537,19 +526,7 @@ namespace SilkySouls2.ViewModels
         //     TargetSpeed = value;
         // }
         
-        
-        public bool IsFreezeTargetEnabled
-        {
-            get => _isFreezeTargetEnabled;
-            set
-            {
-                if (SetProperty(ref _isFreezeTargetEnabled, value))
-                {
-                    _enemyService.FreezeTarget(_isFreezeTargetEnabled);
-                }
-            }
-        }
-        
+
         public bool IsAllDisableAiEnabled
         {
             get => _isAllDisableAiEnabled;

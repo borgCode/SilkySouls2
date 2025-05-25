@@ -1,14 +1,14 @@
 using System;
 using System.IO;
 using System.IO.MemoryMappedFiles;
-using SilkySouls2.Memory.Draw;
 
 namespace SilkySouls2.Memory.DLLShared
 {
     public class DllManager
     {
         private readonly MemoryIo _memoryIo;
-        private readonly string _dllPath;
+        private readonly string _drawDllPath;
+        private readonly string _speedDllPath;
         
         private static readonly int NumDrawFlags = Enum.GetValues(typeof(DrawType)).Length;
         private static readonly int NumAddresses = Enum.GetValues(typeof(SharedMemAddr)).Length;
@@ -18,88 +18,103 @@ namespace SilkySouls2.Memory.DLLShared
         
         private static readonly int TotalSize = DrawFlagsSize + AddressesSize;
 
-        private MemoryMappedFile _sharedMemory;
-        private MemoryMappedViewAccessor _viewAccessor;
-        private bool _isInjected;
+        private MemoryMappedFile _drawSharedMemory;
+        private MemoryMappedViewAccessor _drawViewAccessor;
+        
+        private MemoryMappedFile _speedSharedMemory;
+        private MemoryMappedViewAccessor _speedViewAccessor;
+        
+        private bool _drawIsInjected;
+        private bool _speedIsInjected;
         
         public DllManager(MemoryIo memoryIo)
         {
             _memoryIo = memoryIo;
-            _dllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "SilkyDll.dll");
+            _drawDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "SilkyDll.dll");
+            _speedDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "SilkySpeed.dll");
         }
         
-        public void Inject()
+        public void InjectDrawDll()
         {
-            if (_isInjected) return;
+            if (_drawIsInjected) return;
             
             SetAddress(SharedMemAddr.GameManagerImp, Offsets.GameManagerImp.Base.ToInt64());
             SetAddress(SharedMemAddr.ParamLookUp, Offsets.Funcs.ParamLookUp);
             SetAddress(SharedMemAddr.SetRenderTargets, Offsets.Funcs.SetRenderTargets);
             SetAddress(SharedMemAddr.CreateSoundEvent, Offsets.Funcs.CreateSoundEvent);
-            
-            Console.WriteLine($"Injecting DLL from: {_dllPath}");
-            _isInjected = _memoryIo.InjectDll(_dllPath);
-            Console.WriteLine($"Injection {(_isInjected ? "successful" : "failed")}");
+            SetAddress(SharedMemAddr.RenderChrModel, Offsets.Funcs.ChrCtrlUpdate);
+            _drawIsInjected = _memoryIo.InjectDll(_drawDllPath);
         }
         
-        
-        public void AllocateDllVars()
+        public void CreateDrawSharedMem()
         {
-            _sharedMemory = MemoryMappedFile.CreateOrOpen(
+            _drawSharedMemory = MemoryMappedFile.CreateOrOpen(
                 "DrawControl",
                 TotalSize,
                 MemoryMappedFileAccess.ReadWrite);
 
-            _viewAccessor = _sharedMemory.CreateViewAccessor();
+            _drawViewAccessor = _drawSharedMemory.CreateViewAccessor();
             
             for (int i = 0; i < NumDrawFlags; i++)
             {
-                _viewAccessor.Write(i * sizeof(bool), false);
+                _drawViewAccessor.Write(i * sizeof(bool), false);
+            }
+        }
+        
+        public void InjectSpeedDll()
+        {
+            if (_speedIsInjected) return;
+            _speedIsInjected = _memoryIo.InjectDll(_speedDllPath);
+
+        }
+        
+        public void CreateSpeedSharedMem()
+        {
+            _speedSharedMemory = MemoryMappedFile.CreateOrOpen(
+                "SpeedhackSharedMem",
+                sizeof(double),
+                MemoryMappedFileAccess.ReadWrite);
+
+            _speedViewAccessor = _speedSharedMemory.CreateViewAccessor();
+            
+            _speedViewAccessor.Write(0, 1.0);
+        }
+        
+        public void SetSpeed(double speed)
+        {
+            if (!_speedIsInjected)
+            {
+                InjectSpeedDll();
             }
             
-            // for (int i = 0; i < NumFeatureFlags; i++)
-            // {
-            //     _viewAccessor.Write(FeatureFlagsOffset + (i * sizeof(bool)), false);
-            // }
-            //
-            // _viewAccessor.Write(SpeedhackParamOffset, 1.0f);
-            //
-            // for (int i = 0; i < NumAddresses; i++)
-            // {
-            //     _viewAccessor.Write(AddressesOffset + (i * sizeof(long)), (long)0);
-            // }
+            if (_speedViewAccessor == null)
+            {
+                Console.WriteLine("Speed shared memory not initialized");
+                return;
+            }
+            
+            _speedViewAccessor.Write(0, speed);
         }
 
         public void ToggleRender(DrawType drawType, bool value)
         {
-            if (_viewAccessor == null) return;
-            if (!_isInjected) Inject();
+            if (_drawViewAccessor == null) return;
+            if (!_drawIsInjected) InjectDrawDll();
             
             int offset = (int)drawType * sizeof(bool);
-            _viewAccessor.Write(offset, value);
+            _drawViewAccessor.Write(offset, value);
         }
-
-        // public void ToggleFeature(FeatureType featureType, bool value)
-        // {
-        //     if (_viewAccessor == null) return;
-        //     if (!_isInjected) Inject();
-        //
-        //     int offset = FeatureFlagsOffset + ((int)featureType * sizeof(bool));
-        //     _viewAccessor.Write(offset, value);
-        // }
-        //
-        // public void SetSpeedhackFactor(float factor) => _viewAccessor.Write(SpeedhackParamOffset, factor);
-        //
+        
         public void SetAddress(SharedMemAddr addrType, long address)
         {
-            if (_viewAccessor == null)
+            if (_drawViewAccessor == null)
             {
                 Console.WriteLine("Shared memory not initialized");
                 return;
             }
             
             int offset = DrawFlagsSize + ((int)addrType * sizeof(long));
-            _viewAccessor.Write(offset, address);
+            _drawViewAccessor.Write(offset, address);
             Console.WriteLine($"{addrType} address set to: 0x{address:X16}");
         }
     }

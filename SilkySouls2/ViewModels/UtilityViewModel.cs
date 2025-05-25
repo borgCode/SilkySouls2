@@ -15,6 +15,11 @@ namespace SilkySouls2.ViewModels
         private bool _isDrawEventEnabled;
         private bool _isDrawSoundEnabled;
         private bool _isTargetingViewEnabled;
+        private bool _isDrawChrMeshEnabled;
+        
+        
+        private bool _isHideCharactersEnabled;
+        private bool _isHideMapEnabled;
         
         private bool _areButtonsEnabled;
         private readonly HotkeyManager _hotkeyManager;
@@ -106,6 +111,36 @@ namespace SilkySouls2.ViewModels
             {
                 if (!SetProperty(ref _isTargetingViewEnabled, value)) return;
                 _utilityService.ToggleTargetingView(_isTargetingViewEnabled);
+            }
+        }
+        
+        public bool IsDrawChrMeshEnabled
+        {
+            get => _isDrawChrMeshEnabled;
+            set
+            {
+                if (!SetProperty(ref _isDrawChrMeshEnabled, value)) return;
+                _utilityService.ToggleChrMesh(_isDrawChrMeshEnabled);
+            }
+        }
+        
+        public bool IsHideCharactersEnabled
+        {
+            get => _isHideCharactersEnabled;
+            set
+            {
+                if (!SetProperty(ref _isHideCharactersEnabled, value)) return;
+                _utilityService.ToggleHideChr(_isHideCharactersEnabled);
+            }
+        }
+        
+        public bool IsHideMapEnabled
+        {
+            get => _isHideMapEnabled;
+            set
+            {
+                if (!SetProperty(ref _isHideMapEnabled, value)) return;
+                _utilityService.ToggleHideMap(_isHideMapEnabled);
             }
         }
         
@@ -204,7 +239,7 @@ namespace SilkySouls2.ViewModels
             {
                 if (SetProperty(ref _gameSpeed, value))
                 {
-                    // _utilityService.SetGameSpeed(value);
+                   _utilityService.SetGameSpeed(value);
                 }
             }
         }

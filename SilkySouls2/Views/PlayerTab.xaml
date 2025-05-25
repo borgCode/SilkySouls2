@@ -522,8 +522,8 @@
                                                 Value="{Binding NewGame}"
                                                 TextAlignment="Center"
                                                 Width="80"
-                                                Minimum="0"
-                                                Maximum="8"
+                                                Minimum="1"
+                                                Maximum="9"
                                                 Grid.Column="0"
                                                 IsEnabled="{Binding AreOptionsEnabled}"
                                                 BorderBrush="#3F3F46" />

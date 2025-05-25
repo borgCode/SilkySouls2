@@ -309,7 +309,7 @@ namespace SilkySouls2.Services
 
         public void Inject()
         {
-            _dllManager.Inject();
+            _dllManager.InjectDrawDll();
         }
 
         public void ToggleDrawEvent(bool isDrawEventEnabled)
@@ -319,13 +319,21 @@ namespace SilkySouls2.Services
 
         public void ToggleDrawSound(bool isDrawSoundEnabled) =>
             _dllManager.ToggleRender(DrawType.Sound, isDrawSoundEnabled);
-        // public void SetGameSpeed(float value)
-        // {
-        //     _dllManager.ToggleFeature(FeatureType.Speedhack, value != 1.0f);
-        //     _dllManager.SetSpeedhackFactor(value);
-        // }
         public void ToggleTargetingView(bool isTargetingViewEnabled) =>
             _dllManager.ToggleRender(DrawType.TargetingView, isTargetingViewEnabled);
+
+        public void ToggleChrMesh(bool isDrawChrMeshEnabled) =>
+            _dllManager.ToggleRender(DrawType.BoneMesh, isDrawChrMeshEnabled);
+
+        public void ToggleHideChr(bool isHideCharactersEnabled) =>
+            _memoryIo.WriteBytes(Patches.HideChrModels,
+                isHideCharactersEnabled ? new byte[] { 0x75, 0x5 } : new byte[] { 0x74, 0x5 });
+
+        public void ToggleHideMap(bool isHideMapEnabled) => 
+            _memoryIo.WriteBytes(Patches.HideMap + 0x1, //js rel to jns rel
+                isHideMapEnabled ? new byte[] { 0x89 } : new byte[] { 0x88 });
+
+        public void SetGameSpeed(float value) => _dllManager.SetSpeed(value);
     }
     
 }

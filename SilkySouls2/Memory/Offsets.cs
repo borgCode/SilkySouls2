@@ -190,7 +190,8 @@ namespace SilkySouls2.Memory
             public static IntPtr InfiniteStam;
             public static IntPtr ForceSave;
             public static IntPtr InfiniteGoods;
-            public static IntPtr HideChrModels; // Set JE to JNE
+            public static IntPtr HideChrModels;
+            public static IntPtr HideMap;
             public static IntPtr InfiniteCasts;
             public static IntPtr InfiniteDurability;
             public static IntPtr DropRate;
@@ -228,6 +229,7 @@ namespace SilkySouls2.Memory
             public static long ParamLookUp;
             public static long SetRenderTargets;
             public static long CreateSoundEvent;
+            public static long ChrCtrlUpdate;
         }
     }
 }

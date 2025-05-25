@@ -58,6 +58,7 @@ namespace SilkySouls2.Memory
                 addr => Offsets.Patches.ForceSave = addr, saved);
             TryPatternWithFallback("InfiniteGoods", Patterns.InfiniteGoods, addr => Offsets.Patches.InfiniteGoods = addr, saved);
             TryPatternWithFallback("HideChrModels", Patterns.HideChrModels, addr => Offsets.Patches.HideChrModels = addr, saved);
+            TryPatternWithFallback("HideMap", Patterns.HideMap, addr => Offsets.Patches.HideMap = addr, saved);
             TryPatternWithFallback("InfiniteCasts", Patterns.InfiniteCasts,
                 addr => Offsets.Patches.InfiniteCasts = addr, saved);
             TryPatternWithFallback("InfiniteDurability", Patterns.InfiniteDurability,
@@ -139,6 +140,9 @@ namespace SilkySouls2.Memory
             TryPatternWithFallback("CreateSoundEvent",
                 Patterns.CreateSoundEvent,
                 addr => Offsets.Funcs.CreateSoundEvent = addr.ToInt64(), saved);
+            TryPatternWithFallback("ChrCtrlUpdate",
+                Patterns.ChrCtrlUpdate,
+                addr => Offsets.Funcs.ChrCtrlUpdate = addr.ToInt64(), saved);
             // Offsets.Funcs.LevelUp = Offsets.Funcs.Travel - 0x720;
             // Offsets.Funcs.ReinforceWeapon = Offsets.Funcs.Travel - 0x1620;
             // Offsets.Funcs.InfuseWeapon = Offsets.Funcs.Travel - 0x1CB0;
@@ -175,6 +179,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Patches.ForceSave: 0x{Offsets.Patches.ForceSave.ToInt64():X}");
             Console.WriteLine($"Patches.InfiniteGoods: 0x{Offsets.Patches.InfiniteGoods.ToInt64():X}");
             Console.WriteLine($"Patches.HideChrModels: 0x{Offsets.Patches.HideChrModels.ToInt64():X}");
+            Console.WriteLine($"Patches.HideMap: 0x{Offsets.Patches.HideMap.ToInt64():X}");
             Console.WriteLine($"Patches.InfiniteCasts: 0x{Offsets.Patches.InfiniteCasts.ToInt64():X}");
             Console.WriteLine($"Patches.InfiniteDurability: 0x{Offsets.Patches.InfiniteDurability.ToInt64():X}");
             Console.WriteLine($"Patches.DropRate: 0x{Offsets.Patches.DropRate.ToInt64():X}");
@@ -208,7 +213,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Funcs.ParamLookUp: 0x{Offsets.Funcs.ParamLookUp:X}");
             Console.WriteLine($"Funcs.SetRenderTargets: 0x{Offsets.Funcs.SetRenderTargets:X}");
             Console.WriteLine($"Funcs.CreateSoundEvent: 0x{Offsets.Funcs.CreateSoundEvent:X}");
-            // Console.WriteLine($"Funcs.Transpose: 0x{Offsets.Funcs.Transpose:X}");
+            Console.WriteLine($"Funcs.ChrCtrlUpdate: 0x{Offsets.Funcs.ChrCtrlUpdate:X}");
             // Console.WriteLine($"Funcs.CombineMenuFlagAndEventFlag: 0x{Offsets.Funcs.CombineMenuFlagAndEventFlag:X}");
             // Console.WriteLine($"Funcs.BreakAllObjects: 0x{Offsets.Funcs.BreakAllObjects:X}");
             // Console.WriteLine($"Funcs.RestoreAllObjects: 0x{Offsets.Funcs.RestoreAllObjects:X}");

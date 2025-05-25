@@ -600,7 +600,7 @@ c3                      ret</value>
 48 8b 40 18             mov    rax,QWORD PTR [rax+0x18]
 48 8b 40 20             mov    rax,QWORD PTR [rax+0x20]
 48 39 c8                cmp    rax,rcx
-75 23                   jne    46 &lt;normal&gt;
+75 1d                   jne    40 &lt;normal&gt;
 80 3d 00 00 00 00 01    cmp    BYTE PTR [rip+0x0],0x1        # 2a &lt;_main+0x2a&gt;
 75 0e                   jne    3a &lt;save&gt;
 8b 05 00 00 00 00       mov    eax,DWORD PTR [rip+0x0]        # 32 &lt;_main+0x32&gt;
@@ -608,9 +608,8 @@ c3                      ret</value>
 58                      pop    rax
 c3                      ret
 00000000003a &lt;save&gt;:
-8b 81 5c 03 00 00       mov    eax,DWORD PTR [rcx+0x35c]
-89 05 00 00 00 00       mov    DWORD PTR [rip+0x0],eax        # 46 &lt;normal&gt;
-000000000046 &lt;normal&gt;:
+89 15 00 00 00 00       mov    DWORD PTR [rip+0x0],edx        # 40 &lt;normal&gt;
+000000000040 &lt;normal&gt;:
 58                      pop    rax
 89 91 5c 03 00 00       mov    DWORD PTR [rcx+0x35c],edx
 c3                      ret</value>

@@ -322,8 +322,8 @@ namespace SilkySouls2.Services
         public void ToggleTargetingView(bool isTargetingViewEnabled) =>
             _dllManager.ToggleRender(DrawType.TargetingView, isTargetingViewEnabled);
 
-        public void ToggleChrMesh(bool isDrawChrMeshEnabled) =>
-            _dllManager.ToggleRender(DrawType.BoneMesh, isDrawChrMeshEnabled);
+        public void ToggleRagdoll(bool isDrawRagrollEnabled) =>
+            _dllManager.ToggleRender(DrawType.Ragdoll, isDrawRagrollEnabled);
 
         public void ToggleHideChr(bool isHideCharactersEnabled) =>
             _memoryIo.WriteBytes(Patches.HideChrModels,
@@ -334,6 +334,9 @@ namespace SilkySouls2.Services
                 isHideMapEnabled ? new byte[] { 0x89 } : new byte[] { 0x88 });
 
         public void SetGameSpeed(float value) => _dllManager.SetSpeed(value);
+
+        public void ToggleRagdollEsp(bool isSeeThroughwallsEnabled) => 
+            _dllManager.ToggleRender(DrawType.RagdollEsp, isSeeThroughwallsEnabled);
     }
     
 }

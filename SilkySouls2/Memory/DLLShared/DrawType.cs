@@ -6,7 +6,7 @@
         Event = 1,
         Sound = 2,
         TargetingView = 3,
-        BoneMesh = 4,
-        Placeholder4 = 5,
+        Ragdoll = 4,
+        RagdollEsp = 5,
     }
 }

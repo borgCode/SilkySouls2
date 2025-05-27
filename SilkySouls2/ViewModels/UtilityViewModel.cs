@@ -15,8 +15,8 @@ namespace SilkySouls2.ViewModels
         private bool _isDrawEventEnabled;
         private bool _isDrawSoundEnabled;
         private bool _isTargetingViewEnabled;
-        private bool _isDrawChrMeshEnabled;
-        
+        private bool _isDrawRagdollEnabled;
+        private bool _isSeeThroughwallsEnabled;
         
         private bool _isHideCharactersEnabled;
         private bool _isHideMapEnabled;
@@ -114,15 +114,26 @@ namespace SilkySouls2.ViewModels
             }
         }
         
-        public bool IsDrawChrMeshEnabled
+        public bool IsDrawRagdollsEnabled
         {
-            get => _isDrawChrMeshEnabled;
+            get => _isDrawRagdollEnabled;
             set
             {
-                if (!SetProperty(ref _isDrawChrMeshEnabled, value)) return;
-                _utilityService.ToggleChrMesh(_isDrawChrMeshEnabled);
+                if (!SetProperty(ref _isDrawRagdollEnabled, value)) return;
+                _utilityService.ToggleRagdoll(_isDrawRagdollEnabled);
             }
         }
+        
+        public bool IsSeeThroughWallsEnabled
+        {
+            get => _isSeeThroughwallsEnabled;
+            set
+            {
+                if (!SetProperty(ref _isSeeThroughwallsEnabled, value)) return;
+                _utilityService.ToggleRagdollEsp(_isSeeThroughwallsEnabled);
+            }
+        }
+        
         
         public bool IsHideCharactersEnabled
         {

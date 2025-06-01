@@ -116,15 +116,16 @@ namespace SilkySouls2.Properties {
         /// <summary>
         ///   Looks up a localized string similar to 0f 29 74 24 20          movaps XMMWORD PTR [rsp+0x20],xmm6
         ///41 83 78 34 00          cmp    DWORD PTR [r8+0x34],0x0
-        ///74 5e                   je     6a &lt;skip&gt;
+        ///74 64                   je     70 &lt;skip&gt;
         ///51                      push   rcx
         ///48 b9 00 00 00 00 00    movabs rcx,0x0
         ///00 00 00
         ///48 8b 09                mov    rcx,QWORD PTR [rcx]
         ///48 8b 89 d0 00 00 00    mov    rcx,QWORD PTR [rcx+0xd0]
         ///48 39 c1                cmp    rcx,rax
-        ///74 43                   je     69 &lt;exit&gt;
-        ///80 3d 00 00 00 00 00    cmp    BYTE PTR [rip+0x0],0x0        # 2d &lt;_main+0x2d [rest of string was truncated]&quot;;.
+        ///74 49                   je     6f &lt;exit&gt;
+        ///49 3b 49 50             cmp    rcx,QWORD PTR [r9+0x50]
+        ///75 43                 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DamageControl {
             get {

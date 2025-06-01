@@ -8,5 +8,6 @@
         TargetingView = 3,
         Ragdoll = 4,
         RagdollEsp = 5,
+        Collision = 6,
     }
 }

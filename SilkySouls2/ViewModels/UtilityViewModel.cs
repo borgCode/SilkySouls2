@@ -17,6 +17,8 @@ namespace SilkySouls2.ViewModels
         private bool _isTargetingViewEnabled;
         private bool _isDrawRagdollEnabled;
         private bool _isSeeThroughwallsEnabled;
+        private bool _isDrawCollisionEnabled;
+        
         
         private bool _isHideCharactersEnabled;
         private bool _isHideMapEnabled;
@@ -131,6 +133,16 @@ namespace SilkySouls2.ViewModels
             {
                 if (!SetProperty(ref _isSeeThroughwallsEnabled, value)) return;
                 _utilityService.ToggleRagdollEsp(_isSeeThroughwallsEnabled);
+            }
+        }
+        
+        public bool IsDrawCollisionEnabled
+        {
+            get => _isDrawCollisionEnabled;
+            set
+            {
+                if (!SetProperty(ref _isDrawCollisionEnabled, value)) return;
+                _utilityService.ToggleDrawCol(_isDrawCollisionEnabled);
             }
         }
         

@@ -349,25 +349,39 @@ e9 00 00 00 00          jmp    13 &lt;_main+0x13&gt;</value>
   <data name="DamageControl" xml:space="preserve">
     <value>0f 29 74 24 20          movaps XMMWORD PTR [rsp+0x20],xmm6
 41 83 78 34 00          cmp    DWORD PTR [r8+0x34],0x0
-74 5e                   je     6a &lt;skip&gt;
+74 64                   je     70 &lt;skip&gt;
 51                      push   rcx
 48 b9 00 00 00 00 00    movabs rcx,0x0
 00 00 00
 48 8b 09                mov    rcx,QWORD PTR [rcx]
 48 8b 89 d0 00 00 00    mov    rcx,QWORD PTR [rcx+0xd0]
 48 39 c1                cmp    rcx,rax
-74 43                   je     69 &lt;exit&gt;
-80 3d 00 00 00 00 00    cmp    BYTE PTR [rip+0x0],0x0        # 2d &lt;_main+0x2d&gt;
-74 16                   je     45 &lt;check_oneshot&gt;
-48 8b 0d 00 00 00 00    mov    rcx,QWORD PTR [rip+0x0]        # 36 &lt;_main+0x36&gt;
+74 49                   je     6f &lt;exit&gt;
+49 3b 49 50             cmp    rcx,QWORD PTR [r9+0x50]
+75 43                   jne    6f &lt;exit&gt;
+80 3d 00 00 00 00 00    cmp    BYTE PTR [rip+0x0],0x0        # 33 &lt;_main+0x33&gt;
+74 16                   je     4b &lt;check_oneshot&gt;
+48 8b 0d 00 00 00 00    mov    rcx,QWORD PTR [rip+0x0]        # 3c &lt;_main+0x3c&gt;
 48 39 c1                cmp    rcx,rax
-75 0a                   jne    45 &lt;check_oneshot&gt;
+75 0a                   jne    4b &lt;check_oneshot&gt;
 41 c7 40 34 00 00 00    mov    DWORD PTR [r8+0x34],0x0
 00
-eb 24                   jmp    69 &lt;exit&gt;
-000000000045 &lt;check_oneshot&gt;:
-80 3d 00 00 00 00 00    cmp    BYTE PTR [rip+0x0],0x0        # 4c &lt;check_oneshot+0x7&gt;
-74 0a                   je     58 &lt;check_dealNoDamage&gt;
+eb 24                   jmp    6f &lt;exit&gt;
+00000000004b &lt;check_oneshot&gt;:
+80 3d 00 00 00 00 00    cmp    BYTE PTR [rip+0x0],0x0        # 52 &lt;check_oneshot+0x7&gt;
+74 0a                   je     5e &lt;check_dealNoDamage&gt;
+41 c7 40 34 7f 96 98    mov    DWORD PTR [r8+0x34],0x98967f
+00
+eb 11                   jmp    6f &lt;exit&gt;
+00000000005e &lt;check_dealNoDamage&gt;:
+80 3d 00 00 00 00 00    cmp    BYTE PTR [rip+0x0],0x0        # 65 &lt;check_dealNoDamage+0x7&gt;
+74 08                   je     6f &lt;exit&gt;
+41 c7 40 34 00 00 00    mov    DWORD PTR [r8+0x34],0x0
+00
+00000000006f &lt;exit&gt;:
+59                      pop    rcx
+000000000070 &lt;skip&gt;:
+e9 00 00 00 00          jmp    75 &lt;skip+0x5&gt;e     58 &lt;check_dealNoDamage&gt;
 41 c7 40 34 7f 96 98    mov    DWORD PTR [r8+0x34],0x98967f
 00
 eb 11                   jmp    69 &lt;exit&gt;

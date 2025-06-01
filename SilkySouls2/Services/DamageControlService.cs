@@ -42,11 +42,11 @@ namespace SilkySouls2.Services
             Array.Copy(bytes, 0, codeBytes, 0xD + 2, 8);
             AsmHelper.WriteRelativeOffsets(codeBytes, new []
             {
-                (_damageControlCode.ToInt64() + 0x26, _freezeTargetFlag.ToInt64(), 7, 0x26 + 2),
-                (_damageControlCode.ToInt64() + 0x2F, lockedTarget.ToInt64(), 7, 0x2F + 3),
-                (_damageControlCode.ToInt64() + 0x45, _oneShotFlag.ToInt64(), 7, 0x45 + 2),
-                (_damageControlCode.ToInt64() + 0x58, _dealNoDamageFlag.ToInt64(), 7, 0x58 + 2),
-                (_damageControlCode.ToInt64() + 0x6A, hookLoc + 0x5, 5, 0x6A + 1)
+                (_damageControlCode.ToInt64() + 0x2C, _freezeTargetFlag.ToInt64(), 7, 0x2C + 2),
+                (_damageControlCode.ToInt64() + 0x35, lockedTarget.ToInt64(), 7, 0x35 + 3),
+                (_damageControlCode.ToInt64() + 0x4B, _oneShotFlag.ToInt64(), 7, 0x4B + 2),
+                (_damageControlCode.ToInt64() + 0x5E, _dealNoDamageFlag.ToInt64(), 7, 0x5E + 2),
+                (_damageControlCode.ToInt64() + 0x70, hookLoc + 0x5, 5, 0x70 + 1)
             });
             
             _memoryIo.WriteBytes(_damageControlCode, codeBytes);

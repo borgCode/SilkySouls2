@@ -337,6 +337,9 @@ namespace SilkySouls2.Services
 
         public void ToggleRagdollEsp(bool isSeeThroughwallsEnabled) => 
             _dllManager.ToggleRender(DrawType.RagdollEsp, isSeeThroughwallsEnabled);
+
+        public void ToggleDrawCol(bool isDrawCollisionEnabled) =>
+            _dllManager.ToggleRender(DrawType.Collision, isDrawCollisionEnabled);
     }
     
 }

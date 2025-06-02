@@ -417,40 +417,6 @@
                         <TextBlock Text="Faith" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" />
                     </Grid>
                 </StackPanel>
-                <Border Grid.Column="2" BorderThickness="1" BorderBrush="#333" CornerRadius="3" Margin="10,0,0,0" Padding="10">
-                    <StackPanel>
-                        <Grid Margin="0,2">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Agility:" FontWeight="Bold" Margin="0,0,10,0" />
-                            <TextBlock Grid.Column="1" Text="{Binding Agility}" />
-                        </Grid>
-                        
-                        <Grid Margin="0,2">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Roll:" FontWeight="Bold" Margin="0,0,10,0" />
-                            <TextBlock Grid.Column="1" Text="{Binding RollIFrames}" />
-                        </Grid>
-                        
-                        <Grid Margin="0,2">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Backstep:" FontWeight="Bold" Margin="0,0,10,0" />
-                            <TextBlock Grid.Column="1" Text="{Binding BackstepIFrames}" />
-                        </Grid>
-                        
-                        <TextBlock Text="{Binding NextBreakpoint}" 
-                                   TextWrapping="Wrap"
-                                   Margin="0,10,0,0" />
-                    </StackPanel>
-                </Border>
             </Grid>
             
             <Grid Grid.Row="5" Margin="0,10,0,10">

@@ -217,6 +217,7 @@ namespace SilkySouls2.Memory
             public static long KillboxFlagSet;
             public static long SetCurrectAct;
             public static long SetCurrectAct2;
+            public static long FastQuitout;
         }
 
         public static class Funcs

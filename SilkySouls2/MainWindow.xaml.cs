@@ -64,7 +64,7 @@ namespace SilkySouls2
             var travelService = new TravelService(_memoryIo, _hookManager, utilityService);
             var enemyService = new EnemyService(_memoryIo, _hookManager, _damageControlService);
             var itemService = new ItemService(_memoryIo, _hookManager);
-            var settingsService = new SettingsService(_memoryIo);
+            var settingsService = new SettingsService(_memoryIo, _hookManager);
 
             _playerViewModel = new PlayerViewModel(playerService, hotkeyManager, _damageControlService);
             _travelViewModel = new TravelViewModel(travelService, hotkeyManager);
@@ -155,6 +155,7 @@ namespace SilkySouls2
                     _loaded = true;
                     TryEnableFeatures();
                     // TrySetGameStartPrefs();
+                    _settingsViewModel.ApplyLoadedOptions();
                     if (_appliedOneTimeFeatures) return;
                     ApplyOneTimeFeatures();
                     _appliedOneTimeFeatures = true;

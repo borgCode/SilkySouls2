@@ -628,4 +628,13 @@ c3                      ret
 89 91 5c 03 00 00       mov    DWORD PTR [rcx+0x35c],edx
 c3                      ret</value>
   </data>
+  <data name="FastQuitout" xml:space="preserve">
+    <value>48 89 84 24 50 01 00    mov    QWORD PTR [rsp+0x150],rax
+00
+83 7f 08 17             cmp    DWORD PTR [rdi+0x8],0x17
+75 07                   jne    15 &lt;exit&gt;
+c7 47 08 47 00 00 00    mov    DWORD PTR [rdi+0x8],0x47
+000000000015 &lt;exit&gt;:
+e9 00 00 00 00          jmp    1a &lt;exit+0x5&gt;</value>
+  </data>
 </root>

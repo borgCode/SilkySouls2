@@ -136,7 +136,6 @@ namespace SilkySouls2.ViewModels
             SoulLevel = _playerService.GetSoulLevel();
             NewGame = _playerService.GetNewGame();
             PlayerSpeed = _playerService.GetPlayerSpeed();
-            UpdateAgilityAndIFrames();
         }
 
 
@@ -548,90 +547,6 @@ namespace SilkySouls2.ViewModels
             }
         }
 
-        private int _agility;
-
-        public int Agility
-        {
-            get => _agility;
-            private set => SetProperty(ref _agility, value);
-        }
-
-        private string _rollIFrames;
-
-        public string RollIFrames
-        {
-            get => _rollIFrames;
-            private set => SetProperty(ref _rollIFrames, value);
-        }
-
-        private string _backstepIFrames;
-
-        public string BackstepIFrames
-        {
-            get => _backstepIFrames;
-            private set => SetProperty(ref _backstepIFrames, value);
-        }
-
-        private string _nextBreakpoint;
-
-        public string NextBreakpoint
-        {
-            get => _nextBreakpoint;
-            private set => SetProperty(ref _nextBreakpoint, value);
-        }
-
-
-        private static readonly Dictionary<int, int> RollFrames = new Dictionary<int, int>
-        {
-            { 85, 5 }, { 86, 8 }, { 88, 9 },
-            { 92, 10 }, { 96, 11 }, { 99, 12 },
-            { 105, 13 }, { 111, 14 }, { 114, 15 }, { 116, 16 }
-        };
-
-        private static readonly Dictionary<int, int> BackstepFrames = new Dictionary<int, int>
-        {
-            { 85, 3 }, { 87, 5 }, { 91, 6 },
-            { 96, 7 }, { 99, 8 }, { 105, 9 }
-        };
-
-        private void UpdateAgilityAndIFrames()
-        {
-            int baseValue = Attunement + (3 * Adp);
-            int calculatedAgility;
-    
-            if (Attunement == 99 && Adp == 99)
-                calculatedAgility = 120;
-            else if (baseValue <= 120)
-                calculatedAgility = 80 + baseValue / 4;
-            else
-                calculatedAgility = 110 + (baseValue - 120) / 28;
-    
-            Agility = Math.Max(85, calculatedAgility);
-    
-            int currentRoll = 0;
-            int currentBackstep = 0;
-    
-            foreach (var entry in RollFrames.OrderBy(e => e.Key))
-                if (Agility >= entry.Key) currentRoll = entry.Value;
-    
-            foreach (var entry in BackstepFrames.OrderBy(e => e.Key))
-                if (Agility >= entry.Key) currentBackstep = entry.Value;
-    
-            RollIFrames = $"{currentRoll} iframes";
-            BackstepIFrames = $"{currentBackstep} iframes";
-    
-            int nextRoll = RollFrames.Keys.OrderBy(k => k).FirstOrDefault(k => k > Agility);
-    
-            if (nextRoll == 0)
-            {
-                NextBreakpoint = "Maximum roll iFrames reached";
-                return;
-            }
-    
-            NextBreakpoint = $"Next iframe at {nextRoll} agility";
-        }
-
-        
         public float PlayerSpeed
         {
             get => _playerSpeed;

@@ -11,7 +11,7 @@ namespace SilkySouls2.Utilities
         public string HotkeyActionIds { get; set; } = "";
         public string HotkeyValues { get; set; } = "";
         public bool EnableHotkeys { get; set; }
-        public bool StutterFix { get; set; }
+        public bool FastQuitout { get; set; }
         public bool AlwaysOnTop { get; set; }
         public double WindowLeft { get; set; }
         public double WindowTop { get; set; }
@@ -38,7 +38,7 @@ namespace SilkySouls2.Utilities
                 {
                     $"HotkeyActionIds={HotkeyActionIds}",
                     $"EnableHotkeys={EnableHotkeys}",
-                    $"StutterFix={StutterFix}",
+                    $"FastQuitout={FastQuitout}",
                     $"AlwaysOnTop={AlwaysOnTop}",
                     $"WindowLeft={WindowLeft}",
                     $"WindowTop={WindowTop}",
@@ -82,10 +82,10 @@ namespace SilkySouls2.Utilities
                                     bool.TryParse(value, out bool eh);
                                     settings.EnableHotkeys = eh;
                                     break;
-                                case "StutterFix":
-                                    bool.TryParse(value, out bool sf);
-                                    settings.StutterFix = sf;
-                                    break;
+                                case "FastQuitout":
+                                    bool.TryParse(value, out bool fq);
+                                    settings.FastQuitout = fq;
+                                    break; 
                                 case "AlwaysOnTop":
                                     bool.TryParse(value, out bool aot);
                                     settings.AlwaysOnTop = aot;

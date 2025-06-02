@@ -106,6 +106,8 @@ namespace SilkySouls2.Memory
                 addr => Offsets.Hooks.Ctrl = addr.ToInt64(), saved);
             TryPatternWithFallback("NoClipUpdateCoords", Patterns.NoClipUpdateCoords,
                 addr => Offsets.Hooks.NoClipUpdateCoords = addr.ToInt64(), saved);
+            TryPatternWithFallback("FastQuitout", Patterns.FastQuitout,
+                addr => Offsets.Hooks.FastQuitout = addr.ToInt64(), saved);
             
             var setCurrectActLocs = FindAddressesByPattern(Patterns.SetCurrectAct, 2);
             if (setCurrectActLocs[0] == IntPtr.Zero && saved.TryGetValue("SetCurrectAct", out var value))
@@ -204,6 +206,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Hooks.KillboxFlagSet: 0x{Offsets.Hooks.KillboxFlagSet:X}");
             Console.WriteLine($"Hooks.SetCurrectAct: 0x{Offsets.Hooks.SetCurrectAct:X}");
             Console.WriteLine($"Hooks.SetCurrectAct2: 0x{Offsets.Hooks.SetCurrectAct2:X}");
+            Console.WriteLine($"Hooks.FastQuitout: 0x{Offsets.Hooks.FastQuitout:X}");
             //
             Console.WriteLine($"Funcs.WarpPrep: 0x{Offsets.Funcs.WarpPrep:X}");
             Console.WriteLine($"Funcs.BonfireWarp: 0x{Offsets.Funcs.BonfireWarp:X}");

@@ -6,8 +6,9 @@
         Event = 1,
         Sound = 2,
         TargetingView = 3,
-        Ragdoll = 4,
-        RagdollEsp = 5,
-        Collision = 6,
+        TargetingViewWallAware = 4,
+        Ragdoll = 5,
+        RagdollEsp = 6,
+        Collision = 7,
     }
 }

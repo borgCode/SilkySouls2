@@ -77,6 +77,7 @@ namespace SilkySouls2.Memory
             Code = 0x6D0,
             Code2 = 0x720
         }
-        
+
+        public const int FastQuitout = 0x770;
     }
 }

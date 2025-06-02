@@ -44,6 +44,13 @@ namespace SilkySouls2.Memory
             0x6,
             None
         );
+
+        public static readonly Pattern FastQuitout = new Pattern(
+            new byte[] { 0x48, 0x89, 0x84, 0x24, 0x50, 0x01, 0x00, 0x00, 0x83, 0x79, 0x10 },
+            "xxxxxxxxxxx",
+            0,
+            None
+        );
         
         public static readonly Pattern SetCurrectAct = new Pattern(
             new byte[] { 0x83, 0x89, 0x50, 0x03, 0x00, 0x00, 0x01 },

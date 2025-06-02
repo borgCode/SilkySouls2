@@ -12,7 +12,7 @@ namespace SilkySouls2.ViewModels
     {
         #region property setters
         private bool _isEnableHotkeysEnabled;
-        private bool _isStutterFixEnabled;
+        private bool _isFastQuitoutEnabled;
         private bool _isAlwaysOnTopEnabled;
         private bool _isLoaded;
         
@@ -83,6 +83,21 @@ namespace SilkySouls2.ViewModels
             }
         }
         
+        
+        public bool IsFastQuitoutEnabled
+        {
+            get => _isFastQuitoutEnabled;
+            set
+            {
+                if (!SetProperty(ref _isFastQuitoutEnabled, value)) return;
+                SettingsManager.Default.FastQuitout = value;
+                SettingsManager.Default.Save();
+                if (_isLoaded)
+                {
+                    _settingsService.ToggleFastQuitout(_isFastQuitoutEnabled);
+                }
+            }
+        }
         
         public bool IsAlwaysOnTopEnabled
         {
@@ -570,6 +585,13 @@ namespace SilkySouls2.ViewModels
         #endregion
         
         
+        public void ApplyLoadedOptions()
+        {
+            _isLoaded = true;
+            if (IsFastQuitoutEnabled) _settingsService.ToggleFastQuitout(true);
+        }
+        
+        
         public void ApplyStartUpOptions()
         {
             _isEnableHotkeysEnabled = SettingsManager.Default.EnableHotkeys;
@@ -577,6 +599,8 @@ namespace SilkySouls2.ViewModels
             else _hotkeyManager.Stop();
             OnPropertyChanged(nameof(IsEnableHotkeysEnabled));
             IsAlwaysOnTopEnabled = SettingsManager.Default.AlwaysOnTop;
+            _isFastQuitoutEnabled = SettingsManager.Default.FastQuitout;
+            OnPropertyChanged(nameof(IsFastQuitoutEnabled));
         }
 
         public void ResetAttached() => _isLoaded = false;

@@ -159,6 +159,21 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 48 89 84 24 50 01 00    mov    QWORD PTR [rsp+0x150],rax
+        ///00
+        ///83 7f 08 17             cmp    DWORD PTR [rdi+0x8],0x17
+        ///75 07                   jne    15 &lt;exit&gt;
+        ///c7 47 08 47 00 00 00    mov    DWORD PTR [rdi+0x8],0x47
+        ///000000000015 &lt;exit&gt;:
+        ///e9 00 00 00 00          jmp    1a &lt;exit+0x5&gt;.
+        /// </summary>
+        internal static string FastQuitout {
+            get {
+                return ResourceManager.GetString("FastQuitout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 b9 00 00 00 00 00    movabs rcx,0x0
         ///00 00 00
         ///48 ba 00 00 00 00 00    movabs rdx,0x0

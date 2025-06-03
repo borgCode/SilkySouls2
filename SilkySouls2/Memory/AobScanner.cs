@@ -141,6 +141,9 @@ namespace SilkySouls2.Memory
             Offsets.Funcs.ParamLookUp = FindAddressByPattern(Patterns.ParamLookUp).ToInt64();
             Offsets.Funcs.SetEvent = FindAddressByPattern(Patterns.SetEvent).ToInt64();
             Offsets.Funcs.GiveSouls = FindAddressByPattern(Patterns.GiveSouls).ToInt64();
+            Offsets.Funcs.LevelLookUp = FindAddressByPattern(Patterns.LevelLookUp).ToInt64();
+            Offsets.Funcs.LevelUp = FindAddressByPattern(Patterns.LevelUp).ToInt64();
+            Offsets.Patches.NegativeLevel = (IntPtr)Offsets.Funcs.LevelUp + 0x38;
             
             TryPatternWithFallback("SetRenderTargets",
                 Patterns.SetRenderTargetsWrapper,
@@ -151,7 +154,7 @@ namespace SilkySouls2.Memory
             TryPatternWithFallback("ChrCtrlUpdate",
                 Patterns.ChrCtrlUpdate,
                 addr => Offsets.Funcs.ChrCtrlUpdate = addr.ToInt64(), saved);
-            // Offsets.Funcs.LevelUp = Offsets.Funcs.Travel - 0x720;
+    
             // Offsets.Funcs.ReinforceWeapon = Offsets.Funcs.Travel - 0x1620;
             // Offsets.Funcs.InfuseWeapon = Offsets.Funcs.Travel - 0x1CB0;
             // Offsets.Funcs.Repair = Offsets.Funcs.Travel - 0x14C0;
@@ -194,6 +197,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Patches.DisableAi: 0x{Offsets.Patches.DisableAi.ToInt64():X}");
             Console.WriteLine($"Patches.Silent: 0x{Offsets.Patches.Silent.ToInt64():X}");
             Console.WriteLine($"Patches.Hidden: 0x{Offsets.Patches.Hidden.ToInt64():X}");
+            Console.WriteLine($"Patches.NegativeLevel: 0x{Offsets.Patches.NegativeLevel.ToInt64():X}");
             
             // Console.WriteLine($"Patches.TargetingView: 0x{Offsets.Patches.DbgDrawFlag.ToInt64():X}");
             // Console.WriteLine($"Patches.FreeCam: 0x{Offsets.Patches.FreeCam.ToInt64():X}");
@@ -226,8 +230,8 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Funcs.SetRenderTargets: 0x{Offsets.Funcs.SetRenderTargets:X}");
             Console.WriteLine($"Funcs.CreateSoundEvent: 0x{Offsets.Funcs.CreateSoundEvent:X}");
             Console.WriteLine($"Funcs.ChrCtrlUpdate: 0x{Offsets.Funcs.ChrCtrlUpdate:X}");
-            // Console.WriteLine($"Funcs.CombineMenuFlagAndEventFlag: 0x{Offsets.Funcs.CombineMenuFlagAndEventFlag:X}");
-            // Console.WriteLine($"Funcs.BreakAllObjects: 0x{Offsets.Funcs.BreakAllObjects:X}");
+            Console.WriteLine($"Funcs.LevelLookUp: 0x{Offsets.Funcs.LevelLookUp:X}");
+            Console.WriteLine($"Funcs.LevelUp: 0x{Offsets.Funcs.LevelUp:X}");
             // Console.WriteLine($"Funcs.RestoreAllObjects: 0x{Offsets.Funcs.RestoreAllObjects:X}");
 #endif
         }

@@ -162,7 +162,10 @@ namespace SilkySouls2.Memory
                     public const int Int = 0x14;
                     public const int Fth = 0x16;
                     public const int Adp = 0x18;
+                    public const int HiddenStat1 = 0x1A;
+                    public const int HiddenStat2 = 0x1C;
                     public const int SoulLevel = 0xD0;
+                    public const int CurrentSouls = 0xEC;
                     public const int SoulMemory = 0xF4;
                 }
             }
@@ -198,6 +201,7 @@ namespace SilkySouls2.Memory
             public static IntPtr DisableAi;
             public static IntPtr Silent;
             public static IntPtr Hidden;
+            public static IntPtr NegativeLevel;
         }
         
         
@@ -234,6 +238,8 @@ namespace SilkySouls2.Memory
             public static long SetRenderTargets;
             public static long CreateSoundEvent;
             public static long ChrCtrlUpdate;
+            public static long LevelLookUp;
+            public static long LevelUp;
         }
     }
 }

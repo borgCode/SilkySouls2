@@ -11,12 +11,7 @@ namespace SilkySouls2.Services
         private readonly MemoryIo _memoryIo;
         private readonly HookManager _hookManager;
         private readonly NopManager _nopManager;
-
-        private readonly Dictionary<int, int> _lowLevelSoulRequirements = new Dictionary<int, int>
-        {
-            { 2, 673 }, { 3, 690 }, { 4, 707 }, { 5, 724 }, { 6, 741 }, { 7, 758 }, { 8, 775 }, { 9, 793 }, { 10, 811 },
-            { 11, 829 },
-        };
+        
 
         public PlayerService(MemoryIo memoryIo, HookManager hookManager, NopManager nopManager)
         {
@@ -44,109 +39,9 @@ namespace SilkySouls2.Services
         private IntPtr GetPlayerCtrlField(int fieldOffset) =>
             _memoryIo.FollowPointers(GameManagerImp.Base, new[] { GameManagerImp.Offsets.PlayerCtrl, fieldOffset },
                 false);
-
-        // public void ToggleNoDamage(bool isNoDamageEnabled)
-
-        // {
-
-        //     var noDamagePtr = _memoryIo.ReadInt64(GetPlayerCtrlField(GameManagerImp.PlayerCtrlOffsets.ChrFlagsPtr));
-
-        //     _memoryIo.WriteByte((IntPtr)noDamagePtr, isNoDamageEnabled ? 1 : 0);
-
-        // }
-
-
-        //        
-        //                public void SavePos(int index)
-        //                {
-        //                    var chrPhysicsModule = GetChrPhysicsModule();
-        //        
-        //                    byte[] positionBytes = _memoryIo.ReadBytes(chrPhysicsModule + (int)WorldChrMan.ChrPhysicsModule.X, 12);
-        //                    float angle = _memoryIo.ReadFloat(chrPhysicsModule + (int)WorldChrMan.ChrPhysicsModule.Angle);
-        //        
-        //                    byte[] angleBytes = BitConverter.GetBytes(angle);
-        //                    byte[] data = new byte[16];
-        //                    Buffer.BlockCopy(positionBytes, 0, data, 0, 12);
-        //                    Buffer.BlockCopy(angleBytes, 0, data, 12, 4);
-        //        
-        //                    if (index == 0) _memoryIo.WriteBytes(CodeCaveOffsets.Base + CodeCaveOffsets.SavePos1, data);
-        //                    else _memoryIo.WriteBytes(CodeCaveOffsets.Base + CodeCaveOffsets.SavePos2, data);
-        //                }
-        //        
-        //                private IntPtr GetChrPhysicsModule()
-        //                {
-        //                    return _memoryIo.FollowPointers(WorldChrMan.Base, new[]
-        //                    {
-        //                        WorldChrMan.PlayerIns,
-        //                        (int)WorldChrMan.PlayerInsOffsets.Modules,
-        //                        (int)WorldChrMan.Modules.ChrPhysicsModule,
-        //                    }, true);
-        //                }
-        //        
-        //                public void RestorePos(int index)
-        //                {
-        //                    byte[] positionBytes;
-        //                    if (index == 0) positionBytes = _memoryIo.ReadBytes(CodeCaveOffsets.Base + CodeCaveOffsets.SavePos1, 16);
-        //                    else positionBytes = _memoryIo.ReadBytes(CodeCaveOffsets.Base + CodeCaveOffsets.SavePos2, 16);
-        //        
-        //                    float angle = BitConverter.ToSingle(positionBytes, 12);
-        //        
-        //                    var chrPhysicsModule = GetChrPhysicsModule();
-        //        
-        //                    byte[] xyzBytes = new byte[12];
-        //                    Buffer.BlockCopy(positionBytes, 0, xyzBytes, 0, 12);
-        //        
-        //                    _memoryIo.WriteBytes(chrPhysicsModule + (int)WorldChrMan.ChrPhysicsModule.X, xyzBytes);
-        //                    _memoryIo.WriteFloat(chrPhysicsModule + (int)WorldChrMan.ChrPhysicsModule.Angle, angle);
-        //                }
-        //        
-        //                public void SetAxis(WorldChrMan.ChrPhysicsModule axis, float value) =>
-        //                    _memoryIo.WriteFloat(GetChrPhysicsModule() + (int) axis, value);
-        //        
-        //                public (float x, float y, float z) GetCoords()
-        //                {
-        //                    var coordBytes = _memoryIo.ReadBytes(GetChrPhysicsModule() + (int)WorldChrMan.ChrPhysicsModule.X, 12);
-        //                    float x = BitConverter.ToSingle(coordBytes, 0);
-        //                    float z = BitConverter.ToSingle(coordBytes, 4);
-        //                    float y = BitConverter.ToSingle(coordBytes, 8);
-        //                    return (x, y, z); 
-        //                }
-        //        
-        //                public void ToggleDebugFlag(int offset, int value)
-        //                {
-        //                    _memoryIo.WriteByte(DebugFlags.Base + offset, value);
-        //                }
-        //        
-        //                public void ToggleInfiniteDurability(bool isInfiniteDurabilityEnabled)
-        //                {
-        //                    _memoryIo.WriteByte(Offsets.Patches.InfiniteDurability + 0x1, isInfiniteDurabilityEnabled ? 0x84 : 0x85);
-        //                }
-        //        
-        //                public void ToggleInfinitePoise(bool setValue)
-        //                {
-        //                    var infinitePoisePtr = _memoryIo.FollowPointers(WorldChrMan.Base,
-        //                        new[]
-        //                        {
-        //                            WorldChrMan.PlayerIns,
-        //                            (int)WorldChrMan.PlayerInsOffsets.Modules,
-        //                            (int) WorldChrMan.Modules.ChrSuperArmorModule,
-        //                            (int) WorldChrMan.ChrSuperArmorModule.InfinitePoise,
-        //                        }, false);
-        //                    var flagMask = WorldChrMan.InfinitePoise;
-        //                    _memoryIo.SetBitValue(infinitePoisePtr, flagMask, setValue);
-        //                }
-        //        
-        //                public void ToggleNoGoodsConsume(bool setValue)
-        //                {
-        //                    var noGoodsConsumePtr = _memoryIo.FollowPointers(WorldChrMan.Base,
-        //                        new[]
-        //                        {
-        //                            WorldChrMan.PlayerIns,
-        //                            (int)WorldChrMan.PlayerInsOffsets.CharFlags1
-        //                        }, false);
-        //                    var flagMask = (int)WorldChrMan.ChrFlag1BitFlag.NoGoodsConsume;
-        //                    _memoryIo.SetBit32(noGoodsConsumePtr, flagMask, setValue);
-        //                }
+        
+        
+        
         //        
         //                public int GetNewGame() =>
         //                    _memoryIo.ReadInt32((IntPtr)_memoryIo.ReadInt64(GameDataMan.Base) + GameDataMan.NewGame);
@@ -302,8 +197,7 @@ namespace SilkySouls2.Services
             _memoryIo.WriteByte(Patches.InfiniteStam + 1, isInfiniteStaminaEnabled ? 0x82 : 0x83);
 
         public int GetPlayerStat(int statOffset) => _memoryIo.ReadUInt8(GetStatPtr(statOffset));
-
-
+        
         private IntPtr GetStatPtr(int statOffset)
         {
             return _memoryIo.FollowPointers(GameManagerImp.Base, new[]
@@ -313,6 +207,78 @@ namespace SilkySouls2.Services
                 statOffset
             }, false);
         }
+
+        public void SetPlayerStat(int statOffset, byte val)
+        {
+            var currentStatVal = GetPlayerStat(statOffset);
+            _memoryIo.WriteUInt8(GetStatPtr(statOffset), val);
+            var numOfLevels = val - currentStatVal;
+
+            if (numOfLevels <= 0)
+            {
+                
+            }
+            
+            var buffer = CodeCaveOffsets.Base + (int)CodeCaveOffsets.LevelUp.Buffer;
+            var code = CodeCaveOffsets.Base + (int)CodeCaveOffsets.LevelUp.Code;
+            var numOfLevelsShortLoc = buffer + 0xE2;
+            var numOfLevelsIntLoc = buffer + 0xE8;
+            var currentLevelLoc = buffer + 0xEC;
+            var newLevelLoc = buffer + 0xF0;
+            var currentSoulsLoc = buffer + 0xF4;
+            var requiredSouls = buffer + 0xFC;
+            var soulsAfterLevelUp = buffer + 0xF8;
+            
+            var giveSouls = Funcs.GiveSouls;
+            var levelLookUp = Funcs.LevelLookUp;
+            var levelUp = Funcs.LevelUp;
+            
+            var statsEntity = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+            {
+                GameManagerImp.Offsets.PlayerCtrl,
+                GameManagerImp.PlayerCtrlOffsets.StatsPtr
+            }, true);
+            
+            var currentStatBytes = _memoryIo.ReadBytes(GetStatPtr(GameManagerImp.PlayerCtrlOffsets.Stats.Vig), 22);
+            var currentLevel = _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.PlayerCtrlOffsets.Stats.SoulLevel));
+            
+            
+            _memoryIo.WriteBytes(buffer, currentStatBytes);
+            _memoryIo.WriteByte(numOfLevelsShortLoc, numOfLevels);
+            _memoryIo.WriteInt32(numOfLevelsIntLoc, numOfLevels);
+            _memoryIo.WriteInt32(currentLevelLoc, currentLevel);
+            _memoryIo.WriteInt32(newLevelLoc, currentLevel + numOfLevels);
+            var currentSouls = _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.PlayerCtrlOffsets.Stats.CurrentSouls));
+            _memoryIo.WriteInt32(currentSoulsLoc, currentSouls);
+            
+            var bytes = AsmLoader.GetAsmBytes("LevelUp");
+            
+            AsmHelper.WriteAbsoluteAddresses(bytes, new []
+            {
+                (levelLookUp, 0xF + 2),
+                (statsEntity.ToInt64(), 0x44 + 2),
+                (giveSouls, 0x4E + 2),
+                (statsEntity.ToInt64(), 0x63 + 2),
+                (statsEntity.ToInt64(), 0x87 + 2),
+                (levelUp, 0x9F + 2)
+            });
+            
+            AsmHelper.WriteRelativeOffsets(bytes, new []
+            {
+                (code.ToInt64(), currentLevelLoc.ToInt64(), 6, 0x0 + 2),
+                (code.ToInt64() + 0x2A, newLevelLoc.ToInt64(), 6, 0x2A + 2),
+                (code.ToInt64() + 0x32, requiredSouls.ToInt64(), 6, 0x32 + 2),
+                (code.ToInt64() + 0x38, currentSoulsLoc.ToInt64(), 6, 0x38 + 2),
+                (code.ToInt64() + 0x73, currentSoulsLoc.ToInt64(), 6, 0x73 + 2),
+                (code.ToInt64() + 0x79, requiredSouls.ToInt64(), 6, 0x79 +2),
+                (code.ToInt64() + 0x81, soulsAfterLevelUp.ToInt64(), 6, 0x81 + 2),
+                (code.ToInt64() + 0x91, buffer.ToInt64(), 7, 0x91 + 3)
+            });
+            
+            _memoryIo.WriteBytes(code, bytes);
+            _memoryIo.RunThread(code);
+        }
+        
 
         public int GetSoulLevel() => _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.PlayerCtrlOffsets.Stats.SoulLevel));
 

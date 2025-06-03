@@ -80,5 +80,11 @@ namespace SilkySouls2.Memory
 
         public const int FastQuitout = 0x770;
         public const int InfinitePoise = 0x790;
+
+        public enum LevelUp
+        {
+            Buffer = 0x7C0,
+            Code = 0x8C0
+        }
     }
 }

@@ -174,6 +174,22 @@ namespace SilkySouls2.Memory
         );
 
 
+        public static readonly Pattern LevelLookUp = new Pattern(
+            new byte[] { 0x48, 0x85, 0xDB, 0x74, 0x07, 0x0F, 0xB7, 0x03 },
+            "xxxxxxxx",
+            -0x50,
+            None
+        );
+
+        public static readonly Pattern LevelUp = new Pattern(
+            new byte[] { 0x48, 0x85, 0xD2, 0x0F, 0x84, 0xA0, 0x01 },
+            "xxxxxxx",
+            0,
+            None
+        );
+
+
+
         public static readonly Pattern ChrCtrlUpdate = new Pattern(
             new byte[] { 0x48, 0x8B, 0x89, 0xE0, 0x00, 0x00, 0x00, 0xF3 },
             "xxxxxxxx",

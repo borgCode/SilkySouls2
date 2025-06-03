@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Threading;
+using SilkySouls2.Memory;
 using SilkySouls2.Models;
 using SilkySouls2.Services;
 using SilkySouls2.Utilities;
@@ -604,5 +605,10 @@ namespace SilkySouls2.ViewModels
         public void GiveSouls() => _playerService.GiveSouls(Souls);
 
         public void RestoreSpellcasts() => _playerService.RestoreSpellcasts();
+
+        public void Test()
+        {
+            _playerService.SetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.End, 15);
+        }
     }
 }

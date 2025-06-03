@@ -83,6 +83,7 @@ namespace SilkySouls2.Memory
 
         public enum LevelUp
         {
+            NegativeFlag = 0x7BF,
             Buffer = 0x7C0,
             Code = 0x8C0
         }

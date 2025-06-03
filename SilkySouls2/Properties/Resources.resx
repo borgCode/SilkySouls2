@@ -656,7 +656,9 @@ e9 00 00 00 00          jmp    2c &lt;exit+0x6&gt;</value>
     <value>8b 0d 00 00 00 00       mov    ecx,DWORD PTR [rip+0x0]        # 6 &lt;_main+0x6&gt;
 ff c1                   inc    ecx
 ba 00 00 00 00          mov    edx,0x0
-00000000000d &lt;loop_start&gt;:
+80 3d 00 00 00 00 01    cmp    BYTE PTR [rip+0x0],0x1        # 14 &lt;_main+0x14&gt;
+74 25                   je     3b &lt;skip_lookup&gt;
+000000000016 &lt;loop_start&gt;:
 51                      push   rcx
 52                      push   rdx
 49 bf 00 00 00 00 00    movabs r15,0x0
@@ -668,12 +670,13 @@ ba 00 00 00 00          mov    edx,0x0
 59                      pop    rcx
 01 c2                   add    edx,eax
 ff c1                   inc    ecx
-3b 0d 00 00 00 00       cmp    ecx,DWORD PTR [rip+0x0]        # 30 &lt;loop_start+0x23&gt;
-7e db                   jle    d &lt;loop_start&gt;
-89 15 00 00 00 00       mov    DWORD PTR [rip+0x0],edx        # 38 &lt;loop_start+0x2b&gt;
-8b 0d 00 00 00 00       mov    ecx,DWORD PTR [rip+0x0]        # 3e &lt;loop_start+0x31&gt;
+3b 0d 00 00 00 00       cmp    ecx,DWORD PTR [rip+0x0]        # 39 &lt;loop_start+0x23&gt;
+7e db                   jle    16 &lt;loop_start&gt;
+00000000003b &lt;skip_lookup&gt;:
+89 15 00 00 00 00       mov    DWORD PTR [rip+0x0],edx        # 41 &lt;skip_lookup+0x6&gt;
+8b 0d 00 00 00 00       mov    ecx,DWORD PTR [rip+0x0]        # 47 &lt;skip_lookup+0xc&gt;
 39 d1                   cmp    ecx,edx
-7d 3d                   jge    7f &lt;enough_souls&gt;
+7d 3d                   jge    88 &lt;enough_souls&gt;
 29 ca                   sub    edx,ecx
 48 b9 00 00 00 00 00    movabs rcx,0x0
 00 00 00
@@ -685,14 +688,14 @@ ff c1                   inc    ecx
 48 b9 00 00 00 00 00    movabs rcx,0x0
 00 00 00
 8b 89 ec 00 00 00       mov    ecx,DWORD PTR [rcx+0xec]
-89 0d 00 00 00 00       mov    DWORD PTR [rip+0x0],ecx        # 79 &lt;loop_start+0x6c&gt;
-8b 15 00 00 00 00       mov    edx,DWORD PTR [rip+0x0]        # 7f &lt;enough_souls&gt;
-00000000007f &lt;enough_souls&gt;:
+89 0d 00 00 00 00       mov    DWORD PTR [rip+0x0],ecx        # 82 &lt;skip_lookup+0x47&gt;
+8b 15 00 00 00 00       mov    edx,DWORD PTR [rip+0x0]        # 88 &lt;enough_souls&gt;
+000000000088 &lt;enough_souls&gt;:
 29 d1                   sub    ecx,edx
-89 0d 00 00 00 00       mov    DWORD PTR [rip+0x0],ecx        # 87 &lt;enough_souls+0x8&gt;
+89 0d 00 00 00 00       mov    DWORD PTR [rip+0x0],ecx        # 90 &lt;enough_souls+0x8&gt;
 48 b9 00 00 00 00 00    movabs rcx,0x0
 00 00 00
-48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 98 &lt;enough_souls+0x19&gt;
+48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # a1 &lt;enough_souls+0x19&gt;
 48 81 ec 48 01 00 00    sub    rsp,0x148
 49 bf 00 00 00 00 00    movabs r15,0x0
 00 00 00

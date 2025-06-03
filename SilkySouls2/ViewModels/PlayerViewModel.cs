@@ -608,7 +608,7 @@ namespace SilkySouls2.ViewModels
 
         public void Test()
         {
-            _playerService.SetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.End, 15);
+            _playerService.SetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.End, 5);
         }
     }
 }

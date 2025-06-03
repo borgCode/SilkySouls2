@@ -237,17 +237,16 @@ namespace SilkySouls2.Properties {
         ///   Looks up a localized string similar to 8b 0d 00 00 00 00       mov    ecx,DWORD PTR [rip+0x0]        # 6 &lt;_main+0x6&gt;
         ///ff c1                   inc    ecx
         ///ba 00 00 00 00          mov    edx,0x0
-        ///00000000000d &lt;loop_start&gt;:
+        ///80 3d 00 00 00 00 01    cmp    BYTE PTR [rip+0x0],0x1        # 14 &lt;_main+0x14&gt;
+        ///74 25                   je     3b &lt;skip_lookup&gt;
+        ///000000000016 &lt;loop_start&gt;:
         ///51                      push   rcx
         ///52                      push   rdx
         ///49 bf 00 00 00 00 00    movabs r15,0x0
         ///00 00 00
         ///48 83 ec 28             sub    rsp,0x28
         ///41 ff d7                call   r15
-        ///48 83 c4 28             add    rsp,0x28
-        ///5a                      pop    rdx
-        ///59                      pop    rcx
-        ///01 c2             [rest of string was truncated]&quot;;.
+        ///4 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string LevelUp {
             get {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using SilkySouls2.Memory;
 using SilkySouls2.Utilities;
 using static SilkySouls2.Memory.Offsets;
@@ -213,14 +214,10 @@ namespace SilkySouls2.Services
             var currentStatVal = GetPlayerStat(statOffset);
             _memoryIo.WriteUInt8(GetStatPtr(statOffset), val);
             var numOfLevels = val - currentStatVal;
-
-            if (numOfLevels <= 0)
-            {
-                
-            }
             
             var buffer = CodeCaveOffsets.Base + (int)CodeCaveOffsets.LevelUp.Buffer;
             var code = CodeCaveOffsets.Base + (int)CodeCaveOffsets.LevelUp.Code;
+            var negativeFlag = CodeCaveOffsets.Base + (int)CodeCaveOffsets.LevelUp.NegativeFlag;
             var numOfLevelsShortLoc = buffer + 0xE2;
             var numOfLevelsIntLoc = buffer + 0xE8;
             var currentLevelLoc = buffer + 0xEC;
@@ -242,6 +239,8 @@ namespace SilkySouls2.Services
             var currentStatBytes = _memoryIo.ReadBytes(GetStatPtr(GameManagerImp.PlayerCtrlOffsets.Stats.Vig), 22);
             var currentLevel = _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.PlayerCtrlOffsets.Stats.SoulLevel));
             
+            if (numOfLevels <= 0){ _memoryIo.WriteBytes(Patches.NegativeLevel + 1, new byte[] {0x85});}
+            _memoryIo.WriteByte(negativeFlag, numOfLevels <= 0 ? 1 : 0);
             
             _memoryIo.WriteBytes(buffer, currentStatBytes);
             _memoryIo.WriteByte(numOfLevelsShortLoc, numOfLevels);
@@ -255,28 +254,30 @@ namespace SilkySouls2.Services
             
             AsmHelper.WriteAbsoluteAddresses(bytes, new []
             {
-                (levelLookUp, 0xF + 2),
-                (statsEntity.ToInt64(), 0x44 + 2),
-                (giveSouls, 0x4E + 2),
-                (statsEntity.ToInt64(), 0x63 + 2),
-                (statsEntity.ToInt64(), 0x87 + 2),
-                (levelUp, 0x9F + 2)
+                (levelLookUp, 0x18 + 2),
+                (statsEntity.ToInt64(), 0x4D + 2),
+                (giveSouls, 0x57 + 2),
+                (statsEntity.ToInt64(), 0x6C + 2),
+                (statsEntity.ToInt64(), 0x90 + 2),
+                (levelUp, 0xA8 + 2)
             });
             
             AsmHelper.WriteRelativeOffsets(bytes, new []
             {
                 (code.ToInt64(), currentLevelLoc.ToInt64(), 6, 0x0 + 2),
-                (code.ToInt64() + 0x2A, newLevelLoc.ToInt64(), 6, 0x2A + 2),
-                (code.ToInt64() + 0x32, requiredSouls.ToInt64(), 6, 0x32 + 2),
-                (code.ToInt64() + 0x38, currentSoulsLoc.ToInt64(), 6, 0x38 + 2),
-                (code.ToInt64() + 0x73, currentSoulsLoc.ToInt64(), 6, 0x73 + 2),
-                (code.ToInt64() + 0x79, requiredSouls.ToInt64(), 6, 0x79 +2),
-                (code.ToInt64() + 0x81, soulsAfterLevelUp.ToInt64(), 6, 0x81 + 2),
-                (code.ToInt64() + 0x91, buffer.ToInt64(), 7, 0x91 + 3)
+                (code.ToInt64() + 0xD, negativeFlag.ToInt64(), 7, 0xD + 2),
+                (code.ToInt64() + 0x33, newLevelLoc.ToInt64(), 6, 0x33 + 2),
+                (code.ToInt64() + 0x3B, requiredSouls.ToInt64(), 6, 0x3B + 2),
+                (code.ToInt64() + 0x41, currentSoulsLoc.ToInt64(), 6, 0x41 + 2),
+                (code.ToInt64() + 0x7C, currentSoulsLoc.ToInt64(), 6, 0x7C + 2),
+                (code.ToInt64() + 0x82, requiredSouls.ToInt64(), 6, 0x82 +2),
+                (code.ToInt64() + 0x8A, soulsAfterLevelUp.ToInt64(), 6, 0x8A + 2),
+                (code.ToInt64() + 0x9A, buffer.ToInt64(), 7, 0x9A + 3)
             });
             
             _memoryIo.WriteBytes(code, bytes);
-            _memoryIo.RunThread(code);
+            _memoryIo.RunThreadAndWaitForCompletion(code);
+            if (numOfLevels <= 0) _memoryIo.WriteBytes(Patches.NegativeLevel + 1, new byte[] {0x84});
         }
         
 

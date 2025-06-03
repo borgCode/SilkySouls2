@@ -124,7 +124,7 @@ namespace SilkySouls2.Properties {
         ///48 8b 89 d0 00 00 00    mov    rcx,QWORD PTR [rcx+0xd0]
         ///48 39 c1                cmp    rcx,rax
         ///74 49                   je     6f &lt;exit&gt;
-        ///49 3b 49 50             cmp    rcx,QWORD PTR [r9+0x50]
+        ///49 3b 49 68             cmp    rcx,QWORD PTR [r9+0x68]
         ///75 43                 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DamageControl {

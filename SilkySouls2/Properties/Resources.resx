@@ -357,7 +357,7 @@ e9 00 00 00 00          jmp    13 &lt;_main+0x13&gt;</value>
 48 8b 89 d0 00 00 00    mov    rcx,QWORD PTR [rcx+0xd0]
 48 39 c1                cmp    rcx,rax
 74 49                   je     6f &lt;exit&gt;
-49 3b 49 50             cmp    rcx,QWORD PTR [r9+0x50]
+49 3b 49 68             cmp    rcx,QWORD PTR [r9+0x68]
 75 43                   jne    6f &lt;exit&gt;
 80 3d 00 00 00 00 00    cmp    BYTE PTR [rip+0x0],0x0        # 33 &lt;_main+0x33&gt;
 74 16                   je     4b &lt;check_oneshot&gt;

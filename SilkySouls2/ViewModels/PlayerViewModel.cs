@@ -382,17 +382,17 @@ namespace SilkySouls2.ViewModels
         //     }
         // }
         //
-        // public bool IsSilentEnabled
-        // {
-        //     get => _isSilentEnabled;
-        //     set
-        //     {
-        //         if (SetProperty(ref _isSilentEnabled, value))
-        //         {
-        //             _playerService.ToggleDebugFlag(DebugFlags.Silent, _isSilentEnabled ? 1 : 0);
-        //         }
-        //     }
-        // }
+        public bool IsSilentEnabled
+        {
+            get => _isSilentEnabled;
+            set
+            {
+                if (SetProperty(ref _isSilentEnabled, value))
+                {
+                    _playerService.ToggleSilent(_isSilentEnabled);
+                }
+            }
+        }
         //
         // public bool IsNoAmmoConsumeEnabled
         // {

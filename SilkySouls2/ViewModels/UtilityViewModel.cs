@@ -15,6 +15,7 @@ namespace SilkySouls2.ViewModels
         private bool _isDrawEventEnabled;
         private bool _isDrawSoundEnabled;
         private bool _isTargetingViewEnabled;
+        private bool _isWallAwareEnabled;
         private bool _isDrawRagdollEnabled;
         private bool _isSeeThroughwallsEnabled;
         private bool _isDrawCollisionEnabled;
@@ -113,6 +114,16 @@ namespace SilkySouls2.ViewModels
             {
                 if (!SetProperty(ref _isTargetingViewEnabled, value)) return;
                 _utilityService.ToggleTargetingView(_isTargetingViewEnabled);
+            }
+        }
+        
+        public bool IsWallAwareEnabled
+        {
+            get => _isWallAwareEnabled;
+            set
+            {
+                if (!SetProperty(ref _isWallAwareEnabled, value)) return;
+                _utilityService.ToggleTargetingViewWallAware(_isWallAwareEnabled);
             }
         }
         

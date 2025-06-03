@@ -10,6 +10,7 @@ namespace SilkySouls2.Services
     {
         private readonly MemoryIo _memoryIo;
         private readonly HookManager _hookManager;
+        private readonly NopManager _nopManager;
 
         private readonly Dictionary<int, int> _lowLevelSoulRequirements = new Dictionary<int, int>
         {
@@ -17,10 +18,11 @@ namespace SilkySouls2.Services
             { 11, 829 },
         };
 
-        public PlayerService(MemoryIo memoryIo, HookManager hookManager)
+        public PlayerService(MemoryIo memoryIo, HookManager hookManager, NopManager nopManager)
         {
             _memoryIo = memoryIo;
             _hookManager = hookManager;
+            _nopManager = nopManager;
         }
 
         public int GetHp() =>
@@ -438,6 +440,12 @@ namespace SilkySouls2.Services
             });
             
             _memoryIo.AllocateAndExecute(codeBytes);
+        }
+
+        public void ToggleSilent(bool isSilentEnabled)
+        {
+            if (isSilentEnabled) _nopManager.InstallNOP(Patches.Silent.ToInt64(), 5);
+            else _nopManager.RestoreNOP(Patches.Silent.ToInt64());
         }
     }
 }

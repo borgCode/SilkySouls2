@@ -180,6 +180,12 @@ namespace SilkySouls2.Memory
             0,
             Call);
         
+        public static readonly Pattern Silent = new Pattern(
+            new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x84, 0xC0, 0x74, 0x4C, 0x48, 0x8B, 0x83 },
+            "x????xxxxxxx",
+            0,
+            None);
+        
         
         public static readonly Pattern SetRenderTargetsWrapper = new Pattern(
             new byte[] { 0x40, 0x53, 0x48, 0x83, 0xEC, 0x60, 0x41, 0x8B },

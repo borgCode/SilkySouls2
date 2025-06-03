@@ -196,6 +196,7 @@ namespace SilkySouls2.Memory
             public static IntPtr InfiniteDurability;
             public static IntPtr DropRate;
             public static IntPtr DisableAi;
+            public static IntPtr Silent;
         }
         
         

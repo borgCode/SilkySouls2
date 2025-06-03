@@ -203,6 +203,12 @@
                     <CheckBox Content="Infinite Poise todo"
                               IsChecked="{Binding IsInfinitePoiseEnabled}"
                               Margin="0,2" />
+                    <CheckBox Content="Silent"
+                              IsChecked="{Binding IsSilentEnabled}"
+                              Margin="0,2" />
+                    <CheckBox Content="Hidden"
+                              IsChecked="{Binding IsHiddenEnabled}"
+                              Margin="0,2" />
                     <Button Content="Restore Spellcasts"
                             Width="150"
                             Margin="0, 15, 0,0"

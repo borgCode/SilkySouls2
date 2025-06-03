@@ -94,6 +94,7 @@
         <Compile Include="Memory\DLLShared\DrawType.cs" />
         <Compile Include="Memory\DLLShared\FeatureType.cs" />
         <Compile Include="Memory\DLLShared\SharedMemAddr.cs" />
+        <Compile Include="Memory\NopManager.cs" />
         <Compile Include="Models\NpcInfo.cs" />
         <Compile Include="Models\WarpLocation.cs" />
         <Compile Include="Models\CharacterState.cs" />

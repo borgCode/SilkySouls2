@@ -65,6 +65,8 @@ namespace SilkySouls2.Memory
                 addr => Offsets.Patches.InfiniteDurability = addr, saved);
             TryPatternWithFallback("DropRate", Patterns.DropRate,
                 addr => Offsets.Patches.DropRate = addr, saved);
+            TryPatternWithFallback("Silent", Patterns.Silent,
+                addr => Offsets.Patches.Silent = addr, saved);
             TryPatternWithFallback("DisableAi", Patterns.DisableAi, addr => Offsets.Patches.DisableAi = addr, saved);
             // TryPatternWithFallback("TargetingView", Patterns.DbgDrawFlag, addr => Offsets.Patches.DbgDrawFlag = addr,
             //     saved);
@@ -186,6 +188,8 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Patches.InfiniteDurability: 0x{Offsets.Patches.InfiniteDurability.ToInt64():X}");
             Console.WriteLine($"Patches.DropRate: 0x{Offsets.Patches.DropRate.ToInt64():X}");
             Console.WriteLine($"Patches.DisableAi: 0x{Offsets.Patches.DisableAi.ToInt64():X}");
+            Console.WriteLine($"Patches.Silent: 0x{Offsets.Patches.Silent.ToInt64():X}");
+            
             // Console.WriteLine($"Patches.TargetingView: 0x{Offsets.Patches.DbgDrawFlag.ToInt64():X}");
             // Console.WriteLine($"Patches.FreeCam: 0x{Offsets.Patches.FreeCam.ToInt64():X}");
             //

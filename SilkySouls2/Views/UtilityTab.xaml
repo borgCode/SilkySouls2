@@ -17,7 +17,6 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
@@ -50,6 +49,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
 
@@ -72,11 +72,16 @@
                               IsChecked="{Binding IsDrawSoundEnabled}"
                               Grid.Column="0" Grid.Row="3"
                               Margin="0,2" />
+                    
                     <CheckBox Content="Enemy Targeting View"
                               IsChecked="{Binding IsTargetingViewEnabled}"
                               Grid.Column="1" Grid.Row="0"
                               Margin="0,2" />
-
+                    <CheckBox Content="Wall Aware"
+                              IsChecked="{Binding IsWallAwareEnabled}"
+                    
+                              Grid.Column="1" Grid.Row="1"
+                              Margin="15,2,0,2" />
      
 
                     <!-- <CheckBox Content="Hide Objects" -->
@@ -86,17 +91,17 @@
 
                     <CheckBox Content="Hide Map"
                               IsChecked="{Binding IsHideMapEnabled}"
-                              Grid.Column="1" Grid.Row="1"
+                              Grid.Column="1" Grid.Row="2"
                               Margin="0,2" />
                     
                     <CheckBox Content="Hide Characters"
                               IsChecked="{Binding IsHideCharactersEnabled}"
-                              Grid.Column="1" Grid.Row="2"
+                              Grid.Column="1" Grid.Row="3"
                               Margin="0,2" />
 
                     <CheckBox Content="Hide Sfx"
                               IsChecked="{Binding IsHideSfxEnabled}"
-                              Grid.Column="1" Grid.Row="3"
+                              Grid.Column="1" Grid.Row="4"
                               Margin="0,2" />
 
                     <CheckBox Content="Draw Ragdolls"
@@ -114,7 +119,10 @@
                               IsChecked="{Binding IsDrawCollisionEnabled}"
                               Grid.Column="2" Grid.Row="3"
                               Margin="0,2" />
-                    
+                    <CheckBox Content="Draw Collision"
+                              IsChecked="{Binding IsDrawCollisionEnabled}"
+                              Grid.Column="2" Grid.Row="3"
+                              Margin="0,2" />
                 </Grid>
             </StackPanel>
         </Border>

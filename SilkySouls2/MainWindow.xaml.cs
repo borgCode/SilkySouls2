@@ -25,6 +25,7 @@ namespace SilkySouls2
         private readonly AoBScanner _aobScanner;
         private readonly DispatcherTimer _gameLoadedTimer;
         private readonly HookManager _hookManager;
+        private readonly NopManager _nopManager;
 
         private readonly PlayerViewModel _playerViewModel;
         private readonly TravelViewModel _travelViewModel;
@@ -54,12 +55,13 @@ namespace SilkySouls2
 
 
             _hookManager = new HookManager(_memoryIo);
+            _nopManager = new NopManager(_memoryIo);
             _aobScanner = new AoBScanner(_memoryIo);
             _dllManager = new DllManager(_memoryIo);
             var hotkeyManager = new HotkeyManager(_memoryIo);
 
             _damageControlService = new DamageControlService(_memoryIo, _hookManager);
-            var playerService = new PlayerService(_memoryIo, _hookManager);
+            var playerService = new PlayerService(_memoryIo, _hookManager, _nopManager);
             var utilityService = new UtilityService(_memoryIo, _hookManager, _dllManager);
             var travelService = new TravelService(_memoryIo, _hookManager, utilityService);
             var enemyService = new EnemyService(_memoryIo, _hookManager, _damageControlService);
@@ -170,6 +172,7 @@ namespace SilkySouls2
             {
                 _hookManager.ClearHooks();
                 DisableFeatures();
+                _nopManager.ClearRegistry();
                 // _settingsViewModel.ResetAttached();
                 _loaded = false;
                 _hasAllocatedMemory = false;

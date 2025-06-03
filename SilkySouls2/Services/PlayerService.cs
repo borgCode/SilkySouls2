@@ -447,5 +447,34 @@ namespace SilkySouls2.Services
             if (isSilentEnabled) _nopManager.InstallNOP(Patches.Silent.ToInt64(), 5);
             else _nopManager.RestoreNOP(Patches.Silent.ToInt64());
         }
+
+        public void ToggleHidden(bool isHiddenEnabled) =>
+            _memoryIo.WriteBytes(Patches.Hidden + 1, isHiddenEnabled ? new byte[] { 0x85 } : new byte[] { 0x84 });
+
+        public void ToggleInfinitePoise(bool isInfinitePoiseEnabled)
+        {
+       
+            var code = CodeCaveOffsets.Base + CodeCaveOffsets.InfinitePoise;
+            
+            if (isInfinitePoiseEnabled)
+            {
+                var origin = Hooks.InfinitePoise;
+                var gameMan = GameManagerImp.Base;
+                var codeBytes = AsmLoader.GetAsmBytes("InfinitePoise");
+
+                var bytes = BitConverter.GetBytes(gameMan.ToInt64());
+                Array.Copy(bytes, 0, codeBytes, 0x1 + 2, 8);
+                bytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 6, code + 0x2C);
+                Array.Copy(bytes, 0, codeBytes, 0x27 + 1, 4);
+                _memoryIo.WriteBytes(code, codeBytes);
+                _hookManager.InstallHook(code.ToInt64(), origin, new byte[]
+                    { 0x39, 0x9D, 0xEC, 0x05, 0x00, 0x00 });
+            }
+            else
+            {
+                _hookManager.UninstallHook(code.ToInt64());
+            }
+            
+        }
     }
 }

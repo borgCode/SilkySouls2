@@ -33,7 +33,7 @@ namespace SilkySouls2.ViewModels
         private bool _isInfiniteDurabilityEnabled;
         private bool _isOneShotEnabled;
         private bool _isDealNoDamageEnabled;
-        private bool _isInvisibleEnabled;
+        private bool _isHiddenEnabled;
         private bool _isSilentEnabled;
         private bool _isNoAmmoConsumeEnabled;
         private bool _isInfinitePoiseEnabled;
@@ -364,24 +364,19 @@ namespace SilkySouls2.ViewModels
                 _damageControlService.ToggleOneShot(_isOneShotEnabled);
             }
         }
-
         
-       
+        public bool IsHiddenEnabled
+        {
+            get => _isHiddenEnabled;
+            set
+            {
+                if (SetProperty(ref _isHiddenEnabled, value))
+                {
+                    _playerService.ToggleHidden(_isHiddenEnabled);
+                }
+            }
+        }
         
-
-        //
-        // public bool IsInvisibleEnabled
-        // {
-        //     get => _isInvisibleEnabled;
-        //     set
-        //     {
-        //         if (SetProperty(ref _isInvisibleEnabled, value))
-        //         {
-        //             _playerService.ToggleDebugFlag(DebugFlags.Invisible, _isInvisibleEnabled ? 1 : 0);
-        //         }
-        //     }
-        // }
-        //
         public bool IsSilentEnabled
         {
             get => _isSilentEnabled;
@@ -406,17 +401,17 @@ namespace SilkySouls2.ViewModels
         //     }
         // }
         //
-        // public bool IsInfinitePoiseEnabled
-        // {
-        //     get => _isInfinitePoiseEnabled;
-        //     set
-        //     {
-        //         if (SetProperty(ref _isInfinitePoiseEnabled, value))
-        //         {
-        //             _playerService.ToggleInfinitePoise(_isInfinitePoiseEnabled);
-        //         }
-        //     }
-        // }
+        public bool IsInfinitePoiseEnabled
+        {
+            get => _isInfinitePoiseEnabled;
+            set
+            {
+                if (SetProperty(ref _isInfinitePoiseEnabled, value))
+                {
+                    _playerService.ToggleInfinitePoise(_isInfinitePoiseEnabled);
+                }
+            }
+        }
         //
         // public bool IsAutoSetNewGameSevenEnabled
         // {

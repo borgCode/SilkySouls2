@@ -197,6 +197,7 @@ namespace SilkySouls2.Memory
             public static IntPtr DropRate;
             public static IntPtr DisableAi;
             public static IntPtr Silent;
+            public static IntPtr Hidden;
         }
         
         
@@ -219,6 +220,7 @@ namespace SilkySouls2.Memory
             public static long SetCurrectAct;
             public static long SetCurrectAct2;
             public static long FastQuitout;
+            public static long InfinitePoise;
         }
 
         public static class Funcs

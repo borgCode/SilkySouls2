@@ -79,5 +79,6 @@ namespace SilkySouls2.Memory
         }
 
         public const int FastQuitout = 0x770;
+        public const int InfinitePoise = 0x790;
     }
 }

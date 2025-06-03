@@ -200,7 +200,7 @@
                     <CheckBox Content="Deal No Damage"
                               IsChecked="{Binding IsDealNoDamageEnabled}"
                               Margin="0,2" />
-                    <CheckBox Content="Infinite Poise todo"
+                    <CheckBox Content="Infinite Poise"
                               IsChecked="{Binding IsInfinitePoiseEnabled}"
                               Margin="0,2" />
                     <CheckBox Content="Silent"

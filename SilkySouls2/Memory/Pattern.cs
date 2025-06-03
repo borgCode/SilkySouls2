@@ -45,6 +45,14 @@ namespace SilkySouls2.Memory
             None
         );
 
+        public static readonly Pattern InfinitePoise = new Pattern(
+            new byte[] { 0x39, 0x9D, 0xEC, 0x05 },
+            "xxxx",
+            0,
+            None
+        );
+
+
         public static readonly Pattern FastQuitout = new Pattern(
             new byte[] { 0x48, 0x89, 0x84, 0x24, 0x50, 0x01, 0x00, 0x00, 0x83, 0x79, 0x10 },
             "xxxxxxxxxxx",
@@ -180,13 +188,7 @@ namespace SilkySouls2.Memory
             0,
             Call);
         
-        public static readonly Pattern Silent = new Pattern(
-            new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x84, 0xC0, 0x74, 0x4C, 0x48, 0x8B, 0x83 },
-            "x????xxxxxxx",
-            0,
-            None);
-        
-        
+
         public static readonly Pattern SetRenderTargetsWrapper = new Pattern(
             new byte[] { 0x40, 0x53, 0x48, 0x83, 0xEC, 0x60, 0x41, 0x8B },
             "xxxxxxxx",
@@ -228,6 +230,21 @@ namespace SilkySouls2.Memory
             None
         );
 
+        public static readonly Pattern Silent = new Pattern(
+            new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x84, 0xC0, 0x74, 0x4C, 0x48, 0x8B, 0x83 },
+            "x????xxxxxxx",
+            0,
+            None);
+
+        public static readonly Pattern Hidden = new Pattern(
+            new byte[] { 0x0F, 0x84, 0x02, 0x02, 0x00, 0x00, 0x48, 0x85 },
+            "xxxxxxxx",
+            0,
+            None
+        );
+        
+        
+        
         public static readonly Pattern ForceSave = new Pattern(
             new byte[] { 0x74, 0x5A, 0x8B, 0x4B },
             "xxxx",

@@ -192,6 +192,27 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 50                      push   rax
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
+        ///48 8b 00                mov    rax,QWORD PTR [rax]
+        ///48 39 88 d0 00 00 00    cmp    QWORD PTR [rax+0xd0],rcx
+        ///75 09                   jne    20 &lt;normal&gt;
+        ///83 bd ec 05 00 00 ff    cmp    DWORD PTR [rbp+0x5ec],0xffffffff
+        ///eb 06                   jmp    26 &lt;exit&gt;
+        ///000000000020 &lt;normal&gt;:
+        ///39 9d ec 05 00 00       cmp    DWORD PTR [rbp+0x5ec],ebx
+        ///000000000026 &lt;exit&gt;:
+        ///58                      pop    rax
+        ///e9 00 00 00 00          jm [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string InfinitePoise {
+            get {
+                return ResourceManager.GetString("InfinitePoise", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 53                      push   rbx
         ///48 bb 00 00 00 00 00    movabs rbx,0x0
         ///00 00 00

@@ -67,6 +67,8 @@ namespace SilkySouls2.Memory
                 addr => Offsets.Patches.DropRate = addr, saved);
             TryPatternWithFallback("Silent", Patterns.Silent,
                 addr => Offsets.Patches.Silent = addr, saved);
+            TryPatternWithFallback("Hidden", Patterns.Hidden,
+                addr => Offsets.Patches.Hidden = addr, saved);
             TryPatternWithFallback("DisableAi", Patterns.DisableAi, addr => Offsets.Patches.DisableAi = addr, saved);
             // TryPatternWithFallback("TargetingView", Patterns.DbgDrawFlag, addr => Offsets.Patches.DbgDrawFlag = addr,
             //     saved);
@@ -110,6 +112,8 @@ namespace SilkySouls2.Memory
                 addr => Offsets.Hooks.NoClipUpdateCoords = addr.ToInt64(), saved);
             TryPatternWithFallback("FastQuitout", Patterns.FastQuitout,
                 addr => Offsets.Hooks.FastQuitout = addr.ToInt64(), saved);
+            TryPatternWithFallback("InfinitePoise", Patterns.InfinitePoise,
+                addr => Offsets.Hooks.InfinitePoise = addr.ToInt64(), saved);
             
             var setCurrectActLocs = FindAddressesByPattern(Patterns.SetCurrectAct, 2);
             if (setCurrectActLocs[0] == IntPtr.Zero && saved.TryGetValue("SetCurrectAct", out var value))
@@ -189,6 +193,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Patches.DropRate: 0x{Offsets.Patches.DropRate.ToInt64():X}");
             Console.WriteLine($"Patches.DisableAi: 0x{Offsets.Patches.DisableAi.ToInt64():X}");
             Console.WriteLine($"Patches.Silent: 0x{Offsets.Patches.Silent.ToInt64():X}");
+            Console.WriteLine($"Patches.Hidden: 0x{Offsets.Patches.Hidden.ToInt64():X}");
             
             // Console.WriteLine($"Patches.TargetingView: 0x{Offsets.Patches.DbgDrawFlag.ToInt64():X}");
             // Console.WriteLine($"Patches.FreeCam: 0x{Offsets.Patches.FreeCam.ToInt64():X}");

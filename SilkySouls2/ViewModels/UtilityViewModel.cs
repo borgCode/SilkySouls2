@@ -19,6 +19,8 @@ namespace SilkySouls2.ViewModels
         private bool _isDrawRagdollEnabled;
         private bool _isSeeThroughwallsEnabled;
         private bool _isDrawCollisionEnabled;
+        private bool _isColWireframeEnabled;
+        private bool _isDrawKillboxEnabled;
         
         
         private bool _isHideCharactersEnabled;
@@ -147,6 +149,27 @@ namespace SilkySouls2.ViewModels
             }
         }
         
+        public bool IsColWireframeEnabled
+        {
+            get => _isColWireframeEnabled;
+            set
+            {
+                if (!SetProperty(ref _isColWireframeEnabled, value)) return;
+                _utilityService.ToggleColWireframe(_isColWireframeEnabled);
+            }
+        }
+        
+        public bool IsDrawKillboxEnabled
+        {
+            get => _isDrawKillboxEnabled;
+            set
+            {
+                if (!SetProperty(ref _isDrawKillboxEnabled, value)) return;
+                _utilityService.ToggleDrawKillbox(_isDrawKillboxEnabled);
+            }
+        }
+
+        
         public bool IsDrawCollisionEnabled
         {
             get => _isDrawCollisionEnabled;
@@ -156,6 +179,7 @@ namespace SilkySouls2.ViewModels
                 _utilityService.ToggleDrawCol(_isDrawCollisionEnabled);
             }
         }
+
         
         
         public bool IsHideCharactersEnabled

@@ -342,6 +342,12 @@ namespace SilkySouls2.Services
 
         public void ToggleDrawCol(bool isDrawCollisionEnabled) =>
             _dllManager.ToggleRender(DrawType.Collision, isDrawCollisionEnabled);
+
+        public void ToggleDrawKillbox(bool isDrawKillboxEnabled) =>
+            _dllManager.ToggleRender(DrawType.CollisionKillbox, isDrawKillboxEnabled);
+
+        public void ToggleColWireframe(bool isColWireframeEnabled) =>
+            _dllManager.ToggleRender(DrawType.CollisionWireframe, isColWireframeEnabled);
     }
     
 }

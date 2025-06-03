@@ -214,11 +214,6 @@
                             Margin="0, 15, 0,0"
                             Click="RestoreSpellcasts_Click">
                     </Button>
-                    <Button Content="Test"
-                            Width="150"
-                            Margin="0, 15, 0,0"
-                            Click="Test_Click">
-                    </Button>
                 </StackPanel>
             </Grid>
 

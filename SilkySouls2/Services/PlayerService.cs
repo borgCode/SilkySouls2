@@ -236,7 +236,7 @@ namespace SilkySouls2.Services
                 GameManagerImp.PlayerCtrlOffsets.StatsPtr
             }, true);
             
-            var currentStatBytes = _memoryIo.ReadBytes(GetStatPtr(GameManagerImp.PlayerCtrlOffsets.Stats.Vig), 22);
+            var currentStatBytes = _memoryIo.ReadBytes(GetStatPtr(GameManagerImp.PlayerCtrlOffsets.Stats.Vigor), 22);
             var currentLevel = _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.PlayerCtrlOffsets.Stats.SoulLevel));
             
             if (numOfLevels <= 0){ _memoryIo.WriteBytes(Patches.NegativeLevel + 1, new byte[] {0x85});}
@@ -278,6 +278,9 @@ namespace SilkySouls2.Services
             _memoryIo.WriteBytes(code, bytes);
             _memoryIo.RunThreadAndWaitForCompletion(code);
             if (numOfLevels <= 0) _memoryIo.WriteBytes(Patches.NegativeLevel + 1, new byte[] {0x84});
+            
+            var newSouls = _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.PlayerCtrlOffsets.Stats.CurrentSouls));
+            GiveSouls(currentSouls - newSouls);
         }
         
 

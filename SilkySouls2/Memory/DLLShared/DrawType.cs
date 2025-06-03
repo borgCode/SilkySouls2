@@ -10,5 +10,7 @@
         Ragdoll = 5,
         RagdollEsp = 6,
         Collision = 7,
+        CollisionWireframe = 8,
+        CollisionKillbox = 9,
     }
 }

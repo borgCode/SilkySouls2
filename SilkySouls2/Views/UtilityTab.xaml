@@ -72,6 +72,10 @@
                               IsChecked="{Binding IsDrawSoundEnabled}"
                               Grid.Column="0" Grid.Row="3"
                               Margin="0,2" />
+                    <CheckBox Content="Draw Killbox"
+                              IsChecked="{Binding IsDrawKillboxEnabled}"
+                              Grid.Column="0" Grid.Row="4"
+                              Margin="0,2" />
                     
                     <CheckBox Content="Enemy Targeting View"
                               IsChecked="{Binding IsTargetingViewEnabled}"
@@ -119,10 +123,10 @@
                               IsChecked="{Binding IsDrawCollisionEnabled}"
                               Grid.Column="2" Grid.Row="3"
                               Margin="0,2" />
-                    <CheckBox Content="Draw Collision"
-                              IsChecked="{Binding IsDrawCollisionEnabled}"
-                              Grid.Column="2" Grid.Row="3"
-                              Margin="0,2" />
+                    <CheckBox Content="Wireframe"
+                              IsChecked="{Binding IsColWireframeEnabled}"
+                              Grid.Column="2" Grid.Row="4"
+                              Margin="15,2,0,2" />
                 </Grid>
             </StackPanel>
         </Border>

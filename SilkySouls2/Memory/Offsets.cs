@@ -153,17 +153,15 @@ namespace SilkySouls2.Memory
                 
                 public static class Stats
                 {
-                    public const int Vig = 0x08;
-                    public const int End = 0x0A;
-                    public const int Vit = 0x0C;
-                    public const int Atn = 0x0E;
-                    public const int Str = 0x10;
-                    public const int Dex = 0x12;
-                    public const int Int = 0x14;
-                    public const int Fth = 0x16;
+                    public const int Vigor = 0x08;
+                    public const int Endurance = 0x0A;
+                    public const int Vitality = 0x0C;
+                    public const int Attunement = 0x0E;
+                    public const int Strength = 0x10;
+                    public const int Dexterity = 0x12;
+                    public const int Intelligence = 0x14;
+                    public const int Faith = 0x16;
                     public const int Adp = 0x18;
-                    public const int HiddenStat1 = 0x1A;
-                    public const int HiddenStat2 = 0x1C;
                     public const int SoulLevel = 0xD0;
                     public const int CurrentSouls = 0xEC;
                     public const int SoulMemory = 0xF4;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Threading;
 using SilkySouls2.Memory;
 using SilkySouls2.Models;
@@ -125,15 +126,15 @@ namespace SilkySouls2.ViewModels
 
         private void LoadStats()
         {
-            Vigor = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Vig);
-            Endurance = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.End);
-            Vitality = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Vit);
-            Attunement = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Atn);
-            Strength = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Str);
-            Dexterity = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Dex);
+            Vigor = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Vigor);
+            Endurance = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Endurance);
+            Vitality = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Vitality);
+            Attunement = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Attunement);
+            Strength = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Strength);
+            Dexterity = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Dexterity);
             Adp = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Adp);
-            Intelligence = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Int);
-            Faith = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Fth);
+            Intelligence = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Intelligence);
+            Faith = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Faith);
             SoulLevel = _playerService.GetSoulLevel();
             NewGame = _playerService.GetNewGame();
             PlayerSpeed = _playerService.GetPlayerSpeed();
@@ -518,13 +519,23 @@ namespace SilkySouls2.ViewModels
             get => _soulMemory;
             private set => SetProperty(ref _soulMemory, value);
         }
-        //
-        // public void SetStat(string statName, int value)
-        // {
-        //     Offsets.GameManagerImp.PlayerCtrlOffsets.Stats stat = (Offsets.GameManagerImp.PlayerCtrlOffsets.Stats)Enum.Parse(typeof(Offsets.GameManagerImp.PlayerCtrlOffsets.Stats), statName);
-        //     _playerService.SetPlayerStat(stat, value);
-        // }
-        //
+        
+        public void SetStat(string statName, int value)
+        {
+            var field = typeof(GameManagerImp.PlayerCtrlOffsets.Stats)
+                .GetField(statName, BindingFlags.Public | BindingFlags.Static);
+            
+            if (field != null)
+            {
+                int statOffset = (int)field.GetValue(null);
+                _playerService.SetPlayerStat(statOffset, (byte)value);
+            }
+            else
+            {
+                throw new ArgumentException($"Invalid stat name: {statName}");
+            }
+        }
+        
         public int Souls
         {
             get => _souls;
@@ -596,11 +607,7 @@ namespace SilkySouls2.ViewModels
             AreOptionsEnabled = false;
             _timer.Stop();
         }
-
-        public void SetStat(string statName, int upDownValue)
-        {
-            // throw new NotImplementedException();
-        }
+        
 
         public void GiveSouls() => _playerService.GiveSouls(Souls);
 
@@ -608,7 +615,7 @@ namespace SilkySouls2.ViewModels
 
         public void Test()
         {
-            _playerService.SetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.End, 5);
+            _playerService.SetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Endurance, 25);
         }
     }
 }

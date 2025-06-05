@@ -225,6 +225,7 @@ namespace SilkySouls2.Memory
             public static long SetCurrectAct2;
             public static long FastQuitout;
             public static long InfinitePoise;
+            public static long EzStateSetEvent;
         }
 
         public static class Funcs

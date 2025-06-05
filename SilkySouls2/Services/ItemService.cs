@@ -43,6 +43,9 @@ namespace SilkySouls2.Services
             var dlBackAllocator =
                 _memoryIo.ReadInt64((IntPtr)_memoryIo.ReadInt64(GameManagerImp.Base) + GameManagerImp.Offsets.DLBackAllocator);
             
+            _memoryIo.WriteInt32(currentQuantity, 0);
+            _memoryIo.WriteInt32(stackCount, 0);
+            
             _memoryIo.WriteInt32(maxQuantity, selectedItem.StackSize);
             _memoryIo.WriteInt32(itemStruct + 0x4, selectedItem.Id);
             _memoryIo.WriteFloat(itemStruct + 0x8, -1f);

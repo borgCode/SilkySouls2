@@ -348,6 +348,26 @@ namespace SilkySouls2.Services
 
         public void ToggleColWireframe(bool isColWireframeEnabled) =>
             _dllManager.ToggleRender(DrawType.CollisionWireframe, isColWireframeEnabled);
+
+        public void ToggleSnowstormHook(bool isSnowstormDisabled)
+        {
+            var code = CodeCaveOffsets.Base + CodeCaveOffsets.Snowstorm;
+
+            if (isSnowstormDisabled)
+            {
+                var origin = Hooks.EzStateSetEvent;
+                var bytes = AsmLoader.GetAsmBytes("DisableSnowstorm");
+                var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 11, code + 0x1C);
+                Array.Copy(jmpBytes, 0, bytes, 0x17 + 1, 4);
+                _memoryIo.WriteBytes(code, bytes);
+                _hookManager.InstallHook(code.ToInt64(), origin, new byte[]
+                    { 0x41, 0x0F, 0xB6, 0xF8, 0x48, 0x8B, 0x88, 0xF0, 0x22, 0x00, 0x00 });
+            }
+            else
+            {
+                _hookManager.UninstallHook(code.ToInt64());
+            }
+        }
     }
     
 }

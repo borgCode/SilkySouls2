@@ -98,7 +98,8 @@ namespace SilkySouls2.Memory
             ItemStruct = 0x9D0,
             StackSpace = 0x9E0,
             Code = 0xB00,
-            
         }
+
+        public const int Snowstorm = 0xD00;
     }
 }

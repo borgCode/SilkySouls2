@@ -123,5 +123,20 @@ namespace SilkySouls2.ViewModels
             if (FlagStateIndex == 0) _utilityService.SetEventOn(flagIdValue);
             else _utilityService.SetEventOff(flagIdValue);
         }
+        
+        
+        private bool _isSnowstormDisabled;
+        public bool IsSnowstormDisabled
+        {
+            get => _isSnowstormDisabled;
+            set
+            {
+                if (SetProperty(ref _isSnowstormDisabled, value))
+                {
+                    _utilityService.ToggleSnowstormHook(_isSnowstormDisabled);
+                    _utilityService.SetEventOff(GameIds.EventFlags.FrigidSnowstorm);
+                }
+            }
+        }
     }
 }

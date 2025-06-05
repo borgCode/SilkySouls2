@@ -2098,4 +2098,13 @@ c3                      ret</value>
 48 81 c4 08 02 00 00    add    rsp,0x208
 c3                      ret</value>
   </data>
+  <data name="DisableSnowstorm" xml:space="preserve">
+    <value>48 81 fa 5e 1f 02 20    cmp    rdx,0x20021f5e
+75 03                   jne    c &lt;normal&gt;
+4d 31 c0                xor    r8,r8
+00000000000c &lt;normal&gt;:
+41 0f b6 f8             movzx  edi,r8b
+48 8b 88 f0 22 00 00    mov    rcx,QWORD PTR [rax+0x22f0]
+e9 00 00 00 00          jmp    1c &lt;normal+0x10&gt;</value>
+  </data>
 </root>

@@ -85,6 +85,9 @@ namespace SilkySouls2.Memory
             TryPatternWithFallback("CompareEventRandValue",
                 Patterns.CompareEventRandValue,
                 addr => Offsets.Hooks.CompareEventRandValue = addr.ToInt64(), saved);
+            TryPatternWithFallback("EzStateSetEvent",
+                Patterns.EzStateSetEvent,
+                addr => Offsets.Hooks.EzStateSetEvent = addr.ToInt64(), saved);
             TryPatternWithFallback("HpWrite", Patterns.HpWrite,
                 addr => Offsets.Hooks.HpWrite = addr.ToInt64(), saved);
             Offsets.Hooks.OneShot = Offsets.Hooks.HpWrite - 0xB;
@@ -202,6 +205,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Hooks.SetAreaVariable: 0x{Offsets.Hooks.SetAreaVariable:X}");
             Console.WriteLine($"Hooks.CompareEventRandValue: 0x{Offsets.Hooks.CompareEventRandValue:X}");
             Console.WriteLine($"Hooks.HpWrite: 0x{Offsets.Hooks.HpWrite:X}");
+            Console.WriteLine($"Hooks.EzStateSetEvent: 0x{Offsets.Hooks.EzStateSetEvent:X}");
             Console.WriteLine($"Hooks.OneShot: 0x{Offsets.Hooks.OneShot:X}");
             Console.WriteLine($"Hooks.WarpCoordWrite: 0x{Offsets.Hooks.WarpCoordWrite:X}");
             Console.WriteLine($"Hooks.LockedTarget: 0x{Offsets.Hooks.LockedTarget:X}");

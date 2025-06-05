@@ -206,6 +206,21 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 48 81 fa 5e 1f 02 20    cmp    rdx,0x20021f5e
+        ///75 03                   jne    c &lt;normal&gt;
+        ///4d 31 c0                xor    r8,r8
+        ///00000000000c &lt;normal&gt;:
+        ///41 0f b6 f8             movzx  edi,r8b
+        ///48 8b 88 f0 22 00 00    mov    rcx,QWORD PTR [rax+0x22f0]
+        ///e9 00 00 00 00          jmp    1c &lt;normal+0x10&gt;.
+        /// </summary>
+        internal static string DisableSnowstorm {
+            get {
+                return ResourceManager.GetString("DisableSnowstorm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to b8 0a 00 00 00          mov    eax,0xa
         ///e9 00 00 00 00          jmp    a &lt;_main+0xa&gt;.
         /// </summary>

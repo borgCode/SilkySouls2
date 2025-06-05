@@ -52,7 +52,14 @@ namespace SilkySouls2.Memory
             None
         );
 
+        public static readonly Pattern EzStateSetEvent = new Pattern(
+            new byte[] { 0x41, 0x0F, 0xB6, 0xF8, 0x48, 0x8B, 0x88 },
+            "xxxxxxx",
+            0,
+            None
+        );
 
+            
         public static readonly Pattern FastQuitout = new Pattern(
             new byte[] { 0x48, 0x89, 0x84, 0x24, 0x50, 0x01, 0x00, 0x00, 0x83, 0x79, 0x10 },
             "xxxxxxxxxxx",

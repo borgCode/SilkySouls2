@@ -145,6 +145,11 @@ namespace SilkySouls2.Memory
             Offsets.Funcs.LevelUp = FindAddressByPattern(Patterns.LevelUp).ToInt64();
             Offsets.Patches.NegativeLevel = (IntPtr)Offsets.Funcs.LevelUp + 0x38;
             
+            Offsets.Funcs.CurrentItemQuantityCheck = FindAddressByPattern(Patterns.CurrentItemQuantityCheck).ToInt64();
+            Offsets.Funcs.ItemGive = FindAddressByPattern(Patterns.ItemGive).ToInt64();
+            Offsets.Funcs.BuildItemDialog = FindAddressByPattern(Patterns.BuildItemDialog).ToInt64();
+            Offsets.Funcs.ShowItemDialog = FindAddressByPattern(Patterns.ShowItemDialog).ToInt64();
+            
             TryPatternWithFallback("SetRenderTargets",
                 Patterns.SetRenderTargetsWrapper,
                 addr => Offsets.Funcs.SetRenderTargets = addr.ToInt64(), saved);
@@ -155,15 +160,6 @@ namespace SilkySouls2.Memory
                 Patterns.ChrCtrlUpdate,
                 addr => Offsets.Funcs.ChrCtrlUpdate = addr.ToInt64(), saved);
     
-            // Offsets.Funcs.ReinforceWeapon = Offsets.Funcs.Travel - 0x1620;
-            // Offsets.Funcs.InfuseWeapon = Offsets.Funcs.Travel - 0x1CB0;
-            // Offsets.Funcs.Repair = Offsets.Funcs.Travel - 0x14C0;
-            // Offsets.Funcs.Attunement = Offsets.Funcs.Travel - 0xB10;
-            // Offsets.Funcs.AllotEstus = Offsets.Funcs.Travel - 0x2010;
-            // Offsets.Funcs.Transpose = Offsets.Funcs.Travel - 0x1A10;
-            // Offsets.Funcs.RegularShop = Offsets.Funcs.Travel - 0x1B50;
-            // Offsets.Funcs.CombineMenuFlagAndEventFlag =
-            //     FindAddressByPattern(Patterns.CombineMenuFlagAndEventFlag).ToInt64();
 
 
 #if DEBUG
@@ -232,7 +228,10 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Funcs.ChrCtrlUpdate: 0x{Offsets.Funcs.ChrCtrlUpdate:X}");
             Console.WriteLine($"Funcs.LevelLookUp: 0x{Offsets.Funcs.LevelLookUp:X}");
             Console.WriteLine($"Funcs.LevelUp: 0x{Offsets.Funcs.LevelUp:X}");
-            // Console.WriteLine($"Funcs.RestoreAllObjects: 0x{Offsets.Funcs.RestoreAllObjects:X}");
+            Console.WriteLine($"Funcs.CurrentItemQuantityCheck: 0x{Offsets.Funcs.CurrentItemQuantityCheck:X}");
+            Console.WriteLine($"Funcs.ItemGive: 0x{Offsets.Funcs.ItemGive:X}");
+            Console.WriteLine($"Funcs.BuildItemDialog: 0x{Offsets.Funcs.BuildItemDialog:X}");
+            Console.WriteLine($"Funcs.ShowItemDialog: 0x{Offsets.Funcs.ShowItemDialog:X}");
 #endif
         }
 

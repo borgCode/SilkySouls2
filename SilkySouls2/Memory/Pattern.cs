@@ -189,7 +189,35 @@ namespace SilkySouls2.Memory
         );
 
 
+        public static readonly Pattern CurrentItemQuantityCheck = new Pattern(
+            new byte[] { 0x48, 0x98, 0x8B, 0x8C, 0x82, 0xCC, 0x52 },
+            "xxxxxxx",
+            -0x4D,
+            None
+        );
 
+        public static readonly Pattern ItemGive = new Pattern(
+            new byte[] { 0x8D, 0x46, 0xFF, 0x83, 0xF8, 0x1F, 0x0F, 0x87, 0xF2 },
+            "xxxxxxxxx",
+            -0x1E,
+            None
+        );
+
+        public static readonly Pattern BuildItemDialog = new Pattern(
+            new byte[] { 0x44, 0x89, 0x11, 0x4C },
+            "xxxx",
+            -0x0F,
+            None
+        );
+
+        public static readonly Pattern ShowItemDialog = new Pattern(
+            new byte[] { 0x48, 0x8B, 0x89, 0xD8, 0x00, 0x00, 0x00, 0x48, 0x85, 0xC9, 0x0F, 0x85, 0x20 },
+            "xxxxxxxxxxxxx",
+            0,
+            None
+        );
+
+        
         public static readonly Pattern ChrCtrlUpdate = new Pattern(
             new byte[] { 0x48, 0x8B, 0x89, 0xE0, 0x00, 0x00, 0x00, 0xF3 },
             "xxxxxxxx",

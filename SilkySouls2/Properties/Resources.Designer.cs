@@ -60,6 +60,53 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 60760000,Wood Arrow,999,0,0
+        ///60770000,Iron Arrow,999,0,0
+        ///60780000,Magic Arrow,999,0,0
+        ///60790000,Lightning Arrow,999,0,0
+        ///60800000,Fire Arrow,999,0,0
+        ///60810000,Dark Arrow,999,0,0
+        ///60820000,Poison Arrow,999,0,0
+        ///60830000,Lacerating Arrow,999,0,0
+        ///60850000,Iron Greatarrow,999,0,0
+        ///60870000,Lightning Greatarrow,999,0,0
+        ///60880000,Fire Greatarrow,999,0,0
+        ///60900000,Destructive Greatarrow,999,0,0
+        ///60910000,Wood Bolt,999,0,0
+        ///60920000,Heavy Bolt,999,0,0
+        ///60930000,Magic Bolt,999,0,0
+        ///60940000,Lightning Bolt,999,0,0        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Ammo {
+            get {
+                return ResourceManager.GetString("Ammo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 25060101,Agdayne&apos;s Black Robe,1,5,0
+        ///25060102,Agdayne&apos;s Cuffs,1,5,0
+        ///25060103,Agdayne&apos;s Kilt,1,5,0
+        ///23060101,Alonne Captain Armor,1,10,0
+        ///23060100,Alonne Captain Helm,1,10,0
+        ///23061101,Alonne Knight Armor,1,10,0
+        ///23061102,Alonne Knight Gauntlets,1,10,0
+        ///23061100,Alonne Knight Helm,1,10,0
+        ///23061103,Alonne Knight Leggings,1,10,0
+        ///26800101,Alonne&apos;s Armor,1,5,0
+        ///26800102,Alonne&apos;s Gauntlets,1,5,0
+        ///26800100,Alonne&apos;s Helm,1,5,0
+        ///26800103,Alonne&apos;s Leggings,1,5,0
+        ///21490101,Alva Armor,1,10,0
+        ///21490102,Alva Gauntlets,1 [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Armor {
+            get {
+                return ResourceManager.GetString("Armor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 83 ec 60             sub    rsp,0x60
         ///48 8d 0d 00 00 00 00    lea    rcx,[rip+0x0]        # b &lt;_main+0xb&gt;
         ///0f b7 15 00 00 00 00    movzx  edx,WORD PTR [rip+0x0]        # 12 &lt;_main+0x12&gt;
@@ -94,6 +141,31 @@ namespace SilkySouls2.Properties {
         internal static string CompareEventRandValue {
             get {
                 return ResourceManager.GetString("CompareEventRandValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 60010000,Lifegem,99,0,0
+        ///60020000,Radiant Lifegem,99,0,0
+        ///60030000,Old Radiant Lifegem,99,0,0
+        ///60035000,Elizabeth Mushroom,99,0,0
+        ///60036000,Dried Root,99,0,0
+        ///60040000,Amber Herb,99,0,0
+        ///60050000,Twilight Herb,99,0,0
+        ///60060000,Wilted Dusk Herb,99,0,0
+        ///60070000,Poison Moss,99,0,0
+        ///60090000,Monastery Charm,99,0,0
+        ///60100000,Dragon Charm,99,0,0
+        ///60105000,Divine Blessing,99,0,0
+        ///60110000,Rouge Water,99,0,0
+        ///60120000,Crimson Water,99,0,0
+        ///60151000,Human Effigy,99,0,0
+        ///60160000,Small Blue Burr,99,0,0
+        ///60170000,Sma [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Consumables {
+            get {
+                return ResourceManager.GetString("Consumables", resourceCulture);
             }
         }
         
@@ -174,6 +246,30 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 63000000,Point Gesture,1,0,0
+        ///63001000,I won&apos;t bite Gesture,1,0,0
+        ///63003000,Bow Gesture,1,0,0
+        ///63004000,Welcome Gesture,1,0,0
+        ///63005000,Duel bow Gesture,1,0,0
+        ///63006000,Wave Gesture,1,0,0
+        ///63007000,Pumped up Gesture,1,0,0
+        ///63008000,Joy Gesture,1,0,0
+        ///63009000,Warcry Gesture,1,0,0
+        ///63010000,Warmup Gesture,1,0,0
+        ///63011000,Hurrah! Gesture,1,0,0
+        ///63012000,Righty-ho! Gesture,1,0,0
+        ///63013000,No way Gesture,1,0,0
+        ///63014000,This one&apos;s me Gesture,1,0,0
+        ///63015000,Have mercy! Gesture,1,0,0
+        ///63016000,Prostration Gestur [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Gestures {
+            get {
+                return ResourceManager.GetString("Gestures", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 b9 00 00 00 00 00    movabs rcx,0x0
         ///00 00 00
         ///48 ba 00 00 00 00 00    movabs rdx,0x0
@@ -209,6 +305,77 @@ namespace SilkySouls2.Properties {
         internal static string InfinitePoise {
             get {
                 return ResourceManager.GetString("InfinitePoise", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 0,0,0,0,0,0,0,0,0,0,0
+        ///10,1,0,0,0,0,0,0,1,1,1
+        ///100000,1,1,1,1,1,1,1,1,1,1
+        ///100100,1,1,1,1,1,1,0,1,1,1
+        ///100200,1,1,1,1,1,1,1,1,1,1
+        ///100300,1,1,1,1,1,1,1,1,1,1
+        ///100400,1,1,1,1,1,1,1,1,1,1
+        ///100500,1,1,1,1,1,1,1,1,1,1
+        ///100600,1,1,1,1,1,1,1,1,1,1
+        ///100700,1,1,1,1,1,1,1,1,1,1
+        ///100800,1,1,1,1,1,1,1,1,1,1
+        ///100900,1,1,1,1,1,1,1,1,1,1
+        ///101000,1,1,1,1,1,1,1,1,1,1
+        ///101100,1,1,1,1,1,1,1,1,1,1
+        ///101200,1,1,1,1,1,1,1,1,1,1
+        ///101300,1,1,1,1,1,1,1,1,1,1
+        ///101400,1,1,1,1,1,1,1,1,1,1
+        ///101500,1,1,1,1,1,1,0,1,1,1
+        ///101600,1,1,1,1,1, [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Infusions {
+            get {
+                return ResourceManager.GetString("Infusions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 80 3d 00 00 00 00 01    cmp    BYTE PTR [rip+0x0],0x1        # 7 &lt;_main+0x7&gt;
+        ///75 5c                   jne    65 &lt;skip_adjust&gt;
+        ///48 b9 00 00 00 00 00    movabs rcx,0x0
+        ///00 00 00
+        ///48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 1a &lt;_main+0x1a&gt;
+        ///4c 8d 05 00 00 00 00    lea    r8,[rip+0x0]        # 21 &lt;_main+0x21&gt;
+        ///44 8b 0d 00 00 00 00    mov    r9d,DWORD PTR [rip+0x0]        # 28 &lt;_main+0x28&gt;
+        ///49 bf 00 00 00 00 00    movabs r15,0x0
+        ///00 00 00
+        ///48 83 ec 30             sub    rsp,0x30
+        ///41 ff d7               [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string ItemSpawn {
+            get {
+                return ResourceManager.GetString("ItemSpawn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 60355000,Aged Feather,1,0,0
+        ///51030000,Aldia Key,1,0,0
+        ///50840000,Antiquated Key,1,0,0
+        ///50910000,Ashen Mist Heart,1,0,0
+        ///62150000,Awestone,99,0,0
+        ///50800000,Bastille Key,1,0,0
+        ///6100000,Binoculars,1,0,0
+        ///62160000,Black Separation Crystal,1,0,0
+        ///62020000,Bone of Order,1,0,0
+        ///50830000,Brightstone Key,1,0,0
+        ///50940000,Champion&apos;s Tablet,1,0,0
+        ///62050000,Cracked Blue Eye Orb,99,0,0
+        ///62060000,Cracked Red Eye Orb,99,0,0
+        ///51000000,Crushed Eye Orb,1,0,0
+        ///62070000,Dragon Eye,1,0,0
+        ///60405000,Dragon Head Stone,1,0,0
+        ///6040501 [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string KeyItems {
+            get {
+                return ResourceManager.GetString("KeyItems", resourceCulture);
             }
         }
         
@@ -415,6 +582,30 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 40010000,Life Ring,1,0,0
+        ///40010001,Life Ring+1,1,0,0
+        ///40010002,Life Ring+2,1,0,0
+        ///40010003,Life Ring+3,1,0,0
+        ///40020000,Chloranthy Ring,1,0,0
+        ///40020001,Chloranthy Ring+1,1,0,0
+        ///40020002,Chloranthy Ring+2,1,0,0
+        ///40030000,Royal Soldier&apos;s Ring,1,0,0
+        ///40030001,Royal Soldier&apos;s Ring+1,1,0,0
+        ///40030002,Royal Soldier&apos;s Ring+2,1,0,0
+        ///40040000,First Dragon Ring,1,0,0
+        ///40040001,Second Dragon Ring,1,0,0
+        ///40040002,Third Dragon Ring,1,0,0
+        ///40050000,Ring of Steel Protection,1,0,0
+        ///40050001,Ring of Steel Protection+1,1,0,0
+        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Rings {
+            get {
+                return ResourceManager.GetString("Rings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 89 3d 00 00 00 00    mov    QWORD PTR [rip+0x0],rdi        # 7 &lt;_main+0x7&gt;
         ///48 89 bb c0 00 00 00    mov    QWORD PTR [rbx+0xc0],rdi
         ///e9 00 00 00 00          jmp    13 &lt;_main+0x13&gt;.
@@ -482,6 +673,55 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 31010000,Soul Arrow,1,0,0
+        ///31020000,Great Soul Arrow,1,0,0
+        ///31030000,Heavy Soul Arrow,1,0,0
+        ///31040000,Great Heavy Soul Arrow,1,0,0
+        ///31050000,Homing Soul Arrow,1,0,0
+        ///31060000,Heavy Homing Soul Arrow,1,0,0
+        ///31070000,Homing Soulmass,1,0,0
+        ///31080000,Homing Crystal Soulmass,1,0,0
+        ///31090000,Soul Spear,1,0,0
+        ///31100000,Crystal Soul Spear,1,0,0
+        ///31110000,Shockwave,1,0,0
+        ///31120000,Soul Spear Barrage,1,0,0
+        ///31130000,Soul Shower,1,0,0
+        ///31140000,Soul Greatsword,1,0,0
+        ///31150000,Soul Vortex,1,0,0
+        ///31160000,Soul Bolt,1,0, [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Spells {
+            get {
+                return ResourceManager.GetString("Spells", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 60970000,Titanite Shard,99,0,0
+        ///60975000,Large Titanite Shard,99,0,0
+        ///60980000,Titanite Chunk,99,0,0
+        ///60990000,Titanite Slab,99,0,0
+        ///61000000,Twinkling Titanite,99,0,0
+        ///61030000,Petrified Dragon Bone,99,0,0
+        ///61060000,Faintstone,99,0,0
+        ///61070000,Boltstone,99,0,0
+        ///61080000,Firedrake Stone,99,0,0
+        ///61090000,Darknight Stone,99,0,0
+        ///61100000,Poison Stone,99,0,0
+        ///61110000,Bleed Stone,99,0,0
+        ///61130000,Raw Stone,99,0,0
+        ///61140000,Magic Stone,99,0,0
+        ///61150000,Old Mundane Stone,99,0,0
+        ///61160000,Palestone,99,0,0
+        ///.
+        /// </summary>
+        internal static string UpgradeMaterials {
+            get {
+                return ResourceManager.GetString("UpgradeMaterials", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 0f 5c c2                subps  xmm0,xmm2
         ///0f 29 47 50             movaps XMMWORD PTR [rdi+0x50],xmm0
         ///50                      push   rax
@@ -511,6 +751,29 @@ namespace SilkySouls2.Properties {
         internal static string WarpLocations {
             get {
                 return ResourceManager.GetString("WarpLocations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 5225000,Aged Smelter Sword,1,5,0
+        ///2540000,Aldia Hammer,1,10,101500
+        ///4400000,Alonne Greatbow,1,10,102200
+        ///5010000,Arced Sword,1,5,111400
+        ///4060000,Archdrake Chime,1,10,102500
+        ///2720000,Archdrake Mace,1,10,101600
+        ///11250000,Archdrake Shield,1,10,102800
+        ///3860000,Archdrake Staff,1,10,102400
+        ///1380000,Ashen Warrior Sword,1,10,101000
+        ///4660000,Avelyn,1,10,102300
+        ///3930000,Azal&apos;s Staff,1,5,0
+        ///2020000,Bandit Axe,1,10,101700
+        ///2220000,Bandit Greataxe,1,10,101800
+        ///1010000,Bandit&apos;s Knife,1,10,100400
+        ///2560000,Barbed Club,1,5, [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Weapons {
+            get {
+                return ResourceManager.GetString("Weapons", resourceCulture);
             }
         }
     }

@@ -703,4 +703,1399 @@ ff c1                   inc    ecx
 48 81 c4 48 01 00 00    add    rsp,0x148
 c3                      ret</value>
   </data>
+  <data name="Ammo" xml:space="preserve">
+    <value>60760000,Wood Arrow,999,0,0
+60770000,Iron Arrow,999,0,0
+60780000,Magic Arrow,999,0,0
+60790000,Lightning Arrow,999,0,0
+60800000,Fire Arrow,999,0,0
+60810000,Dark Arrow,999,0,0
+60820000,Poison Arrow,999,0,0
+60830000,Lacerating Arrow,999,0,0
+60850000,Iron Greatarrow,999,0,0
+60870000,Lightning Greatarrow,999,0,0
+60880000,Fire Greatarrow,999,0,0
+60900000,Destructive Greatarrow,999,0,0
+60910000,Wood Bolt,999,0,0
+60920000,Heavy Bolt,999,0,0
+60930000,Magic Bolt,999,0,0
+60940000,Lightning Bolt,999,0,0
+60950000,Fire Bolt,999,0,0
+60960000,Dark Bolt,999,0,0
+</value>
+  </data>
+  <data name="Armor" xml:space="preserve">
+    <value>25060101,Agdayne's Black Robe,1,5,0
+25060102,Agdayne's Cuffs,1,5,0
+25060103,Agdayne's Kilt,1,5,0
+23060101,Alonne Captain Armor,1,10,0
+23060100,Alonne Captain Helm,1,10,0
+23061101,Alonne Knight Armor,1,10,0
+23061102,Alonne Knight Gauntlets,1,10,0
+23061100,Alonne Knight Helm,1,10,0
+23061103,Alonne Knight Leggings,1,10,0
+26800101,Alonne's Armor,1,5,0
+26800102,Alonne's Gauntlets,1,5,0
+26800100,Alonne's Helm,1,5,0
+26800103,Alonne's Leggings,1,5,0
+21490101,Alva Armor,1,10,0
+21490102,Alva Gauntlets,1,10,0
+21490100,Alva Helm,1,10,0
+21490103,Alva Leggings,1,10,0
+22310103,Archdrake Boots,1,10,0
+22310102,Archdrake Gloves,1,10,0
+22310100,Archdrake Helm,1,10,0
+22310101,Archdrake Robes,1,10,0
+21360101,Armor of Aurous,1,5,0
+21361101,Armor of Aurous,1,5,0
+26940101,Armor of the Forlorn,1,5,0
+21230103,Astrologist's Bottoms,1,10,0
+21230102,Astrologist's Gauntlets,1,10,0
+21230101,Astrologist's Robe,1,10,0
+22110101,Bandit Armor,1,10,0
+22110103,Bandit Boots,1,10,0
+22110102,Bandit Gauntlets,1,10,0
+27530101,Bell Keeper Bellyband,1,10,0
+27530102,Bell Keeper Cuffs,1,10,0
+27530100,Bell Keeper Helmet,1,10,0
+27530103,Bell Keeper Trousers,1,10,0
+27430101,Benhart's Armor,1,10,0
+27430103,Benhart's Boots,1,10,0
+27430102,Benhart's Gauntlets,1,10,0
+27430100,Benhart's Knight Helm,1,10,0
+27680103,Black Boots,1,5,0
+21330101,Black Dragon Armor,1,5,0
+21330102,Black Dragon Gauntlets,1,5,0
+21330100,Black Dragon Helm,1,5,0
+21330103,Black Dragon Leggings,1,5,0
+27680102,Black Gloves,1,5,0
+22180100,Black Hollow Mage Hood,1,10,0
+22180101,Black Hollow Mage Robe,1,10,0
+27680100,Black Hood,1,5,0
+21020101,Black Leather Armor,1,10,0
+21020103,Black Leather Boots,1,10,0
+21020102,Black Leather Gloves,1,10,0
+27680101,Black Robes,1,5,0
+21502100,Black Witch Domino Mask,1,5,0
+21500102,Black Witch Gloves,1,5,0
+21501100,Black Witch Hat,1,5,0
+21500101,Black Witch Robe,1,5,0
+21500103,Black Witch Trousers,1,5,0
+21500100,Black Witch Veil,1,5,0
+21390103,Blood-Stained Skirt,1,10,0
+22540100,Bone Crown,1,5,0
+22540102,Bone King Cuffs,1,5,0
+22540101,Bone King Robe,1,5,0
+22540103,Bone King Skirt,1,5,0
+21080101,Brigand Armor,1,10,0
+21080102,Brigand Gauntlets,1,10,0
+21080100,Brigand Hood,1,10,0
+21080103,Brigand Trousers,1,10,0
+27510100,Cale's Helm,1,10,0
+27510101,Cale's Leather Armor,1,10,0
+27510103,Cale's Shoes,1,10,0
+21480101,Catarina Armor,1,5,0
+21480102,Catarina Gauntlets,1,5,0
+21480100,Catarina Helm,1,5,0
+21480103,Catarina Leggings,1,5,0
+27710103,Chaos Boots,1,5,0
+27710102,Chaos Gloves,1,5,0
+27710100,Chaos Hood,1,5,0
+27710101,Chaos Robe,1,5,0
+26890101,Charred Loyce Armor,1,5,0
+26890102,Charred Loyce Gauntlets,1,5,0
+26890100,Charred Loyce Helm,1,5,0
+26890103,Charred Loyce Leggings,1,5,0
+27420102,Creighton's Chain Gloves,1,10,0
+27420103,Creighton's Chain Leggings,1,10,0
+27420101,Creighton's Chainmail,1,10,0
+27420100,Creighton's Steel Mask,1,10,0
+21640100,Crown of the Ivory King,1,5,0
+21630100,Crown of the Old Iron King,1,5,0
+21650100,Crown of the Sunken King,1,5,0
+22360101,Dark Armor,1,5,0
+22360102,Dark Gauntlets,1,5,0
+22360103,Dark Leggings,1,5,0
+22360100,Dark Mask,1,5,0
+23160102,Desert Sorceress Gloves,1,10,0
+23160100,Desert Sorceress Hood,1,10,0
+23160103,Desert Sorceress Skirt,1,10,0
+23160101,Desert Sorceress Top,1,10,0
+21390102,Dingy Cuffs,1,10,0
+21390100,Dingy Hood,1,10,0
+21390101,Dingy Robe,1,10,0
+23170103,Dragon Acolyte Boots,1,10,0
+23170102,Dragon Acolyte Gloves,1,10,0
+23170100,Dragon Acolyte Mask,1,10,0
+23170101,Dragon Acolyte Robe,1,10,0
+23171100,Dragon Sage Hood,1,10,0
+26100101,Dragonrider Armor,1,5,0
+26100102,Dragonrider Gauntlets,1,5,0
+26100100,Dragonrider Helm,1,5,0
+26100103,Dragonrider Leggings,1,5,0
+21600101,Drakeblood Armor,1,10,0
+21600102,Drakeblood Gauntlets,1,10,0
+21600100,Drakeblood Helm,1,10,0
+21600103,Drakeblood Leggings,1,10,0
+23310101,Drakekeeper Armor,1,10,0
+23310103,Drakekeeper Boots,1,10,0
+23310102,Drakekeeper Gauntlets,1,10,0
+23310100,Drakekeeper Helm,1,10,0
+27240102,Drangleic Gauntlets,1,5,0
+27240100,Drangleic Helm,1,5,0
+27240103,Drangleic Leggings,1,5,0
+27240101,Drangleic Mail,1,5,0
+21430100,Durgo's Hat,1,5,0
+21060101,Elite Knight Armor,1,10,0
+21060102,Elite Knight Gloves,1,10,0
+21060100,Elite Knight Helm,1,10,0
+21060103,Elite Knight Leggings,1,10,0
+21440102,Engraved Gauntlets,1,5,0
+26180101,Executioner Armor,1,5,0
+26180102,Executioner Gauntlets,1,5,0
+26180100,Executioner Helm,1,5,0
+26180103,Executioner Leggings,1,5,0
+23130101,Falconer Armor,1,10,0
+23130103,Falconer Boots,1,10,0
+23130102,Falconer Gloves,1,10,0
+23130100,Falconer Helm,1,10,0
+21320101,Faraam Armor,1,10,0
+21320103,Faraam Boots,1,10,0
+21320102,Faraam Gauntlets,1,10,0
+21320100,Faraam Helm,1,10,0
+21690103,Flower Skirt,1,10,0
+21460103,Flying Feline Boots,1,5,0
+26510103,Fume Sorcerer Boots,1,10,0
+26510102,Fume Sorcerer Gloves,1,10,0
+26510100,Fume Sorcerer Mask,1,10,0
+26510101,Fume Sorcerer Robes,1,10,0
+21360102,Gauntlets of Aurous,1,5,0
+21361102,Gauntlets of Aurous,1,5,0
+26940102,Gauntlets of the Forlorn,1,5,0
+23120103,Grave Warden Bottoms,1,10,0
+23120102,Grave Warden Cuffs,1,10,0
+23120100,Grave Warden Mask,1,10,0
+23120101,Grave Warden Top,1,10,0
+22340101,Gyrm Armor,1,10,0
+22340103,Gyrm Boots,1,10,0
+22340102,Gyrm Gloves,1,10,0
+22340100,Gyrm Helm,1,10,0
+22350101,Gyrm Warrior Armor,1,10,0
+22350103,Gyrm Warrior Boots,1,10,0
+22350102,Gyrm Warrior Gloves,1,10,0
+22351100,Gyrm Warrior Greathelm,1,10,0
+22350100,Gyrm Warrior Helm,1,10,0
+27440101,Hard Leather Armor,1,10,0
+27440103,Hard Leather Boots,1,10,0
+27440102,Hard Leather Gauntlets,1,10,0
+21160101,Havel's Armor,1,5,0
+21160102,Havel's Gauntlets,1,5,0
+21160100,Havel's Helm,1,5,0
+21160103,Havel's Leggings,1,5,0
+21070103,Heavy Boots,1,10,0
+23010101,Heide Knight Chainmail,1,10,0
+23010102,Heide Knight Gauntlets,1,10,0
+23010100,Heide Knight Greathelm,1,10,0
+23011100,Heide Knight Iron Mask,1,10,0
+23010103,Heide Knight Leggings,1,10,0
+21360100,Helm of Aurous,1,5,0
+21361100,Helm of Aurous,1,5,0
+27700103,Hexer's Boots,1,5,0
+27700102,Hexer's Gloves,1,5,0
+27700100,Hexer's Hood,1,5,0
+27700101,Hexer's Robes,1,5,0
+22030101,Hollow Infantry Armor,1,10,0
+22030103,Hollow Infantry Boots,1,10,0
+22030102,Hollow Infantry Gloves,1,10,0
+22030100,Hollow Infantry Helm,1,10,0
+21670100,Hollow Skin,1,10,0
+22020101,Hollow Soldier Armor,1,10,0
+22020102,Hollow Soldier Gauntlets,1,10,0
+22020100,Hollow Soldier Helm,1,10,0
+22020103,Hollow Soldier Leggings,1,10,0
+26940100,Hood of the Forlorn,1,5,0
+21040100,Hunter's Hat,1,10,0
+25110101,Imperious Armor,1,10,0
+25110102,Imperious Gloves,1,10,0
+25110100,Imperious Helm,1,10,0
+25110103,Imperious Leggings,1,10,0
+21100100,Imported Hood,1,10,0
+21100102,Imported Manchettes,1,10,0
+21100103,Imported Trousers,1,10,0
+21100101,Imported Tunic,1,10,0
+22031101,Infantry Armor,1,10,0
+22031103,Infantry Boots,1,10,0
+22031102,Infantry Gloves,1,10,0
+22031100,Infantry Helm,1,10,0
+25100101,Insolent Armor,1,10,0
+25100103,Insolent Boots,1,10,0
+25100102,Insolent Gloves,1,10,0
+25100100,Insolent Helm,1,10,0
+22510101,Ironclad Armor,1,10,0
+22510102,Ironclad Gauntlets,1,10,0
+22510100,Ironclad Helm,1,10,0
+22510103,Ironclad Leggings,1,10,0
+26900101,Ivory King Armor,1,5,0
+26900102,Ivory King Gauntlets,1,5,0
+26900100,Ivory King Helm,1,5,0
+26900103,Ivory King Leggings,1,5,0
+21210100,Jester's Cap,1,10,0
+21210102,Jester's Gloves,1,10,0
+21210101,Jester's Robes,1,10,0
+21210103,Jester's Tights,1,10,0
+25130101,King's Armor,1,5,0
+25130100,King's Crown,1,5,0
+25130102,King's Gauntlets,1,5,0
+25130103,King's Leggings,1,5,0
+21050101,Knight Armor,1,10,0
+21050102,Knight Gauntlets,1,10,0
+21050100,Knight Helm,1,10,0
+21050103,Knight Leggings,1,10,0
+21040101,Leather Armor,1,10,0
+21040103,Leather Boots,1,10,0
+21040102,Leather Gloves,1,10,0
+21360103,Leggings of Aurous,1,5,0
+21361103,Leggings of Aurous,1,5,0
+26940103,Leggings of the Forlorn,1,5,0
+25090100,Leydia Black Hood,1,5,0
+25090101,Leydia Black Robe,1,5,0
+25120102,Leydia Gauntlets,1,10,0
+25120100,Leydia White Hood,1,10,0
+25120101,Leydia White Robe,1,10,0
+22190102,Lion Mage Cuffs,1,10,0
+22190101,Lion Mage Robe,1,10,0
+22190103,Lion Mage Skirt,1,10,0
+23080101,Lion Warrior Cape,1,10,0
+23080102,Lion Warrior Cuffs,1,10,0
+23081100,Lion Warrior Helm,1,10,0
+23080103,Lion Warrior Skirt,1,10,0
+27210101,Llewellyn Armor,1,5,0
+27210102,Llewellyn Gloves,1,5,0
+27210103,Llewellyn Shoes,1,5,0
+25040101,Looking Glass Armor,1,5,0
+25040102,Looking Glass Gauntlets,1,5,0
+25040103,Looking Glass Leggings,1,5,0
+25040100,Looking Glass Mask,1,5,0
+26880101,Loyce Armor,1,5,0
+26880102,Loyce Gauntlets,1,5,0
+26880100,Loyce Helm,1,5,0
+26880103,Loyce Leggings,1,5,0
+27520102,Lucatiel's Gloves,1,10,0
+27520100,Lucatiel's Mask,1,10,0
+27520103,Lucatiel's Trousers,1,10,0
+27520101,Lucatiel's Vest,1,10,0
+27550101,Mad Warrior Armor,1,5,0
+27550102,Mad Warrior Gauntlets,1,5,0
+27550103,Mad Warrior Leggings,1,5,0
+27550100,Mad Warrior Mask,1,5,0
+21350102,Manchettes of Judgment,1,5,0
+22240103,Manikin Boots,1,10,0
+22240102,Manikin Gloves,1,10,0
+22240100,Manikin Mask,1,10,0
+22240101,Manikin Top,1,10,0
+21350100,Mask of Judgment,1,5,0
+23150101,Mastodon Armor,1,10,0
+23150102,Mastodon Gauntlets,1,10,0
+23150100,Mastodon Helm,1,10,0
+23150103,Mastodon Leggings,1,10,0
+21700100,Minotaur Helm,1,10,0
+27521100,Mirrah Hat,1,10,0
+21370100,Monastery Headcloth,1,5,0
+21370102,Monastery Long Gloves,1,5,0
+21370101,Monastery Longshirt,1,5,0
+21370103,Monastery Skirt,1,5,0
+21470102,Moon Butterfly Cuffs,1,5,0
+21470100,Moon Butterfly Hat,1,5,0
+21470103,Moon Butterfly Skirt,1,5,0
+21470101,Moon Butterfly Wings,1,5,0
+21230100,Moon Hat,1,10,0
+27830100,Nahr Alma Hood,1,10,0
+27830101,Nahr Alma Robes,1,10,0
+21610100,Northwarder Hood,1,10,0
+21610102,Northwarder Manchettes,1,10,0
+21610101,Northwarder Robe,1,10,0
+21610103,Northwarder Trousers,1,10,0
+21660100,Old Bell Helm,1,10,0
+22512101,Old Ironclad Armor,1,10,0
+22512102,Old Ironclad Gauntlets,1,10,0
+22512100,Old Ironclad Helm,1,10,0
+22512103,Old Ironclad Leggings,1,10,0
+23300101,Old Knight Armor,1,10,0
+23300102,Old Knight Gauntlets,1,10,0
+23300100,Old Knight Helm,1,10,0
+23300103,Old Knight Leggings,1,10,0
+21010101,Pate's Armor,1,10,0
+21010102,Pate's Gloves,1,10,0
+21010100,Pate's Helm,1,10,0
+21010103,Pate's Trousers,1,10,0
+22480101,Peasant Attire,1,10,0
+22480100,Peasant Hat,1,10,0
+22480102,Peasant Long Gloves,1,10,0
+22480103,Peasant Trousers,1,10,0
+26260102,Penal Handcuffs,1,5,0
+26260100,Penal Mask,1,5,0
+26260103,Penal Skirt,1,5,0
+26260101,Penal Straightjacket,1,5,0
+21680100,Pharros Mask,1,10,0
+22062102,Priestess Gloves,1,10,0
+22062100,Priestess Headpiece,1,10,0
+22062101,Priestess Robe,1,10,0
+22062103,Priestess Skirt,1,10,0
+22270102,Prisoner's Gloves,1,10,0
+22270100,Prisoner's Hood,1,10,0
+22271100,Prisoner's Hood,1,10,0
+22270101,Prisoner's Tatters,1,10,0
+22271101,Prisoner's Tatters,1,10,0
+22270103,Prisoner's Waistcloth,1,10,0
+26750101,Raime's Armor,1,5,0
+26750102,Raime's Gauntlets,1,5,0
+26750100,Raime's Helm,1,5,0
+26750103,Raime's Leggings,1,5,0
+26590101,Rampart Golem Armor,1,5,0
+26590102,Rampart Golem Gauntlets,1,5,0
+26590100,Rampart Golem Helm,1,5,0
+26590103,Rampart Golem Leggings,1,5,0
+23081101,Red Lion Warrior Cape,1,10,0
+26770101,Retainer Robe,1,10,0
+21350101,Robe of Judgment,1,5,0
+22080101,Rogue Armor,1,10,0
+22080102,Rogue Gauntlets,1,10,0
+22080100,Rogue Hood,1,10,0
+22080103,Rogue Leggings,1,10,0
+22021101,Royal Soldier Armor,1,10,0
+22021102,Royal Soldier Gauntlets,1,10,0
+22021100,Royal Soldier Helm,1,10,0
+22021103,Royal Soldier Leggings,1,10,0
+22520101,Royal Swordsman Armor,1,10,0
+22520102,Royal Swordsman Gloves,1,10,0
+22520100,Royal Swordsman Helm,1,10,0
+22520103,Royal Swordsman Leggings,1,10,0
+23250101,Ruin Armor,1,5,0
+23250102,Ruin Gauntlets,1,5,0
+23250100,Ruin Helm,1,5,0
+23250103,Ruin Leggings,1,5,0
+23140101,Rusted Mastodon Armor,1,10,0
+23140102,Rusted Mastodon Gauntlets,1,10,0
+23140100,Rusted Mastodon Helm,1,10,0
+23140103,Rusted Mastodon Leggings,1,10,0
+27690101,Saint's Dress,1,5,0
+27690100,Saint's Hood,1,5,0
+27690102,Saint's Long Gloves,1,5,0
+27690103,Saint's Trousers,1,5,0
+26650101,Sanctum Knight Armor,1,5,0
+26650102,Sanctum Knight Gauntlets,1,5,0
+26650100,Sanctum Knight Helm,1,5,0
+26650103,Sanctum Knight Leggings,1,5,0
+26700100,Sanctum Priestess Tiara,1,10,0
+26660102,Sanctum Soldier Gauntlet,1,10,0
+22230102,Shadow Gauntlets,1,10,0
+22230103,Shadow Leggings,1,10,0
+22230100,Shadow Mask,1,10,0
+22230101,Shadow Top,1,10,0
+23040101,Singer's Dress,1,5,0
+23050101,Smelter Demon Armor,1,5,0
+23050102,Smelter Demon Gauntlets,1,5,0
+23050100,Smelter Demon Helm,1,5,0
+23050103,Smelter Demon Leggings,1,5,0
+22110100,Spiked Bandit Helm,1,10,0
+27440100,Standard Helm,1,10,0
+22220101,Steel Armor,1,10,0
+22220102,Steel Gauntlets,1,10,0
+22220100,Steel Helm,1,10,0
+22220103,Steel Leggings,1,10,0
+22530101,Syan's Armor,1,10,0
+22530102,Syan's Gauntlets,1,10,0
+22530100,Syan's Helm,1,10,0
+22530103,Syan's Leggings,1,10,0
+21710100,Symbol of Avarice,1,10,0
+27950101,Targray's Armor,1,10,0
+27950100,Targray's Helm,1,10,0
+27950103,Targray's Leggings,1,10,0
+27950102,Targray's Manifers,1,10,0
+21070100,Tattered Cloth Hood,1,10,0
+21070102,Tattered Cloth Manchettes,1,10,0
+21070101,Tattered Cloth Robe,1,10,0
+21020100,Thief Mask,1,10,0
+23320101,Throne Defender Armor,1,5,0
+23320102,Throne Defender Gauntlets,1,5,0
+23320100,Throne Defender Helm,1,5,0
+23320103,Throne Defender Leggings,1,5,0
+23340101,Throne Watcher Armor,1,5,0
+23340102,Throne Watcher Gauntlets,1,5,0
+23340100,Throne Watcher Helm,1,5,0
+23340103,Throne Watcher Leggings,1,5,0
+21350103,Tights of Judgment,1,5,0
+21140103,Traveling Merchant Boots,1,10,0
+21140101,Traveling Merchant Coat,1,10,0
+21140102,Traveling Merchant Gloves,1,10,0
+21140100,Traveling Merchant Hat,1,10,0
+22460100,Tseldora Cap,1,10,0
+22460102,Tseldora Manchettes,1,10,0
+22460101,Tseldora Robe,1,10,0
+22460103,Tseldora Trousers,1,10,0
+22130101,Varangian Armor,1,10,0
+22130102,Varangian Cuffs,1,10,0
+22130100,Varangian Helm,1,10,0
+22130103,Varangian Leggings,1,10,0
+23330101,Velstadt's Armor,1,5,0
+23330102,Velstadt's Gauntlets,1,5,0
+23330100,Velstadt's Helm,1,5,0
+23330103,Velstadt's Leggings,1,5,0
+23070101,Vengarl's Armor,1,5,0
+23070103,Vengarl's Boots,1,5,0
+23070102,Vengarl's Gloves,1,5,0
+23070100,Vengarl's Helm,1,5,0
+21030103,Wanderer Boots,1,10,0
+21030101,Wanderer Coat,1,10,0
+21030100,Wanderer Hood,1,10,0
+21030102,Wanderer Manchettes,1,10,0
+22370100,Warlock Mask,1,10,0
+22182100,White Hollow Mage Hood,1,10,0
+22182101,White Hollow Mage Robe,1,10,0
+22060102,White Priest Gloves,1,10,0
+22060100,White Priest Headpiece,1,10,0
+22060101,White Priest Robe,1,10,0
+22060103,White Priest Skirt,1,10,0
+21340100,Xanthous Crown,1,5,0
+21340102,Xanthous Gloves,1,5,0
+21340101,Xanthous Overcoat,1,5,0
+21340103,Xanthous Waistcloth,1,5,0
+</value>
+  </data>
+  <data name="Consumables" xml:space="preserve">
+    <value>60010000,Lifegem,99,0,0
+60020000,Radiant Lifegem,99,0,0
+60030000,Old Radiant Lifegem,99,0,0
+60035000,Elizabeth Mushroom,99,0,0
+60036000,Dried Root,99,0,0
+60040000,Amber Herb,99,0,0
+60050000,Twilight Herb,99,0,0
+60060000,Wilted Dusk Herb,99,0,0
+60070000,Poison Moss,99,0,0
+60090000,Monastery Charm,99,0,0
+60100000,Dragon Charm,99,0,0
+60105000,Divine Blessing,99,0,0
+60110000,Rouge Water,99,0,0
+60120000,Crimson Water,99,0,0
+60151000,Human Effigy,99,0,0
+60160000,Small Blue Burr,99,0,0
+60170000,Small Yellow Burr,99,0,0
+60180000,Small Orange Burr,99,0,0
+60190000,Dark Troches,99,0,0
+60200000,Common Fruit,99,0,0
+60210000,Red Leech Troches,99,0,0
+60230000,Triclops Snake Troches,99,0,0
+60235000,Old Growth Balm,99,0,0
+60236000,Vine Balm,99,0,0
+60237000,Blackweed Balm,99,0,0
+60238000,Goldenfruit Balm,99,0,0
+60239000,Brightbug,99,0,0
+60240000,Aromatic Ooze,99,0,0
+60250000,Gold Pine Resin,99,0,0
+60260000,Charcoal Pine Resin,99,0,0
+60270000,Dark Pine Resin,99,0,0
+60280000,Rotten Pine Resin,99,0,0
+60290000,Bleeding Serum,99,0,0
+60310000,Green Blossom,99,0,0
+60320000,Rusted Coin,99,0,0
+60350000,Homeward Bone,99,0,0
+60370000,Silver Talisman,99,0,0
+60410000,Repair Powder,99,0,0
+60420000,Torch,1,0,0
+60430000,Flame Butterfly,99,0,0
+60450000,Prism Stone,99,0,0
+60510000,Rubbish,99,0,0
+60511000,Petrified Something,99,0,0
+60527000,Bonfire Ascetic,99,0,0
+60530000,Alluring Skull,99,0,0
+60531000,Lloyd's Talisman,99,0,0
+60536000,Pharros' Lockstone,99,0,0
+60537000,Fragrant Branch of Yore,99,0,0
+60538000,Fire Seed,99,0,0
+60540000,Throwing Knife,99,0,0
+60550000,Witching Urn,99,0,0
+60560000,Lightning Urn,99,0,0
+60570000,Firebomb,99,0,0
+60575000,Black Firebomb,99,0,0
+60580000,Hexing Urn,99,0,0
+60590000,Poison Throwing Knife,99,0,0
+60595000,Dung Pie,99,0,0
+60600000,Lacerating Knife,99,0,0
+60610000,Corrosive Urn,99,0,0
+60620000,Holy Water Urn,99,0,0
+60625000,Fading Soul,99,0,0
+60630000,Soul of a Lost Undead,99,0,0
+60640000,Large Soul of a Lost Undead,99,0,0
+60650000,Soul of a Nameless Soldier,99,0,0
+60660000,Large Soul of a Nameless Soldier,99,0,0
+60670000,Soul of a Proud Knight,99,0,0
+60680000,Large Soul of a Proud Knight,99,0,0
+60690000,Soul of a Brave Warrior,99,0,0
+60700000,Large Soul of a Brave Warrior,99,0,0
+60710000,Soul of a Hero,99,0,0
+60720000,Soul of a Great Hero,99,0,0
+64000000,Soul of the Pursuer,99,0,0
+64010000,Soul of the Last Giant,99,0,0
+64020000,Dragonrider Soul,99,0,0
+64030000,Old Dragonslayer Soul,99,0,0
+64040000,Flexile Sentry Soul,99,0,0
+64050000,Ruin Sentinel Soul,99,0,0
+64060000,Soul of the Lost Sinner,99,0,0
+64070000,Executioner's Chariot Soul,99,0,0
+64080000,Skeleton Lord's Soul,99,0,0
+64090000,Covetous Demon Soul,99,0,0
+64100000,Mytha- the Baneful Queen Soul,99,0,0
+64110000,Smelter Demon Soul,99,0,0
+64120000,Old Iron King Soul,99,0,0
+64130000,Royal Rat Vanguard Soul,99,0,0
+64140000,Soul of the Rotten,99,0,0
+64150000,Scorpioness Najka Soul,99,0,0
+64160000,Royal Rat Authority Soul,99,0,0
+64170000,Soul of the Duke's Dear Freja,99,0,0
+64180000,Looking Glass Knight Soul,99,0,0
+64190000,Demon of Song Soul,99,0,0
+64200000,Soul of Velstadt,99,0,0
+64210000,Soul of the King,99,0,0
+64220000,Guardian Dragon Soul,99,0,0
+64230000,Ancient Dragon Soul,99,0,0
+64240000,Giant Lord Soul,99,0,0
+64250000,Soul of Nashandra,99,0,0
+64260000,Throne Defender Soul,99,0,0
+64270000,Throne Watcher Soul,99,0,0
+64280000,Darklurker Soul,99,0,0
+64290000,Belfry Gargoyle Soul,99,0,0
+64300000,Old Witch Soul,99,0,0
+64310000,Old King Soul,99,0,0
+64320000,Old Dead One Soul,99,0,0
+64330000,Old Paledrake Soul,99,0,0
+64500000,Soul of Sinh- the Slumbering Dragon,99,0,0
+64510000,Soul of the Fume Knight,99,0,0
+64520000,Soul of Aava- the King's Pet,99,0,0
+64530000,Soul of Elana- Squalid Queen,99,0,0
+64540000,Soul of Nadalia- Bride of Ash,99,0,0
+64550000,Soul of Alsanna- Silent Oracle,99,0,0
+64560000,Soul of Sir Alonne,99,0,0
+64580000,Soul of the Ivory King,99,0,0
+64590000,Soul of Zallen- the King's Pet,99,0,0
+64600000,Loyce Soul,99,0,0
+64610000,Soul of Lud- the King's Pet,99,0,0
+</value>
+  </data>
+  <data name="Gestures" xml:space="preserve">
+    <value>63000000,Point Gesture,1,0,0
+63001000,I won't bite Gesture,1,0,0
+63003000,Bow Gesture,1,0,0
+63004000,Welcome Gesture,1,0,0
+63005000,Duel bow Gesture,1,0,0
+63006000,Wave Gesture,1,0,0
+63007000,Pumped up Gesture,1,0,0
+63008000,Joy Gesture,1,0,0
+63009000,Warcry Gesture,1,0,0
+63010000,Warmup Gesture,1,0,0
+63011000,Hurrah! Gesture,1,0,0
+63012000,Righty-ho! Gesture,1,0,0
+63013000,No way Gesture,1,0,0
+63014000,This one's me Gesture,1,0,0
+63015000,Have mercy! Gesture,1,0,0
+63016000,Prostration Gesture,1,0,0
+63017000,Decapitate Gesture,1,0,0
+63018000,Fist pump Gesture,1,0,0
+63019000,Mock Gesture,1,0,0
+63021000,Praise the Sun Gesture,1,0,0
+</value>
+  </data>
+  <data name="Infusions" xml:space="preserve">
+    <value>0,0,0,0,0,0,0,0,0,0,0
+10,1,0,0,0,0,0,0,1,1,1
+100000,1,1,1,1,1,1,1,1,1,1
+100100,1,1,1,1,1,1,0,1,1,1
+100200,1,1,1,1,1,1,1,1,1,1
+100300,1,1,1,1,1,1,1,1,1,1
+100400,1,1,1,1,1,1,1,1,1,1
+100500,1,1,1,1,1,1,1,1,1,1
+100600,1,1,1,1,1,1,1,1,1,1
+100700,1,1,1,1,1,1,1,1,1,1
+100800,1,1,1,1,1,1,1,1,1,1
+100900,1,1,1,1,1,1,1,1,1,1
+101000,1,1,1,1,1,1,1,1,1,1
+101100,1,1,1,1,1,1,1,1,1,1
+101200,1,1,1,1,1,1,1,1,1,1
+101300,1,1,1,1,1,1,1,1,1,1
+101400,1,1,1,1,1,1,1,1,1,1
+101500,1,1,1,1,1,1,0,1,1,1
+101600,1,1,1,1,1,1,0,1,1,1
+101700,1,1,1,1,1,1,1,1,1,1
+101800,1,1,1,1,1,1,1,1,1,1
+101900,1,1,1,1,1,1,1,1,1,1
+102000,1,1,1,1,1,1,1,1,1,1
+102100,1,1,1,1,1,0,0,1,1,1
+102200,1,1,1,1,1,0,0,1,1,1
+102300,1,1,1,1,1,0,0,1,1,1
+102400,1,0,1,0,1,0,0,0,0,0
+102500,1,0,0,1,1,0,0,0,0,0
+102600,1,0,0,0,0,0,0,0,0,0
+102700,1,1,1,1,1,1,1,0,0,0
+102800,1,1,1,1,1,1,1,0,0,0
+102900,1,1,1,1,1,1,1,0,0,0
+105000,1,0,0,0,0,0,0,0,0,0
+110100,1,1,1,1,1,1,0,1,1,1
+110200,1,1,1,1,1,1,1,1,1,1
+110300,1,1,1,1,1,1,1,1,1,1
+110400,1,1,1,1,1,1,1,1,1,1
+110500,1,1,1,1,1,1,1,1,1,1
+110600,1,1,1,1,1,1,1,1,1,1
+110700,1,1,1,1,1,1,1,1,1,1
+110800,1,1,1,1,1,1,1,1,1,1
+110900,1,1,1,1,1,1,1,1,1,1
+111000,1,1,1,1,1,1,1,1,1,1
+111100,1,1,1,1,1,1,1,1,1,1
+111200,1,1,1,1,1,1,1,1,1,1
+111300,1,1,1,1,1,1,1,1,1,1
+111400,1,1,1,1,1,1,1,1,1,1
+111500,1,1,1,1,1,1,0,1,1,1
+111600,1,1,1,1,1,1,0,1,1,1
+111700,1,1,1,1,1,1,1,1,1,1
+111800,1,1,1,1,1,1,1,1,1,1
+111900,1,1,1,1,1,1,1,1,1,1
+112000,1,1,1,1,1,1,1,1,1,1
+112100,1,1,1,1,1,0,0,1,1,1
+112200,1,1,1,1,1,0,0,1,1,1
+112300,1,1,1,1,1,0,0,1,1,1
+112400,1,0,1,0,1,0,0,0,0,0
+112500,1,0,0,1,1,0,0,0,0,0
+112600,1,0,0,0,0,0,0,0,0,0
+112700,1,1,1,1,1,1,1,0,0,0
+112800,1,1,1,1,1,1,1,0,0,0
+112900,1,1,1,1,1,1,1,0,0,0
+115000,1,0,0,0,0,0,0,0,0,0
+120100,1,1,1,1,1,1,0,1,1,1
+120200,1,1,1,1,1,1,1,1,1,1
+120300,1,1,1,1,1,1,1,1,1,1
+120400,1,1,1,1,1,1,1,1,1,1
+120500,1,1,1,1,1,1,1,1,1,1
+120600,1,1,1,1,1,1,1,1,1,1
+120700,1,1,1,1,1,1,1,1,1,1
+120800,1,1,1,1,1,1,1,1,1,1
+120900,1,1,1,1,1,1,1,1,1,1
+121000,1,1,1,1,1,1,1,1,1,1
+121100,1,1,1,1,1,1,1,1,1,1
+121200,1,1,1,1,1,1,1,1,1,1
+121300,1,1,1,1,1,1,1,1,1,1
+121400,1,1,1,1,1,1,1,1,1,1
+121500,1,1,1,1,1,1,0,1,1,1
+121600,1,1,1,1,1,1,0,1,1,1
+121700,1,1,1,1,1,1,1,1,1,1
+121800,1,1,1,1,1,1,1,1,1,1
+121900,1,1,1,1,1,1,1,1,1,1
+122000,1,1,1,1,1,1,1,1,1,1
+122100,1,1,1,1,1,0,0,1,1,1
+122200,1,1,1,1,1,0,0,1,1,1
+122300,1,1,1,1,1,0,0,1,1,1
+122400,1,0,1,0,1,0,0,0,0,0
+122500,1,0,0,1,1,0,0,0,0,0
+122600,1,0,0,0,0,0,0,0,0,0
+122700,1,1,1,1,1,1,1,0,0,0
+122800,1,1,1,1,1,1,1,0,0,0
+122900,1,1,1,1,1,1,1,0,0,0
+125000,1,0,0,0,0,0,0,0,0,0
+200100,1,0,0,0,0,0,0,0,0,0
+</value>
+  </data>
+  <data name="KeyItems" xml:space="preserve">
+    <value>60355000,Aged Feather,1,0,0
+51030000,Aldia Key,1,0,0
+50840000,Antiquated Key,1,0,0
+50910000,Ashen Mist Heart,1,0,0
+62150000,Awestone,99,0,0
+50800000,Bastille Key,1,0,0
+6100000,Binoculars,1,0,0
+62160000,Black Separation Crystal,1,0,0
+62020000,Bone of Order,1,0,0
+50830000,Brightstone Key,1,0,0
+50940000,Champion's Tablet,1,0,0
+62050000,Cracked Blue Eye Orb,99,0,0
+62060000,Cracked Red Eye Orb,99,0,0
+51000000,Crushed Eye Orb,1,0,0
+62070000,Dragon Eye,1,0,0
+60405000,Dragon Head Stone,1,0,0
+60405010,Dragon Head Stone,1,0,0
+62130000,Dragon Scale,99,0,0
+52650000,Dragon Stone,1,0,0
+52000000,Dragon Talon,1,0,0
+60406000,Dragon Torso Stone,1,0,0
+60406010,Dragon Torso Stone,1,0,0
+62000000,Dried Fingers,1,0,0
+50990000,Dull Ember,1,0,0
+60155000,Estus Flask,1,0,0
+60525000,Estus Flask Shard,99,0,0
+52300000,Eternal Sanctum Key,1,0,0
+53600000,Eye of the Priestess,1,0,0
+50850000,Fang Key,1,0,0
+50820000,Forgotten Key,1,0,0
+52200000,Frozen Flower,1,0,0
+52500000,Garrison Ward Key,1,0,0
+50900000,Giant's Kinship,1,0,0
+52100000,Heavy Iron Key,1,0,0
+60470000,Hello Carving,1,0,0
+50860000,House Key,1,0,0
+60490000,I'm Sorry Carving,1,0,0
+50810000,Iron Key,1,0,0
+50610000,Key to King's Passage,1,0,0
+50950000,Ladder Miniature,1,0,0
+50870000,Lenigrast's Key,1,0,0
+62190000,Petrified Egg,1,0,0
+62140000,Rat Tail,99,0,0
+62045000,Red Sign Soapstone,1,0,0
+50890000,Rotunda Lockstone,1,0,0
+53100000,Scorching Iron Scepter,1,0,0
+62170000,Seed of a Tree of Giants,99,0,0
+51010000,Simpleton's Spice,99,0,0
+51020000,Skeptic's Spice,99,0,0
+50885000,Small Smooth &amp; Silky Stone,99,0,0
+62040000,Small White Sign Soapstone,1,0,0
+53200000,Smelter Wedge,99,0,0
+50880000,Smooth &amp; Silky Stone,99,0,0
+50600000,Soldier Key,1,0,0
+50920000,Soul of a Giant,99,0,0
+53300000,Soul of Nadalia- Bride of Ash,99,0,0
+50960000,Soul Vessel,99,0,0
+60526000,Sublime Bone Dust,99,0,0
+62120000,Sunlight Medal,99,0,0
+60480000,Thank You Carving,1,0,0
+62100000,Token of Fidelity,99,0,0
+62110000,Token of Spite,99,0,0
+52400000,Tower Key,1,0,0
+50930000,Tseldora Den Key,1,0,0
+50970000,Undead Lockaway Key,1,0,0
+60500000,Very Good! Carving,1,0,0
+62030000,White Sign Soapstone,1,0,0
+</value>
+  </data>
+  <data name="Rings" xml:space="preserve">
+    <value>40010000,Life Ring,1,0,0
+40010001,Life Ring+1,1,0,0
+40010002,Life Ring+2,1,0,0
+40010003,Life Ring+3,1,0,0
+40020000,Chloranthy Ring,1,0,0
+40020001,Chloranthy Ring+1,1,0,0
+40020002,Chloranthy Ring+2,1,0,0
+40030000,Royal Soldier's Ring,1,0,0
+40030001,Royal Soldier's Ring+1,1,0,0
+40030002,Royal Soldier's Ring+2,1,0,0
+40040000,First Dragon Ring,1,0,0
+40040001,Second Dragon Ring,1,0,0
+40040002,Third Dragon Ring,1,0,0
+40050000,Ring of Steel Protection,1,0,0
+40050001,Ring of Steel Protection+1,1,0,0
+40050002,Ring of Steel Protection+2,1,0,0
+40060000,Spell Quartz Ring,1,0,0
+40060001,Spell Quartz Ring+1,1,0,0
+40060002,Spell Quartz Ring+2,1,0,0
+40060003,Spell Quartz Ring+3,1,0,0
+40070000,Flame Quartz Ring,1,0,0
+40070001,Flame Quartz Ring+1,1,0,0
+40070002,Flame Quartz Ring+2,1,0,0
+40070003,Flame Quartz Ring+3,1,0,0
+40080000,Thunder Quartz Ring,1,0,0
+40080001,Thunder Quartz Ring+1,1,0,0
+40080002,Thunder Quartz Ring+2,1,0,0
+40080003,Thunder Quartz Ring+3,1,0,0
+40090000,Dark Quartz Ring,1,0,0
+40090001,Dark Quartz Ring+1,1,0,0
+40090002,Dark Quartz Ring+2,1,0,0
+40090003,Dark Quartz Ring+3,1,0,0
+40100000,Poisonbite Ring,1,0,0
+40100001,Poisonbite Ring+1,1,0,0
+40110000,Bloodbite Ring,1,0,0
+40110001,Bloodbite Ring+1,1,0,0
+40120000,Bracing Knuckle Ring,1,0,0
+40120001,Bracing Knuckle Ring+1,1,0,0
+40120002,Bracing Knuckle Ring+2,1,0,0
+40130000,Cursebite Ring,1,0,0
+40135000,Ash Knuckle Ring,1,0,0
+40140000,Dispelling Ring,1,0,0
+40140001,Dispelling Ring+1,1,0,0
+40150000,Ring of Resistance,1,0,0
+40150001,Ring of Resistance+1,1,0,0
+40160000,Ring of Blades,1,0,0
+40160001,Ring of Blades+1,1,0,0
+40160002,Ring of Blades+2,1,0,0
+40210000,Ring of Knowledge,1,0,0
+40220000,Ring of Prayer,1,0,0
+40230000,Stone Ring,1,0,0
+40260000,Red Tearstone Ring,1,0,0
+40280000,Blue Tearstone Ring,1,0,0
+40290000,Ring of Giants,1,0,0
+40290001,Ring of Giants+1,1,0,0
+40290002,Ring of Giants+2,1,0,0
+40295000,Old Leo Ring,1,0,0
+40300000,Ring of Soul Protection,1,0,0
+40310000,Ring of Life Protection,1,0,0
+40320000,Lingering Dragoncrest Ring,1,0,0
+40320001,Lingering Dragoncrest Ring+1,1,0,0
+40320002,Lingering Dragoncrest Ring+2,1,0,0
+40330000,Clear Bluestone Ring,1,0,0
+40330001,Clear Bluestone Ring+1,1,0,0
+40330002,Clear Bluestone Ring+2,1,0,0
+40340000,Northern Ritual Band,1,0,0
+40340001,Northern Ritual Band+1,1,0,0
+40340002,Northern Ritual Band+2,1,0,0
+40350000,Southern Ritual Band,1,0,0
+40350001,Southern Ritual Band+1,1,0,0
+40350002,Southern Ritual Band+2,1,0,0
+40360000,Covetous Gold Serpent Ring,1,0,0
+40360001,Covetous Gold Serpent Ring+1,1,0,0
+40360002,Covetous Gold Serpent Ring+2,1,0,0
+40370000,Covetous Silver Serpent Ring,1,0,0
+40370001,Covetous Silver Serpent Ring+1,1,0,0
+40370002,Covetous Silver Serpent Ring+2,1,0,0
+40390000,Ring of the Evil Eye,1,0,0
+40390001,Ring of the Evil Eye+1,1,0,0
+40390002,Ring of the Evil Eye+2,1,0,0
+40400000,Ring of Restoration,1,0,0
+40410000,Ring of Binding,1,0,0
+40420000,Silvercat Ring,1,0,0
+40430000,Redeye Ring,1,0,0
+40440000,Gower's Ring of Protection,1,0,0
+40450000,Name-engraved Ring,1,0,0
+40460000,Slumbering Dragoncrest Ring,1,0,0
+40470000,Hawk Ring,1,0,0
+40480000,Old Sun Ring,1,0,0
+40500000,Illusory Ring of a Conqueror,1,0,0
+40510000,King's Ring,1,0,0
+40520000,Ring of the Dead,1,0,0
+40530000,Ring of Thorns,1,0,0
+40530001,Ring of Thorns+1,1,0,0
+40530002,Ring of Thorns+2,1,0,0
+40540000,Delicate String,1,0,0
+40550000,White Ring,1,0,0
+40610000,Ring of Whispers,1,0,0
+40620000,Illusory Ring of the Exalted,1,0,0
+40700000,Crest of the Rat,1,0,0
+40710000,Bell Keeper's Seal,1,0,0
+40720000,Guardian's Seal,1,0,0
+40730000,Crest of Blood,1,0,0
+40740000,Blue Seal,1,0,0
+40750000,Abyss Seal,1,0,0
+40760000,Vanquisher's Seal,1,0,0
+40770000,Sun Seal,1,0,0
+40780000,Ancient Dragon Seal,1,0,0
+41000000,Simpleton's Ring,1,0,0
+41010000,Strength Ring,1,0,0
+41020000,Dexterity Ring,1,0,0
+41030000,Ivory Warrior Ring,1,0,0
+41040000,Sorcery Clutch Ring,1,0,0
+41050000,Lightning Clutch Ring,1,0,0
+41060000,Fire Clutch Ring,1,0,0
+41070000,Dark Clutch Ring,1,0,0
+41090000,Baneful Bird Ring,1,0,0
+41100000,Flynn's Ring,1,0,0
+41110000,Ring of the Embedded,1,0,0
+41120000,Ring of the Living,1,0,0
+41130000,Yorgh's Ring,1,0,0
+42000000,Agape Ring,1,0,0
+</value>
+  </data>
+  <data name="Spells" xml:space="preserve">
+    <value>31010000,Soul Arrow,1,0,0
+31020000,Great Soul Arrow,1,0,0
+31030000,Heavy Soul Arrow,1,0,0
+31040000,Great Heavy Soul Arrow,1,0,0
+31050000,Homing Soul Arrow,1,0,0
+31060000,Heavy Homing Soul Arrow,1,0,0
+31070000,Homing Soulmass,1,0,0
+31080000,Homing Crystal Soulmass,1,0,0
+31090000,Soul Spear,1,0,0
+31100000,Crystal Soul Spear,1,0,0
+31110000,Shockwave,1,0,0
+31120000,Soul Spear Barrage,1,0,0
+31130000,Soul Shower,1,0,0
+31140000,Soul Greatsword,1,0,0
+31150000,Soul Vortex,1,0,0
+31160000,Soul Bolt,1,0,0
+31170000,Soul Geyser,1,0,0
+31180000,Magic Weapon,1,0,0
+31190000,Great Magic Weapon,1,0,0
+31200000,Crystal Magic Weapon,1,0,0
+31210000,Strong Magic Shield,1,0,0
+31220000,Yearn,1,0,0
+31230000,Hush,1,0,0
+31240000,Fall Control,1,0,0
+31250000,Hidden Weapon,1,0,0
+31260000,Repair,1,0,0
+31270000,Cast Light,1,0,0
+31280000,Chameleon,1,0,0
+31290000,Unleash Magic,1,0,0
+31300000,Soul Flash,1,0,0
+31310000,Focus Souls,1,0,0
+32010000,Heal,1,0,0
+32020000,Med Heal,1,0,0
+32030000,Great Heal Excerpt,1,0,0
+32040000,Great Heal,1,0,0
+32050000,Soothing Sunlight,1,0,0
+32060000,Replenishment,1,0,0
+32070000,Resplendent Life,1,0,0
+32080000,Bountiful Sunlight,1,0,0
+32090000,Caressing Prayer,1,0,0
+32100000,Force,1,0,0
+32110000,Wrath of the Gods,1,0,0
+32120000,Emit Force,1,0,0
+32130000,Heavenly Thunder,1,0,0
+32140000,Lightning Spear,1,0,0
+32150000,Great Lightning Spear,1,0,0
+32160000,Sunlight Spear,1,0,0
+32170000,Soul Appease,1,0,0
+32180000,Blinding Bolt,1,0,0
+32190000,Magic Barrier,1,0,0
+32200000,Great Magic Barrier,1,0,0
+32210000,Homeward,1,0,0
+32220000,Guidance,1,0,0
+32230000,Sacred Oath,1,0,0
+32240000,Unveil,1,0,0
+32250000,Perseverance,1,0,0
+32260000,Sunlight Blade,1,0,0
+32300000,Denial,1,0,0
+32310000,Splintering Lightning Spear,1,0,0
+33010000,Fireball,1,0,0
+33020000,Fire Orb,1,0,0
+33030000,Great Fireball,1,0,0
+33040000,Great Chaos Fireball,1,0,0
+33050000,Firestorm,1,0,0
+33060000,Fire Tempest,1,0,0
+33070000,Chaos Storm,1,0,0
+33080000,Combustion,1,0,0
+33090000,Great Combustion,1,0,0
+33100000,Fire Whip,1,0,0
+33110000,Poison Mist,1,0,0
+33120000,Toxic Mist,1,0,0
+33130000,Acid Surge,1,0,0
+33140000,Lingering Flame,1,0,0
+33150000,Flame Swathe,1,0,0
+33160000,Forbidden Sun,1,0,0
+33170000,Flame Weapon,1,0,0
+33180000,Flash Sweat,1,0,0
+33190000,Iron Flesh,1,0,0
+33200000,Warmth,1,0,0
+33210000,Immolation,1,0,0
+33300000,Fire Snake,1,0,0
+33310000,Dance of Fire,1,0,0
+33320000,Outcry,1,0,0
+34010000,Dark Orb,1,0,0
+34020000,Dark Hail,1,0,0
+34030000,Dark Fog,1,0,0
+34040000,Affinity,1,0,0
+34050000,Dead Again,1,0,0
+34060000,Dark Weapon,1,0,0
+34070000,Whisper of Despair,1,0,0
+34080000,Repel,1,0,0
+34090000,Twisted Barricade,1,0,0
+34100000,Numbness,1,0,0
+34300000,Dark Greatsword,1,0,0
+34310000,Recollection,1,0,0
+35010000,Scraps of Life,1,0,0
+35020000,Darkstorm,1,0,0
+35030000,Resonant Soul,1,0,0
+35040000,Great Resonant Soul,1,0,0
+35050000,Climax,1,0,0
+35060000,Resonant Flesh,1,0,0
+35070000,Resonant Weapon,1,0,0
+35080000,Lifedrain Patch,1,0,0
+35090000,Profound Still,1,0,0
+35300000,Promised Walk of Peace,1,0,0
+35310000,Dark Dance,1,0,0
+</value>
+  </data>
+  <data name="UpgradeMaterials" xml:space="preserve">
+    <value>60970000,Titanite Shard,99,0,0
+60975000,Large Titanite Shard,99,0,0
+60980000,Titanite Chunk,99,0,0
+60990000,Titanite Slab,99,0,0
+61000000,Twinkling Titanite,99,0,0
+61030000,Petrified Dragon Bone,99,0,0
+61060000,Faintstone,99,0,0
+61070000,Boltstone,99,0,0
+61080000,Firedrake Stone,99,0,0
+61090000,Darknight Stone,99,0,0
+61100000,Poison Stone,99,0,0
+61110000,Bleed Stone,99,0,0
+61130000,Raw Stone,99,0,0
+61140000,Magic Stone,99,0,0
+61150000,Old Mundane Stone,99,0,0
+61160000,Palestone,99,0,0
+</value>
+  </data>
+  <data name="Weapons" xml:space="preserve">
+    <value>5225000,Aged Smelter Sword,1,5,0
+2540000,Aldia Hammer,1,10,101500
+4400000,Alonne Greatbow,1,10,102200
+5010000,Arced Sword,1,5,111400
+4060000,Archdrake Chime,1,10,102500
+2720000,Archdrake Mace,1,10,101600
+11250000,Archdrake Shield,1,10,102800
+3860000,Archdrake Staff,1,10,102400
+1380000,Ashen Warrior Sword,1,10,101000
+4660000,Avelyn,1,10,102300
+3930000,Azal's Staff,1,5,0
+2020000,Bandit Axe,1,10,101700
+2220000,Bandit Greataxe,1,10,101800
+1010000,Bandit's Knife,1,10,100400
+2560000,Barbed Club,1,5,111500
+1800000,Bastard Sword,1,10,101200
+3870000,Bat Staff,1,10,102400
+2010000,Battle Axe,1,10,101700
+4270000,Bell Keeper Bow,1,10,102100
+11470000,Bell Keeper Shield,1,10,102800
+11005000,Benhart's Parma,1,10,102700
+1770000,Berserker Blade,1,5,121100
+1790000,Bewitched Alonne Sword,1,5,111100
+2290000,Black Dragon Greataxe,1,5,111800
+1920000,Black Dragon Greatsword,1,5,111200
+11480000,Black Dragon Shield,1,5,112800
+1350000,Black Dragon Sword,1,5,111000
+2530000,Black Dragon Warpick,1,5,111500
+5500000,Black Flamestone Dagger,1,10,100400
+11800000,Black Flamestone Parma,1,10,102800
+2300000,Black Knight Greataxe,1,5,121800
+1930000,Black Knight Greatsword,1,5,121200
+3300000,Black Knight Halberd,1,5,122000
+5290000,Black Knight Ultra Greatsword,1,5,121300
+1520000,Black Scorpion Stinger,1,5,120500
+4150000,Black Witch's Staff,1,10,102400
+2520000,Blacksmith's Hammer,1,10,101500
+1730000,Blacksteel Katana,1,10,101100
+3620000,Bloodied Whip,1,10,100300
+11730000,Blossom Kite Shield,1,10,102800
+1140000,Blue Dagger,1,5,100400
+1280000,Blue Flame,1,5,121000
+3280000,Blue Knight's Halberd,1,5,122000
+11210000,Blue Wooden Shield,1,10,102800
+1870000,Bluemoon Greatsword,1,10,101200
+3530000,Bone Fist,1,5,120100
+3060000,Bone Scythe,1,5,111900
+11495000,Bone Shield,1,10,102800
+3880000,Bone Staff,1,10,102400
+5520000,Bound Hand Axe,1,10,101700
+11820000,Bound Wooden Shield,1,10,102800
+4280000,Bow of Want,1,5,112100
+1230000,Broadsword,1,10,101000
+1200000,Broken Straight Sword,1,10,100400
+1070000,Broken Thief Sword,1,10,100400
+11000000,Buckler,1,10,102700
+2090000,Butcher's Knife,1,5,111700
+3500000,Caestus,1,10,100100
+4090000,Caitha's Chime,1,10,102500
+2890000,Channeler's Trident,1,10,100600
+1720000,Chaos Blade,1,5,111100
+1420000,Chaos Rapier,1,5,120500
+11395000,Chaos Shield,1,5,122800
+2940000,Chariot Lance,1,5,0
+1996000,Charred Loyce Greatsword,1,5,121200
+11295000,Charred Loyce Shield,1,5,122800
+4120000,Chime of Screams,1,5,112500
+4050000,Chime of Want,1,5,112500
+3410000,Claws,1,10,100200
+1820000,Claymore,1,10,101200
+11110000,Cleric's Parma,1,10,102700
+4010000,Cleric's Sacred Chime,1,10,102500
+11120000,Cleric's Small Shield,1,10,102700
+2400000,Club,1,10,101500
+4220000,Composite Bow,1,10,102100
+2440000,Craftsman's Hammer,1,5,121500
+2200000,Crescent Axe,1,5,121700
+3040000,Crescent Sickle,1,10,101900
+11091000,Crimson Parma,1,10,102700
+5280000,Crypt Blacksword,1,5,111300
+11140000,Cursed Bone Shield,1,5,122700
+5040000,Curved Dragon Greatsword,1,5,111400
+5050000,Curved Nil Greatsword,1,5,111400
+5360000,Curved Twinblade,1,5,120800
+1000000,Dagger,1,10,100400
+5410000,Dark Pyromancy Flame,1,10,0
+1760000,Darkdrift,1,10,101100
+1960000,Defender Greatsword,1,5,111200
+11475000,Defender's Shield,1,5,112800
+2710000,Demon's Great Hammer,1,5,121600
+4110000,Disc Chime,1,10,102500
+4040000,Dragon Chime,1,5,122500
+2680000,Dragon Tooth,1,5,121600
+4240000,Dragonrider Bow,1,5,112100
+11560000,Dragonrider Greatshield,1,5,112900
+5330000,Dragonrider Twinblade,1,5,110800
+3290000,Dragonrider's Halberd,1,5,112000
+4420000,Dragonslayer Greatbow,1,5,112200
+2896000,Dragonslayer Spear,1,5,0
+2080000,Dragonslayer's Crescent Axe,1,5,121700
+1990000,Drakeblood Greatsword,1,5,111200
+2740000,Drakekeeper's Great Hammer,1,10,101600
+2310000,Drakekeeper's Greataxe,1,10,101800
+11640000,Drakekeeper's Greatshield,1,10,102900
+11485000,Drakekeeper's Shield,1,10,102800
+1370000,Drakekeeper's Sword,1,10,101000
+5275000,Drakekeeper's Ultra Greatsword,1,10,101300
+3350000,Drakekeeper's Warpick,1,10,102000
+5230000,Drakewing Ultra Greatsword,1,5,111300
+11230000,Drangleic Shield,1,5,122800
+1850000,Drangleic Sword,1,5,121200
+1630000,Eleum Loyce,1,5,110900
+1440000,Espada Ropera,1,10,100500
+1400000,Estoc,1,10,100500
+1600000,Falchion,1,10,100900
+1810000,Flamberge,1,10,101200
+11030000,Foot Soldier Shield,1,10,102700
+1240000,Foot Soldier Sword,1,10,101000
+3020000,Full Moon Sickle,1,10,101900
+1290000,Fume Sword,1,5,101000
+5250000,Fume Ultra Greatsword,1,5,111300
+2895000,Gargoyle Bident,1,5,110600
+2250000,Giant Stone Axe,1,5,111800
+2690000,Giant Warrior Club,1,10,101600
+11050000,Golden Falcon Shield,1,10,102700
+11310000,Golden Wing Shield,1,10,102800
+2930000,Grand Lance,1,10,100700
+11370000,Grand Spirit Tree Shield,1,5,122800
+2620000,Great Club,1,10,101600
+3010000,Great Machete,1,10,101900
+3000000,Great Scythe,1,10,101900
+2210000,Greataxe,1,10,101800
+11650000,Greatshield of Glory,1,10,102900
+5210000,Greatsword,1,10,101300
+1997000,Greatsword of the Forlorn,1,5,121200
+2070000,Gyrm Axe,1,10,101700
+2630000,Gyrm Great Hammer,1,10,101600
+2260000,Gyrm Greataxe,1,10,101800
+11600000,Gyrm Greatshield,1,10,102900
+3220000,Halberd,1,10,102000
+2000000,Hand Axe,1,10,101700
+2500000,Handmaid's Ladle,1,10,101500
+11590000,Havel's Greatshield,1,5,122900
+4610000,Heavy Crossbow,1,10,102300
+2920000,Heide Greatlance,1,10,100700
+1320000,Heide Knight Sword,1,10,101000
+2900000,Heide Lance,1,5,120700
+2870000,Heide Spear,1,10,100600
+3240000,Helix Halberd,1,5,122000
+11420000,Hollow Soldier Shield,1,10,102800
+5530000,Homunculus Mace,1,10,101500
+11830000,Homunculus Wooden Shield,1,10,102800
+4290000,Hunter's Blackbow,1,10,102100
+1580000,Ice Rapier,1,5,100500
+4080000,Idol's Chime,1,5,122500
+2030000,Infantry Axe,1,10,101700
+2660000,Iron King Hammer,1,5,111600
+11020000,Iron Parma,1,10,102700
+5255000,Ivory King Ultra Greatsword,1,5,111300
+1390000,Ivory Straight Sword,1,5,0
+1980000,Key to the Embedded,1,10,0
+11550000,King's Mirror,1,5,112900
+11260000,King's Shield,1,5,0
+5240000,King's Ultra Greatsword,1,5,111300
+2600000,Large Club,1,10,101600
+11200000,Large Leather Shield,1,10,102800
+4600000,Light Crossbow,1,10,102300
+11240000,Lion Clan Shield,1,10,102800
+2240000,Lion Greataxe,1,10,101800
+3830000,Lizard Staff,1,10,102400
+11080000,Llewellyn Shield,1,5,122700
+4210000,Long Bow,1,10,102100
+1220000,Longsword,1,10,101000
+5295000,Lost Sinner's Sword,1,5,111300
+1995000,Loyce Greatsword,1,5,121200
+11290000,Loyce Shield,1,5,122800
+3200000,Lucerne,1,10,102000
+2410000,Mace,1,10,101500
+2470000,Mace of the Insolent,1,10,101500
+11130000,Magic Shield,1,10,102700
+1410000,Mail Breaker,1,10,100500
+1830000,Majestic Greatsword,1,5,121200
+1831000,Majestic Greatsword,1,5,121200
+3420000,Malformed Claws,1,10,100200
+2700000,Malformed Shell,1,5,121600
+2670000,Malformed Skull,1,10,101600
+3430000,Manikin Claws,1,10,100200
+1110000,Manikin Knife,1,10,100400
+1640000,Manikin Sabre,1,10,100900
+11070000,Manikin Shield,1,10,102700
+1740000,Manslayer,1,5,121100
+11570000,Mastodon Greatshield,1,10,102900
+1880000,Mastodon Greatsword,1,10,101200
+3270000,Mastodon Halberd,1,10,102000
+1680000,Melu Scimitar,1,10,100900
+1910000,Mirrah Greatsword,1,10,101200
+11270000,Mirrah Shield,1,10,102800
+1690000,Monastery Scimitar,1,10,100900
+11380000,Moon Butterfly Shield,1,10,102800
+1871000,Moonlight Greatsword,1,5,111200
+2420000,Morning Star,1,10,101500
+5000000,Murakumo,1,10,101400
+1040000,Mytha's Bent Blade,1,5,0
+3610000,Notched Whip,1,10,0
+11630000,Old Knight Greatshield,1,10,102900
+1950000,Old Knight Greatsword,1,10,101200
+3330000,Old Knight Halberd,1,10,102000
+2730000,Old Knight Hammer,1,10,101600
+3340000,Old Knight Pike,1,10,102000
+5285000,Old Knight Ultra Greatsword,1,10,101300
+11280000,Old Knight's Shield,1,10,102800
+1911000,Old Mirrah Greatsword,1,10,101200
+3660000,Old Whip,1,5,120300
+3850000,Olenford's Staff,1,5,122400
+11530000,Orma's Greatshield,1,5,122900
+1100000,Parrying Dagger,1,10,100400
+2830000,Partizan,1,10,100600
+11620000,Pate's Shield,1,10,102900
+2880000,Pate's Spear,1,5,120600
+11700000,Phoenix Parma,1,10,102700
+2610000,Pickaxe,1,10,101500
+2820000,Pike,1,10,100600
+3910000,Pilgrim's Spontoon,1,10,102400
+11490000,Porcine Shield,1,10,102800
+4430000,Possessed Armor Greatbow,1,10,102200
+1260000,Possessed Armor Sword,1,10,101000
+4030000,Priest's Chime,1,10,102500
+4100000,Protective Chime,1,10,102500
+11610000,Pursuer's Greatshield,1,5,112900
+5270000,Pursuer's Ultra Greatsword,1,5,111300
+1250000,Puzzling Stone Sword,1,5,121000
+5400000,Pyromancy Flame,1,10,0
+2950000,Rampart Golem Lance,1,10,100700
+11455000,Rampart Golem Shield,1,10,102800
+1500000,Rapier,1,10,100500
+11740000,Rebel's Greatshield,1,10,102900
+5350000,Red Iron Twinblade,1,10,100800
+1660000,Red Rust Scimitar,1,5,120900
+11450000,Red Rust Shield,1,5,122800
+1330000,Red Rust Sword,1,5,121000
+11540000,Reeve's Greatshield,1,5,122900
+2430000,Reinforced Club,1,10,101500
+3940000,Retainer Staff,1,10,102400
+1160000,Retainer's Short Sword,1,10,100400
+1530000,Ricard's Rapier,1,10,100500
+3320000,Roaring Halberd,1,5,112000
+1130000,Royal Dirk,1,5,120400
+1940000,Royal Greatsword,1,10,101200
+11430000,Royal Kite Shield,1,10,102800
+1900000,Ruler's Sword,1,5,111200
+2750000,Sacred Chime Hammer,1,5,111600
+4670000,Sanctum Crossbow,1,10,102300
+2760000,Sanctum Mace,1,10,101600
+4680000,Sanctum Repeating Crossbow,1,10,102300
+11150000,Sanctum Shield,1,10,102500
+3250000,Santier's Spear,1,5,122000
+3251000,Santier's Spear,1,5,122000
+1650000,Scimitar,1,10,100900
+3210000,Scythe,1,10,102000
+3050000,Scythe of Nahr Alma,1,5,121900
+3080000,Scythe of the Forlorn,1,5,121900
+3070000,Scythe of Want,1,5,0
+4230000,Sea Bow,1,10,102100
+1050000,Shadow Dagger,1,10,100400
+4630000,Shield Crossbow,1,5,112300
+11330000,Shield of the Insolent,1,10,102800
+4200000,Short Bow,1,10,102100
+1210000,Shortsword,1,10,101000
+1610000,Shotel,1,10,100900
+11220000,Silver Eagle Kite Shield,1,10,102800
+11350000,Silverblack Shield,1,10,102800
+2100000,Silverblack Sickle,1,10,101700
+2860000,Silverblack Spear,1,10,100600
+11390000,Slumbering Dragon Shield,1,10,102800
+11010000,Small Leather Shield,1,10,102700
+2960000,Smelter Hammer,1,10,101600
+5220000,Smelter Sword,1,5,0
+3800000,Sorcerer's Staff,1,10,102400
+5370000,Sorcerer's Twinblade,1,10,102400
+2800000,Spear,1,10,100600
+1670000,Spider Fang,1,5,110900
+1430000,Spider's Silk,1,5,110500
+11300000,Spirit Tree Shield,1,10,102800
+2850000,Spitfire Spear,1,5,110600
+3630000,Spotted Whip,1,5,110300
+3810000,Staff of Amana,1,10,102400
+3890000,Staff of Wisdom,1,5,122400
+11360000,Stone Parma,1,10,102800
+2840000,Stone Soldier Spear,1,10,100600
+5310000,Stone Twinblade,1,10,100800
+1360000,Sun Sword,1,10,101000
+11710000,Sunlight Parma,1,10,102700
+3900000,Sunset Staff,1,5,122400
+3310000,Syan's Halberd,1,10,102000
+11040000,Target Shield,1,10,102700
+1060000,Thief Dagger,1,10,100400
+1860000,Thorned Greatsword,1,5,111200
+11510000,Tower Shield,1,10,102900
+11840000,Transgressor's Leather Shield,1,10,102700
+5540000,Transgressor's Staff,1,10,102400
+11500000,Twin Dragon Greatshield,1,10,102900
+5340000,Twinblade,1,10,100800
+4440000,Twin-headed Greatbow,1,5,122200
+1700000,Uchigatana,1,10,101100
+1150000,Umbral Dagger,1,5,0
+11160000,Varangian Shield,1,10,102700
+1270000,Varangian Sword,1,10,101000
+11320000,Vessel Shield,1,10,102800
+1620000,Warped Sword,1,5,110900
+1710000,Washing Pole,1,10,101100
+11720000,Watchdragon Parma,1,10,102800
+1970000,Watcher Greatsword,1,5,111200
+11185000,Watcher's Shield,1,5,112700
+3600000,Whip,1,10,100300
+11750000,Wicked Eye Greatshield,1,10,102900
+2810000,Winged Spear,1,10,100600
+4020000,Witchtree Bellvine,1,10,102500
+3820000,Witchtree Branch,1,10,102400
+11400000,Wooden Shield,1,10,102800
+3440000,Work Hook,1,10,100200
+3370000,Wrathful Axe,1,5,112000
+5510000,Yellow Quartz Longsword,1,10,101000
+11810000,Yellow Quartz Shield,1,10,102800
+2855000,Yorgh's Spear,1,5,110600
+5200000,Zweihander,1,10,101300
+</value>
+  </data>
+  <data name="ItemSpawn" xml:space="preserve">
+    <value>80 3d 00 00 00 00 01    cmp    BYTE PTR [rip+0x0],0x1        # 7 &lt;_main+0x7&gt;
+75 5c                   jne    65 &lt;skip_adjust&gt;
+48 b9 00 00 00 00 00    movabs rcx,0x0
+00 00 00
+48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 1a &lt;_main+0x1a&gt;
+4c 8d 05 00 00 00 00    lea    r8,[rip+0x0]        # 21 &lt;_main+0x21&gt;
+44 8b 0d 00 00 00 00    mov    r9d,DWORD PTR [rip+0x0]        # 28 &lt;_main+0x28&gt;
+49 bf 00 00 00 00 00    movabs r15,0x0
+00 00 00
+48 83 ec 30             sub    rsp,0x30
+41 ff d7                call   r15
+48 83 c4 30             add    rsp,0x30
+0f b7 05 00 00 00 00    movzx  eax,WORD PTR [rip+0x0]        # 44 &lt;_main+0x44&gt;
+03 05 00 00 00 00       add    eax,DWORD PTR [rip+0x0]        # 4a &lt;_main+0x4a&gt;
+3b 05 00 00 00 00       cmp    eax,DWORD PTR [rip+0x0]        # 50 &lt;_main+0x50&gt;
+7e 13                   jle    65 &lt;skip_adjust&gt;
+8b 05 00 00 00 00       mov    eax,DWORD PTR [rip+0x0]        # 58 &lt;_main+0x58&gt;
+2b 05 00 00 00 00       sub    eax,DWORD PTR [rip+0x0]        # 5e &lt;_main+0x5e&gt;
+66 89 05 00 00 00 00    mov    WORD PTR [rip+0x0],ax        # 65 &lt;skip_adjust&gt;
+000000000065 &lt;skip_adjust&gt;:
+48 81 ec 08 02 00 00    sub    rsp,0x208
+48 b9 00 00 00 00 00    movabs rcx,0x0
+00 00 00
+48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 7d &lt;skip_adjust+0x18&gt;
+44 8b 05 00 00 00 00    mov    r8d,DWORD PTR [rip+0x0]        # 84 &lt;skip_adjust+0x1f&gt;
+45 31 c9                xor    r9d,r9d
+49 bf 00 00 00 00 00    movabs r15,0x0
+00 00 00
+41 ff d7                call   r15
+48 8d 0d 00 00 00 00    lea    rcx,[rip+0x0]        # 9b &lt;skip_adjust+0x36&gt;
+48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # a2 &lt;skip_adjust+0x3d&gt;
+44 8b 05 00 00 00 00    mov    r8d,DWORD PTR [rip+0x0]        # a9 &lt;skip_adjust+0x44&gt;
+41 b9 01 00 00 00       mov    r9d,0x1
+49 bf 00 00 00 00 00    movabs r15,0x0
+00 00 00
+41 ff d7                call   r15
+48 b9 00 00 00 00 00    movabs rcx,0x0
+00 00 00
+48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # cd &lt;skip_adjust+0x68&gt;
+49 bf 00 00 00 00 00    movabs r15,0x0
+00 00 00
+41 ff d7                call   r15
+48 81 c4 08 02 00 00    add    rsp,0x208
+c3                      ret</value>
+  </data>
 </root>

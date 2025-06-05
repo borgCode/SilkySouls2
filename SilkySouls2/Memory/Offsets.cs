@@ -23,6 +23,7 @@ namespace SilkySouls2.Memory
                 public const int ViewMatrixPtr = 0x1158;
                 public const int ProjectionMatrixPtr = 0x16F0;
                 public const int ProjectionMatrix = 0x170;
+                public const int DLBackAllocator = 0x22E0;
                 public const int MenuKick = 0x24B1;
                 public const int LoadingFlag = 0x24BC;
             }
@@ -56,7 +57,8 @@ namespace SilkySouls2.Memory
 
                 public static class Inventory
                 {
-                    public const int ItemInventory2BagList = 0xD0;
+                    public const int InventoryLists = 0x10;
+                    public const int ItemInventory2BagList = 0x10;
                 }
             }
 
@@ -238,6 +240,10 @@ namespace SilkySouls2.Memory
             public static long ChrCtrlUpdate;
             public static long LevelLookUp;
             public static long LevelUp;
+            public static long CurrentItemQuantityCheck;
+            public static long ItemGive;
+            public static long BuildItemDialog;
+            public static long ShowItemDialog;
         }
     }
 }

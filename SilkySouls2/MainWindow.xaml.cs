@@ -65,7 +65,7 @@ namespace SilkySouls2
             var utilityService = new UtilityService(_memoryIo, _hookManager, _dllManager);
             var travelService = new TravelService(_memoryIo, _hookManager, utilityService);
             var enemyService = new EnemyService(_memoryIo, _hookManager, _damageControlService);
-            var itemService = new ItemService(_memoryIo, _hookManager);
+            var itemService = new ItemService(_memoryIo);
             var settingsService = new SettingsService(_memoryIo, _hookManager);
 
             _playerViewModel = new PlayerViewModel(playerService, hotkeyManager, _damageControlService);
@@ -196,6 +196,7 @@ namespace SilkySouls2
             _playerViewModel.TryEnableFeatures();
             _utilityViewModel.TryEnableFeatures();
             _enemyViewModel.TryEnableFeatures();
+            _itemViewModel.TryEnableFeatures();
         }
 
         private void DisableFeatures()
@@ -203,6 +204,7 @@ namespace SilkySouls2
             _utilityViewModel.DisableFeatures();
             _playerViewModel.DisableFeatures();
             _enemyViewModel.DisableFeatures();
+            _itemViewModel.DisableFeatures();
         }
 
         private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

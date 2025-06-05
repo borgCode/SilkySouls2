@@ -87,5 +87,18 @@ namespace SilkySouls2.Memory
             Buffer = 0x7C0,
             Code = 0x8C0
         }
+
+        public enum ItemSpawn
+        {
+            AdjustQuantityFlag = 0x9BF,
+            MaxQuantity = 0x9C0,
+            ItemCount = 0x9C4,
+            CurrentQuantity = 0x9C8,
+            StackCount = 0x9CC,
+            ItemStruct = 0x9D0,
+            StackSpace = 0x9E0,
+            Code = 0xB00,
+            
+        }
     }
 }

@@ -120,7 +120,6 @@ namespace SilkySouls2.Views
             HookIntegerUpDownSpinner(FaithUpDown, "Faith");
             HookIntegerUpDownSpinner(AdpUpDown, "Adp");
             HookIntegerUpDownSpinner(VitalityUpDown, "Vitality");
-            HookIntegerUpDownSpinner(SoulsUpDown, "Souls");
         }
 
         private void HookIntegerUpDownSpinner(IntegerUpDown upDown, string stat)

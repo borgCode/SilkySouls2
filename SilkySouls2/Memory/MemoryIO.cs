@@ -261,6 +261,11 @@ namespace SilkySouls2.Memory
         {
             WriteBytes(addr, BitConverter.GetBytes(val));
         }
+        
+        public void WriteInt16(IntPtr addr, short val)
+        {
+            WriteBytes(addr, BitConverter.GetBytes(val));
+        }
 
         public void WriteFloat(IntPtr addr, float val)
         {

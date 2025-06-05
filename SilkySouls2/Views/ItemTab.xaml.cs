@@ -22,10 +22,7 @@ namespace SilkySouls2.Views
             throw new System.NotImplementedException();
         }
 
-        private void MassSpawn_Click(object sender, RoutedEventArgs e)
-        {
-            throw new System.NotImplementedException();
-        }
+        private void MassSpawn_Click(object sender, RoutedEventArgs e) => _itemViewModel.MassSpawn();
 
         private void Create_Click(object sender, RoutedEventArgs e)
         {

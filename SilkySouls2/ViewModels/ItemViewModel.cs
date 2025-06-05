@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using SilkySouls2.Models;
 using SilkySouls2.Services;
 using SilkySouls2.Utilities;
@@ -65,7 +66,7 @@ namespace SilkySouls2.ViewModels
             //
             // SelectedLoadoutName = Loadouts.FirstOrDefault();
             SelectedCategory = Categories.FirstOrDefault();
-            // SelectedMassSpawnCategory = Categories.FirstOrDefault();
+            SelectedMassSpawnCategory = Categories.FirstOrDefault();
             // SelectedAutoSpawnWeapon = WeaponList.FirstOrDefault();
         }
         
@@ -280,6 +281,12 @@ namespace SilkySouls2.ViewModels
             }
         }
         
+        private string _selectedMassSpawnCategory;
+        public string SelectedMassSpawnCategory
+        {
+            get => _selectedMassSpawnCategory;
+            set => SetProperty(ref _selectedMassSpawnCategory, value);
+        }
 
         // public ObservableCollection<string> Loadouts
         // {
@@ -308,6 +315,26 @@ namespace SilkySouls2.ViewModels
         public void DisableFeatures()
         {
             AreOptionsEnabled = false;
+        }
+
+        public void MassSpawn()
+        {
+            if (SelectedMassSpawnCategory == "Weapons")
+            {
+                foreach (var weapon in _itemsByCategory[SelectedMassSpawnCategory])
+                {
+                    _itemService.SpawnItem(weapon, 0, 1, 0);
+                    _itemService.SpawnItem(weapon, weapon.MaxUpgrade, 1, 0);
+                }
+            }
+            else
+            {
+                foreach (var item in _itemsByCategory[SelectedMassSpawnCategory])
+                {
+                    _itemService.SpawnItem(item, 0, item.StackSize, 0);
+                    
+                }
+            }
         }
     }
 }

@@ -169,7 +169,19 @@ namespace SilkySouls2.Memory
                     public const int SoulMemory = 0xF4;
                 }
             }
+            
+            public static class DLAllocator
+            {
+                public const int FeOperatorFrontend = 0x10;
+
+                public static class FeOperatorFrontendOffsets
+                {
+                    public const int FeSceneAdoptionItem = 0x90;
+                    public const int AdoptionCleanupFlag = 0x24;
+                }
+            }
         }
+        
 
         public static class HkHardwareInfo
         {

@@ -10,6 +10,7 @@ namespace SilkySouls2.Services
     {
         
         private readonly MemoryIo _memoryIo;
+        private bool _codeIswritten;
         public ItemService(MemoryIo memoryIo)
         {
             _memoryIo = memoryIo;
@@ -17,6 +18,7 @@ namespace SilkySouls2.Services
 
         public void SpawnItem(Item selectedItem,  int selectedUpgrade, int selectedQuantity, int selectedInfusion)
         {
+          
             var adjustQuantityFlag = CodeCaveOffsets.Base + (int)CodeCaveOffsets.ItemSpawn.AdjustQuantityFlag;
             var maxQuantity = CodeCaveOffsets.Base + (int)CodeCaveOffsets.ItemSpawn.MaxQuantity;
             var itemCount = CodeCaveOffsets.Base + (int)CodeCaveOffsets.ItemSpawn.ItemCount;
@@ -55,40 +57,43 @@ namespace SilkySouls2.Services
             _memoryIo.WriteInt32(itemCount, 1);
             _memoryIo.WriteByte(adjustQuantityFlag, selectedItem.StackSize > 1 ? 1 : 0);
 
-            var bytes = AsmLoader.GetAsmBytes("ItemSpawn");
-            
-            AsmHelper.WriteAbsoluteAddresses(bytes, new []
+            if (!_codeIswritten)
             {
-                (itemIventory2BagList, 0x9 + 2),
-                (getCurrentQuantity, 0x28 + 2),
-                (inventoryLists.ToInt64(), 0x6C + 2),
-                (itemGive, 0x87 + 2),
-                (buildItemDialog, 0xAF + 2),
-                (dlBackAllocator, 0xBC + 2),
-                (showItemPopup, 0xCD + 2)
-            });
+                var bytes = AsmLoader.GetAsmBytes("ItemSpawn");
             
-            AsmHelper.WriteRelativeOffsets(bytes, new []
-            {
-                (code.ToInt64(), adjustQuantityFlag.ToInt64(), 7, 0x0 + 2),
-                (code.ToInt64() + 0x13, currentQuantity.ToInt64(), 7, 0x13 + 3),
-                (code.ToInt64() + 0x1A, stackCount.ToInt64(), 7, 0x1A + 3),
-                (code.ToInt64() + 0x21, itemStruct.ToInt64() + 0x4, 7, 0x21 + 3),
-                (code.ToInt64() + 0x3D, itemStruct.ToInt64() + 0xC, 7, 0x3D + 3),
-                (code.ToInt64() + 0x44, currentQuantity.ToInt64(), 6, 0x44 + 2),
-                (code.ToInt64() + 0x4A, maxQuantity.ToInt64(), 6, 0x4A + 2),
-                (code.ToInt64() + 0x52, maxQuantity.ToInt64(), 6, 0x52 + 2),
-                (code.ToInt64() + 0x58, currentQuantity.ToInt64(), 6, 0x58 + 2),
-                (code.ToInt64() + 0x5E, itemStruct.ToInt64() + 0xC, 7, 0x5E + 3),
-                (code.ToInt64() + 0x76, itemStruct.ToInt64(), 7, 0x76 + 3),
-                (code.ToInt64() + 0x7D, itemCount.ToInt64(), 7, 0x7D + 3),
-                (code.ToInt64() + 0x94, stackSpace.ToInt64(), 7, 0x94 + 3),
-                (code.ToInt64() + 0x9B, itemStruct.ToInt64(), 7, 0x9B + 3),
-                (code.ToInt64() + 0xA2, itemCount.ToInt64(), 7, 0xA2 + 3),
-                (code.ToInt64() + 0xC6, stackSpace.ToInt64(), 7, 0xC6 + 3),
-            });
+                AsmHelper.WriteAbsoluteAddresses(bytes, new []
+                {
+                    (itemIventory2BagList, 0x9 + 2),
+                    (getCurrentQuantity, 0x28 + 2),
+                    (inventoryLists.ToInt64(), 0x6C + 2),
+                    (itemGive, 0x87 + 2),
+                    (buildItemDialog, 0xAF + 2),
+                    (dlBackAllocator, 0xBC + 2),
+                    (showItemPopup, 0xCD + 2)
+                });
             
-            _memoryIo.WriteBytes(code, bytes);
+                AsmHelper.WriteRelativeOffsets(bytes, new []
+                {
+                    (code.ToInt64(), adjustQuantityFlag.ToInt64(), 7, 0x0 + 2),
+                    (code.ToInt64() + 0x13, currentQuantity.ToInt64(), 7, 0x13 + 3),
+                    (code.ToInt64() + 0x1A, stackCount.ToInt64(), 7, 0x1A + 3),
+                    (code.ToInt64() + 0x21, itemStruct.ToInt64() + 0x4, 7, 0x21 + 3),
+                    (code.ToInt64() + 0x3D, itemStruct.ToInt64() + 0xC, 7, 0x3D + 3),
+                    (code.ToInt64() + 0x44, currentQuantity.ToInt64(), 6, 0x44 + 2),
+                    (code.ToInt64() + 0x4A, maxQuantity.ToInt64(), 6, 0x4A + 2),
+                    (code.ToInt64() + 0x52, maxQuantity.ToInt64(), 6, 0x52 + 2),
+                    (code.ToInt64() + 0x58, currentQuantity.ToInt64(), 6, 0x58 + 2),
+                    (code.ToInt64() + 0x5E, itemStruct.ToInt64() + 0xC, 7, 0x5E + 3),
+                    (code.ToInt64() + 0x76, itemStruct.ToInt64(), 7, 0x76 + 3),
+                    (code.ToInt64() + 0x7D, itemCount.ToInt64(), 7, 0x7D + 3),
+                    (code.ToInt64() + 0x94, stackSpace.ToInt64(), 7, 0x94 + 3),
+                    (code.ToInt64() + 0x9B, itemStruct.ToInt64(), 7, 0x9B + 3),
+                    (code.ToInt64() + 0xA2, itemCount.ToInt64(), 7, 0xA2 + 3),
+                    (code.ToInt64() + 0xC6, stackSpace.ToInt64(), 7, 0xC6 + 3),
+                });
+                _memoryIo.WriteBytes(code, bytes);
+                _codeIswritten = true;
+            }
             _memoryIo.RunThread(code);
         }
     }

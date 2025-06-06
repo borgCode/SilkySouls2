@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using SilkySouls2.Models;
 using SilkySouls2.Services;
 using SilkySouls2.Utilities;
@@ -319,22 +320,25 @@ namespace SilkySouls2.ViewModels
 
         public void MassSpawn()
         {
-            if (SelectedMassSpawnCategory == "Weapons")
+            Task.Run(() =>
             {
-                foreach (var weapon in _itemsByCategory[SelectedMassSpawnCategory])
+                if (SelectedMassSpawnCategory == "Weapons")
                 {
-                    _itemService.SpawnItem(weapon, 0, 1, 0);
-                    _itemService.SpawnItem(weapon, weapon.MaxUpgrade, 1, 0);
+                    foreach (var weapon in _itemsByCategory[SelectedMassSpawnCategory])
+                    {
+                        _itemService.SpawnItem(weapon, 0, 1, 0);
+                        Thread.Sleep(10);
+                    }
                 }
-            }
-            else
-            {
-                foreach (var item in _itemsByCategory[SelectedMassSpawnCategory])
+                else
                 {
-                    _itemService.SpawnItem(item, 0, item.StackSize, 0);
-                    
+                    foreach (var item in _itemsByCategory[SelectedMassSpawnCategory])
+                    {
+                        _itemService.SpawnItem(item, 0, item.StackSize, 0);
+                        Thread.Sleep(10);
+                    }
                 }
-            }
+            });
         }
     }
 }

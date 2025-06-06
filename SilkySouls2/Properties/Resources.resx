@@ -2054,49 +2054,57 @@ c3                      ret</value>
   </data>
   <data name="ItemSpawn" xml:space="preserve">
     <value>80 3d 00 00 00 00 01    cmp    BYTE PTR [rip+0x0],0x1        # 7 &lt;_main+0x7&gt;
-75 5c                   jne    65 &lt;skip_adjust&gt;
+0f 85 e8 00 00 00       jne    f5 &lt;nothing_to_process&gt;
+c6 05 00 00 00 00 00    mov    BYTE PTR [rip+0x0],0x0        # 14 &lt;_main+0x14&gt;
+80 3d 00 00 00 00 01    cmp    BYTE PTR [rip+0x0],0x1        # 1b &lt;_main+0x1b&gt;
+75 5c                   jne    79 &lt;skip_adjust&gt;
 48 b9 00 00 00 00 00    movabs rcx,0x0
 00 00 00
-48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 1a &lt;_main+0x1a&gt;
-4c 8d 05 00 00 00 00    lea    r8,[rip+0x0]        # 21 &lt;_main+0x21&gt;
-44 8b 0d 00 00 00 00    mov    r9d,DWORD PTR [rip+0x0]        # 28 &lt;_main+0x28&gt;
+48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 2e &lt;_main+0x2e&gt;
+4c 8d 05 00 00 00 00    lea    r8,[rip+0x0]        # 35 &lt;_main+0x35&gt;
+44 8b 0d 00 00 00 00    mov    r9d,DWORD PTR [rip+0x0]        # 3c &lt;_main+0x3c&gt;
 49 bf 00 00 00 00 00    movabs r15,0x0
 00 00 00
 48 83 ec 30             sub    rsp,0x30
 41 ff d7                call   r15
 48 83 c4 30             add    rsp,0x30
-0f b7 05 00 00 00 00    movzx  eax,WORD PTR [rip+0x0]        # 44 &lt;_main+0x44&gt;
-03 05 00 00 00 00       add    eax,DWORD PTR [rip+0x0]        # 4a &lt;_main+0x4a&gt;
-3b 05 00 00 00 00       cmp    eax,DWORD PTR [rip+0x0]        # 50 &lt;_main+0x50&gt;
-7e 13                   jle    65 &lt;skip_adjust&gt;
-8b 05 00 00 00 00       mov    eax,DWORD PTR [rip+0x0]        # 58 &lt;_main+0x58&gt;
-2b 05 00 00 00 00       sub    eax,DWORD PTR [rip+0x0]        # 5e &lt;_main+0x5e&gt;
-66 89 05 00 00 00 00    mov    WORD PTR [rip+0x0],ax        # 65 &lt;skip_adjust&gt;
-000000000065 &lt;skip_adjust&gt;:
+0f b7 05 00 00 00 00    movzx  eax,WORD PTR [rip+0x0]        # 58 &lt;_main+0x58&gt;
+03 05 00 00 00 00       add    eax,DWORD PTR [rip+0x0]        # 5e &lt;_main+0x5e&gt;
+3b 05 00 00 00 00       cmp    eax,DWORD PTR [rip+0x0]        # 64 &lt;_main+0x64&gt;
+7e 13                   jle    79 &lt;skip_adjust&gt;
+8b 05 00 00 00 00       mov    eax,DWORD PTR [rip+0x0]        # 6c &lt;_main+0x6c&gt;
+2b 05 00 00 00 00       sub    eax,DWORD PTR [rip+0x0]        # 72 &lt;_main+0x72&gt;
+66 89 05 00 00 00 00    mov    WORD PTR [rip+0x0],ax        # 79 &lt;skip_adjust&gt;
+000000000079 &lt;skip_adjust&gt;:
 48 81 ec 08 02 00 00    sub    rsp,0x208
 48 b9 00 00 00 00 00    movabs rcx,0x0
 00 00 00
-48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 7d &lt;skip_adjust+0x18&gt;
-44 8b 05 00 00 00 00    mov    r8d,DWORD PTR [rip+0x0]        # 84 &lt;skip_adjust+0x1f&gt;
+48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 91 &lt;skip_adjust+0x18&gt;
+44 8b 05 00 00 00 00    mov    r8d,DWORD PTR [rip+0x0]        # 98 &lt;skip_adjust+0x1f&gt;
 45 31 c9                xor    r9d,r9d
 49 bf 00 00 00 00 00    movabs r15,0x0
 00 00 00
 41 ff d7                call   r15
-48 8d 0d 00 00 00 00    lea    rcx,[rip+0x0]        # 9b &lt;skip_adjust+0x36&gt;
-48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # a2 &lt;skip_adjust+0x3d&gt;
-44 8b 05 00 00 00 00    mov    r8d,DWORD PTR [rip+0x0]        # a9 &lt;skip_adjust+0x44&gt;
+48 8d 0d 00 00 00 00    lea    rcx,[rip+0x0]        # af &lt;skip_adjust+0x36&gt;
+48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # b6 &lt;skip_adjust+0x3d&gt;
+44 8b 05 00 00 00 00    mov    r8d,DWORD PTR [rip+0x0]        # bd &lt;skip_adjust+0x44&gt;
 41 b9 01 00 00 00       mov    r9d,0x1
 49 bf 00 00 00 00 00    movabs r15,0x0
 00 00 00
 41 ff d7                call   r15
 48 b9 00 00 00 00 00    movabs rcx,0x0
 00 00 00
-48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # cd &lt;skip_adjust+0x68&gt;
+48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # e1 &lt;skip_adjust+0x68&gt;
 49 bf 00 00 00 00 00    movabs r15,0x0
 00 00 00
 41 ff d7                call   r15
 48 81 c4 08 02 00 00    add    rsp,0x208
-c3                      ret</value>
+0000000000f5 &lt;nothing_to_process&gt;:
+48 b8 00 00 00 00 00    movabs rax,0x0
+00 00 00
+48 c7 c1 05 00 00 00    mov    rcx,0x5
+ff d0                   call   rax
+e9 f3 fe ff ff          jmp    0 &lt;_main&gt;</value>
   </data>
   <data name="DisableSnowstorm" xml:space="preserve">
     <value>48 81 fa 5e 1f 02 20    cmp    rdx,0x20021f5e

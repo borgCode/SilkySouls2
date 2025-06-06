@@ -90,6 +90,7 @@ namespace SilkySouls2.Memory
 
         public enum ItemSpawn
         {
+            ShouldProcessFlag = 0x9BE,
             AdjustQuantityFlag = 0x9BF,
             MaxQuantity = 0x9C0,
             ItemCount = 0x9C4,

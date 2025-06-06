@@ -83,6 +83,7 @@ namespace SilkySouls2
             var enemyTab = new EnemyTab(_enemyViewModel);
             var itemTab = new ItemTab(_itemViewModel);
             var settingsTab = new SettingsTab(_settingsViewModel);
+            
 
             MainTabControl.Items.Add(new TabItem { Header = "Player", Content = playerTab });
             MainTabControl.Items.Add(new TabItem { Header = "Travel", Content = travelTab });

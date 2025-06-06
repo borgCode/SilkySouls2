@@ -154,6 +154,12 @@ namespace SilkySouls2.Memory
             Kernel32.CloseHandle(thread);
             return ret;
         }
+        
+        public void RunPersistentThread(IntPtr address)
+        {
+            IntPtr thread = Kernel32.CreateRemoteThread(ProcessHandle, IntPtr.Zero, 0, address, IntPtr.Zero, 0, IntPtr.Zero);
+            Kernel32.CloseHandle(thread); 
+        }
 
         public bool RunThreadAndWaitForCompletion(IntPtr address, uint timeout = 0xFFFFFFFF)
         {
@@ -458,7 +464,7 @@ namespace SilkySouls2.Memory
             }
         }
 
-        private IntPtr GetProcAddress(string moduleName, string procName)
+        public IntPtr GetProcAddress(string moduleName, string procName)
         {
             IntPtr moduleHandle = Kernel32.GetModuleHandle(moduleName);
             if (moduleHandle == IntPtr.Zero)

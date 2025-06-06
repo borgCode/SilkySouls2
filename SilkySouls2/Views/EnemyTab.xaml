@@ -159,7 +159,7 @@
 
                             <StackPanel Grid.Column="0" Margin="0,5,10,0">
                                 <CheckBox Content="Poise" Margin="0,5"
-                                          IsChecked="{Binding ShowPoise, FallbackValue=False}" />
+                                          IsChecked="{Binding ShowHeavyPoise, FallbackValue=False}" />
                                 <CheckBox Content="Bleed" Margin="0,5"
                                           IsChecked="{Binding ShowBleed, FallbackValue=False}" />
                                 <CheckBox Content="Poison" Margin="0,5"
@@ -174,18 +174,19 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-
+                                
                                 <StackPanel Grid.Row="0" Grid.Column="0"
-                                            Visibility="{Binding ShowPoise, Converter={StaticResource BoolToVis}, FallbackValue=Visible}"
+                                            Visibility="{Binding ShowHeavyPoise, Converter={StaticResource BoolToVis}, FallbackValue=Visible}"
                                             Margin="0,0,5,5">
                                     <ProgressBar Height="25"
-                                                 Value="{Binding TargetCurrentPoise}"
-                                                 Maximum="{Binding TargetMaxPoise, FallbackValue=100}">
+                                                 Value="{Binding TargetCurrentHeavyPoise}"
+                                                 Maximum="{Binding TargetMaxHeavyPoise, FallbackValue=100}">
                                         <ProgressBar.Template>
                                             <ControlTemplate TargetType="ProgressBar">
                                                 <Border BorderBrush="#444444" BorderThickness="1" Background="#222222"
@@ -202,16 +203,45 @@
                                         </ProgressBar.Template>
                                     </ProgressBar>
                                     <TextBlock HorizontalAlignment="Center" Margin="0,2,0,0">
-                                        <Run Text="Poise " />
-                                        <Run Text="{Binding TargetCurrentPoise, StringFormat=F1, Mode=OneWay}" />
+                                        <Run Text="Heavy stagger " />
+                                        <Run Text="{Binding TargetCurrentHeavyPoise, StringFormat=F1, Mode=OneWay}" />
                                         <Run Text="/" />
-                                        <Run Text="{Binding TargetMaxPoise, Mode=OneWay}" />
+                                        <Run Text="{Binding TargetMaxHeavyPoise, Mode=OneWay}" />
                                     </TextBlock>
                                 </StackPanel>
 
                                 <StackPanel Grid.Row="0" Grid.Column="1"
-                                            Visibility="{Binding ShowBleed, Converter={StaticResource BoolToVis}, FallbackValue=Visible}"
+                                            Visibility="{Binding ShowLightPoise, Converter={StaticResource BoolToVis}, FallbackValue=Visible}"
                                             Margin="5,0,0,5">
+                                    <ProgressBar Height="25"
+                                                 Value="{Binding TargetCurrentLightPoise}"
+                                                 Maximum="{Binding TargetMaxLightPoise, FallbackValue=100}">
+                                        <ProgressBar.Template>
+                                            <ControlTemplate TargetType="ProgressBar">
+                                                <Border BorderBrush="#444444" BorderThickness="1" Background="#222222"
+                                                        CornerRadius="3">
+                                                    <Grid x:Name="PART_Track">
+                                                        <Rectangle x:Name="PART_Indicator"
+                                                                   Fill="#FFA000"
+                                                                   HorizontalAlignment="Left"
+                                                                   RadiusX="2" RadiusY="2"
+                                                                   Margin="1" />
+                                                    </Grid>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </ProgressBar.Template>
+                                    </ProgressBar>
+                                    <TextBlock HorizontalAlignment="Center" Margin="0,2,0,0">
+                                        <Run Text="Light stagger " />
+                                        <Run Text="{Binding TargetCurrentLightPoise, StringFormat=F1, Mode=OneWay}" />
+                                        <Run Text="/" />
+                                        <Run Text="{Binding TargetMaxLightPoise, Mode=OneWay}" />
+                                    </TextBlock>
+                                </StackPanel>
+                                
+                                <StackPanel Grid.Row="1" Grid.Column="0"
+                                            Visibility="{Binding ShowBleed, Converter={StaticResource BoolToVis}, FallbackValue=Visible}"
+                                            Margin="0,5,5,5">
                                     <Grid>
                                         <ProgressBar Height="25"
                                                      Value="{Binding TargetCurrentBleed}"
@@ -248,9 +278,9 @@
                                     </TextBlock>
                                 </StackPanel>
 
-                                <StackPanel Grid.Row="1" Grid.Column="0"
+                                <StackPanel Grid.Row="1" Grid.Column="1"
                                             Visibility="{Binding ShowPoison, Converter={StaticResource BoolToVis}, FallbackValue=Visible}"
-                                            Margin="0,5,5,0">
+                                            Margin="5,5,0,5">
                                     <Grid>
                                         <ProgressBar Height="25"
                                                      Value="{Binding TargetCurrentPoison}"
@@ -287,9 +317,10 @@
                                     </TextBlock>
                                 </StackPanel>
 
-                                <StackPanel Grid.Row="1" Grid.Column="1"
+                                <!-- Row 3: Toxic alone -->
+                                <StackPanel Grid.Row="2" Grid.Column="0"
                                             Visibility="{Binding ShowToxic, Converter={StaticResource BoolToVis}, FallbackValue=Visible}"
-                                            Margin="5,5,0,0">
+                                            Margin="0,5,5,0">
                                     <Grid>
                                         <ProgressBar Height="25"
                                                      Value="{Binding TargetCurrentToxic}"

@@ -18,7 +18,7 @@ namespace SilkySouls2.Services
         }
         
         public void Quitout() =>
-            _memoryIo.WriteByte((IntPtr)_memoryIo.ReadInt64(GameManagerImp.Base) + GameManagerImp.Offsets.MenuKick, 6);
+            _memoryIo.WriteByte((IntPtr)_memoryIo.ReadInt64(GameManagerImp.Base) + GameManagerImp.Offsets.Quitout, 6);
         
         public void ToggleFastQuitout(bool isEnabled)
         {

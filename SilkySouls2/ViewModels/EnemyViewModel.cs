@@ -32,10 +32,12 @@ namespace SilkySouls2.ViewModels
         // private ResistancesWindow _resistancesWindowWindow;
         private bool _isResistancesWindowOpen;
 
-        private float _targetCurrentPoise;
-        private float _targetMaxPoise;
-        private float _targetPoiseTimer;
-        private bool _showPoise;
+        private float _targetCurrentHeavyPoise;
+        private float _targetMaxHeavyPoise;
+        private bool _showHeavyPoise;
+        private float _targetCurrentLightPoise;
+        private float _targetMaxLightPoise;
+        private bool _showLightPoise;
 
         private float _targetCurrentBleed;
         private float _targetMaxBleed;
@@ -169,7 +171,8 @@ namespace SilkySouls2.ViewModels
                 //
                 // IsFreezeHealthEnabled = _enemyService.IsTargetNoDamageEnabled();
                 _currentTargetId = targetId;
-                TargetMaxPoise = _enemyService.GetTargetResistance(GameManagerImp.PlayerCtrlOffsets.PoiseMax);
+                TargetMaxHeavyPoise = _enemyService.GetTargetResistance(GameManagerImp.PlayerCtrlOffsets.HeavyPoiseMax);
+                TargetMaxLightPoise = _enemyService.GetTargetResistance(GameManagerImp.PlayerCtrlOffsets.LightPoiseMax);
                 (IsPoisonToxicImmune, IsBleedImmune) = _enemyService.GetImmunities();
                 TargetMaxPoison = IsPoisonToxicImmune
                     ? 0
@@ -189,7 +192,8 @@ namespace SilkySouls2.ViewModels
             }
         
             // TargetSpeed = _enemyService.GetTargetSpeed();
-            TargetCurrentPoise = _enemyService.GetTargetResistance(GameManagerImp.PlayerCtrlOffsets.PoiseCurrent);
+            TargetCurrentHeavyPoise = _enemyService.GetTargetResistance(GameManagerImp.PlayerCtrlOffsets.HeavyPoiseCurrent);
+            TargetCurrentLightPoise = _enemyService.GetTargetResistance(GameManagerImp.PlayerCtrlOffsets.LightPoiseCurrent);
             TargetCurrentPoison = IsPoisonToxicImmune
                 ? 0
                 : _enemyService.GetTargetResistance(GameManagerImp.PlayerCtrlOffsets.PoisonCurrent);
@@ -261,7 +265,8 @@ namespace SilkySouls2.ViewModels
                     // IsResistancesWindowOpen = false;
                     IsFreezeHealthEnabled = false;
                     _enemyService.ToggleTargetHook(false);
-                    ShowPoise = false;
+                    ShowHeavyPoise = false;
+                    ShowLightPoise = false;
                     ShowBleed = false;
                     ShowPoison = false;
                     ShowToxic = false;
@@ -275,14 +280,16 @@ namespace SilkySouls2.ViewModels
             if (_showAllResistances)
             {
                 ShowBleed = true;
-                ShowPoise = true;
+                ShowHeavyPoise = true;
+                ShowLightPoise = true;
                 ShowPoison = true;
                 ShowToxic = true;
             }
             else
             {
                 ShowBleed = false;
-                ShowPoise = false;
+                ShowHeavyPoise = false;
+                ShowLightPoise = false;
                 ShowPoison = false;
                 ShowToxic = false;
             }
@@ -385,30 +392,54 @@ namespace SilkySouls2.ViewModels
         // public bool ShowFrostAndNotImmune => ShowFrost && !IsFrostImmune;
         //
         
-        public float TargetCurrentPoise
+        public float TargetCurrentHeavyPoise
         {
-            get => _targetCurrentPoise;
-            set => SetProperty(ref _targetCurrentPoise, value);
+            get => _targetCurrentHeavyPoise;
+            set => SetProperty(ref _targetCurrentHeavyPoise, value);
         }
         
-        public float TargetMaxPoise
+        public float TargetMaxHeavyPoise
         {
-            get => _targetMaxPoise;
-            set => SetProperty(ref _targetMaxPoise, value);
+            get => _targetMaxHeavyPoise;
+            set => SetProperty(ref _targetMaxHeavyPoise, value);
         }
         
 
         
-        public bool ShowPoise
+        public bool ShowHeavyPoise
         {
-            get => _showPoise;
+            get => _showHeavyPoise;
             set
             {
-                SetProperty(ref _showPoise, value);
+                SetProperty(ref _showHeavyPoise, value);
                 // if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
                 // _resistancesWindowWindow.DataContext = null;
                 // _resistancesWindowWindow.DataContext = this;
             }
+        }
+        
+        public bool ShowLightPoise
+        {
+            get => _showLightPoise;
+            set
+            {
+                SetProperty(ref _showLightPoise, value);
+                // if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
+                // _resistancesWindowWindow.DataContext = null;
+                // _resistancesWindowWindow.DataContext = this;
+            }
+        }
+        
+        public float TargetCurrentLightPoise
+        {
+            get => _targetCurrentLightPoise;
+            set => SetProperty(ref _targetCurrentLightPoise, value);
+        }
+        
+        public float TargetMaxLightPoise
+        {
+            get => _targetMaxLightPoise;
+            set => SetProperty(ref _targetMaxLightPoise, value);
         }
         
         public float TargetCurrentBleed

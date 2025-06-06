@@ -117,12 +117,15 @@ namespace SilkySouls2.Memory
                 addr => Offsets.Hooks.InfinitePoise = addr.ToInt64(), saved);
             
             var setCurrectActLocs = FindAddressesByPattern(Patterns.SetCurrectAct, 2);
-            if (setCurrectActLocs[0] == IntPtr.Zero && saved.TryGetValue("SetCurrectAct", out var value))
+            if (setCurrectActLocs.Count < 2 || setCurrectActLocs[0] == IntPtr.Zero)
             {
-                Offsets.Hooks.SetCurrectAct = value;
-                Offsets.Hooks.SetCurrectAct2 = saved["SetCurrectAct2"];
+                if (saved.TryGetValue("SetCurrectAct", out var value))
+                {
+                    Offsets.Hooks.SetCurrectAct = value;
+                    Offsets.Hooks.SetCurrectAct2 = saved["SetCurrectAct2"];
+                }
             }
-            else if (setCurrectActLocs[0] != IntPtr.Zero)
+            else
             {
                 Offsets.Hooks.SetCurrectAct = setCurrectActLocs[0].ToInt64();
                 Offsets.Hooks.SetCurrectAct2 = setCurrectActLocs[1].ToInt64();

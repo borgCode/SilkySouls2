@@ -20,7 +20,7 @@ namespace SilkySouls2.Memory
                 public const int PlayerCtrl = 0xD0;
                 public const int ViewMatrixPtr = 0x1158;
                 public const int DLBackAllocator = 0x22E0;
-                public const int MenuKick = 0x24B1;
+                public const int Quitout = 0x24B1;
                 public const int LoadingFlag = 0x24BC;
             }
             
@@ -28,7 +28,6 @@ namespace SilkySouls2.Memory
             {
                 //TODO 0x18 FREE CAMERA 
                 public const int IngameCameraOperatorPtr = 0x28;
-                public const int CamLeaveChr= 0x450; // TODO Maybe free cam?
                 public const int MapId = 0x45C;
                 
             }
@@ -83,14 +82,16 @@ namespace SilkySouls2.Memory
                 public const int MaxHp = 0x170;
                 public const int Stamina = 0x1AC;
                 public const int MaxStamina = 0x1B4;
-                public const int PoiseCurrent = 0x1B8;
-                public const int PoiseMax = 0x1C0;
+                public const int HeavyPoiseCurrent = 0x1B8;
+                public const int HeavyPoiseMax = 0x1C0;
                 public const int PoisonCurrent = 0x1C4;
                 public const int PoisonMax = 0x1CC;
                 public const int BleedCurrent = 0x1D0;
                 public const int BleedMax = 0x1D8;
                 public const int ToxicCurrent = 0x200;
                 public const int ToxicMax = 0x208;
+                public const int LightPoiseCurrent = 0x218;
+                public const int LightPoiseMax = 0x220;
                 public const int ChrCullingGroupCtrlPtr = 0x240;
                 public const int Speed = 0x2A8;
                 

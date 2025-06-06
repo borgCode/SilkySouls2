@@ -294,16 +294,6 @@ namespace SilkySouls2.Memory
             None
         );
         
-        
-        
-        public static readonly Pattern ForceSave = new Pattern(
-            new byte[] { 0x74, 0x5A, 0x8B, 0x4B },
-            "xxxx",
-            0,
-            None
-        );
-        
-
         public static readonly Pattern DisableAi = new Pattern(
             new byte[] { 0x7F, 0x59, 0x48, 0x8D },
             "xxxx",

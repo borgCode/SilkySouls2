@@ -16,6 +16,7 @@ namespace SilkySouls2.Memory
                 public const int EnemyGeneratorManager = 0x40;
                 public const int EventManager = 0x70;
                 public const int GameDataManager = 0xA8;
+                public const int SaveLoadSystem = 0xB8;
                 public const int PlayerCtrl = 0xD0;
                 public const int ViewMatrixPtr = 0x1158;
                 public const int DLBackAllocator = 0x22E0;
@@ -50,6 +51,12 @@ namespace SilkySouls2.Memory
                     public const int InventoryLists = 0x10;
                     public const int ItemInventory2BagList = 0x10;
                 }
+            }
+
+            public static class SaveLoadSystem
+            {
+                public const int ForceSaveFlag1 = 0x68;
+                public const int ForceSaveFlag2 = 0x1A2;
             }
 
             //For locked target
@@ -193,7 +200,6 @@ namespace SilkySouls2.Memory
         public static class Patches
         {
             public static IntPtr InfiniteStam;
-            public static IntPtr ForceSave;
             public static IntPtr InfiniteGoods;
             public static IntPtr HideChrModels;
             public static IntPtr HideMap;

@@ -53,7 +53,7 @@ namespace SilkySouls2.ViewModels
             _hotkeyManager.RegisterAction("ForceSave", () =>
             {
                 if (!AreButtonsEnabled) return;
-                _ = _utilityService.ForceSave();
+                _utilityService.ForceSave();
             });
             _hotkeyManager.RegisterAction("NoClip", () => { IsNoClipEnabled = !IsNoClipEnabled; });
             _hotkeyManager.RegisterAction("IncreaseNoClipSpeed", () =>
@@ -340,7 +340,7 @@ namespace SilkySouls2.ViewModels
             AreButtonsEnabled = false;
         }
 
-        public void ForceSave() => _ = _utilityService.ForceSave();
+        public void ForceSave() => _utilityService.ForceSave();
 
         public void TryApplyOneTimeFeatures()
         {

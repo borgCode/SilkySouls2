@@ -54,8 +54,6 @@ namespace SilkySouls2.Memory
             //
             //
             TryPatternWithFallback("InfiniteStam", Patterns.InfiniteStam, addr => Offsets.Patches.InfiniteStam = addr, saved);
-            TryPatternWithFallback("ForceSave", Patterns.ForceSave,
-                addr => Offsets.Patches.ForceSave = addr, saved);
             TryPatternWithFallback("InfiniteGoods", Patterns.InfiniteGoods, addr => Offsets.Patches.InfiniteGoods = addr, saved);
             TryPatternWithFallback("HideChrModels", Patterns.HideChrModels, addr => Offsets.Patches.HideChrModels = addr, saved);
             TryPatternWithFallback("HideMap", Patterns.HideMap, addr => Offsets.Patches.HideMap = addr, saved);
@@ -186,7 +184,6 @@ namespace SilkySouls2.Memory
             // Console.WriteLine($"WorldObjMan.Base: 0x{Offsets.WorldObjMan.Base.ToInt64():X}");
             //
             Console.WriteLine($"Patches.InfiniteStam: 0x{Offsets.Patches.InfiniteStam.ToInt64():X}");
-            Console.WriteLine($"Patches.ForceSave: 0x{Offsets.Patches.ForceSave.ToInt64():X}");
             Console.WriteLine($"Patches.InfiniteGoods: 0x{Offsets.Patches.InfiniteGoods.ToInt64():X}");
             Console.WriteLine($"Patches.HideChrModels: 0x{Offsets.Patches.HideChrModels.ToInt64():X}");
             Console.WriteLine($"Patches.HideMap: 0x{Offsets.Patches.HideMap.ToInt64():X}");

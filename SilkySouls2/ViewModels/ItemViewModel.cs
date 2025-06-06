@@ -68,7 +68,7 @@ namespace SilkySouls2.ViewModels
             // SelectedLoadoutName = Loadouts.FirstOrDefault();
             SelectedCategory = Categories.FirstOrDefault();
             SelectedMassSpawnCategory = Categories.FirstOrDefault();
-            // SelectedAutoSpawnWeapon = WeaponList.FirstOrDefault();
+            SelectedAutoSpawnWeapon = WeaponList.FirstOrDefault();
         }
         
         private bool _areOptionsEnabled;
@@ -288,6 +288,32 @@ namespace SilkySouls2.ViewModels
             get => _selectedMassSpawnCategory;
             set => SetProperty(ref _selectedMassSpawnCategory, value);
         }
+        
+        private bool _autoSpawnEnabled;
+        public bool AutoSpawnEnabled
+        {
+            get => _autoSpawnEnabled;
+            set  {
+                if (SetProperty(ref _autoSpawnEnabled, value))
+                {
+                    _itemService.SetAutoSpawnWeapon(!_autoSpawnEnabled ? 3400000 : SelectedAutoSpawnWeapon.Id);
+                }
+            }
+        }
+        
+        private Item _selectedAutoSpawnWeapon;
+        public Item SelectedAutoSpawnWeapon
+        {
+            get => _selectedAutoSpawnWeapon;
+            set  {
+                if (SetProperty(ref _selectedAutoSpawnWeapon, value))
+                {
+                    _itemService.SetAutoSpawnWeapon(SelectedAutoSpawnWeapon.Id);
+                }
+            }
+        }
+        
+        public ObservableCollection<Item> WeaponList => new ObservableCollection<Item>(_itemsByCategory["Weapons"]);
 
         // public ObservableCollection<string> Loadouts
         // {
@@ -339,6 +365,11 @@ namespace SilkySouls2.ViewModels
                     }
                 }
             });
+        }
+
+        public void ApplyLaunchFeatures()
+        {
+            if (AutoSpawnEnabled) _itemService.SetAutoSpawnWeapon(SelectedAutoSpawnWeapon.Id);
         }
     }
 }

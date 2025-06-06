@@ -23,6 +23,14 @@ namespace SilkySouls2.Memory
                 public const int Quitout = 0x24B1;
                 public const int LoadingFlag = 0x24BC;
             }
+
+            public static class CharacterManagerOffsets
+            {
+                public const int PlayerStatusParamPtr = 0x730;
+                public const int PlayerStatusParam = 0xD8;
+                public const int StartingWeapon = 0x278;
+            }
+            
             
             public static class CameraManagerOffsets
             {
@@ -211,6 +219,7 @@ namespace SilkySouls2.Memory
             public static IntPtr Silent;
             public static IntPtr Hidden;
             public static IntPtr NegativeLevel;
+            public static IntPtr Ng7;
         }
         
         

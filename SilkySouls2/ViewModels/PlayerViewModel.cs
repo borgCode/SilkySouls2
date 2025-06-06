@@ -414,12 +414,18 @@ namespace SilkySouls2.ViewModels
                 }
             }
         }
-        //
-        // public bool IsAutoSetNewGameSevenEnabled
-        // {
-        //     get => _isAutoSetNewGameSevenEnabled;
-        //     set => SetProperty(ref _isAutoSetNewGameSevenEnabled, value);
-        // }
+        
+        public bool IsAutoSetNewGameSevenEnabled
+        {
+            get => _isAutoSetNewGameSevenEnabled;
+            set
+            {
+                if (SetProperty(ref _isAutoSetNewGameSevenEnabled, value))
+                {
+                    _playerService.ToggleAutoSetNg7(_isAutoSetNewGameSevenEnabled);
+                }
+            }
+        }
         //
         // public bool IsNoRollEnabled
         // {
@@ -579,14 +585,6 @@ namespace SilkySouls2.ViewModels
             _timer.Start();
         }
         
-        // public void TrySetNgPref()
-        // {
-        //     if (!IsAutoSetNewGameSevenEnabled) return;
-        //     _playerService.SetNewGame(8);
-        //     NewGame = _playerService.GetNewGame();
-        // }
-        //
-    
         public void TryApplyOneTimeFeatures()
         {
             if (IsOneShotEnabled) _damageControlService.ToggleOneShot(true);
@@ -607,14 +605,13 @@ namespace SilkySouls2.ViewModels
             _timer.Stop();
         }
         
-
         public void GiveSouls() => _playerService.GiveSouls(Souls);
 
         public void RestoreSpellcasts() => _playerService.RestoreSpellcasts();
 
-        public void Test()
+        public void ApplyLaunchFeatures()
         {
-            _playerService.SetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Endurance, 25);
+            if (IsAutoSetNewGameSevenEnabled) _playerService.ToggleAutoSetNg7(true);
         }
     }
 }

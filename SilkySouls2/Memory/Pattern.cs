@@ -281,6 +281,14 @@ namespace SilkySouls2.Memory
             None
         );
 
+        public static readonly Pattern Ng7Patch = new Pattern(
+            new byte[] { 0x48, 0x8B, 0xCF, 0x44, 0x89, 0x77 },
+            "xxxxxx",
+            0xC,
+            None
+        );
+
+
         public static readonly Pattern Silent = new Pattern(
             new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x84, 0xC0, 0x74, 0x4C, 0x48, 0x8B, 0x83 },
             "x????xxxxxxx",

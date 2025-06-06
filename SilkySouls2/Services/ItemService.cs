@@ -102,5 +102,17 @@ namespace SilkySouls2.Services
                 _memoryIo.RunPersistentThread(code);
             }
         }
+
+        public void SetAutoSpawnWeapon(int wepId)
+        {
+            var startingWeapon = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+            {
+                GameManagerImp.Offsets.CharacterManager,
+                GameManagerImp.CharacterManagerOffsets.PlayerStatusParamPtr,
+                GameManagerImp.CharacterManagerOffsets.PlayerStatusParam,
+                GameManagerImp.CharacterManagerOffsets.StartingWeapon,
+            }, false);
+            _memoryIo.WriteInt32(startingWeapon, wepId);
+        }
     }
 }

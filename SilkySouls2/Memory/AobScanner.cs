@@ -67,6 +67,8 @@ namespace SilkySouls2.Memory
                 addr => Offsets.Patches.Silent = addr, saved);
             TryPatternWithFallback("Hidden", Patterns.Hidden,
                 addr => Offsets.Patches.Hidden = addr, saved);
+            TryPatternWithFallback("Ng7", Patterns.Ng7Patch,
+                addr => Offsets.Patches.Ng7 = addr, saved);
             TryPatternWithFallback("DisableAi", Patterns.DisableAi, addr => Offsets.Patches.DisableAi = addr, saved);
             // TryPatternWithFallback("TargetingView", Patterns.DbgDrawFlag, addr => Offsets.Patches.DbgDrawFlag = addr,
             //     saved);
@@ -197,6 +199,8 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Patches.Silent: 0x{Offsets.Patches.Silent.ToInt64():X}");
             Console.WriteLine($"Patches.Hidden: 0x{Offsets.Patches.Hidden.ToInt64():X}");
             Console.WriteLine($"Patches.NegativeLevel: 0x{Offsets.Patches.NegativeLevel.ToInt64():X}");
+            Console.WriteLine($"Patches.Ng7: 0x{Offsets.Patches.Ng7.ToInt64():X}");
+            
             
             // Console.WriteLine($"Patches.TargetingView: 0x{Offsets.Patches.DbgDrawFlag.ToInt64():X}");
             // Console.WriteLine($"Patches.FreeCam: 0x{Offsets.Patches.FreeCam.ToInt64():X}");

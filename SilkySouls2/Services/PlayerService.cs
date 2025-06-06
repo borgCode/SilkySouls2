@@ -323,5 +323,8 @@ namespace SilkySouls2.Services
             }
             
         }
+
+        public void ToggleAutoSetNg7(bool isAutoSetNewGameSevenEnabled) =>
+            _memoryIo.WriteByte(Patches.Ng7 + 3, isAutoSetNewGameSevenEnabled ? 9 : 1);
     }
 }

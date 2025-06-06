@@ -116,6 +116,7 @@ namespace SilkySouls2
         private bool _hasAppliedNoLogo;
 
         private bool _appliedOneTimeFeatures;
+        private bool _hasAppliedLaunchFeatures;
 
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -135,6 +136,11 @@ namespace SilkySouls2
                     Console.WriteLine($"Base: 0x{_memoryIo.BaseAddress.ToInt64():X}");
                 }
 
+                if (!_hasAppliedLaunchFeatures)
+                {
+                    ApplyLaunchFeatures();
+                }
+                
                 //
                 // if (!_hasAppliedNoLogo)
                 // {
@@ -183,6 +189,12 @@ namespace SilkySouls2
                 IsAttachedText.Foreground = (SolidColorBrush)Application.Current.Resources["NotAttachedBrush"];
                 // LaunchGameButton.IsEnabled = true;
             }
+        }
+
+        private void ApplyLaunchFeatures()
+        {
+            _playerViewModel.ApplyLaunchFeatures();
+            _itemViewModel.ApplyLaunchFeatures();
         }
 
         private void ApplyOneTimeFeatures()

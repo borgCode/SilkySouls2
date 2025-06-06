@@ -7,17 +7,16 @@
              xmlns:converters="clr-namespace:SilkySouls2.Converters"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="500">
-    
+
     <UserControl.Resources>
         <converters:BooleanAndConverter x:Key="BooleanAndConverter" />
-        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
     </UserControl.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition />
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0"
@@ -25,118 +24,7 @@
                 BorderBrush="#333"
                 CornerRadius="3"
                 Margin="0,0,0,5">
-            <StackPanel Margin="10">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-
-                    <TextBlock Text="Draw"
-                               Grid.Column="0" />
-                </Grid>
-
-                <Grid Margin="20,5,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-
-                    </Grid.ColumnDefinitions>
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-
-                    <CheckBox Content="Draw hitbox"
-                              IsChecked="{Binding IsDrawHitboxEnabled}"
-                              Grid.Column="0" Grid.Row="0"
-                              Margin="0,2" />
-
-                    <Button Content="Inject"
-                              Click="Inject_Dll"
-                              Grid.Column="0" Grid.Row="1"
-                              Margin="0,2" />
-
-                    <CheckBox Content="Draw Events"
-                              IsChecked="{Binding IsDrawEventEnabled}"
-                              Grid.Column="0" Grid.Row="2"
-                              Margin="0,2" />
-
-                    <CheckBox Content="Player Sound"
-                              IsChecked="{Binding IsDrawSoundEnabled}"
-                              Grid.Column="0" Grid.Row="3"
-                              Margin="0,2" />
-                    <CheckBox Content="Draw Killbox"
-                              IsChecked="{Binding IsDrawKillboxEnabled}"
-                              Grid.Column="0" Grid.Row="4"
-                              Margin="0,2" />
-                    
-                    <CheckBox Content="Enemy Targeting View"
-                              IsChecked="{Binding IsTargetingViewEnabled}"
-                              Grid.Column="1" Grid.Row="0"
-                              Margin="0,2" />
-                    <CheckBox Content="Wall Aware"
-                              IsChecked="{Binding IsWallAwareEnabled}"
-                    
-                              Grid.Column="1" Grid.Row="1"
-                              Margin="15,2,0,2" />
-     
-
-                    <!-- <CheckBox Content="Hide Objects" -->
-                    <!--           IsChecked="{Binding IsHideObjectsEnabled}" -->
-                    <!--           Grid.Column="1" Grid.Row="1" -->
-                    <!--           Margin="0,2" /> -->
-
-                    <CheckBox Content="Hide Map"
-                              IsChecked="{Binding IsHideMapEnabled}"
-                              Grid.Column="1" Grid.Row="2"
-                              Margin="0,2" />
-                    
-                    <CheckBox Content="Hide Characters"
-                              IsChecked="{Binding IsHideCharactersEnabled}"
-                              Grid.Column="1" Grid.Row="3"
-                              Margin="0,2" />
-
-                    <CheckBox Content="Hide Sfx"
-                              IsChecked="{Binding IsHideSfxEnabled}"
-                              Grid.Column="1" Grid.Row="4"
-                              Margin="0,2" />
-
-                    <CheckBox Content="Draw Ragdolls"
-                              IsChecked="{Binding IsDrawRagdollsEnabled}"
-                              Grid.Column="2" Grid.Row="0"
-                              Margin="0,2" />
-
-                    <CheckBox Content="See Through Walls"
-                              IsChecked="{Binding IsSeeThroughWallsEnabled}"
-                              IsEnabled="{Binding IsDrawRagdollsEnabled}"
-                              Grid.Column="2" Grid.Row="1"
-                              Margin="15,2,0,2" />
-                    
-                    <CheckBox Content="Draw Collision"
-                              IsChecked="{Binding IsDrawCollisionEnabled}"
-                              Grid.Column="2" Grid.Row="3"
-                              Margin="0,2" />
-                    <CheckBox Content="Wireframe"
-                              IsChecked="{Binding IsColWireframeEnabled}"
-                              Grid.Column="2" Grid.Row="4"
-                              Margin="15,2,0,2" />
-                </Grid>
-            </StackPanel>
-        </Border>
-
-        <Border Grid.Row="1"
-                BorderThickness="1"
-                BorderBrush="#333"
-                CornerRadius="3"
-                Margin="0,0,0,5">
-            <TabControl Margin="5" Height="140">
+            <TabControl Margin="5">
                 <TabItem Header="General">
                     <StackPanel Margin="10">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,3" VerticalAlignment="Center">
@@ -282,7 +170,6 @@
                             </StackPanel>
 
                             <Button Content="Move Free Cam to Player"
-                             
                                     IsEnabled="{Binding IsFreeCamEnabled}"
                                     Padding="5,0"
                                     Margin="20,0,0,5"
@@ -315,15 +202,15 @@
                             </StackPanel>
 
                             <Button Content="Set Default FOV"
-                           
                                     HorizontalAlignment="Right"
                                     Padding="5,2"
                                     Margin="0,0,0,0"
                                     Width="100">
                                 <Button.IsEnabled>
                                     <MultiBinding Converter="{StaticResource BooleanAndConverter}">
-                                        <Binding Path="AreButtonsEnabled"/>
-                                        <Binding Path="IsFreeCamEnabled" Converter="{StaticResource InverseBooleanConverter}"/>
+                                        <Binding Path="AreButtonsEnabled" />
+                                        <Binding Path="IsFreeCamEnabled"
+                                                 Converter="{StaticResource InverseBooleanConverter}" />
                                     </MultiBinding>
                                 </Button.IsEnabled>
                             </Button>
@@ -333,156 +220,104 @@
             </TabControl>
         </Border>
 
-        <Grid Grid.Row="3">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+        <Border Grid.Row="1"
+                BorderThickness="1"
+                BorderBrush="#333"
+                CornerRadius="3"
+                Margin="0,0,0,5">
+            <StackPanel Margin="10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
 
-            <Border Grid.Column="0"
-                    BorderThickness="1"
-                    BorderBrush="#333"
-                    CornerRadius="3"
-                    Margin="0,0,5,0">
-                <TabControl Margin="5">
-                    <TabItem Header="Menu">
-                        <WrapPanel Margin="5" HorizontalAlignment="Center">
-                            <Button Content="Travel"
-                                    IsEnabled="{Binding AreButtonsEnabled}"
-                             
-                                    Width="80"
-                                    Height="24"
-                                    Margin="3" />
+                    <TextBlock Text="Draw"
+                               Grid.Column="0" />
+                </Grid>
 
-                            <Button Content="Level Up"
-                                    IsEnabled="{Binding AreButtonsEnabled}"
-                         
-                                    Width="80"
-                                    Height="24"
-                                    Margin="3" />
+                <Grid Margin="20,5,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
 
-                            <Button Content="Upgrade"
-                                    IsEnabled="{Binding AreButtonsEnabled}"
-                          
-                                    Height="24"
-                                    Width="80"
-                                    Margin="3" />
-
-                            <Button Content="Repair"
-                                    IsEnabled="{Binding AreButtonsEnabled}"
-                              
-                                    Height="24"
-                                    Width="80"
-                                    Margin="3" />
-
-                            <Button Content="Infuse"
-                                    IsEnabled="{Binding AreButtonsEnabled}"
-                         
-                                    Height="24"
-                                    Width="80"
-                                    Margin="3" />
-
-                            <Button Content="Allot Estus"
-                                    IsEnabled="{Binding AreButtonsEnabled}"
-                                    Height="24"
-                            
-                                    Width="80"
-                                    Margin="3" />
-
-                            <Button Content="Attunement"
-                                    IsEnabled="{Binding AreButtonsEnabled}"
-                                    Height="24"
-                   
-                                    Width="80"
-                                    Margin="3" />
-                        </WrapPanel>
-                    </TabItem>
-
-                    <TabItem Header="Shops">
-                        <WrapPanel Margin="5" HorizontalAlignment="Center">
-                            <Button Content="Handmaid"
-                                    IsEnabled="{Binding AreButtonsEnabled}"
-                  
-                                    Height="24"
-                                    Width="80"
-                                    Margin="3" />
-
-                            <Button Content="Greirat"
-                                    IsEnabled="{Binding AreButtonsEnabled}"
-                       
-                                    Height="24"
-                                    Width="80"
-                                    Margin="3" />
-
-                            <Button Content="Patches"
-                                    IsEnabled="{Binding AreButtonsEnabled}"
-                       
-                                    Height="24"
-                                    Width="80"
-                                    Margin="3" />
-
-                            <Button Content="Orbeck"
-                                    IsEnabled="{Binding AreButtonsEnabled}"
-                        
-                                    Height="24"
-                                    Width="80"
-                                    Margin="3" />
-
-                            <Button Content="Cornyx"
-                                    IsEnabled="{Binding AreButtonsEnabled}"
-                          
-                                    Height="24"
-                                    Width="80"
-                                    Margin="3" />
-
-                            <Button Content="Karla"
-                                    IsEnabled="{Binding AreButtonsEnabled}"
-                          
-                                    Height="24"
-                                    Width="80"
-                                    Margin="3" />
-
-                            <Button Content="Transpose"
-                                    IsEnabled="{Binding AreButtonsEnabled}"
-                           
-                                    Height="24"
-                                    Width="80"
-                                    Margin="3" />
-                        </WrapPanel>
-                    </TabItem>
-                </TabControl>
-            </Border>
-
-            <Border Grid.Column="1"
-                    BorderThickness="1"
-                    BorderBrush="#333"
-                    CornerRadius="3"
-                    Margin="5,0,0,0">
-                <StackPanel Margin="10">
-                    <TextBlock Text="Event Manager"
-                               FontWeight="Bold"
-                               Margin="0,0,0,10" />
-
-                    <StackPanel>
-                        <Button Content="Unlock All Bonfires"
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
                     
-                                IsEnabled="{Binding AreButtonsEnabled}"
-                                Height="20"
-                                Margin="0,2" />
+                    <CheckBox Content="Draw hitbox"
+                              IsChecked="{Binding IsDrawHitboxEnabled}"
+                              Grid.Column="0" Grid.Row="0"
+                              Margin="0,2" />
 
-                        <Button Content="Unlock Midir"
-               
-                                IsEnabled="{Binding AreButtonsEnabled}"
-                                Height="20"
-                                Margin="0,5" />
-                        <Button Content="Patches to Firelink"
+                    <CheckBox Content="Draw Events"
+                              IsChecked="{Binding IsDrawEventEnabled}"
+                              Grid.Column="0" Grid.Row="1"
+                              Margin="0,2" />
+
+                    <CheckBox Content="Player Sound"
+                              IsChecked="{Binding IsDrawSoundEnabled}"
+                              Grid.Column="0" Grid.Row="2"
+                              Margin="0,2" />
+
+                    <CheckBox Content="Enemy Targeting View"
+                              IsChecked="{Binding IsTargetingViewEnabled}"
+                              Grid.Column="0" Grid.Row="3"
+                              Margin="0,2" />
                     
-                                IsEnabled="{Binding AreButtonsEnabled}"
-                                Height="20"
-                                Margin="0,5" />
-                    </StackPanel>
-                </StackPanel>
-            </Border>
-        </Grid>
+                    <CheckBox Content="Hide Map"
+                              IsChecked="{Binding IsHideMapEnabled}"
+                              Grid.Column="1" Grid.Row="0"
+                              Margin="0,2" />
+
+                    <CheckBox Content="Hide Characters"
+                              IsChecked="{Binding IsHideCharactersEnabled}"
+                              Grid.Column="1" Grid.Row="1"
+                              Margin="0,2" />
+
+                    <CheckBox Content="Hide Sfx"
+                              IsChecked="{Binding IsHideSfxEnabled}"
+                              Grid.Column="1" Grid.Row="2"
+                              Margin="0,2" />
+                    
+                    <CheckBox Content="Draw Collision"
+                              IsChecked="{Binding IsDrawCollisionEnabled}"
+                              Grid.Column="2" Grid.Row="0"
+                              Margin="0,2" />
+
+                    <CheckBox Content="Wireframe"
+                              IsChecked="{Binding IsColWireframeEnabled}"
+                              IsEnabled="{Binding IsDrawCollisionEnabled}"
+                              Grid.Column="2" Grid.Row="1"
+                              Margin="15,2,0,2" />
+
+                    <CheckBox Content="Draw Killbox"
+                              IsChecked="{Binding IsDrawKillboxEnabled}"
+                              Grid.Column="2" Grid.Row="2"
+                              Margin="0,2" />
+
+                    <CheckBox Content="Draw Ragdolls"
+                              IsChecked="{Binding IsDrawRagdollsEnabled}"
+                              Grid.Column="2" Grid.Row="3"
+                              Margin="0,2" />
+
+                    <CheckBox Content="See Through Walls"
+                              IsChecked="{Binding IsSeeThroughWallsEnabled}"
+                              IsEnabled="{Binding IsDrawRagdollsEnabled}"
+                              Grid.Column="2" Grid.Row="4"
+                              Margin="15,2,0,2" />
+                </Grid>
+            </StackPanel>
+        </Border>
+        <Button Content="Inject"
+                Click="Inject_Dll"
+                Grid.Row="2"
+                Margin="0,2" />
     </Grid>
 </UserControl>

@@ -212,7 +212,8 @@
                     <Button Content="Restore Spellcasts"
                             Width="150"
                             Margin="0, 15, 0,0"
-                            Click="RestoreSpellcasts_Click">
+                            Click="RestoreSpellcasts_Click"
+                            IsEnabled="{Binding AreOptionsEnabled}">
                     </Button>
                 </StackPanel>
             </Grid>

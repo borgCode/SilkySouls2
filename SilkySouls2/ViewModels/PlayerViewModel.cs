@@ -431,29 +431,7 @@ namespace SilkySouls2.ViewModels
         //     }
         // }
         //
-        public void TryEnableFeatures()
-        {
-            if (IsOneShotEnabled) _damageControlService.ToggleOneShot(true);
-            if (IsDealNoDamageEnabled) _damageControlService.ToggleDealNoDamage(true);
-            if (IsInfiniteStaminaEnabled) _playerService.ToggleInfiniteStamina(true);
-            if (IsNoGoodsConsumeEnabled) _playerService.ToggleNoGoodsConsume(true);
-            if (IsInfiniteCastsEnabled) _playerService.ToggleInfiniteCasts(true);
-            // if (IsInvisibleEnabled)
-            //     _playerService.ToggleDebugFlag(DebugFlags.Invisible, 1);
-            // if (IsSilentEnabled)
-            //     _playerService.ToggleDebugFlag(DebugFlags.Silent, 1);
-            // if (IsNoAmmoConsumeEnabled)
-            //     _playerService.ToggleDebugFlag(DebugFlags.InfiniteArrows, 1);
-            // if (IsInfinitePoiseEnabled)
-            //     _playerService.ToggleInfinitePoise(true);
-            if (IsInfiniteDurabilityEnabled) _playerService.ToggleInfiniteDurability(true);
-            // if (IsNoRollEnabled)
-            //     _playerService.ToggleNoRoll(true);
-            AreOptionsEnabled = true;
-            LoadStats();
-            _timer.Start();
-        }
-
+        
         public int Vigor
         {
             get => _vigor;
@@ -588,6 +566,19 @@ namespace SilkySouls2.ViewModels
             return Math.Abs(a - b) < Epsilon;
         }
         
+        
+        public void TryEnableFeatures()
+        {
+    
+            if (IsNoDeathEnabled) _playerService.ToggleNoDeath(true);
+            
+            // if (IsNoRollEnabled)
+            //     _playerService.ToggleNoRoll(true);
+            AreOptionsEnabled = true;
+            LoadStats();
+            _timer.Start();
+        }
+        
         // public void TrySetNgPref()
         // {
         //     if (!IsAutoSetNewGameSevenEnabled) return;
@@ -598,8 +589,16 @@ namespace SilkySouls2.ViewModels
     
         public void TryApplyOneTimeFeatures()
         {
-            if (IsNoDeathEnabled) _playerService.ToggleNoDeath(true);
+            if (IsOneShotEnabled) _damageControlService.ToggleOneShot(true);
+            if (IsDealNoDamageEnabled) _damageControlService.ToggleDealNoDamage(true);
             if (IsNoDamageEnabled) _playerService.ToggleNoDamage(true);
+            if (IsInfiniteStaminaEnabled) _playerService.ToggleInfiniteStamina(true);
+            if (IsNoGoodsConsumeEnabled) _playerService.ToggleNoGoodsConsume(true);
+            if (IsInfiniteCastsEnabled) _playerService.ToggleInfiniteCasts(true);
+            if (IsInfiniteDurabilityEnabled) _playerService.ToggleInfiniteDurability(true);
+            if (IsInfinitePoiseEnabled) _playerService.ToggleInfinitePoise(true);
+            if (IsSilentEnabled) _playerService.ToggleSilent(true);
+            if (IsHiddenEnabled) _playerService.ToggleHidden(true);
         }
 
         public void DisableFeatures()

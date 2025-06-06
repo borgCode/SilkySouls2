@@ -6,11 +6,10 @@
         Event = 1,
         Sound = 2,
         TargetingView = 3,
-        TargetingViewWallAware = 4,
-        Ragdoll = 5,
-        RagdollEsp = 6,
-        Collision = 7,
-        CollisionWireframe = 8,
-        CollisionKillbox = 9,
+        Ragdoll = 4,
+        RagdollEsp = 5,
+        Collision = 6,
+        CollisionWireframe = 7,
+        CollisionKillbox = 8,
     }
 }

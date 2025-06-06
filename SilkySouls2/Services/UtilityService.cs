@@ -321,8 +321,6 @@ namespace SilkySouls2.Services
             _dllManager.ToggleRender(DrawType.Sound, isDrawSoundEnabled);
         public void ToggleTargetingView(bool isTargetingViewEnabled) =>
             _dllManager.ToggleRender(DrawType.TargetingView, isTargetingViewEnabled);
-        public void ToggleTargetingViewWallAware(bool isEnabled) =>
-            _dllManager.ToggleRender(DrawType.TargetingViewWallAware, isEnabled);
 
         public void ToggleRagdoll(bool isDrawRagrollEnabled) =>
             _dllManager.ToggleRender(DrawType.Ragdoll, isDrawRagrollEnabled);

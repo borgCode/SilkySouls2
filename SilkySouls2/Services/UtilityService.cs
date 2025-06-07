@@ -236,6 +236,45 @@ namespace SilkySouls2.Services
                 });
                 
                 _memoryIo.WriteBytes(coordsCode, codeBytes);
+
+                codeBytes = AsmLoader.GetAsmBytes("NoClip_RayCast");
+
+                var frameCounter = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.FrameCounter;
+                var rayInput = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.RayInput;
+                var rayOutput = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.RayOutput;
+                var mapId = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.MapId;
+
+                var pxWorld = _memoryIo.ReadInt64((IntPtr)_memoryIo.ReadInt64(GameManagerImp.Base) +
+                                                  GameManagerImp.Offsets.PxWorld);
+                var raycastFunc = Funcs.HavokRayCast;
+                var convertToMap = Funcs.ConvertPxRigidToMapEntity;
+                var convertToMapId = Funcs.ConvertMapEntityToGameId;
+                
+                AsmHelper.WriteRelativeOffsets(codeBytes, new []
+                {
+                    (raycastCode.ToInt64() + 0x1C, frameCounter.ToInt64(), 6, 0x1C + 2),
+                    (raycastCode.ToInt64() + 0x22, frameCounter.ToInt64(), 7, 0x22 + 2),
+                    (raycastCode.ToInt64() + 0x32, frameCounter.ToInt64(), 6, 0x32 + 2),
+                    (raycastCode.ToInt64() + 0x51, rayInput.ToInt64(), 7, 0x51 + 3),
+                    (raycastCode.ToInt64() + 0x8F, rayOutput.ToInt64(), 7, 0x8F + 3),
+                    (raycastCode.ToInt64() + 0xA6, raycastFunc, 5, 0xA6 + 1),
+                    (raycastCode.ToInt64() + 0xB2, rayOutput.ToInt64() + 0x10, 7, 0xB2 + 2),
+                    (raycastCode.ToInt64() + 0xCC, convertToMap, 5, 0xCC + 1),
+                    (raycastCode.ToInt64() + 0xD8, mapId.ToInt64(), 7, 0xD8 + 3),
+                    (raycastCode.ToInt64() + 0xE3, convertToMapId, 5, 0xE3 + 1),
+                    (raycastCode.ToInt64() + 0xFA, rayCastHook + 0x7, 5, 0xFA + 1)
+                });
+                
+                AsmHelper.WriteAbsoluteAddresses(codeBytes, new []
+                {
+                    (updateCoordsPIdentifier.ToInt64(), 0x8 + 2),
+                    (pxWorld, 0x3D + 2),
+                    (updateCoordsPIdentifier.ToInt64(), 0x47 + 2),
+                    (rayOutput.ToInt64() + 0x18, 0xBB + 2)
+                });
+
+                _memoryIo.WriteBytes(raycastCode, codeBytes);
+                
                 
                 _memoryIo.WriteByte(GetGravityPtr(), 1);
                 
@@ -247,7 +286,9 @@ namespace SilkySouls2.Services
                     { 0x81, 0x8B, 0x28, 0x02, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00 });
                 _hookManager.InstallHook(coordsCode.ToInt64(), coordsHook, 
                 new byte[] { 0x66, 0x0F, 0x7F, 0xB8, 0x90, 0x00, 0x00, 0x00 });
-    
+                _hookManager.InstallHook(raycastCode.ToInt64(), rayCastHook, new byte[]
+                    { 0x48, 0x8D, 0x9E, 0xD8, 0x00, 0x00, 0x00 });
+
             }
             else
             {
@@ -256,6 +297,7 @@ namespace SilkySouls2.Services
                 _hookManager.UninstallHook(triggersAndSpaceCode.ToInt64());
                 _hookManager.UninstallHook(ctrlCode.ToInt64());
                 _hookManager.UninstallHook(inAirTimerCode.ToInt64());
+                _hookManager.UninstallHook(raycastCode.ToInt64());
             }
             
         }

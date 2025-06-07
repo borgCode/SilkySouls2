@@ -18,6 +18,7 @@ namespace SilkySouls2.Memory
                 public const int GameDataManager = 0xA8;
                 public const int SaveLoadSystem = 0xB8;
                 public const int PlayerCtrl = 0xD0;
+                public const int PxWorld = 0x660;
                 public const int ViewMatrixPtr = 0x1158;
                 public const int DLBackAllocator = 0x22E0;
                 public const int Quitout = 0x24B1;

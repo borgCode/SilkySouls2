@@ -2126,25 +2126,25 @@ c3                      ret</value>
   </data>
   <data name="NoClip_RayCast" xml:space="preserve">
     <value>48 8d 9e d8 00 00 00    lea    rbx,[rsi+0xd8]
-ff 05 00 00 00 00       inc    DWORD PTR [rip+0x0]        # d &lt;_main+0xd&gt;
-81 3d 00 00 00 00 b4    cmp    DWORD PTR [rip+0x0],0xb4        # 17 &lt;_main+0x17&gt;
-00 00 00
-0f 8e db 00 00 00       jle    f8 &lt;skip&gt;
 50                      push   rax
-56                      push   rsi
-57                      push   rdi
-48 31 c0                xor    rax,rax
-89 05 00 00 00 00       mov    DWORD PTR [rip+0x0],eax        # 29 &lt;_main+0x29&gt;
 48 b8 00 00 00 00 00    movabs rax,0x0
 00 00 00
-48 8b 00                mov    rax,QWORD PTR [rax]
-48 8b 80 d0 00 00 00    mov    rax,QWORD PTR [rax+0xd0]
 48 3b 41 08             cmp    rax,QWORD PTR [rcx+0x8]
-0f 85 ae 00 00 00       jne    f5 &lt;exit&gt;
+0f 85 dd 00 00 00       jne    f9 &lt;exit&gt;
+ff 05 00 00 00 00       inc    DWORD PTR [rip+0x0]        # 22 &lt;_main+0x22&gt;
+83 3d 00 00 00 00 78    cmp    DWORD PTR [rip+0x0],0x78        # 29 &lt;_main+0x29&gt;
+0f 8e ca 00 00 00       jle    f9 &lt;exit&gt;
+48 31 c0                xor    rax,rax
+89 05 00 00 00 00       mov    DWORD PTR [rip+0x0],eax        # 38 &lt;_main+0x38&gt;
+56                      push   rsi
+57                      push   rdi
 51                      push   rcx
 52                      push   rdx
 53                      push   rbx
-48 8b 88 60 06 00 00    mov    rcx,QWORD PTR [rax+0x660]
+48 b9 00 00 00 00 00    movabs rcx,0x0
+00 00 00
+48 b8 00 00 00 00 00    movabs rax,0x0
+00 00 00
 48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 58 &lt;_main+0x58&gt;
 4c 8d 80 90 00 00 00    lea    r8,[rax+0x90]
 45 0f 10 38             movups xmm15,XMMWORD PTR [r8]
@@ -2160,34 +2160,35 @@ c6 42 24 1f             mov    BYTE PTR [rdx+0x24],0x1f
 4c 8d 05 00 00 00 00    lea    r8,[rip+0x0]        # 96 &lt;_main+0x96&gt;
 b8 ff ff ff ff          mov    eax,0xffffffff
 41 89 40 20             mov    DWORD PTR [r8+0x20],eax
-48 81 ec 08 02 00 00    sub    rsp,0x208
+48 81 ec 10 02 00 00    sub    rsp,0x210
 e8 00 00 00 00          call   ab &lt;_main+0xab&gt;
-48 81 c4 08 02 00 00    add    rsp,0x208
+48 81 c4 10 02 00 00    add    rsp,0x210
 80 3d 00 00 00 00 00    cmp    BYTE PTR [rip+0x0],0x0        # b9 &lt;_main+0xb9&gt;
-74 37                   je     f2 &lt;no_hit&gt;
+74 39                   je     f4 &lt;no_hit&gt;
 48 b9 00 00 00 00 00    movabs rcx,0x0
 00 00 00
+48 8b 09                mov    rcx,QWORD PTR [rcx]
 48 83 ec 28             sub    rsp,0x28
-e8 00 00 00 00          call   ce &lt;_main+0xce&gt;
+e8 00 00 00 00          call   d1 &lt;_main+0xd1&gt;
 48 83 c4 28             add    rsp,0x28
 48 89 c2                mov    rdx,rax
-48 8d 0d 00 00 00 00    lea    rcx,[rip+0x0]        # dc &lt;_main+0xdc&gt;
+48 8d 0d 00 00 00 00    lea    rcx,[rip+0x0]        # df &lt;_main+0xdf&gt;
 48 83 ec 28             sub    rsp,0x28
-e8 00 00 00 00          call   e5 &lt;_main+0xe5&gt;
+e8 00 00 00 00          call   e8 &lt;_main+0xe8&gt;
 48 83 c4 28             add    rsp,0x28
 5b                      pop    rbx
-89 83 e0 00 00 00       mov    DWORD PTR [rbx+0xe0],eax
-eb 01                   jmp    f3 &lt;rbx_already_popped&gt;
-0000000000f2 &lt;no_hit&gt;:
+8b 00                   mov    eax,DWORD PTR [rax]
+89 43 08                mov    DWORD PTR [rbx+0x8],eax
+eb 01                   jmp    f5 &lt;rbx_already_popped&gt;
+0000000000f4 &lt;no_hit&gt;:
 5b                      pop    rbx
-0000000000f3 &lt;rbx_already_popped&gt;:
+0000000000f5 &lt;rbx_already_popped&gt;:
 59                      pop    rcx
 5a                      pop    rdx
-0000000000f5 &lt;exit&gt;:
 5f                      pop    rdi
 5e                      pop    rsi
+0000000000f9 &lt;exit&gt;:
 58                      pop    rax
-0000000000f8 &lt;skip&gt;:
-e9 00 00 00 00          jmp    fd &lt;skip+0x5&gt;</value>
+e9 00 00 00 00          jmp    ff &lt;exit+0x6&gt;</value>
   </data>
 </root>

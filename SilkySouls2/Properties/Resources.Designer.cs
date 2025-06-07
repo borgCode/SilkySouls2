@@ -468,12 +468,12 @@ namespace SilkySouls2.Properties {
         ///48 b8 00 00 00 00 00    movabs rax,0x0
         ///00 00 00
         ///48 3b 41 08             cmp    rax,QWORD PTR [rcx+0x8]
-        ///0f 85 dd 00 00 00       jne    f9 &lt;exit&gt;
+        ///0f 85 6d 02 00 00       jne    289 &lt;exit&gt;
         ///ff 05 00 00 00 00       inc    DWORD PTR [rip+0x0]        # 22 &lt;_main+0x22&gt;
         ///83 3d 00 00 00 00 78    cmp    DWORD PTR [rip+0x0],0x78        # 29 &lt;_main+0x29&gt;
-        ///0f 8e ca 00 00 00       jle    f9 &lt;exit&gt;
+        ///0f 8e 5a 02 00 00       jle    289 &lt;exit&gt;
         ///48 31 c0                xor    rax,rax
-        ///89 05 00 00 00 00       mov    DWORD PTR [rest of string was truncated]&quot;;.
+        ///89 05 00 00 00 00       mov    DWORD P [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string NoClip_RayCast {
             get {

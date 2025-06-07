@@ -259,10 +259,27 @@ namespace SilkySouls2.Services
                     (raycastCode.ToInt64() + 0x8F, rayOutput.ToInt64(), 7, 0x8F + 3),
                     (raycastCode.ToInt64() + 0xA6, raycastFunc, 5, 0xA6 + 1),
                     (raycastCode.ToInt64() + 0xB2, rayOutput.ToInt64() + 0x10, 7, 0xB2 + 2),
-                    (raycastCode.ToInt64() + 0xCC, convertToMap, 5, 0xCC + 1),
-                    (raycastCode.ToInt64() + 0xD8, mapId.ToInt64(), 7, 0xD8 + 3),
-                    (raycastCode.ToInt64() + 0xE3, convertToMapId, 5, 0xE3 + 1),
-                    (raycastCode.ToInt64() + 0xFA, rayCastHook + 0x7, 5, 0xFA + 1)
+                    (raycastCode.ToInt64() + 0xBF, rayInput.ToInt64(), 7, 0xBF + 3),
+                    (raycastCode.ToInt64() + 0xEA, rayOutput.ToInt64(), 7, 0xEA + 3),
+                    (raycastCode.ToInt64() + 0x10B, raycastFunc, 5, 0x10B + 1),
+                    (raycastCode.ToInt64() + 0x117, rayOutput.ToInt64() + 0x10, 7, 0x117 + 2),
+                    (raycastCode.ToInt64() + 0x124, rayInput.ToInt64(), 7, 0x124 + 3),
+                    (raycastCode.ToInt64() + 0x14F, rayOutput.ToInt64(), 7, 0x14F + 3),
+                    (raycastCode.ToInt64() + 0x170, raycastFunc, 5, 0x170 + 1),
+                    (raycastCode.ToInt64() + 0x17C, rayOutput.ToInt64() + 0x10, 7, 0x17C + 2),
+                    (raycastCode.ToInt64() + 0x189, rayInput.ToInt64(), 7, 0x189 + 3),
+                    (raycastCode.ToInt64() + 0x1B4, rayOutput.ToInt64(), 7, 0x1B4 + 3),
+                    (raycastCode.ToInt64() + 0x1D5, raycastFunc, 5, 0x1D5 + 1),
+                    (raycastCode.ToInt64() + 0x1E1, rayOutput.ToInt64() + 0x10, 7, 0x1E1 + 2),
+                    (raycastCode.ToInt64() + 0x1EA, rayInput.ToInt64(), 7, 0x1EA + 3),
+                    (raycastCode.ToInt64() + 0x215, rayOutput.ToInt64(), 7, 0x215 + 3),
+                    (raycastCode.ToInt64() + 0x236, raycastFunc, 5, 0x236 + 1),
+                    (raycastCode.ToInt64() + 0x242, rayOutput.ToInt64() + 0x10, 7, 0x242 + 2),
+                    
+                    (raycastCode.ToInt64() + 0x25C, convertToMap, 5, 0x25C + 1),
+                    (raycastCode.ToInt64() + 0x268, mapId.ToInt64(), 7, 0x268 + 3),
+                    (raycastCode.ToInt64() + 0x273, convertToMapId, 5, 0x273 + 1),
+                    (raycastCode.ToInt64() + 0x28A, rayCastHook + 0x7, 5, 0x28A + 1)
                 });
                 
                 AsmHelper.WriteAbsoluteAddresses(codeBytes, new []
@@ -270,7 +287,11 @@ namespace SilkySouls2.Services
                     (updateCoordsPIdentifier.ToInt64(), 0x8 + 2),
                     (pxWorld, 0x3D + 2),
                     (updateCoordsPIdentifier.ToInt64(), 0x47 + 2),
-                    (rayOutput.ToInt64() + 0x18, 0xBB + 2)
+                    (pxWorld, 0xFA + 2),
+                    (pxWorld, 0x15F + 2),
+                    (pxWorld, 0x1C4 + 2),
+                    (pxWorld, 0x225 + 2),
+                    (rayOutput.ToInt64() + 0x18, 0x24B + 2)
                 });
 
                 _memoryIo.WriteBytes(raycastCode, codeBytes);

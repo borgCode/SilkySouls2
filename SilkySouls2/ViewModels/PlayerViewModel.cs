@@ -37,7 +37,9 @@ namespace SilkySouls2.ViewModels
         private bool _isDealNoDamageEnabled;
         private bool _isHiddenEnabled;
         private bool _isSilentEnabled;
-        private bool _isNoAmmoConsumeEnabled;
+        private bool _isNoSoulGainEnabled;
+        private bool _isNoSoulLossEnabled;
+        private bool _isNoHollowingEnabled;
         private bool _isInfinitePoiseEnabled;
         private bool _isAutoSetNewGameSevenEnabled;
         private bool _isNoRollEnabled;
@@ -390,19 +392,43 @@ namespace SilkySouls2.ViewModels
                 }
             }
         }
-        //
-        // public bool IsNoAmmoConsumeEnabled
-        // {
-        //     get => _isNoAmmoConsumeEnabled;
-        //     set
-        //     {
-        //         if (SetProperty(ref _isNoAmmoConsumeEnabled, value))
-        //         {
-        //             _playerService.ToggleDebugFlag(DebugFlags.InfiniteArrows, _isNoAmmoConsumeEnabled ? 1 : 0);
-        //         }
-        //     }
-        // }
-        //
+        
+        public bool IsNoSoulLossEnabled
+        {
+            get => _isNoSoulLossEnabled;
+            set
+            {
+                if (SetProperty(ref _isNoSoulLossEnabled, value))
+                {
+                    _playerService.ToggleNoSoulLoss(_isNoSoulLossEnabled);
+                }
+            }
+        }
+        
+        public bool IsNoSoulGainEnabled
+        {
+            get => _isNoSoulGainEnabled;
+            set
+            {
+                if (SetProperty(ref _isNoSoulGainEnabled, value))
+                {
+                    _playerService.ToggleNoSoulGain(_isNoSoulGainEnabled);
+                }
+            }
+        }
+        
+        public bool IsNoHollowingEnabled
+        {
+            get => _isNoHollowingEnabled;
+            set
+            {
+                if (SetProperty(ref _isNoHollowingEnabled, value))
+                {
+                    _playerService.ToggleNoHollowing(_isNoHollowingEnabled);
+                }
+            }
+        }
+ 
         public bool IsInfinitePoiseEnabled
         {
             get => _isInfinitePoiseEnabled;
@@ -597,6 +623,9 @@ namespace SilkySouls2.ViewModels
             if (IsInfinitePoiseEnabled) _playerService.ToggleInfinitePoise(true);
             if (IsSilentEnabled) _playerService.ToggleSilent(true);
             if (IsHiddenEnabled) _playerService.ToggleHidden(true);
+            if (IsNoSoulGainEnabled) _playerService.ToggleNoSoulGain(true);
+            if (IsNoSoulLossEnabled) _playerService.ToggleNoSoulLoss(true);
+            if (IsNoHollowingEnabled) _playerService.ToggleNoHollowing(true);
         }
 
         public void DisableFeatures()

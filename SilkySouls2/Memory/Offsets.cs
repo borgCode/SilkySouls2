@@ -212,6 +212,9 @@ namespace SilkySouls2.Memory
             public static IntPtr Hidden;
             public static IntPtr NegativeLevel;
             public static IntPtr Ng7;
+            public static IntPtr NoSoulGain;
+            public static IntPtr NoHollowing;
+            public static IntPtr NoSoulLoss;
         }
         
         

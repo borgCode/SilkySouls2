@@ -12,7 +12,7 @@ namespace SilkySouls2.Services
         private readonly MemoryIo _memoryIo;
         private readonly HookManager _hookManager;
         private readonly NopManager _nopManager;
-        
+
 
         public PlayerService(MemoryIo memoryIo, HookManager hookManager, NopManager nopManager)
         {
@@ -29,18 +29,18 @@ namespace SilkySouls2.Services
 
         public void SetHp(int hp) =>
             _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.PlayerCtrlOffsets.Hp), hp);
-        
-        
+
+
         public int GetSp() =>
             _memoryIo.ReadInt32(GetPlayerCtrlField(GameManagerImp.PlayerCtrlOffsets.Stamina));
 
-        public void SetSp(int sp)=>
+        public void SetSp(int sp) =>
             _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.PlayerCtrlOffsets.Stamina), sp);
 
         private IntPtr GetPlayerCtrlField(int fieldOffset) =>
             _memoryIo.FollowPointers(GameManagerImp.Base, new[] { GameManagerImp.Offsets.PlayerCtrl, fieldOffset },
                 false);
-        
+
 
         public void ToggleNoDeath(bool isNoDeathEnabled) =>
             _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.PlayerCtrlOffsets.MinHp),
@@ -48,7 +48,6 @@ namespace SilkySouls2.Services
 
         public void ToggleNoDamage(bool isNoDamageEnabled)
         {
-            
             var hookLoc = Hooks.HpWrite;
             var code = CodeCaveOffsets.Base + CodeCaveOffsets.PlayerNoDamage;
 
@@ -60,22 +59,21 @@ namespace SilkySouls2.Services
                 bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 6, code + 0x2C);
                 Array.Copy(bytes, 0, codeBytes, 0x27 + 1, 4);
                 _memoryIo.WriteBytes(code, codeBytes);
-                
+
                 _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[] { 0x89, 0x83, 0x68, 0x01, 0x00, 0x00 });
             }
             else
             {
                 _hookManager.UninstallHook(code.ToInt64());
             }
-            
         }
-        
+
 
         public void ToggleInfiniteStamina(bool isInfiniteStaminaEnabled) =>
             _memoryIo.WriteByte(Patches.InfiniteStam + 1, isInfiniteStaminaEnabled ? 0x82 : 0x83);
 
         public int GetPlayerStat(int statOffset) => _memoryIo.ReadUInt8(GetStatPtr(statOffset));
-        
+
         private IntPtr GetStatPtr(int statOffset)
         {
             return _memoryIo.FollowPointers(GameManagerImp.Base, new[]
@@ -91,7 +89,7 @@ namespace SilkySouls2.Services
             var currentStatVal = GetPlayerStat(statOffset);
             _memoryIo.WriteUInt8(GetStatPtr(statOffset), val);
             var numOfLevels = val - currentStatVal;
-            
+
             var buffer = CodeCaveOffsets.Base + (int)CodeCaveOffsets.LevelUp.Buffer;
             var code = CodeCaveOffsets.Base + (int)CodeCaveOffsets.LevelUp.Code;
             var negativeFlag = CodeCaveOffsets.Base + (int)CodeCaveOffsets.LevelUp.NegativeFlag;
@@ -102,23 +100,27 @@ namespace SilkySouls2.Services
             var currentSoulsLoc = buffer + 0xF4;
             var requiredSouls = buffer + 0xFC;
             var soulsAfterLevelUp = buffer + 0xF8;
-            
+
             var giveSouls = Funcs.GiveSouls;
             var levelLookUp = Funcs.LevelLookUp;
             var levelUp = Funcs.LevelUp;
-            
+
             var statsEntity = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
             {
                 GameManagerImp.Offsets.PlayerCtrl,
                 GameManagerImp.PlayerCtrlOffsets.StatsPtr
             }, true);
-            
+
             var currentStatBytes = _memoryIo.ReadBytes(GetStatPtr(GameManagerImp.PlayerCtrlOffsets.Stats.Vigor), 22);
             var currentLevel = _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.PlayerCtrlOffsets.Stats.SoulLevel));
-            
-            if (numOfLevels <= 0){ _memoryIo.WriteBytes(Patches.NegativeLevel + 1, new byte[] {0x85});}
+
+            if (numOfLevels <= 0)
+            {
+                _memoryIo.WriteBytes(Patches.NegativeLevel + 1, new byte[] { 0x85 });
+            }
+
             _memoryIo.WriteByte(negativeFlag, numOfLevels <= 0 ? 1 : 0);
-            
+
             _memoryIo.WriteBytes(buffer, currentStatBytes);
             _memoryIo.WriteByte(numOfLevelsShortLoc, numOfLevels);
             _memoryIo.WriteInt32(numOfLevelsIntLoc, numOfLevels);
@@ -126,10 +128,10 @@ namespace SilkySouls2.Services
             _memoryIo.WriteInt32(newLevelLoc, currentLevel + numOfLevels);
             var currentSouls = _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.PlayerCtrlOffsets.Stats.CurrentSouls));
             _memoryIo.WriteInt32(currentSoulsLoc, currentSouls);
-            
+
             var bytes = AsmLoader.GetAsmBytes("LevelUp");
-            
-            AsmHelper.WriteAbsoluteAddresses(bytes, new []
+
+            AsmHelper.WriteAbsoluteAddresses(bytes, new[]
             {
                 (levelLookUp, 0x18 + 2),
                 (statsEntity.ToInt64(), 0x4D + 2),
@@ -138,8 +140,8 @@ namespace SilkySouls2.Services
                 (statsEntity.ToInt64(), 0x90 + 2),
                 (levelUp, 0xA8 + 2)
             });
-            
-            AsmHelper.WriteRelativeOffsets(bytes, new []
+
+            AsmHelper.WriteRelativeOffsets(bytes, new[]
             {
                 (code.ToInt64(), currentLevelLoc.ToInt64(), 6, 0x0 + 2),
                 (code.ToInt64() + 0xD, negativeFlag.ToInt64(), 7, 0xD + 2),
@@ -147,19 +149,19 @@ namespace SilkySouls2.Services
                 (code.ToInt64() + 0x3B, requiredSouls.ToInt64(), 6, 0x3B + 2),
                 (code.ToInt64() + 0x41, currentSoulsLoc.ToInt64(), 6, 0x41 + 2),
                 (code.ToInt64() + 0x7C, currentSoulsLoc.ToInt64(), 6, 0x7C + 2),
-                (code.ToInt64() + 0x82, requiredSouls.ToInt64(), 6, 0x82 +2),
+                (code.ToInt64() + 0x82, requiredSouls.ToInt64(), 6, 0x82 + 2),
                 (code.ToInt64() + 0x8A, soulsAfterLevelUp.ToInt64(), 6, 0x8A + 2),
                 (code.ToInt64() + 0x9A, buffer.ToInt64(), 7, 0x9A + 3)
             });
-            
+
             _memoryIo.WriteBytes(code, bytes);
             _memoryIo.RunThreadAndWaitForCompletion(code);
-            if (numOfLevels <= 0) _memoryIo.WriteBytes(Patches.NegativeLevel + 1, new byte[] {0x84});
-            
+            if (numOfLevels <= 0) _memoryIo.WriteBytes(Patches.NegativeLevel + 1, new byte[] { 0x84 });
+
             var newSouls = _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.PlayerCtrlOffsets.Stats.CurrentSouls));
             GiveSouls(currentSouls - newSouls);
         }
-        
+
 
         public int GetSoulLevel() => _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.PlayerCtrlOffsets.Stats.SoulLevel));
 
@@ -188,7 +190,7 @@ namespace SilkySouls2.Services
                     ? new byte[] { 0x90, 0x90, 0x90 }
                     : new byte[] { 0x88, 0x4D, 0x20 });
 
-        public void ToggleInfiniteDurability(bool isInfiniteDuraEnabled)=>
+        public void ToggleInfiniteDurability(bool isInfiniteDuraEnabled) =>
             _memoryIo.WriteBytes(Patches.InfiniteDurability,
                 isInfiniteDuraEnabled
                     ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 }
@@ -197,17 +199,18 @@ namespace SilkySouls2.Services
         public void SavePos(int index)
         {
             byte[] positionBytes = _memoryIo.ReadBytes(GetPositionPtr(), 0x40);
-            if (index == 0) _memoryIo.WriteBytes(CodeCaveOffsets.Base + (int)CodeCaveOffsets.SavedPos.Pos1, positionBytes);
+            if (index == 0)
+                _memoryIo.WriteBytes(CodeCaveOffsets.Base + (int)CodeCaveOffsets.SavedPos.Pos1, positionBytes);
             else _memoryIo.WriteBytes(CodeCaveOffsets.Base + (int)CodeCaveOffsets.SavedPos.Pos2, positionBytes);
         }
 
         public void RestorePos(int index)
         {
             byte[] positionBytes;
-            if (index == 0) positionBytes = _memoryIo.ReadBytes(CodeCaveOffsets.Base + (int)CodeCaveOffsets.SavedPos.Pos1, 0x40);
+            if (index == 0)
+                positionBytes = _memoryIo.ReadBytes(CodeCaveOffsets.Base + (int)CodeCaveOffsets.SavedPos.Pos1, 0x40);
             else positionBytes = _memoryIo.ReadBytes(CodeCaveOffsets.Base + (int)CodeCaveOffsets.SavedPos.Pos2, 0x40);
             _memoryIo.WriteBytes(GetPositionPtr(), positionBytes);
-            
         }
 
         private IntPtr GetPositionPtr() =>
@@ -257,8 +260,8 @@ namespace SilkySouls2.Services
                 GameManagerImp.Offsets.PlayerCtrl,
                 GameManagerImp.PlayerCtrlOffsets.StatsPtr
             }, true);
-            
-            AsmHelper.WriteAbsoluteAddresses(codeBytes, new []
+
+            AsmHelper.WriteAbsoluteAddresses(codeBytes, new[]
             {
                 (statsEntity.ToInt64(), 0x0 + 2),
                 (souls, 0x0A + 2),
@@ -267,7 +270,8 @@ namespace SilkySouls2.Services
             _memoryIo.AllocateAndExecute(codeBytes);
         }
 
-        public int GetSoulMemory() => _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.PlayerCtrlOffsets.Stats.SoulMemory));
+        public int GetSoulMemory() =>
+            _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.PlayerCtrlOffsets.Stats.SoulMemory));
 
         public void RestoreSpellcasts()
         {
@@ -280,12 +284,12 @@ namespace SilkySouls2.Services
             var func = Funcs.RestoreSpellcasts;
 
             var codeBytes = AsmLoader.GetAsmBytes("RestoreSpellcasts");
-            AsmHelper.WriteAbsoluteAddresses(codeBytes, new []
+            AsmHelper.WriteAbsoluteAddresses(codeBytes, new[]
             {
                 (inventoryBag.ToInt64(), 0x0 + 2),
                 (func, 0x20 + 2)
             });
-            
+
             _memoryIo.AllocateAndExecute(codeBytes);
         }
 
@@ -300,9 +304,8 @@ namespace SilkySouls2.Services
 
         public void ToggleInfinitePoise(bool isInfinitePoiseEnabled)
         {
-       
             var code = CodeCaveOffsets.Base + CodeCaveOffsets.InfinitePoise;
-            
+
             if (isInfinitePoiseEnabled)
             {
                 var origin = Hooks.InfinitePoise;
@@ -321,7 +324,6 @@ namespace SilkySouls2.Services
             {
                 _hookManager.UninstallHook(code.ToInt64());
             }
-            
         }
 
         public void ToggleAutoSetNg7(bool isAutoSetNewGameSevenEnabled) =>
@@ -339,7 +341,7 @@ namespace SilkySouls2.Services
             }, true);
 
             var setEffectFunc = Funcs.SetSpEffect;
-            
+
             _memoryIo.WriteInt32(spEffectParams, restoreHumanity.EffectId);
             _memoryIo.WriteInt32(spEffectParams + 0x4, restoreHumanity.Quantity);
             _memoryIo.WriteFloat(spEffectParams + 0x8, restoreHumanity.FloatValue);
@@ -351,14 +353,34 @@ namespace SilkySouls2.Services
             var codeBytes = AsmLoader.GetAsmBytes("SetSpEffect");
             var bytes = BitConverter.GetBytes(chrSpEffectCtrl.ToInt64());
             Array.Copy(bytes, 0, codeBytes, 0x7 + 2, 8);
-            AsmHelper.WriteRelativeOffsets(codeBytes, new []
+            AsmHelper.WriteRelativeOffsets(codeBytes, new[]
             {
                 (code.ToInt64(), spEffectParams.ToInt64(), 7, 0x0 + 3),
                 (code.ToInt64() + 0x15, setEffectFunc, 5, 0x15 + 1)
             });
-            
+
             _memoryIo.WriteBytes(code, codeBytes);
             _memoryIo.RunThread(code);
         }
+
+        public void ToggleNoSoulGain(bool isEnabled)
+        {
+            if (isEnabled) _nopManager.InstallNOP(Patches.NoSoulGain.ToInt64(), 5);
+            else _nopManager.RestoreNOP(Patches.NoSoulGain.ToInt64());
+        }
+
+        public void ToggleNoHollowing(bool isEnabled) =>
+            _memoryIo.WriteBytes(Patches.NoHollowing,
+                isEnabled
+                    ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 }
+                    : new byte[] { 0x88, 0x81, 0xAC, 0x01, 0x00, 0x00 }
+            );
+        
+        public void ToggleNoSoulLoss(bool isEnabled) =>
+            _memoryIo.WriteBytes(Patches.NoSoulLoss,
+                isEnabled
+                    ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 }
+                    : new byte[] { 0x89, 0x90, 0xEC, 0x00, 0x00, 0x00 } 
+            );
     }
 }

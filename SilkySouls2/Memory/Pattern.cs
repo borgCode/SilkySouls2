@@ -67,14 +67,14 @@ namespace SilkySouls2.Memory
             None
         );
 
-            
+
         public static readonly Pattern FastQuitout = new Pattern(
             new byte[] { 0x48, 0x89, 0x84, 0x24, 0x50, 0x01, 0x00, 0x00, 0x83, 0x79, 0x10 },
             "xxxxxxxxxxx",
             0,
             None
         );
-        
+
         public static readonly Pattern SetCurrectAct = new Pattern(
             new byte[] { 0x83, 0x89, 0x50, 0x03, 0x00, 0x00, 0x01 },
             "xxxxxxx",
@@ -116,8 +116,8 @@ namespace SilkySouls2.Memory
             0,
             None
         );
-        
-        
+
+
         public static readonly Pattern WarpCoordWrite = new Pattern(
             new byte[] { 0x0F, 0x5C, 0xC2, 0x0F, 0x29, 0x47, 0x50 },
             "xxxxxxx",
@@ -167,7 +167,7 @@ namespace SilkySouls2.Memory
             0,
             None
         );
-        
+
         //Funcs
 
         public static readonly Pattern WarpPrep = new Pattern(
@@ -176,7 +176,7 @@ namespace SilkySouls2.Memory
             -0x15,
             None
         );
-        
+
 
         public static readonly Pattern BonfireWarp = new Pattern(
             new byte[] { 0x40, 0x53, 0x48, 0x83, 0xEC, 0x60, 0x8B },
@@ -213,7 +213,7 @@ namespace SilkySouls2.Memory
             -0x19,
             None
         );
-        
+
         public static readonly Pattern LevelLookUp = new Pattern(
             new byte[] { 0x48, 0x85, 0xDB, 0x74, 0x07, 0x0F, 0xB7, 0x03 },
             "xxxxxxxx",
@@ -257,13 +257,13 @@ namespace SilkySouls2.Memory
             None
         );
 
-        
+
         public static readonly Pattern CreateSoundEvent = new Pattern(
             new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x84, 0xC0, 0x74, 0x4C, 0x48, 0x8B, 0x83 },
             "x????xxxxxxx",
             0,
             Call);
-        
+
 
         public static readonly Pattern SetRenderTargetsWrapper = new Pattern(
             new byte[] { 0x40, 0x53, 0x48, 0x83, 0xEC, 0x60, 0x41, 0x8B },
@@ -271,7 +271,6 @@ namespace SilkySouls2.Memory
             0,
             None
         );
-
 
 
         public static readonly Pattern ParamLookUp = new Pattern(
@@ -313,6 +312,28 @@ namespace SilkySouls2.Memory
             None
         );
 
+        public static readonly Pattern NoSoulGain = new Pattern(
+            new byte[] { 0xF3, 0x48, 0x0F, 0x2C, 0xD0, 0xE8 },
+            "xxxxxx",
+            5,
+            None
+        );
+
+        public static readonly Pattern NoHollowing = new Pattern(
+            new byte[] { 0x88, 0x54, 0x24, 0x18 },
+            "xxxx",
+            0x29,
+            None
+        );
+
+        public static readonly Pattern NoSoulLoss = new Pattern(
+            new byte[] { 0x89, 0x90, 0xEC, 0x00 },
+            "xxxx",
+            0,
+            None
+        );
+
+
         public static readonly Pattern GetEyePosition = new Pattern(
             new byte[] { 0x48, 0x83, 0xC4, 0x30, 0x5F, 0xC3, 0x48, 0x8D, 0x54, 0x24, 0x20, 0xE8 },
             "xxxxxxxxxxxx",
@@ -332,14 +353,14 @@ namespace SilkySouls2.Memory
             0,
             None
         );
-        
+
         public static readonly Pattern DisableAi = new Pattern(
             new byte[] { 0x7F, 0x59, 0x48, 0x8D },
             "xxxx",
             0,
             None);
 
-        
+
         public static readonly Pattern KillboxFlagSet = new Pattern(
             new byte[]
             {
@@ -350,7 +371,6 @@ namespace SilkySouls2.Memory
             0,
             None
         );
-
 
 
         public static readonly Pattern InfiniteGoods = new Pattern(
@@ -395,6 +415,5 @@ namespace SilkySouls2.Memory
             0,
             None
         );
-
     }
 }

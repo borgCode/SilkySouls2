@@ -70,8 +70,12 @@ namespace SilkySouls2.Memory
             TryPatternWithFallback("Ng7", Patterns.Ng7Patch,
                 addr => Offsets.Patches.Ng7 = addr, saved);
             TryPatternWithFallback("DisableAi", Patterns.DisableAi, addr => Offsets.Patches.DisableAi = addr, saved);
-            // TryPatternWithFallback("TargetingView", Patterns.DbgDrawFlag, addr => Offsets.Patches.DbgDrawFlag = addr,
-            //     saved);
+            TryPatternWithFallback("NoSoulGain", Patterns.NoSoulGain, addr => Offsets.Patches.NoSoulGain = addr,
+                saved);
+            TryPatternWithFallback("NoHollowing", Patterns.NoHollowing, addr => Offsets.Patches.NoHollowing = addr,
+                saved);
+            TryPatternWithFallback("NoSoulLoss", Patterns.NoSoulLoss, addr => Offsets.Patches.NoSoulLoss = addr,
+                saved);
             // TryPatternWithFallback("FreeCam", Patterns.FreeCamPatch, addr => Offsets.Patches.FreeCam = addr, saved);
             //
             // TryPatternWithFallback("OverrideGeneratorStartPositionRandom",
@@ -203,6 +207,9 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Patches.Hidden: 0x{Offsets.Patches.Hidden.ToInt64():X}");
             Console.WriteLine($"Patches.NegativeLevel: 0x{Offsets.Patches.NegativeLevel.ToInt64():X}");
             Console.WriteLine($"Patches.Ng7: 0x{Offsets.Patches.Ng7.ToInt64():X}");
+            Console.WriteLine($"Patches.NoSoulGain: 0x{Offsets.Patches.NoSoulGain.ToInt64():X}");
+            Console.WriteLine($"Patches.NoHollowing: 0x{Offsets.Patches.NoHollowing.ToInt64():X}");
+            Console.WriteLine($"Patches.NoSoulLoss: 0x{Offsets.Patches.NoSoulLoss.ToInt64():X}");
             
             
             // Console.WriteLine($"Patches.TargetingView: 0x{Offsets.Patches.DbgDrawFlag.ToInt64():X}");

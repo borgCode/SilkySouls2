@@ -46,6 +46,17 @@
                     Param2 = 0x00,
                     Param3 = 0x00
                 };
+
+                public static readonly SpEffectData BonfireRest = new SpEffectData
+                {
+                    EffectId = 110000010,
+                    Quantity = 1,
+                    FloatValue = -1.0f,
+                    EffectType = 0x19,
+                    Param1 = 0x02,
+                    Param2 = 0x00,
+                    Param3 = 0x00
+                };
             }
         }
     }

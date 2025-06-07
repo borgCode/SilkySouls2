@@ -18,5 +18,7 @@ namespace SilkySouls2.Views
         {
             _travelViewModel.Warp();
         }
+
+        private void UnlockAllBonfires_Click(object sender, RoutedEventArgs e) => _travelViewModel.UnlockAllBonfires();
     }
 }

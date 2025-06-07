@@ -644,5 +644,7 @@ namespace SilkySouls2.ViewModels
         }
 
         public void RestoreHumanity() => _playerService.SetSpEffect(GameIds.SpEffects.SpEffectData.RestoreHumanity);
+
+        public void Rest() => _playerService.SetSpEffect(GameIds.SpEffects.SpEffectData.BonfireRest);
     }
 }

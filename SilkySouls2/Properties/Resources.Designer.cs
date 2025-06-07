@@ -744,6 +744,28 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 49 bc 00 00 00 00 00    movabs r12,0x0
+        ///00 00 00
+        ///49 be 00 00 00 00 00    movabs r14,0x0
+        ///00 00 00
+        ///45 8b 6c 24 28          mov    r13d,DWORD PTR [r12+0x28]
+        ///45 85 ed                test   r13d,r13d
+        ///74 2c                   je     4a &lt;done&gt;
+        ///49 8b 5c 24 20          mov    rbx,QWORD PTR [r12+0x20]
+        ///31 f6                   xor    esi,esi
+        ///48 83 ec 28             sub    rsp,0x28
+        ///000000000029 &lt;loop_start&gt;:
+        ///48 89 f0                mov    rax,rsi
+        ///48 6b c0 18             imul   rax,rax,0x18
+        ///48 01 d8            [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string UnlockAllBonfires {
+            get {
+                return ResourceManager.GetString("UnlockAllBonfires", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 60970000,Titanite Shard,99,0,0
         ///60975000,Large Titanite Shard,99,0,0
         ///60980000,Titanite Chunk,99,0,0

@@ -44,6 +44,7 @@ namespace SilkySouls2.Memory
             public static class EventManagerOffsets
             {
                 public const int EventFlagManager = 0x20;
+                public const int EventBonfireManager = 0x58;
                 public const int WarpEventEntity = 0x70;
             }
 
@@ -263,6 +264,7 @@ namespace SilkySouls2.Memory
             public static long HavokRayCast;
             public static long ConvertPxRigidToMapEntity;
             public static long ConvertMapEntityToGameId;
+            public static long UnlockBonfire;
         }
     }
 }

@@ -27,8 +27,8 @@ namespace SilkySouls2.ViewModels
         private bool _isSearchActive;
         private string _preSearchMainArea;
         private readonly ObservableCollection<WarpLocation> _searchResultsCollection = new ObservableCollection<WarpLocation>();
-        
-        
+
+        private bool _isRestOnWarpEnabled;
         
         public TravelViewModel(TravelService travelService, HotkeyManager hotkeyManager)
         {
@@ -159,6 +159,16 @@ namespace SilkySouls2.ViewModels
             SelectedWarpLocation = AreaLocations.FirstOrDefault();
         }
 
-        public void Warp() => Task.Run(() => _travelService.Warp(SelectedWarpLocation));
+        public void Warp() => Task.Run(() => _travelService.Warp(SelectedWarpLocation, IsRestOnWarpEnabled));
+
+        public void UnlockAllBonfires() => _travelService.UnlockAllBonfires();
+        
+        
+        public bool IsRestOnWarpEnabled
+        {
+            get => _isRestOnWarpEnabled;
+            set => SetProperty(ref _isRestOnWarpEnabled, value);
+        }
+
     }
 }

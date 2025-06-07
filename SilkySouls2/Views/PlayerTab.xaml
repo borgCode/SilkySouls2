@@ -446,6 +446,12 @@
                             Click="RestoreHumanity_Click"
                             IsEnabled="{Binding AreOptionsEnabled}">
                     </Button>
+                    <Button Content="Rest"
+                            Width="150"
+                            Margin="0, 15, 0,0"
+                            Click="Rest_Click"
+                            IsEnabled="{Binding AreOptionsEnabled}">
+                    </Button>
                 </StackPanel>
             </Grid>
 

@@ -2264,4 +2264,30 @@ eb 01                   jmp    285 &lt;rbx_already_popped&gt;
 58                      pop    rax
 e9 00 00 00 00          jmp    28f &lt;exit+0x6&gt;</value>
   </data>
+  <data name="UnlockAllBonfires" xml:space="preserve">
+    <value>49 bc 00 00 00 00 00    movabs r12,0x0
+00 00 00
+49 be 00 00 00 00 00    movabs r14,0x0
+00 00 00
+45 8b 6c 24 28          mov    r13d,DWORD PTR [r12+0x28]
+45 85 ed                test   r13d,r13d
+74 2c                   je     4a &lt;done&gt;
+49 8b 5c 24 20          mov    rbx,QWORD PTR [r12+0x20]
+31 f6                   xor    esi,esi
+48 83 ec 28             sub    rsp,0x28
+000000000029 &lt;loop_start&gt;:
+48 89 f0                mov    rax,rsi
+48 6b c0 18             imul   rax,rax,0x18
+48 01 d8                add    rax,rbx
+0f b7 10                movzx  edx,WORD PTR [rax]
+4c 89 e1                mov    rcx,r12
+41 b0 01                mov    r8b,0x1
+41 ff d6                call   r14
+ff c6                   inc    esi
+44 39 ee                cmp    esi,r13d
+7c e3                   jl     29 &lt;loop_start&gt;
+48 83 c4 28             add    rsp,0x28
+00000000004a &lt;done&gt;:
+c3                      ret</value>
+  </data>
 </root>

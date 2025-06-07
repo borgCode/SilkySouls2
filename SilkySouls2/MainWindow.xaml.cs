@@ -63,7 +63,7 @@ namespace SilkySouls2
             _damageControlService = new DamageControlService(_memoryIo, _hookManager);
             var playerService = new PlayerService(_memoryIo, _hookManager, _nopManager);
             var utilityService = new UtilityService(_memoryIo, _hookManager, _dllManager);
-            var travelService = new TravelService(_memoryIo, _hookManager, utilityService);
+            var travelService = new TravelService(_memoryIo, _hookManager, playerService);
             var enemyService = new EnemyService(_memoryIo, _hookManager, _damageControlService);
             var itemService = new ItemService(_memoryIo);
             var settingsService = new SettingsService(_memoryIo, _hookManager);

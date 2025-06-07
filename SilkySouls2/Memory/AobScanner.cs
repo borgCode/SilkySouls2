@@ -166,6 +166,7 @@ namespace SilkySouls2.Memory
             Offsets.Funcs.HavokRayCast = FindAddressByPattern(Patterns.HavokRayCast).ToInt64();
             Offsets.Funcs.ConvertPxRigidToMapEntity = FindAddressByPattern(Patterns.ConvertPxRigidToMapEntity).ToInt64();
             Offsets.Funcs.ConvertMapEntityToGameId = FindAddressByPattern(Patterns.ConvertMapEntityToGameId).ToInt64();
+            Offsets.Funcs.UnlockBonfire = FindAddressByPattern(Patterns.UnlockBonfire).ToInt64();
             
             TryPatternWithFallback("SetRenderTargets",
                 Patterns.SetRenderTargetsWrapper,
@@ -255,6 +256,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Funcs.HavokRayCast: 0x{Offsets.Funcs.HavokRayCast:X}");
             Console.WriteLine($"Funcs.ConvertPxRigidToMapEntity: 0x{Offsets.Funcs.ConvertPxRigidToMapEntity:X}");
             Console.WriteLine($"Funcs.ConvertMapEntityToGameId: 0x{Offsets.Funcs.ConvertMapEntityToGameId:X}");
+            Console.WriteLine($"Funcs.UnlockBonfire: 0x{Offsets.Funcs.UnlockBonfire:X}");
 #endif
         }
 

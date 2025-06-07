@@ -12,16 +12,17 @@ namespace SilkySouls2.Services
     {
         private readonly MemoryIo _memoryIo;
         private readonly HookManager _hookManager;
-        private readonly UtilityService _utilityService;
-
-        public TravelService(MemoryIo memoryIo, HookManager hookManager, UtilityService utilityService)
+        private readonly PlayerService _playerService;
+        
+        
+        public TravelService(MemoryIo memoryIo, HookManager hookManager, PlayerService playerService)
         {
             _memoryIo = memoryIo;
             _hookManager = hookManager;
-            _utilityService = utilityService;
+            _playerService = playerService;
         }
 
-        public void Warp(WarpLocation location)
+        public void Warp(WarpLocation location, bool isRestOnWarpEnabled)
         {
             var actualWarp = Funcs.BonfireWarp;
             var eventWarpEntity = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
@@ -77,7 +78,7 @@ namespace SilkySouls2.Services
 
             _memoryIo.WriteBytes(codeLoc, warpBytes);
             _memoryIo.RunThread(codeLoc);
-
+            if (isRestOnWarpEnabled) _playerService.SetSpEffect(GameIds.SpEffects.SpEffectData.BonfireRest);
             if (location.HasCoordinates) PerformCoordWrite(location);
         }
 
@@ -134,5 +135,25 @@ namespace SilkySouls2.Services
         public bool IsLoadingScreen() =>
             _memoryIo.ReadUInt8((IntPtr)_memoryIo.ReadInt64(GameManagerImp.Base) +
                                 GameManagerImp.Offsets.LoadingFlag) == 1;
+
+        public void UnlockAllBonfires()
+        {
+            var func = Funcs.UnlockBonfire;
+            var bonfireManager = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+            {
+                GameManagerImp.Offsets.EventManager,
+                GameManagerImp.EventManagerOffsets.EventBonfireManager
+            }, true);
+            
+            var bytes = AsmLoader.GetAsmBytes("UnlockAllBonfires");
+            AsmHelper.WriteAbsoluteAddresses(bytes, new []
+            {
+               
+                (bonfireManager.ToInt64(), 2),
+                (func,   0xA + 2),
+            });
+            
+            _memoryIo.AllocateAndExecute(bytes);
+        }
     }
 }

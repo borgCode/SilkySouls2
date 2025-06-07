@@ -12,10 +12,11 @@
         <converters:StringToVisibilityConverter x:Key="NullToVisibilityConverter" />
     </UserControl.Resources>
      <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+         <Grid.RowDefinitions>
+             <RowDefinition Height="Auto" />
+             <RowDefinition Height="3*" /> 
+             <RowDefinition Height="Auto" />  
+         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="190" />
@@ -210,5 +211,26 @@
                 </ListView>
             </Border>
         </Grid>
+         <Border Grid.Row="2"
+                 BorderThickness="1"
+                 BorderBrush="#333"
+                 CornerRadius="3"
+                 Margin="0,10,0,0"
+                 Grid.ColumnSpan="2">
+             <StackPanel Margin="10">
+                 
+                 <Grid Margin="10,0,0,0">
+                     <Grid.ColumnDefinitions>
+                         <ColumnDefinition Width="*" />
+                         <ColumnDefinition Width="*" />
+                     </Grid.ColumnDefinitions>
+                     
+                     <Button Grid.Column="0" Content="Unlock All Bonfires" Click="UnlockAllBonfires_Click" Margin="0,2" />
+                     <CheckBox Grid.Column="1" Content="Rest on Warp"
+                               IsChecked="{Binding IsRestOnWarpEnabled}"
+                               Margin="10,2" />
+                 </Grid>
+             </StackPanel>
+         </Border>
     </Grid>
 </UserControl>

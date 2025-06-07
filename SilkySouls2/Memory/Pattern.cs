@@ -192,6 +192,14 @@ namespace SilkySouls2.Memory
             Call
         );
 
+        public static readonly Pattern UnlockBonfire = new Pattern(
+            new byte[] { 0x48, 0x8B, 0x4E, 0x58, 0x8B, 0x10, 0x44 },
+            "xxxxxxx",
+            0xA,
+            Call
+        );
+
+
         public static readonly Pattern HavokRayCast = new Pattern(
             new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x80, 0x7D, 0x40, 0x00, 0x0F, 0x84, 0x80 },
             "x????xxxxxxx",

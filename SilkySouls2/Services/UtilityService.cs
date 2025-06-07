@@ -143,6 +143,7 @@ namespace SilkySouls2.Services
             var triggersAndSpaceCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.TriggersAndSpaceCheck;
             var ctrlCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.CtrlCheck;
             var coordsCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.UpdateCoords;
+            var raycastCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.RayCastCode;
 
             if (isNoClipEnabled)
             {
@@ -150,6 +151,8 @@ namespace SilkySouls2.Services
                 var triggersAndSpaceHook = Hooks.TriggersAndSpace;
                 var ctrlHook = Hooks.Ctrl;
                 var coordsHook = Hooks.NoClipUpdateCoords;
+                var rayCastHook = Hooks.MapIdWrite;
+                
                 
                 var zDirectionLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.ZDirection;
                 var codeBytes = AsmLoader.GetAsmBytes("NoClip_InAirTimer");

@@ -66,6 +66,11 @@ namespace SilkySouls2.Memory
             TriggersAndSpaceCheck = 0x4D0,
             CtrlCheck = 0x530,
             UpdateCoords = 0x540,
+            RayInput = 0xF00,
+            RayOutput = 0xF50,
+            MapId = 0xF80,
+            FrameCounter = 0xF84,
+            RayCastCode = 0xF90
         }
 
         public const int Killbox = 0x690;
@@ -104,5 +109,7 @@ namespace SilkySouls2.Memory
         public const int Snowstorm = 0xD00;
         public const int SpEffectParams = 0xD20;
         public const int SpEffectCode = 0xD30;
+        
+        
     }
 }

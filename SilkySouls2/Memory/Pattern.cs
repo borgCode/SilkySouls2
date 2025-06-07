@@ -45,6 +45,14 @@ namespace SilkySouls2.Memory
             None
         );
 
+        public static readonly Pattern MapIdWrite = new Pattern(
+            new byte[] { 0x48, 0x8D, 0x9E, 0xD8, 0x00, 0x00, 0x00, 0x4C },
+            "xxxxxxxx",
+            0,
+            None
+        );
+
+
         public static readonly Pattern InfinitePoise = new Pattern(
             new byte[] { 0x39, 0x9D, 0xEC, 0x05 },
             "xxxx",
@@ -182,6 +190,28 @@ namespace SilkySouls2.Memory
             "xxxxxxxxxx",
             0x9,
             Call
+        );
+
+        public static readonly Pattern HavokRayCast = new Pattern(
+            new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x80, 0x7D, 0x40, 0x00, 0x0F, 0x84, 0x80 },
+            "x????xxxxxxx",
+            0,
+            Call
+        );
+
+        public static readonly Pattern ConvertPxRigidToMapEntity = new Pattern(
+            new byte[] { 0x48, 0x85, 0xC9, 0x74, 0x2F, 0x48, 0x8B, 0x79 },
+            "xxxxxxxx",
+            -0xA,
+            None
+        );
+
+
+        public static readonly Pattern ConvertMapEntityToGameId = new Pattern(
+            new byte[] { 0x48, 0x8B, 0xC1, 0x48, 0x8B, 0x5C, 0x24, 0x48 },
+            "xxxxxxxx",
+            -0x19,
+            None
         );
         
         public static readonly Pattern LevelLookUp = new Pattern(

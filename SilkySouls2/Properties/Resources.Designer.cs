@@ -463,6 +463,25 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 48 8d 9e d8 00 00 00    lea    rbx,[rsi+0xd8]
+        ///ff 05 00 00 00 00       inc    DWORD PTR [rip+0x0]        # d &lt;_main+0xd&gt;
+        ///81 3d 00 00 00 00 b4    cmp    DWORD PTR [rip+0x0],0xb4        # 17 &lt;_main+0x17&gt;
+        ///00 00 00
+        ///0f 8e db 00 00 00       jle    f8 &lt;skip&gt;
+        ///50                      push   rax
+        ///56                      push   rsi
+        ///57                      push   rdi
+        ///48 31 c0                xor    rax,rax
+        ///89 05 00 00 00 00       mov    DWORD PTR [rip+0x0],eax        # 29 &lt;_main+0x29&gt;
+        ///48 b8 00 00 00 00 00    mov [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string NoClip_RayCast {
+            get {
+                return ResourceManager.GetString("NoClip_RayCast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 4c 8b 7c 24 70          mov    r15,QWORD PTR [rsp+0x70]
         ///48 8b 43 08             mov    rax,QWORD PTR [rbx+0x8]
         ///52                      push   rdx

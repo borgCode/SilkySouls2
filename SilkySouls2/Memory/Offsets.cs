@@ -235,6 +235,7 @@ namespace SilkySouls2.Memory
             public static long FastQuitout;
             public static long InfinitePoise;
             public static long EzStateSetEvent;
+            public static long MapIdWrite;
         }
 
         public static class Funcs
@@ -255,6 +256,9 @@ namespace SilkySouls2.Memory
             public static long ShowItemDialog;
             public static long GetEyePosition;
             public static long SetSpEffect;
+            public static long HavokRayCast;
+            public static long ConvertPxRigidToMapEntity;
+            public static long ConvertMapEntityToGameId;
         }
     }
 }

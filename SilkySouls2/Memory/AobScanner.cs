@@ -117,6 +117,8 @@ namespace SilkySouls2.Memory
                 addr => Offsets.Hooks.FastQuitout = addr.ToInt64(), saved);
             TryPatternWithFallback("InfinitePoise", Patterns.InfinitePoise,
                 addr => Offsets.Hooks.InfinitePoise = addr.ToInt64(), saved);
+            TryPatternWithFallback("MapIdWrite", Patterns.MapIdWrite,
+                addr => Offsets.Hooks.MapIdWrite = addr.ToInt64(), saved);
             
             var setCurrectActLocs = FindAddressesByPattern(Patterns.SetCurrectAct, 2);
             if (setCurrectActLocs.Count < 2 || setCurrectActLocs[0] == IntPtr.Zero)
@@ -157,6 +159,9 @@ namespace SilkySouls2.Memory
             Offsets.Funcs.ShowItemDialog = FindAddressByPattern(Patterns.ShowItemDialog).ToInt64();
             Offsets.Funcs.GetEyePosition = FindAddressByPattern(Patterns.GetEyePosition).ToInt64();
             Offsets.Funcs.SetSpEffect = FindAddressByPattern(Patterns.SetSpEffect).ToInt64();
+            Offsets.Funcs.HavokRayCast = FindAddressByPattern(Patterns.HavokRayCast).ToInt64();
+            Offsets.Funcs.ConvertPxRigidToMapEntity = FindAddressByPattern(Patterns.ConvertPxRigidToMapEntity).ToInt64();
+            Offsets.Funcs.ConvertMapEntityToGameId = FindAddressByPattern(Patterns.ConvertMapEntityToGameId).ToInt64();
             
             TryPatternWithFallback("SetRenderTargets",
                 Patterns.SetRenderTargetsWrapper,
@@ -222,6 +227,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Hooks.SetCurrectAct: 0x{Offsets.Hooks.SetCurrectAct:X}");
             Console.WriteLine($"Hooks.SetCurrectAct2: 0x{Offsets.Hooks.SetCurrectAct2:X}");
             Console.WriteLine($"Hooks.FastQuitout: 0x{Offsets.Hooks.FastQuitout:X}");
+            Console.WriteLine($"Hooks.MapIdWrite: 0x{Offsets.Hooks.MapIdWrite:X}");
             //
             Console.WriteLine($"Funcs.WarpPrep: 0x{Offsets.Funcs.WarpPrep:X}");
             Console.WriteLine($"Funcs.BonfireWarp: 0x{Offsets.Funcs.BonfireWarp:X}");
@@ -239,6 +245,9 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Funcs.ShowItemDialog: 0x{Offsets.Funcs.ShowItemDialog:X}");
             Console.WriteLine($"Funcs.GetEyePosition: 0x{Offsets.Funcs.GetEyePosition:X}");
             Console.WriteLine($"Funcs.SetSpEffect: 0x{Offsets.Funcs.SetSpEffect:X}");
+            Console.WriteLine($"Funcs.HavokRayCast: 0x{Offsets.Funcs.HavokRayCast:X}");
+            Console.WriteLine($"Funcs.ConvertPxRigidToMapEntity: 0x{Offsets.Funcs.ConvertPxRigidToMapEntity:X}");
+            Console.WriteLine($"Funcs.ConvertMapEntityToGameId: 0x{Offsets.Funcs.ConvertMapEntityToGameId:X}");
 #endif
         }
 

@@ -155,6 +155,8 @@ namespace SilkySouls2.Memory
             Offsets.Funcs.ItemGive = FindAddressByPattern(Patterns.ItemGive).ToInt64();
             Offsets.Funcs.BuildItemDialog = FindAddressByPattern(Patterns.BuildItemDialog).ToInt64();
             Offsets.Funcs.ShowItemDialog = FindAddressByPattern(Patterns.ShowItemDialog).ToInt64();
+            Offsets.Funcs.GetEyePosition = FindAddressByPattern(Patterns.GetEyePosition).ToInt64();
+            Offsets.Funcs.SetSpEffect = FindAddressByPattern(Patterns.SetSpEffect).ToInt64();
             
             TryPatternWithFallback("SetRenderTargets",
                 Patterns.SetRenderTargetsWrapper,
@@ -162,12 +164,8 @@ namespace SilkySouls2.Memory
             TryPatternWithFallback("CreateSoundEvent",
                 Patterns.CreateSoundEvent,
                 addr => Offsets.Funcs.CreateSoundEvent = addr.ToInt64(), saved);
-            TryPatternWithFallback("ChrCtrlUpdate",
-                Patterns.ChrCtrlUpdate,
-                addr => Offsets.Funcs.ChrCtrlUpdate = addr.ToInt64(), saved);
-    
 
-
+            
 #if DEBUG
             Console.WriteLine($"GameManagerImp.Base: 0x{Offsets.GameManagerImp.Base.ToInt64():X}");
             Console.WriteLine($"HkpPtrEntity.Base: 0x{Offsets.HkHardwareInfo.Base.ToInt64():X}");
@@ -233,13 +231,14 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Funcs.ParamLookUp: 0x{Offsets.Funcs.ParamLookUp:X}");
             Console.WriteLine($"Funcs.SetRenderTargets: 0x{Offsets.Funcs.SetRenderTargets:X}");
             Console.WriteLine($"Funcs.CreateSoundEvent: 0x{Offsets.Funcs.CreateSoundEvent:X}");
-            Console.WriteLine($"Funcs.ChrCtrlUpdate: 0x{Offsets.Funcs.ChrCtrlUpdate:X}");
             Console.WriteLine($"Funcs.LevelLookUp: 0x{Offsets.Funcs.LevelLookUp:X}");
             Console.WriteLine($"Funcs.LevelUp: 0x{Offsets.Funcs.LevelUp:X}");
             Console.WriteLine($"Funcs.CurrentItemQuantityCheck: 0x{Offsets.Funcs.CurrentItemQuantityCheck:X}");
             Console.WriteLine($"Funcs.ItemGive: 0x{Offsets.Funcs.ItemGive:X}");
             Console.WriteLine($"Funcs.BuildItemDialog: 0x{Offsets.Funcs.BuildItemDialog:X}");
             Console.WriteLine($"Funcs.ShowItemDialog: 0x{Offsets.Funcs.ShowItemDialog:X}");
+            Console.WriteLine($"Funcs.GetEyePosition: 0x{Offsets.Funcs.GetEyePosition:X}");
+            Console.WriteLine($"Funcs.SetSpEffect: 0x{Offsets.Funcs.SetSpEffect:X}");
 #endif
         }
 

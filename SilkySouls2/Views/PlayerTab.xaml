@@ -52,7 +52,7 @@
                             IsEnabled="{Binding AreOptionsEnabled}"
                             Margin="10,0,0,0"
                             Width="60" />
-                    
+
                     <CheckBox Content="Health Overlay"
                               IsChecked="{Binding IsHealthWindowOpen}"
                               Margin="10,0, 0,2" />
@@ -105,14 +105,14 @@
                         </Button>
                     </UniformGrid>
 
-                    <StackPanel Grid.Row="0" Grid.Column="1" 
-                                Orientation="Horizontal" 
-                                VerticalAlignment="Center" 
+                    <StackPanel Grid.Row="0" Grid.Column="1"
+                                Orientation="Horizontal"
+                                VerticalAlignment="Center"
                                 Margin="10,0,0,5">
-    
+
                         <CheckBox Content="Include State"
                                   IsChecked="{Binding IsStateIncluded}" />
-              
+
                         <Border Background="#3498db"
                                 CornerRadius="10"
                                 Width="12"
@@ -150,15 +150,15 @@
 
                     <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="10,5,0,0"
                                 HorizontalAlignment="Left">
-                        <xctk:DoubleUpDown  Width="70" Margin="5,0,0,0"
+                        <xctk:DoubleUpDown Width="70" Margin="5,0,0,0"
                                            Padding="0,0,5,0"
                                            Value="{Binding PosX}" FormatString="F1"
                                            IsEnabled="False" />
-                        <xctk:DoubleUpDown  Width="70" Margin="5,0,5,0"
+                        <xctk:DoubleUpDown Width="70" Margin="5,0,5,0"
                                            Padding="0,0,5,0"
                                            Value="{Binding PosY}" FormatString="F1"
                                            IsEnabled="False" />
-                        <xctk:DoubleUpDown  Width="70" Value="{Binding PosZ}" 
+                        <xctk:DoubleUpDown Width="70" Value="{Binding PosZ}"
                                            Padding="0,0,5,0"
                                            FormatString="F1"
                                            IsEnabled="False" />
@@ -209,12 +209,6 @@
                     <CheckBox Content="Hidden"
                               IsChecked="{Binding IsHiddenEnabled}"
                               Margin="0,2" />
-                    <Button Content="Restore Spellcasts"
-                            Width="150"
-                            Margin="0, 15, 0,0"
-                            Click="RestoreSpellcasts_Click"
-                            IsEnabled="{Binding AreOptionsEnabled}">
-                    </Button>
                 </StackPanel>
             </Grid>
 
@@ -224,7 +218,8 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="{Binding SoulLevel, StringFormat='Soul Level: {0}'}" FontWeight="Bold" />
-                <TextBlock Grid.Column="1" Text="{Binding SoulMemory, StringFormat='Soul Memory: {0}'}" FontWeight="Bold" Margin="15,0,0,0" />
+                <TextBlock Grid.Column="1" Text="{Binding SoulMemory, StringFormat='Soul Memory: {0}'}"
+                           FontWeight="Bold" Margin="15,0,0,0" />
             </Grid>
             <Grid Grid.Row="4">
                 <Grid.ColumnDefinitions>
@@ -253,7 +248,7 @@
                                             Tag="Vigor" />
                         <TextBlock Text="Vigor" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" />
                     </Grid>
-            
+
                     <Grid Margin="0,2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -274,7 +269,7 @@
                                             BorderBrush="#3F3F46" />
                         <TextBlock Text="Endurance" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" />
                     </Grid>
-                    
+
                     <Grid Margin="0,2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -315,7 +310,7 @@
                                             BorderBrush="#3F3F46" />
                         <TextBlock Text="Attunement" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" />
                     </Grid>
-            
+
                     <Grid Margin="0,2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -336,10 +331,10 @@
                                             BorderBrush="#3F3F46" />
                         <TextBlock Text="Strength" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" />
                     </Grid>
-                    
+
                 </StackPanel>
                 <StackPanel Grid.Column="1">
-                    
+
                     <Grid Margin="0,2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -360,8 +355,8 @@
                                             BorderBrush="#3F3F46" />
                         <TextBlock Text="Dexterity" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" />
                     </Grid>
-                    
-                    
+
+
                     <Grid Margin="0,2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -402,7 +397,7 @@
                                             BorderBrush="#3F3F46" />
                         <TextBlock Text="Intelligence" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" />
                     </Grid>
-            
+
                     <Grid Margin="0,2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -423,17 +418,33 @@
                                             BorderBrush="#3F3F46" />
                         <TextBlock Text="Faith" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" />
                     </Grid>
+
+
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <Button Content="Restore Spellcasts"
+                            Width="150"
+                            Margin="0, 15, 0,0"
+                            Click="RestoreSpellcasts_Click"
+                            IsEnabled="{Binding AreOptionsEnabled}">
+                    </Button>
+                    <Button Content="Restore Humanity"
+                            Width="150"
+                            Margin="0, 15, 0,0"
+                            Click="RestoreHumanity_Click"
+                            IsEnabled="{Binding AreOptionsEnabled}">
+                    </Button>
                 </StackPanel>
             </Grid>
-            
+
             <Grid Grid.Row="5" Margin="0,10,0,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-    
+
                 <TextBlock Grid.Column="0" Text="Souls to give:" VerticalAlignment="Center" />
-    
+
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="10,0,0,0">
                     <xctk:IntegerUpDown x:Name="SoulsUpDown"
                                         Value="{Binding Souls}"
@@ -449,7 +460,7 @@
                                         Tag="Souls"
                                         IsEnabled="{Binding AreOptionsEnabled}"
                                         BorderBrush="#3F3F46" />
-                           
+
                     <Button Content="Give Souls"
                             Click="GiveSouls_Click"
                             IsEnabled="{Binding AreOptionsEnabled}"
@@ -458,14 +469,14 @@
                             Height="25" />
                 </StackPanel>
             </Grid>
-            
+
             <Border Grid.Row="6" VerticalAlignment="Bottom" Margin="0,10,0,0">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-            
+
                     <StackPanel Grid.Column="0" Width="180">
                         <Grid Margin="0,2">
                             <Grid.ColumnDefinitions>
@@ -481,7 +492,7 @@
                                                Increment="0.50"
                                                FormatString="F2"
                                                Grid.Column="0"
-            
+
                                                IsEnabled="{Binding AreOptionsEnabled}"
                                                BorderBrush="#3F3F46" />
                             <TextBlock Text="Player Speed" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" />
@@ -503,7 +514,7 @@
                             <TextBlock Text="New Game" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0" />
                         </Grid>
                     </StackPanel>
-            
+
                     <Border Grid.Column="1"
                             BorderThickness="1"
                             BorderBrush="#333"
@@ -515,13 +526,13 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-            
+
                             <StackPanel Grid.Column="0">
                                 <StackPanel Orientation="Horizontal">
                                     <CheckBox Content="Auto set NG+7"
                                               IsChecked="{Binding IsAutoSetNewGameSevenEnabled}"
                                               Margin="0,2" />
-            
+
                                     <Border
                                         Background="#3498db"
                                         CornerRadius="10"
@@ -539,13 +550,13 @@
                                                    FontSize="10" />
                                     </Border>
                                 </StackPanel>
-            
-                                <CheckBox Content="Disable Roll"
-                                          IsChecked="{Binding IsNoRollEnabled}"
-                                          Margin="0,2" />
-            
+
+                                <!-- <CheckBox Content="Disable Roll" -->
+                                <!--           IsChecked="{Binding IsNoRollEnabled}" -->
+                                <!--           Margin="0,2" /> -->
+
                             </StackPanel>
-            
+
                             <StackPanel Grid.Column="1" />
                         </Grid>
                     </Border>

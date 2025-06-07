@@ -326,5 +326,39 @@ namespace SilkySouls2.Services
 
         public void ToggleAutoSetNg7(bool isAutoSetNewGameSevenEnabled) =>
             _memoryIo.WriteByte(Patches.Ng7 + 3, isAutoSetNewGameSevenEnabled ? 9 : 1);
+
+        public void SetSpEffect(GameIds.SpEffects.SpEffectData restoreHumanity)
+        {
+            var spEffectParams = CodeCaveOffsets.Base + CodeCaveOffsets.SpEffectParams;
+            var code = CodeCaveOffsets.Base + CodeCaveOffsets.SpEffectCode;
+
+            var chrSpEffectCtrl = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+            {
+                GameManagerImp.Offsets.PlayerCtrl,
+                GameManagerImp.PlayerCtrlOffsets.ChrSpEffectCtrl
+            }, true);
+
+            var setEffectFunc = Funcs.SetSpEffect;
+            
+            _memoryIo.WriteInt32(spEffectParams, restoreHumanity.EffectId);
+            _memoryIo.WriteInt32(spEffectParams + 0x4, restoreHumanity.Quantity);
+            _memoryIo.WriteFloat(spEffectParams + 0x8, restoreHumanity.FloatValue);
+            _memoryIo.WriteByte(spEffectParams + 0xC, restoreHumanity.EffectType);
+            _memoryIo.WriteByte(spEffectParams + 0xD, restoreHumanity.Param1);
+            _memoryIo.WriteByte(spEffectParams + 0xE, restoreHumanity.Param2);
+            _memoryIo.WriteByte(spEffectParams + 0xF, restoreHumanity.Param3);
+
+            var codeBytes = AsmLoader.GetAsmBytes("SetSpEffect");
+            var bytes = BitConverter.GetBytes(chrSpEffectCtrl.ToInt64());
+            Array.Copy(bytes, 0, codeBytes, 0x7 + 2, 8);
+            AsmHelper.WriteRelativeOffsets(codeBytes, new []
+            {
+                (code.ToInt64(), spEffectParams.ToInt64(), 7, 0x0 + 3),
+                (code.ToInt64() + 0x15, setEffectFunc, 5, 0x15 + 1)
+            });
+            
+            _memoryIo.WriteBytes(code, codeBytes);
+            _memoryIo.RunThread(code);
+        }
     }
 }

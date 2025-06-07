@@ -2115,4 +2115,13 @@ e9 f3 fe ff ff          jmp    0 &lt;_main&gt;</value>
 48 8b 88 f0 22 00 00    mov    rcx,QWORD PTR [rax+0x22f0]
 e9 00 00 00 00          jmp    1c &lt;normal+0x10&gt;</value>
   </data>
+  <data name="SetSpEffect" xml:space="preserve">
+    <value>48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 7 &lt;_main+0x7&gt;
+48 b9 00 00 00 00 00    movabs rcx,0x0
+00 00 00
+48 83 ec 48             sub    rsp,0x48
+e8 00 00 00 00          call   1a &lt;_main+0x1a&gt;
+48 83 c4 48             add    rsp,0x48
+c3                      ret</value>
+  </data>
 </root>

@@ -686,6 +686,21 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 7 &lt;_main+0x7&gt;
+        ///48 b9 00 00 00 00 00    movabs rcx,0x0
+        ///00 00 00
+        ///48 83 ec 48             sub    rsp,0x48
+        ///e8 00 00 00 00          call   1a &lt;_main+0x1a&gt;
+        ///48 83 c4 48             add    rsp,0x48
+        ///c3                      ret.
+        /// </summary>
+        internal static string SetSpEffect {
+            get {
+                return ResourceManager.GetString("SetSpEffect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 31010000,Soul Arrow,1,0,0
         ///31020000,Great Soul Arrow,1,0,0
         ///31030000,Heavy Soul Arrow,1,0,0

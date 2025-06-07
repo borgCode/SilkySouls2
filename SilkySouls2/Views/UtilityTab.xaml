@@ -281,10 +281,10 @@
                               Grid.Column="1" Grid.Row="1"
                               Margin="0,2" />
 
-                    <CheckBox Content="Hide Sfx"
-                              IsChecked="{Binding IsHideSfxEnabled}"
-                              Grid.Column="1" Grid.Row="2"
-                              Margin="0,2" />
+                    <!-- <CheckBox Content="Hide Sfx" -->
+                    <!--           IsChecked="{Binding IsHideSfxEnabled}" -->
+                    <!--           Grid.Column="1" Grid.Row="2" -->
+                    <!--           Margin="0,2" /> -->
                     
                     <CheckBox Content="Draw Collision"
                               IsChecked="{Binding IsDrawCollisionEnabled}"

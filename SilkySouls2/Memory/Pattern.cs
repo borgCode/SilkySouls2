@@ -159,11 +159,7 @@ namespace SilkySouls2.Memory
             0,
             None
         );
-
         
-
-
-
         //Funcs
 
         public static readonly Pattern WarpPrep = new Pattern(
@@ -172,6 +168,7 @@ namespace SilkySouls2.Memory
             -0x15,
             None
         );
+        
 
         public static readonly Pattern BonfireWarp = new Pattern(
             new byte[] { 0x40, 0x53, 0x48, 0x83, 0xEC, 0x60, 0x8B },
@@ -180,7 +177,13 @@ namespace SilkySouls2.Memory
             None
         );
 
-
+        public static readonly Pattern SetSpEffect = new Pattern(
+            new byte[] { 0x48, 0x8B, 0xCD, 0xF3, 0x0F, 0x11, 0x44, 0x24, 0x28, 0xE8 },
+            "xxxxxxxxxx",
+            0x9,
+            Call
+        );
+        
         public static readonly Pattern LevelLookUp = new Pattern(
             new byte[] { 0x48, 0x85, 0xDB, 0x74, 0x07, 0x0F, 0xB7, 0x03 },
             "xxxxxxxx",
@@ -225,14 +228,6 @@ namespace SilkySouls2.Memory
         );
 
         
-        public static readonly Pattern ChrCtrlUpdate = new Pattern(
-            new byte[] { 0x48, 0x8B, 0x89, 0xE0, 0x00, 0x00, 0x00, 0xF3 },
-            "xxxxxxxx",
-            -0x41,
-            None
-        );
-
-
         public static readonly Pattern CreateSoundEvent = new Pattern(
             new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x84, 0xC0, 0x74, 0x4C, 0x48, 0x8B, 0x83 },
             "x????xxxxxxx",
@@ -288,6 +283,12 @@ namespace SilkySouls2.Memory
             None
         );
 
+        public static readonly Pattern GetEyePosition = new Pattern(
+            new byte[] { 0x48, 0x83, 0xC4, 0x30, 0x5F, 0xC3, 0x48, 0x8D, 0x54, 0x24, 0x20, 0xE8 },
+            "xxxxxxxxxxxx",
+            0xB,
+            Call
+        );
 
         public static readonly Pattern Silent = new Pattern(
             new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x84, 0xC0, 0x74, 0x4C, 0x48, 0x8B, 0x83 },

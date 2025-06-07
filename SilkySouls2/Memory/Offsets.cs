@@ -81,7 +81,7 @@ namespace SilkySouls2.Memory
                 public const int Coords = 0x90;
                 public const int CollisionPtr = 0xB8;
                 public const int ChrFlagsPtr = 0xD8;
-                public const int PlayerActionCtrlPtr = 0xE0;
+                public const int ChrActionCtrlPtr = 0xE0;
                 public const int PlayerOperatorPtr = 0xE8;
                 public const int ChrMotionCtrlPtr = 0xF8;
                 public const int ChrPhysicsCtrlPtr = 0x100;
@@ -102,6 +102,7 @@ namespace SilkySouls2.Memory
                 public const int LightPoiseMax = 0x220;
                 public const int ChrCullingGroupCtrlPtr = 0x240;
                 public const int Speed = 0x2A8;
+                public const int ChrSpEffectCtrl = 0x3E0;
                 
                 public const int StatsPtr = 0x490;
                 
@@ -112,18 +113,7 @@ namespace SilkySouls2.Memory
                     public const int PoisonToxicResist = 0xB0;
                     public const int BleedResist = 0xB4;
                 }
-
-                public static class ChrActionCtrl
-                {
-                    public const int BossAttackCtrlPtr = 0x170;
-                }
-
                 
-                public static class BossAttackCtrl
-                {
-                    public const int LastAttackPtr = 0x10;
-                    public const int LastAttack = 0xEC;
-                }
 
                 public static class Collision
                 {
@@ -135,6 +125,7 @@ namespace SilkySouls2.Memory
                     public const int Invincible = 0;
                     public const int HideModel = 6;
                 }
+                
 
                 public static class PlayerOperator
                 {
@@ -256,13 +247,14 @@ namespace SilkySouls2.Memory
             public static long ParamLookUp;
             public static long SetRenderTargets;
             public static long CreateSoundEvent;
-            public static long ChrCtrlUpdate;
             public static long LevelLookUp;
             public static long LevelUp;
             public static long CurrentItemQuantityCheck;
             public static long ItemGive;
             public static long BuildItemDialog;
             public static long ShowItemDialog;
+            public static long GetEyePosition;
+            public static long SetSpEffect;
         }
     }
 }

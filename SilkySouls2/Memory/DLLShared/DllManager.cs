@@ -42,7 +42,7 @@ namespace SilkySouls2.Memory.DLLShared
             SetAddress(SharedMemAddr.ParamLookUp, Offsets.Funcs.ParamLookUp);
             SetAddress(SharedMemAddr.SetRenderTargets, Offsets.Funcs.SetRenderTargets);
             SetAddress(SharedMemAddr.CreateSoundEvent, Offsets.Funcs.CreateSoundEvent);
-            SetAddress(SharedMemAddr.RenderChrModel, Offsets.Funcs.ChrCtrlUpdate);
+            SetAddress(SharedMemAddr.GetEyePosition, Offsets.Funcs.GetEyePosition);
             _drawIsInjected = _memoryIo.InjectDll(_drawDllPath);
         }
         

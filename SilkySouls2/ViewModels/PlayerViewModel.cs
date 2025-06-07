@@ -613,5 +613,7 @@ namespace SilkySouls2.ViewModels
         {
             if (IsAutoSetNewGameSevenEnabled) _playerService.ToggleAutoSetNg7(true);
         }
+
+        public void RestoreHumanity() => _playerService.SetSpEffect(GameIds.SpEffects.SpEffectData.RestoreHumanity);
     }
 }

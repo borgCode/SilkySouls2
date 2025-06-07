@@ -2,7 +2,7 @@
 {
     public static class GameIds
     {
-
+        
         public static class AreaId
         {
             public const int HarvestPeak = 1017000;
@@ -21,6 +21,32 @@
             public static readonly long[] IvoryBlackKnights = { 537020035, 537020036, 537020037 };
             public static readonly long[] DarklurkerDungeonsLit = { 403000001, 403000002, 403000003 };
             public static readonly long[] Scepter = { 536000024, 536000010 };
+        }
+        
+        
+        public static class SpEffects
+        {
+            public struct SpEffectData
+            {
+                public int EffectId;
+                public int Quantity;
+                public float FloatValue;
+                public byte EffectType;
+                public byte Param1;
+                public byte Param2;
+                public byte Param3;
+
+                public static readonly SpEffectData RestoreHumanity = new SpEffectData
+                {
+                    EffectId = 60151000,
+                    Quantity = 1,
+                    FloatValue = -1.0f,
+                    EffectType = 0x19,
+                    Param1 = 0x02,
+                    Param2 = 0x00,
+                    Param3 = 0x00
+                };
+            }
         }
     }
 }

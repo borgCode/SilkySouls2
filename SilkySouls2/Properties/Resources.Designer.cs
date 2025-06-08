@@ -206,6 +206,25 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 50                      push   rax
+        ///48 8b 47 08             mov    rax,QWORD PTR [rdi+0x8]
+        ///81 78 28 e0 2e 00 00    cmp    DWORD PTR [rax+0x28],0x2ee0
+        ///75 0f                   jne    1d &lt;check_alonne&gt;
+        ///48 31 c0                xor    rax,rax
+        ///48 85 c0                test   rax,rax
+        ///58                      pop    rax
+        ///89 73 18                mov    DWORD PTR [rbx+0x18],esi
+        ///e9 00 00 00 00          jmp    1d &lt;check_alonne&gt;
+        ///00000000001d &lt;check_alonne&gt;:
+        ///81 78 28 d8 d6 00 00    cmp    DWORD PTR [rax+0x28],0xd6d [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string DisableMemoryTimer {
+            get {
+                return ResourceManager.GetString("DisableMemoryTimer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 81 fa 5e 1f 02 20    cmp    rdx,0x20021f5e
         ///75 03                   jne    c &lt;normal&gt;
         ///4d 31 c0                xor    r8,r8

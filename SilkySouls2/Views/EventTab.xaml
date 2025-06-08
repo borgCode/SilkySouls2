@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:SilkySouls2.Views"
              xmlns:converters="clr-namespace:SilkySouls2.Converters"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="500">
@@ -243,30 +242,11 @@
                               Margin="0,2" />
 
 
-                    <CheckBox Content="Option 2"
-                              Grid.Column="0" Grid.Row="1"
-                              IsChecked="{Binding IsOption2Enabled}"
-                              Margin="0,2" />
-
-                    <CheckBox Content="Option 3"
-                              Grid.Column="0" Grid.Row="2"
-                              IsChecked="{Binding IsOption3Enabled}"
-                              Margin="0,2" />
-
-                    <CheckBox Content="Option 4"
-                              Grid.Column="1" Grid.Row="0"
-                              IsChecked="{Binding IsOption4Enabled}"
-                              Margin="0,2" />
-
-                    <CheckBox Content="Option 5"
-                              Grid.Column="1" Grid.Row="1"
-                              IsChecked="{Binding IsOption5Enabled}"
-                              Margin="0,2" />
-
-                    <CheckBox Content="Option 6"
-                              Grid.Column="1" Grid.Row="2"
-                              IsChecked="{Binding IsOption6Enabled}"
-                              Margin="0,2" />
+                    <!-- <CheckBox Content="Disable Memory Timer" -->
+                    <!--           Grid.Column="0" Grid.Row="1" -->
+                    <!--           IsChecked="{Binding IsMemoryTimerDisabled}" -->
+                    <!--           Margin="0,2" /> -->
+                    
                 </Grid>
             </StackPanel>
         </Border>

@@ -430,6 +430,31 @@ namespace SilkySouls2.Services
                 _hookManager.UninstallHook(code.ToInt64());
             }
         }
+
+        public void ToggleMemoryTimer(bool isMemoryTimerDisabled)
+        {
+            var code = CodeCaveOffsets.Base + CodeCaveOffsets.DisableMemoryTimer;
+
+            if (isMemoryTimerDisabled)
+            {
+                var origin = Hooks.ConditionGroupSetFlag;
+                var bytes = AsmLoader.GetAsmBytes("DisableMemoryTimer");
+                AsmHelper.WriteRelativeOffsets(bytes, new []
+                {
+                    (code.ToInt64() + 0x18, origin + 7, 5, 0x18 + 1),
+                    (code.ToInt64() + 0x30, origin + 7, 5, 0x30 + 1),
+                    (code.ToInt64() + 0x3D, origin + 7, 5, 0x3D + 1),
+                });
+                
+                _memoryIo.WriteBytes(code, bytes);
+                _hookManager.InstallHook(code.ToInt64(), origin, new byte[]
+                    { 0x80, 0x7B, 0x1D, 0x00, 0x89, 0x73, 0x18 });
+            }
+            else
+            {
+                _hookManager.UninstallHook(code.ToInt64());
+            }
+        }
     }
     
 }

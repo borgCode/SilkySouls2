@@ -67,7 +67,13 @@ namespace SilkySouls2.Memory
             None
         );
 
-
+        public static readonly Pattern ConditionGroupSetFlag = new Pattern(
+            new byte[] { 0x80, 0x7B, 0x1D, 0x00, 0x89, 0x73, 0x18, 0x74 },
+            "xxxxxxxx",
+            0,
+            None
+        );
+        
         public static readonly Pattern FastQuitout = new Pattern(
             new byte[] { 0x48, 0x89, 0x84, 0x24, 0x50, 0x01, 0x00, 0x00, 0x83, 0x79, 0x10 },
             "xxxxxxxxxxx",

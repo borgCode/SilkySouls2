@@ -92,7 +92,7 @@ namespace SilkySouls2.ViewModels
         public void UnlockNash() => _utilityService.SetEventOn(GameIds.EventFlags.GiantLordDefeated);
         public void UnlockAldia() => _utilityService.SetMultipleEventOn(GameIds.EventFlags.UnlockAldia);
         public void VisibleAava() => _utilityService.SetEventOn(GameIds.EventFlags.VisibleAava);
-        public void BreakIce() => _utilityService.SetEventOn(GameIds.EventFlags.Dlc3Ice);
+        public void BreakIce() => _utilityService.SetMultipleEventOn(GameIds.EventFlags.Dlc3Ice);
         public void RescueKnights() => _utilityService.SetMultipleEventOn(GameIds.EventFlags.Dlc3Knights);
         public void KingsRingAcquired() => _utilityService.SetEventOn(GameIds.EventFlags.KingsRingAcquired);
         public void ActivateBrume() => _utilityService.SetMultipleEventOn(GameIds.EventFlags.Scepter);
@@ -135,6 +135,20 @@ namespace SilkySouls2.ViewModels
                 {
                     _utilityService.ToggleSnowstormHook(_isSnowstormDisabled);
                     _utilityService.SetEventOff(GameIds.EventFlags.FrigidSnowstorm);
+                }
+            }
+        }
+        
+        private bool _isMemoryTimerDisabled;
+        public bool IsMemoryTimerDisabled
+        {
+            get => _isMemoryTimerDisabled;
+            set
+            {
+                if (SetProperty(ref _isMemoryTimerDisabled, value))
+                {
+                    _utilityService.ToggleMemoryTimer(_isMemoryTimerDisabled);
+                 
                 }
             }
         }

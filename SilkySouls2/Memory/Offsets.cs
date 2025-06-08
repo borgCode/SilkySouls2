@@ -241,6 +241,7 @@ namespace SilkySouls2.Memory
             public static long InfinitePoise;
             public static long EzStateSetEvent;
             public static long MapIdWrite;
+            public static long ConditionGroupSetFlag;
         }
 
         public static class Funcs

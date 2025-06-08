@@ -109,7 +109,9 @@ namespace SilkySouls2.Memory
         public const int Snowstorm = 0xD00;
         public const int SpEffectParams = 0xD20;
         public const int SpEffectCode = 0xD30;
-        
-        
+
+        public const int DisableMemoryTimer = 0x1230;
+
+
     }
 }

@@ -266,6 +266,8 @@ namespace SilkySouls2.Memory
             public static long ConvertPxRigidToMapEntity;
             public static long ConvertMapEntityToGameId;
             public static long UnlockBonfire;
+            public static long GetMapObjStateActComponent;
+            public static long GetMapEntityWithAreaIdAndObjId;
         }
     }
 }

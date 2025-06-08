@@ -2314,4 +2314,74 @@ e9 00 00 00 00          jmp    35 &lt;normal&gt;
 89 73 18                mov    DWORD PTR [rbx+0x18],esi
 e9 00 00 00 00          jmp    42 &lt;normal+0xd&gt;</value>
   </data>
+  <data name="IvorySkip" xml:space="preserve">
+    <value>81 fa 78 46 02 20       cmp    edx,0x20024678
+75 12                   jne    1a &lt;check_next&gt;
+41 83 f8 01             cmp    r8d,0x1
+0f 85 bf 00 00 00       jne    d1 &lt;exit&gt;
+45 31 c0                xor    r8d,r8d
+e9 b7 00 00 00          jmp    d1 &lt;exit&gt;
+00000000001a &lt;check_next&gt;:
+81 fa 80 46 02 20       cmp    edx,0x20024680
+0f 85 ab 00 00 00       jne    d1 &lt;exit&gt;
+41 83 f8 01             cmp    r8d,0x1
+0f 85 a1 00 00 00       jne    d1 &lt;exit&gt;
+51                      push   rcx
+52                      push   rdx
+41 50                   push   r8
+41 54                   push   r12
+41 55                   push   r13
+41 56                   push   r14
+41 57                   push   r15
+53                      push   rbx
+55                      push   rbp
+57                      push   rdi
+56                      push   rsi
+49 c7 c4 00 00 25 32    mov    r12,0x32250000
+49 c7 c5 03 00 00 00    mov    r13,0x3
+49 c7 c6 de 9b 00 03    mov    r14,0x3009bde
+48 c7 c7 83 46 02 20    mov    rdi,0x20024683
+49 bf 00 00 00 00 00    movabs r15,0x0
+00 00 00
+48 bb 00 00 00 00 00    movabs rbx,0x0
+00 00 00
+48 bd 00 00 00 00 00    movabs rbp,0x0
+00 00 00
+48 89 ce                mov    rsi,rcx
+48 83 ec 28             sub    rsp,0x28
+000000000081 &lt;loop_start&gt;:
+44 89 e1                mov    ecx,r12d
+44 89 f2                mov    edx,r14d
+41 ff d7                call   r15
+48 8d 88 b8 00 00 00    lea    rcx,[rax+0xb8]
+48 89 c2                mov    rdx,rax
+ff d3                   call   rbx
+48 8b 48 48             mov    rcx,QWORD PTR [rax+0x48]
+48 8b 01                mov    rax,QWORD PTR [rcx]
+ba 46 00 00 00          mov    edx,0x46
+ff 50 30                call   QWORD PTR [rax+0x30]
+48 89 f1                mov    rcx,rsi
+89 fa                   mov    edx,edi
+41 b8 01 00 00 00       mov    r8d,0x1
+ff d5                   call   rbp
+49 ff c6                inc    r14
+48 ff c7                inc    rdi
+49 ff cd                dec    r13
+75 c4                   jne    81 &lt;loop_start&gt;
+48 83 c4 28             add    rsp,0x28
+5e                      pop    rsi
+5f                      pop    rdi
+5d                      pop    rbp
+5b                      pop    rbx
+41 5f                   pop    r15
+41 5e                   pop    r14
+41 5d                   pop    r13
+41 5c                   pop    r12
+41 58                   pop    r8
+5a                      pop    rdx
+59                      pop    rcx
+0000000000d1 &lt;exit&gt;:
+48 89 74 24 10          mov    QWORD PTR [rsp+0x10],rsi
+e9 00 00 00 00          jmp    db &lt;exit+0xa&gt;</value>
+  </data>
 </root>

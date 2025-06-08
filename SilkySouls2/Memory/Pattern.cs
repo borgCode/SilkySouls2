@@ -205,7 +205,20 @@ namespace SilkySouls2.Memory
             Call
         );
 
+        public static readonly Pattern GetMapObjStateActComponent = new Pattern(
+            new byte[] { 0x75, 0x08, 0x48, 0x8B, 0x01, 0x48, 0x8B, 0x40, 0x40 },
+            "xxxxxxxxx",
+            -0x9,
+            None
+        );
 
+        public static readonly Pattern GetMapEntityWithAreaIdAndObjId = new Pattern(
+            new byte[] { 0x80, 0xB8, 0xE0, 0x01, 0x00, 0x00, 0x0C, 0x48 },
+            "xxxxxxxx",
+            -0x2F,
+            None
+        );
+            
         public static readonly Pattern HavokRayCast = new Pattern(
             new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x80, 0x7D, 0x40, 0x00, 0x0F, 0x84, 0x80 },
             "x????xxxxxxx",

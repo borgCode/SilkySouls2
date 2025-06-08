@@ -199,13 +199,6 @@
                         </Grid.ColumnDefinitions>
                         <Button Content="King's Ring" Height="32" IsEnabled="{Binding AreButtonsEnabled}"
                                 Click="KingsRingAcquired_Click" />
-                        <Border Grid.Column="1" Background="#3498db" CornerRadius="10" Width="18" Height="18"
-                                Margin="7,0,0,0"
-                                ToolTip="Sets the flag that enables Forlorn to spawn in Forest (Game sets it when you acquire King's ring)&#x0a;I don't know what other things are affected by this flag so use at your own risk. "
-                                ToolTipService.InitialShowDelay='100'>
-                            <TextBlock Text="i" Foreground="White" HorizontalAlignment="Center"
-                                       VerticalAlignment="Center" FontWeight="Bold" FontSize="10" />
-                        </Border>
                     </Grid>
                     <Button Grid.Column="1" Grid.Row="2" Content="Activate Brume Tower" Height="32" Margin="5,0,0,5"
                             IsEnabled="{Binding AreButtonsEnabled}" Click="ActivateBrume_Click" />

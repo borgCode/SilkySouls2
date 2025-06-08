@@ -448,14 +448,7 @@ namespace SilkySouls2.Memory
 
                 Kernel32.VirtualFreeEx(ProcessHandle, dllPathAddress, 0, 0x8000);
 
-                if (result == 0)
-                {
-                    Console.WriteLine($"Successfully injected: {fullDllPath}");
-                    return true;
-                }
-
-                Console.WriteLine($"DLL injection may have failed, wait result: {result}");
-                return false;
+                return result == 0;
             }
             catch (Exception ex)
             {

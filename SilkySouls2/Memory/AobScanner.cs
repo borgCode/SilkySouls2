@@ -170,6 +170,8 @@ namespace SilkySouls2.Memory
             Offsets.Funcs.ConvertPxRigidToMapEntity = FindAddressByPattern(Patterns.ConvertPxRigidToMapEntity).ToInt64();
             Offsets.Funcs.ConvertMapEntityToGameId = FindAddressByPattern(Patterns.ConvertMapEntityToGameId).ToInt64();
             Offsets.Funcs.UnlockBonfire = FindAddressByPattern(Patterns.UnlockBonfire).ToInt64();
+            Offsets.Funcs.GetMapObjStateActComponent = FindAddressByPattern(Patterns.GetMapObjStateActComponent).ToInt64();
+            Offsets.Funcs.GetMapEntityWithAreaIdAndObjId = FindAddressByPattern(Patterns.GetMapEntityWithAreaIdAndObjId).ToInt64();
             
             TryPatternWithFallback("SetRenderTargets",
                 Patterns.SetRenderTargetsWrapper,
@@ -261,6 +263,8 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Funcs.ConvertPxRigidToMapEntity: 0x{Offsets.Funcs.ConvertPxRigidToMapEntity:X}");
             Console.WriteLine($"Funcs.ConvertMapEntityToGameId: 0x{Offsets.Funcs.ConvertMapEntityToGameId:X}");
             Console.WriteLine($"Funcs.UnlockBonfire: 0x{Offsets.Funcs.UnlockBonfire:X}");
+            Console.WriteLine($"Funcs.GetMapObjStateActComponent: 0x{Offsets.Funcs.GetMapObjStateActComponent:X}");
+            Console.WriteLine($"Funcs.GetMapEntityWithAreaIdAndObjId: 0x{Offsets.Funcs.GetMapEntityWithAreaIdAndObjId:X}");
 #endif
         }
 

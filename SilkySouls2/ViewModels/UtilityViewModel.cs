@@ -209,8 +209,7 @@ namespace SilkySouls2.ViewModels
             set
             {
                 if (!SetProperty(ref _isIvorySkipEnabled, value)) return;
-                if (_isIvorySkipEnabled) _utilityService.SetMultipleEventOn(GameIds.EventFlags.IvoryBlackKnights);
-                else _utilityService.SetMultipleEventOff(GameIds.EventFlags.IvoryBlackKnights);
+                _utilityService.ToggleIvorySkip(_isIvorySkipEnabled);
             }
         }
         

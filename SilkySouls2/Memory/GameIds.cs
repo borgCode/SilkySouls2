@@ -3,11 +3,7 @@
     public static class GameIds
     {
         
-        public static class AreaId
-        {
-            public const int HarvestPeak = 1017000;
-            public const int ShadedWoods = 1032000;
-        }
+   
 
         public static class EventFlags
         {
@@ -22,6 +18,7 @@
             public static readonly long[] DarklurkerDungeonsLit = { 403000001, 403000002, 403000003 };
             public static readonly long[] Scepter = { 536000024, 536000010 };
         }
+        
         
         
         public static class SpEffects

@@ -455,6 +455,38 @@ namespace SilkySouls2.Services
                 _hookManager.UninstallHook(code.ToInt64());
             }
         }
+
+        public void ToggleIvorySkip(bool isIvorySkipEnabled)
+        {
+            var code = CodeCaveOffsets.Base + CodeCaveOffsets.IvorySkip;
+
+            if (isIvorySkipEnabled)
+            {
+                var origin = Funcs.SetEvent;
+                var getComponent = Funcs.GetMapObjStateActComponent;
+                var getMapEntity = Funcs.GetMapEntityWithAreaIdAndObjId;
+
+                var bytes = AsmLoader.GetAsmBytes("IvorySkip");
+                
+                AsmHelper.WriteAbsoluteAddresses(bytes, new []
+                {
+                  (getMapEntity, 0x5C + 2),
+                  (getComponent, 0x66 + 2),
+                  (origin, 0x70 + 2)
+                });
+
+                var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 5, code + 0xDB);
+                Array.Copy(jmpBytes, 0, bytes, 0xD6 + 1, 4);
+                
+                _memoryIo.WriteBytes(code, bytes);
+                _hookManager.InstallHook(code.ToInt64(), origin, new byte[]
+                    { 0x48, 0x89, 0x74, 0x24, 0x10 });
+            }
+            else
+            {
+                _hookManager.UninstallHook(code.ToInt64());
+            }
+        }
     }
     
 }

@@ -387,6 +387,27 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 81 fa 78 46 02 20       cmp    edx,0x20024678
+        ///75 12                   jne    1a &lt;check_next&gt;
+        ///41 83 f8 01             cmp    r8d,0x1
+        ///0f 85 bf 00 00 00       jne    d1 &lt;exit&gt;
+        ///45 31 c0                xor    r8d,r8d
+        ///e9 b7 00 00 00          jmp    d1 &lt;exit&gt;
+        ///00000000001a &lt;check_next&gt;:
+        ///81 fa 80 46 02 20       cmp    edx,0x20024680
+        ///0f 85 ab 00 00 00       jne    d1 &lt;exit&gt;
+        ///41 83 f8 01             cmp    r8d,0x1
+        ///0f 85 a1 00 00 00       jne    d1 &lt;exit&gt;
+        ///51                      push   rcx
+        ///52                 [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string IvorySkip {
+            get {
+                return ResourceManager.GetString("IvorySkip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 60355000,Aged Feather,1,0,0
         ///51030000,Aldia Key,1,0,0
         ///50840000,Antiquated Key,1,0,0

@@ -112,6 +112,8 @@ namespace SilkySouls2.Memory
 
         public const int DisableMemoryTimer = 0x1230;
 
+        public const int IvorySkip = 0x1300;
+
 
     }
 }

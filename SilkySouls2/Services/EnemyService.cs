@@ -159,18 +159,18 @@ namespace SilkySouls2.Services
                 AsmHelper.WriteRelativeOffsets(codeBytes, new []
                 {
                     (code.ToInt64() + 0x8, lockedTargetPtr.ToInt64(), 7, 0x8 + 3),
-                    (code.ToInt64() + 0x23, repeatFlagLoc.ToInt64(), 7, 0x23 + 2),
-                    (code.ToInt64() + 0x2C, attackId.ToInt64(), 6, 0x2C + 2),
-                    (code.ToInt64() + 0x3A, attackId.ToInt64(), 6, 0x3A + 2),
+                    (code.ToInt64() + 0x28, repeatFlagLoc.ToInt64(), 7, 0x28 + 2),
+                    (code.ToInt64() + 0x31, attackId.ToInt64(), 6, 0x31 + 2),
+                    (code.ToInt64() + 0x3F, attackId.ToInt64(), 6, 0x3F + 2),
                 });
                 
                 _memoryIo.WriteBytes(code, codeBytes);
                 AsmHelper.WriteRelativeOffsets(codeBytes, new []
                 {
                     (code2.ToInt64() + 0x8, lockedTargetPtr.ToInt64(), 7, 0x8 + 3),
-                    (code2.ToInt64() + 0x23, repeatFlagLoc.ToInt64(), 7, 0x23 + 2),
-                    (code2.ToInt64() + 0x2C, attackId.ToInt64(), 6, 0x2C + 2),
-                    (code2.ToInt64() + 0x3A, attackId.ToInt64(), 6, 0x3A + 2),
+                    (code2.ToInt64() + 0x28, repeatFlagLoc.ToInt64(), 7, 0x28 + 2),
+                    (code2.ToInt64() + 0x31, attackId.ToInt64(), 6, 0x31 + 2),
+                    (code2.ToInt64() + 0x3F, attackId.ToInt64(), 6, 0x3F + 2),
                 });
                 
                 _memoryIo.WriteBytes(code2, codeBytes);
@@ -190,5 +190,18 @@ namespace SilkySouls2.Services
         public void ToggleRepeatAct(bool isRepeatActEnabled) =>
             _memoryIo.WriteByte(CodeCaveOffsets.Base + (int)CodeCaveOffsets.RepeatAct.RepeatFlag,
                 isRepeatActEnabled ? 1 : 0);
+
+        public void SetTargetSpeed(float value) => 
+            _memoryIo.WriteFloat((IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
+                                PlayerCtrlOffsets.Speed, value);
+        public float GetTargetSpeed() => 
+            _memoryIo.ReadFloat((IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
+                                 PlayerCtrlOffsets.Speed);
+
+        public void ClearLockedTarget()
+        {
+            _memoryIo.WriteBytes(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr, new byte[] 
+                {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00});
+        }
     }
 }

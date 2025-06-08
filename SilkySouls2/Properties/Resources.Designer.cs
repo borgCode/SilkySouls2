@@ -620,13 +620,14 @@ namespace SilkySouls2.Properties {
         ///   Looks up a localized string similar to 83 89 50 03 00 00 01    or     DWORD PTR [rcx+0x350],0x1
         ///50                      push   rax
         ///48 8b 05 00 00 00 00    mov    rax,QWORD PTR [rip+0x0]        # f &lt;_main+0xf&gt;
+        ///48 85 c0                test   rax,rax
+        ///74 31                   je     45 &lt;normal&gt;
         ///48 8b 80 e8 00 00 00    mov    rax,QWORD PTR [rax+0xe8]
         ///48 8b 40 18             mov    rax,QWORD PTR [rax+0x18]
         ///48 8b 40 20             mov    rax,QWORD PTR [rax+0x20]
         ///48 39 c8                cmp    rax,rcx
-        ///75 1d                   jne    40 &lt;normal&gt;
-        ///80 3d 00 00 00 00 01    cmp    BYTE PTR [rip+0x0],0x1        # 2a &lt;_main+0x2a&gt;
-        ///75 0 [rest of string was truncated]&quot;;.
+        ///75 1d                   jne    45 &lt;normal&gt;
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string RepeatAct {
             get {

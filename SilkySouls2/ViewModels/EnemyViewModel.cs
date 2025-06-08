@@ -145,13 +145,11 @@ namespace SilkySouls2.ViewModels
             if (!IsTargetValid())
             {
                 IsValidTarget = false;
+                _enemyService.ClearLockedTarget();
                 return;
             }
         
             IsValidTarget = true;
-            TargetCurrentHealth = _enemyService.GetTargetHp();
-            TargetMaxHealth = _enemyService.GetTargetMaxHp();
-            LastAct = _enemyService.GetLastAct();
             long targetId = _enemyService.GetTargetId();
             if (targetId != _currentTargetId)
             {
@@ -190,8 +188,11 @@ namespace SilkySouls2.ViewModels
                 // _resistancesWindowWindow.DataContext = null;
                 // _resistancesWindowWindow.DataContext = this;
             }
-        
-            // TargetSpeed = _enemyService.GetTargetSpeed();
+            TargetCurrentHealth = _enemyService.GetTargetHp();
+            TargetMaxHealth = _enemyService.GetTargetMaxHp();
+            LastAct = _enemyService.GetLastAct();
+            
+            TargetSpeed = _enemyService.GetTargetSpeed();
             TargetCurrentHeavyPoise = _enemyService.GetTargetResistance(GameManagerImp.PlayerCtrlOffsets.HeavyPoiseCurrent);
             TargetCurrentLightPoise = _enemyService.GetTargetResistance(GameManagerImp.PlayerCtrlOffsets.LightPoiseCurrent);
             TargetCurrentPoison = IsPoisonToxicImmune
@@ -205,8 +206,7 @@ namespace SilkySouls2.ViewModels
                 : _enemyService.GetTargetResistance(GameManagerImp.PlayerCtrlOffsets.BleedCurrent);
             
         }
-        //
-        //
+
         public bool AreOptionsEnabled
         {
             get => _areOptionsEnabled;
@@ -254,7 +254,7 @@ namespace SilkySouls2.ViewModels
                     _enemyService.ToggleTargetHook(true);
                     _targetOptionsTimer.Start();
                     _enemyService.ToggleCurrentActHook(true);
-                    // ShowAllResistances = true;
+                    ShowAllResistances = true;
                 }
                 else
                 {
@@ -375,7 +375,19 @@ namespace SilkySouls2.ViewModels
             int health = TargetMaxHealth * value / 100;
             _enemyService.SetTargetHp(health);
         }
-        //
+        
+        public float TargetSpeed
+        {
+            get => _targetSpeed;
+            set
+            {
+                if (SetProperty(ref _targetSpeed, value))
+                {
+                    _enemyService.SetTargetSpeed(value);
+                }
+            }
+        }
+        
         public bool IsFreezeHealthEnabled
         {
             get => _isFreezeHealthEnabled;

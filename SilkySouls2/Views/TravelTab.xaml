@@ -67,7 +67,7 @@
             <Button Grid.Row="2" 
                     Content="Warp"
                     Click="WarpButton_Click"
-                    IsEnabled="{Binding AreFeaturesEnabled}"
+                    IsEnabled="{Binding AreButtonsEnabled}"
                     Height="25"
                     Margin="0,10,0,0" />
         </Grid>
@@ -225,7 +225,10 @@
                          <ColumnDefinition Width="*" />
                      </Grid.ColumnDefinitions>
                      
-                     <Button Grid.Column="0" Content="Unlock All Bonfires" Click="UnlockAllBonfires_Click" Margin="0,2" />
+                     <Button Grid.Column="0" Content="Unlock All Bonfires"
+                             Click="UnlockAllBonfires_Click"
+                             IsEnabled="{Binding AreButtonsEnabled}"
+                             Margin="0,2" />
                      <CheckBox Grid.Column="1" Content="Rest on Warp"
                                IsChecked="{Binding IsRestOnWarpEnabled}"
                                Margin="10,2" />

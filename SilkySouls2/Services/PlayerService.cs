@@ -279,7 +279,7 @@ namespace SilkySouls2.Services
             {
                 GameManagerImp.Offsets.GameDataManager,
                 GameManagerImp.GameDataManagerOffsets.InventoryPtr,
-                GameManagerImp.GameDataManagerOffsets.Inventory.ItemInventory2BagList
+                GameManagerImp.GameDataManagerOffsets.Inventory.ItemInventory2BagListForSpells
             }, true);
             var func = Funcs.RestoreSpellcasts;
 
@@ -295,8 +295,8 @@ namespace SilkySouls2.Services
 
         public void ToggleSilent(bool isSilentEnabled)
         {
-            if (isSilentEnabled) _nopManager.InstallNOP(Patches.Silent.ToInt64(), 5);
-            else _nopManager.RestoreNOP(Patches.Silent.ToInt64());
+            if (isSilentEnabled) _nopManager.InstallNop(Patches.Silent.ToInt64(), 5);
+            else _nopManager.RestoreNop(Patches.Silent.ToInt64());
         }
 
         public void ToggleHidden(bool isHiddenEnabled) =>
@@ -365,8 +365,8 @@ namespace SilkySouls2.Services
 
         public void ToggleNoSoulGain(bool isEnabled)
         {
-            if (isEnabled) _nopManager.InstallNOP(Patches.NoSoulGain.ToInt64(), 5);
-            else _nopManager.RestoreNOP(Patches.NoSoulGain.ToInt64());
+            if (isEnabled) _nopManager.InstallNop(Patches.NoSoulGain.ToInt64(), 5);
+            else _nopManager.RestoreNop(Patches.NoSoulGain.ToInt64());
         }
 
         public void ToggleNoHollowing(bool isEnabled) =>

@@ -441,10 +441,10 @@
                         <CheckBox Content="Disable AI"
                                   IsChecked="{Binding IsAllDisableAiEnabled}"
                                   Margin="0,2" />
-                        
-                        <CheckBox Content="All Repeat Action"
-                                  IsChecked="{Binding IsAllRepeatActEnabled}"
-                                  Margin="0,2" />
+                        <!-- -->
+                        <!-- <CheckBox Content="All Repeat Action" -->
+                        <!--           IsChecked="{Binding IsAllRepeatActEnabled}" -->
+                        <!--           Margin="0,2" /> -->
                     </UniformGrid>
                 </StackPanel>
             </Border>

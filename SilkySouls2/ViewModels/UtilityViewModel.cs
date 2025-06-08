@@ -11,7 +11,7 @@ namespace SilkySouls2.ViewModels
         private bool _isIvorySkipEnabled;
         private bool _isCreditSkipEnabled;
         private bool _is100DropEnabled;
-        private bool _hitboxTest;
+        private bool _isDrawHitboxEnabled;
         private bool _isDrawEventEnabled;
         private bool _isDrawSoundEnabled;
         private bool _isTargetingViewEnabled;
@@ -30,7 +30,7 @@ namespace SilkySouls2.ViewModels
         private readonly UtilityService _utilityService;
         private readonly PlayerViewModel _playerViewModel;
         
-        private float _gameSpeed;
+        private float _gameSpeed = 1.0f;
         
         private const float DefaultNoclipMultiplier = 1f;
         private const uint BaseXSpeedHex = 0x3e4ccccd;
@@ -44,7 +44,7 @@ namespace SilkySouls2.ViewModels
             _playerViewModel = playerViewModel;
             _utilityService = utilityService;
             _hotkeyManager = hotkeyManager;
-           
+            
             RegisterHotkeys();
         }
 
@@ -80,11 +80,11 @@ namespace SilkySouls2.ViewModels
         
         public bool IsDrawHitboxEnabled
         {
-            get => _hitboxTest;
+            get => _isDrawHitboxEnabled;
             set
             {
-                if (!SetProperty(ref _hitboxTest, value)) return;
-                _utilityService.ToggleDrawHitbox(_hitboxTest);
+                if (!SetProperty(ref _isDrawHitboxEnabled, value)) return;
+                _utilityService.ToggleDrawHitbox(_isDrawHitboxEnabled);
             }
         }
         
@@ -126,6 +126,7 @@ namespace SilkySouls2.ViewModels
             {
                 if (!SetProperty(ref _isDrawRagdollEnabled, value)) return;
                 _utilityService.ToggleRagdoll(_isDrawRagdollEnabled);
+                if (!_isDrawRagdollEnabled) IsSeeThroughWallsEnabled = false;
             }
         }
         
@@ -167,6 +168,7 @@ namespace SilkySouls2.ViewModels
             {
                 if (!SetProperty(ref _isDrawCollisionEnabled, value)) return;
                 _utilityService.ToggleDrawCol(_isDrawCollisionEnabled);
+                if (!_isDrawCollisionEnabled) IsColWireframeEnabled = false;
             }
         }
 
@@ -344,8 +346,20 @@ namespace SilkySouls2.ViewModels
         public void TryApplyOneTimeFeatures()
         {
             if (Is100DropEnabled) _utilityService.Toggle100Drop(true);
+            if (IsCreditSkipEnabled) _utilityService.ToggleCreditSkip(true);
+            if (IsIvorySkipEnabled) _utilityService.ToggleIvorySkip(true);
+            if (IsDrawHitboxEnabled) _utilityService.ToggleDrawHitbox(true);
+            if (IsDrawEventEnabled) _utilityService.ToggleDrawEvent(true);
+            if (IsDrawSoundEnabled) _utilityService.ToggleDrawSound(true);
+            if (IsTargetingViewEnabled) _utilityService.ToggleTargetingView(true);
+            if (IsHideMapEnabled) _utilityService.ToggleHideMap(true);
+            if (IsHideCharactersEnabled) _utilityService.ToggleHideChr(true);
+            if (IsDrawCollisionEnabled) _utilityService.ToggleDrawCol(true);
+            if (IsColWireframeEnabled) _utilityService.ToggleColWireframe(true);
+            if (IsDrawKillboxEnabled) _utilityService.ToggleDrawKillbox(true);
+            if (IsDrawRagdollsEnabled) _utilityService.ToggleRagdoll(true);
+            if (IsSeeThroughWallsEnabled) _utilityService.ToggleRagdollEsp(true);
         }
-
-        public void Inject() => _utilityService.Inject();
+        
     }
 }

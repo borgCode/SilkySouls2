@@ -119,8 +119,25 @@ namespace SilkySouls2.ViewModels
             _hotkeyManager.RegisterAction("RestorePos2", () => RestorePos(1));
             _hotkeyManager.RegisterAction("RTSR", () => SetHp(1));
             _hotkeyManager.RegisterAction("NoDeath", () => { IsNoDeathEnabled = !IsNoDeathEnabled; });
-            // _hotkeyManager.RegisterAction("OneShot", () => { IsOneShotEnabled = !IsOneShotEnabled; });
-            // _hotkeyManager.RegisterAction("PlayerNoDamage", () => { IsNoDamageEnabled = !IsNoDamageEnabled; });
+            _hotkeyManager.RegisterAction("OneShot", () => { IsOneShotEnabled = !IsOneShotEnabled; });
+            _hotkeyManager.RegisterAction("DealNoDamage", () => { IsDealNoDamageEnabled = !IsDealNoDamageEnabled; });
+            _hotkeyManager.RegisterAction("PlayerNoDamage", () => { IsNoDamageEnabled = !IsNoDamageEnabled; });
+            _hotkeyManager.RegisterAction("RestoreSpellcasts", () =>
+            {
+                if (!AreOptionsEnabled) return;
+                _playerService.RestoreSpellcasts();
+            });
+            _hotkeyManager.RegisterAction("RestoreHumanity", () =>
+            {
+                if (!AreOptionsEnabled) return;
+                _playerService.SetSpEffect(GameIds.SpEffects.SpEffectData.RestoreHumanity);
+            });
+            
+            _hotkeyManager.RegisterAction("Rest", () =>
+            {
+                if (!AreOptionsEnabled) return;
+                _playerService.SetSpEffect(GameIds.SpEffects.SpEffectData.BonfireRest);
+            });
             _hotkeyManager.RegisterAction("TogglePlayerSpeed", ToggleSpeed);
             _hotkeyManager.RegisterAction("IncreasePlayerSpeed", () => SetSpeed(Math.Min(10, PlayerSpeed + 0.25f)));
             _hotkeyManager.RegisterAction("DecreasePlayerSpeed", () => SetSpeed(Math.Max(0, PlayerSpeed - 0.25f)));

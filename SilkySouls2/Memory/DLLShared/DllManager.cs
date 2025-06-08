@@ -117,5 +117,11 @@ namespace SilkySouls2.Memory.DLLShared
             _drawViewAccessor.Write(offset, address);
             Console.WriteLine($"{addrType} address set to: 0x{address:X16}");
         }
+
+        public void ResetState()
+        {
+            _drawIsInjected = false;
+            _speedIsInjected = false;
+        } 
     }
 }

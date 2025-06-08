@@ -59,6 +59,7 @@ namespace SilkySouls2.Memory
                 {
                     public const int InventoryLists = 0x10;
                     public const int ItemInventory2BagList = 0x10;
+                    public const int ItemInventory2BagListForSpells = 0xD0;
                 }
             }
 

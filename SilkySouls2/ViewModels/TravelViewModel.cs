@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using SilkySouls2.Models;
 using SilkySouls2.Services;
 using SilkySouls2.Utilities;
@@ -12,7 +13,8 @@ namespace SilkySouls2.ViewModels
     {
         private readonly TravelService _travelService;
         private readonly HotkeyManager _hotkeyManager;
-        
+
+        private bool _areButtonsEnabled;
         
         private ObservableCollection<string> _mainAreas;
         private ObservableCollection<WarpLocation> _areaLocations;
@@ -39,6 +41,16 @@ namespace SilkySouls2.ViewModels
             _areaLocations = new ObservableCollection<WarpLocation>();
 
             LoadLocations();
+            RegisterHotkeys();
+        }
+
+        private void RegisterHotkeys()
+        {
+            _hotkeyManager.RegisterAction("Warp", () =>
+            {
+                if (!AreButtonsEnabled) return;
+                Task.Run(() => _travelService.Warp(SelectedWarpLocation, IsRestOnWarpEnabled));
+            });
         }
 
         private void LoadLocations()
@@ -53,6 +65,12 @@ namespace SilkySouls2.ViewModels
             }
             
             SelectedMainArea = _mainAreas.FirstOrDefault();
+        }
+        
+        public bool AreButtonsEnabled
+        {
+            get => _areButtonsEnabled;
+            set => SetProperty(ref _areButtonsEnabled, value);
         }
         
         public ObservableCollection<string> MainAreas
@@ -161,7 +179,19 @@ namespace SilkySouls2.ViewModels
 
         public void Warp() => Task.Run(() => _travelService.Warp(SelectedWarpLocation, IsRestOnWarpEnabled));
 
-        public void UnlockAllBonfires() => _travelService.UnlockAllBonfires();
+        public void UnlockAllBonfires()
+        {
+            var result = MessageBox.Show(
+                "Are you sure you want to unlock all bonfires?",
+                "Confirm Action",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                _travelService.UnlockAllBonfires();
+            }
+        }
         
         
         public bool IsRestOnWarpEnabled
@@ -170,5 +200,14 @@ namespace SilkySouls2.ViewModels
             set => SetProperty(ref _isRestOnWarpEnabled, value);
         }
 
+        public void TryEnableFeatures()
+        {
+            AreButtonsEnabled = true;
+        }
+
+        public void DisableFeatures()
+        {
+            AreButtonsEnabled = false;
+        }
     }
 }

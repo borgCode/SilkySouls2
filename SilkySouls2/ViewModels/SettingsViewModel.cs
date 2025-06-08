@@ -21,18 +21,24 @@ namespace SilkySouls2.ViewModels
         private string _restorePos1HotkeyText;
         private string _restorePos2HotkeyText;
         private string _rtsrHotkeyText;
+        private string _noDeathHotkeyText;
+        private string _oneShotHotkeyText;
+        private string _noDamageHotkeyText;
+        private string _togglePlayerSpeedHotkeyText;
+        private string _increasePlayerSpeedHotkeyText;
+        private string _decreasePlayerSpeedHotkeyText;
+        private string _dealNoDamageHotkeyText;
+        private string _restoreSpellcastsHotkeyText;
+        private string _restoreHumanityHotkeyText;
+        private string _restHotkeyText;
+        
+        
+        private string _warpHotkeyText;
         private string _noClipHotkeyText;
         private string _enableFreeCamHotkeyText;
         private string _moveCamToPlayerHotkeyText;
         private string _enableDeathCamHotkeyText;
         
-        private string _noDeathHotkeyText;
-        private string _oneShotHotkeyText;
-        private string _noDamageHotkeyText;
-        
-        private string _togglePlayerSpeedHotkeyText;
-        private string _increasePlayerSpeedHotkeyText;
-        private string _decreasePlayerSpeedHotkeyText;
         private string _increaseGameSpeedHotkeyText;
         private string _decreaseGameSpeedHotkeyText;
         private string _increaseNoClipSpeedHotkeyText;
@@ -53,17 +59,6 @@ namespace SilkySouls2.ViewModels
         private string _allNoDamageHotkeyText;
         private string _allRepeatActHotkeyText;
         
-        private string _setSwordPhaseHotkeyText;
-        private string _setLancePhaseHotkeyText;
-        private string _setCurvedPhaseHotkeyText;
-        private string _setStaffPhaseHotkeyText;
-        private string _setGwynPhaseHotkeyText;
-
-        private string _phaseLockHotkeyText;
-
-        private string _castSoulmassHotkeyText;
-
-        private string _endlessSoulmassHotkeyText;
 
         private string _quitoutHotkeyText;
         private string _forceSaveHotkeyText;
@@ -177,6 +172,31 @@ namespace SilkySouls2.ViewModels
             set => SetProperty(ref _decreasePlayerSpeedHotkeyText, value);
         }
         
+        
+        public string DealNoDamageHotkeyText
+        {
+            get => _dealNoDamageHotkeyText;
+            set => SetProperty(ref _dealNoDamageHotkeyText, value);
+        }
+        
+        public string RestoreSpellcastsHotkeyText
+        {
+            get => _restoreSpellcastsHotkeyText;
+            set => SetProperty(ref _restoreSpellcastsHotkeyText, value);
+        }
+        
+        public string RestoreHumanityHotkeyText
+        {
+            get => _restoreHumanityHotkeyText;
+            set => SetProperty(ref _restoreHumanityHotkeyText, value);
+        }
+        
+        public string RestHotkeyText
+        {
+            get => _restHotkeyText;
+            set => SetProperty(ref _restHotkeyText, value);
+        }
+        
         public string IncreaseGameSpeedHotkeyText
         {
             get => _increaseGameSpeedHotkeyText;
@@ -199,6 +219,12 @@ namespace SilkySouls2.ViewModels
         {
             get => _decreaseNoClipSpeedHotkeyText;
             set => SetProperty(ref _decreaseNoClipSpeedHotkeyText, value);
+        }
+        
+        public string WarpHotkeyText
+        {
+            get => _warpHotkeyText;
+            set => SetProperty(ref _warpHotkeyText, value);
         }
         
         public string NoClipHotkeyText
@@ -236,12 +262,7 @@ namespace SilkySouls2.ViewModels
             get => _enableDeathCamHotkeyText;
             set => SetProperty(ref _enableDeathCamHotkeyText, value);
         }
-
-        public string SetSwordPhaseHotkeyText
-        {
-            get => _setSwordPhaseHotkeyText;
-            set => SetProperty(ref _setSwordPhaseHotkeyText, value);
-        }
+        
         
         public string DisableTargetAiHotkeyText
         {
@@ -320,48 +341,6 @@ namespace SilkySouls2.ViewModels
             get => _allRepeatActHotkeyText;
             set => SetProperty(ref _allRepeatActHotkeyText, value);
         }
-
-        public string SetLancePhaseHotkeyText
-        {
-            get => _setLancePhaseHotkeyText;
-            set => SetProperty(ref _setLancePhaseHotkeyText, value);
-        }
-
-        public string SetCurvedPhaseHotkeyText
-        {
-            get => _setCurvedPhaseHotkeyText;
-            set => SetProperty(ref _setCurvedPhaseHotkeyText, value);
-        }
-
-        public string SetStaffPhaseHotkeyText
-        {
-            get => _setStaffPhaseHotkeyText;
-            set => SetProperty(ref _setStaffPhaseHotkeyText, value);
-        }
-
-        public string SetGwynPhaseHotkeyText
-        {
-            get => _setGwynPhaseHotkeyText;
-            set => SetProperty(ref _setGwynPhaseHotkeyText, value);
-        }
-
-        public string PhaseLockHotkeyText
-        {
-            get => _phaseLockHotkeyText;
-            set => SetProperty(ref _phaseLockHotkeyText, value);
-        }
-
-        public string CastSoulmassHotkeyText
-        {
-            get => _castSoulmassHotkeyText;
-            set => SetProperty(ref _castSoulmassHotkeyText, value);
-        }
-
-        public string EndlessSoulmassHotkeyText
-        {
-            get => _endlessSoulmassHotkeyText;
-            set => SetProperty(ref _endlessSoulmassHotkeyText, value);
-        }
         
         
         #endregion
@@ -395,10 +374,14 @@ namespace SilkySouls2.ViewModels
                 { "TogglePlayerSpeed", text => TogglePlayerSpeedHotkeyText = text },
                 { "IncreasePlayerSpeed", text => IncreasePlayerSpeedHotkeyText = text },
                 { "DecreasePlayerSpeed", text => DecreasePlayerSpeedHotkeyText = text },
+                { "DealNoDamage", text => DealNoDamageHotkeyText = text },
+                { "RestoreSpellcasts", text => RestoreSpellcastsHotkeyText = text },
+                { "RestoreHumanity", text => RestoreHumanityHotkeyText = text },
+                { "Rest", text => RestHotkeyText = text },
                 { "IncreaseGameSpeed", text => IncreaseGameSpeedHotkeyText = text },
                 { "DecreaseGameSpeed", text => DecreaseGameSpeedHotkeyText = text },
                 { "NoClip", text => NoClipHotkeyText = text },
-                { "EnableDeathCam", text => EnableDeathCamHotkeyText = text },
+                { "Warp", text => WarpHotkeyText = text },
                 { "IncreaseNoClipSpeed", text => IncreaseNoClipSpeedHotkeyText = text },
                 { "DecreaseNoClipSpeed", text => DecreaseNoClipSpeedHotkeyText = text },
                 { "DisableTargetAi", text => DisableTargetAiHotkeyText = text },

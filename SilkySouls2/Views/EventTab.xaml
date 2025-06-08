@@ -60,7 +60,8 @@
                             IsEnabled="{Binding AreButtonsEnabled}"
                             Padding="10,3"
                             Margin="10,0,0,0"
-                            Click="SetFlag_Click" />
+                            Click="SetFlag_Click"
+                            />
                 </StackPanel>
             </StackPanel>
         </Border>
@@ -218,7 +219,7 @@
 
                 <Grid Margin="10,0,0,0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>

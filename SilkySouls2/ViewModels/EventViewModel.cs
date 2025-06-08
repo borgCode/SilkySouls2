@@ -14,6 +14,9 @@ namespace SilkySouls2.ViewModels
         private bool _canMoveToMajula;
         private string _flagId;
         private int _flagStateIndex;
+
+        private bool _areButtonsEnabled;
+        
         public EventViewModel(UtilityService utilityService)
         {
             _utilityService = utilityService;
@@ -125,6 +128,12 @@ namespace SilkySouls2.ViewModels
         }
         
         
+        public bool AreButtonsEnabled
+        {
+            get => _areButtonsEnabled;
+            set => SetProperty(ref _areButtonsEnabled, value);
+        }
+        
         private bool _isSnowstormDisabled;
         public bool IsSnowstormDisabled
         {
@@ -151,6 +160,21 @@ namespace SilkySouls2.ViewModels
                  
                 }
             }
+        }
+
+        public void TryEnableFeatures()
+        {
+            AreButtonsEnabled = true;
+        }
+
+        public void DisableFeatures()
+        {
+            AreButtonsEnabled = false;
+        }
+
+        public void TryApplyOneTimeFeatures()
+        {
+            if (IsSnowstormDisabled) _utilityService.ToggleSnowstormHook(true);
         }
     }
 }

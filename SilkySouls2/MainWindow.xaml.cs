@@ -180,6 +180,7 @@ namespace SilkySouls2
                 _hookManager.ClearHooks();
                 DisableFeatures();
                 _nopManager.ClearRegistry();
+                _dllManager.ResetState();
                 // _settingsViewModel.ResetAttached();
                 _loaded = false;
                 _hasAllocatedMemory = false;
@@ -201,7 +202,8 @@ namespace SilkySouls2
         {
             _playerViewModel.TryApplyOneTimeFeatures();
             _utilityViewModel.TryApplyOneTimeFeatures();
-            _enemyViewModel.TrryApplyOneTimeFeatures();
+            _enemyViewModel.TryApplyOneTimeFeatures();
+            _eventViewModel.TryApplyOneTimeFeatures();
         }
 
         private void TryEnableFeatures()
@@ -210,6 +212,8 @@ namespace SilkySouls2
             _utilityViewModel.TryEnableFeatures();
             _enemyViewModel.TryEnableFeatures();
             _itemViewModel.TryEnableFeatures();
+            _travelViewModel.TryEnableFeatures();
+            _eventViewModel.TryEnableFeatures();
         }
 
         private void DisableFeatures()
@@ -218,6 +222,8 @@ namespace SilkySouls2
             _playerViewModel.DisableFeatures();
             _enemyViewModel.DisableFeatures();
             _itemViewModel.DisableFeatures();
+            _travelViewModel.DisableFeatures();
+            _eventViewModel.DisableFeatures();
         }
 
         private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -243,16 +249,10 @@ namespace SilkySouls2
             SettingsManager.Default.WindowLeft = Left;
             SettingsManager.Default.WindowTop = Top;
             SettingsManager.Default.Save();
+            _hookManager.UninstallAllHooks();
+            _nopManager.RestoreAll();
         }
-
-
-        // private void LaunchGame_Click(object sender, RoutedEventArgs e)
-        // {
-        //     string dllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "Dll4.dll");
-        //     Console.WriteLine($"Injecting DLL from: {dllPath}");
-        //     bool success = _memoryIo.InjectDll(dllPath);
-        //     Console.WriteLine($"Injection {(success ? "successful" : "failed")}");
-        // }
+        
         private void LaunchGame_Click(object sender, RoutedEventArgs e) => Task.Run(GameLauncher.LaunchDarkSouls2);
     }
 }

@@ -15,7 +15,7 @@ namespace SilkySouls2.Memory
         }
 
 
-        public void InstallNOP(long address, int length)
+        public void InstallNop(long address, int length)
         {
             byte[] originalBytes = _memoryIo.ReadBytes((IntPtr)address, length);
             byte[] nopBytes = Enumerable.Repeat((byte)0x90, length).ToArray();
@@ -24,7 +24,7 @@ namespace SilkySouls2.Memory
             _nopRegistry[address] = originalBytes;
         }
     
-        public void RestoreNOP(long address)
+        public void RestoreNop(long address)
         {
             if (_nopRegistry.TryGetValue(address, out byte[] originalBytes))
             {
@@ -34,5 +34,14 @@ namespace SilkySouls2.Memory
         }
 
         public void ClearRegistry() => _nopRegistry.Clear();
+        
+        
+        public void RestoreAll()
+        {
+            foreach (var key in _nopRegistry.Keys.ToList())
+            {
+                RestoreNop(key);
+            }
+        }
     }
 }

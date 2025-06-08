@@ -158,8 +158,10 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0" Margin="0,5,10,0">
-                                <CheckBox Content="Poise" Margin="0,5"
+                                <CheckBox Content="Heavy Stagger" Margin="0,5"
                                           IsChecked="{Binding ShowHeavyPoise, FallbackValue=False}" />
+                                <CheckBox Content="Light Stagger" Margin="0,5"
+                                          IsChecked="{Binding ShowLightPoise, FallbackValue=False}" />
                                 <CheckBox Content="Bleed" Margin="0,5"
                                           IsChecked="{Binding ShowBleed, FallbackValue=False}" />
                                 <CheckBox Content="Poison" Margin="0,5"
@@ -213,24 +215,33 @@
                                 <StackPanel Grid.Row="0" Grid.Column="1"
                                             Visibility="{Binding ShowLightPoise, Converter={StaticResource BoolToVis}, FallbackValue=Visible}"
                                             Margin="5,0,0,5">
-                                    <ProgressBar Height="25"
-                                                 Value="{Binding TargetCurrentLightPoise}"
-                                                 Maximum="{Binding TargetMaxLightPoise, FallbackValue=100}">
-                                        <ProgressBar.Template>
-                                            <ControlTemplate TargetType="ProgressBar">
-                                                <Border BorderBrush="#444444" BorderThickness="1" Background="#222222"
-                                                        CornerRadius="3">
-                                                    <Grid x:Name="PART_Track">
-                                                        <Rectangle x:Name="PART_Indicator"
-                                                                   Fill="#FFA000"
-                                                                   HorizontalAlignment="Left"
-                                                                   RadiusX="2" RadiusY="2"
-                                                                   Margin="1" />
-                                                    </Grid>
-                                                </Border>
-                                            </ControlTemplate>
-                                        </ProgressBar.Template>
-                                    </ProgressBar>
+                                    <Grid>
+                                        <ProgressBar Height="25"
+                                                     Value="{Binding TargetCurrentLightPoise}"
+                                                     Maximum="{Binding TargetMaxLightPoise, FallbackValue=100}">
+                                            <ProgressBar.Template>
+                                                <ControlTemplate TargetType="ProgressBar">
+                                                    <Border BorderBrush="#444444" BorderThickness="1" Background="#222222"
+                                                            CornerRadius="3">
+                                                        <Grid x:Name="PART_Track">
+                                                            <Rectangle x:Name="PART_Indicator"
+                                                                       Fill="{Binding IsLightPoiseImmune, Converter={StaticResource ImmuneFillConverter}, ConverterParameter=#FFA000}"
+                                                                       HorizontalAlignment="Left"
+                                                                       RadiusX="2" RadiusY="2"
+                                                                       Margin="1" />
+                                                        </Grid>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </ProgressBar.Template>
+                                        </ProgressBar>
+
+                                        <TextBlock Text="IMMUNE"
+                                                   Foreground="White"
+                                                   FontWeight="Bold"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"
+                                                   Visibility="{Binding IsLightPoiseImmune, Converter={StaticResource BoolToVis}}" />
+                                    </Grid>
                                     <TextBlock HorizontalAlignment="Center" Margin="0,2,0,0">
                                         <Run Text="Light stagger " />
                                         <Run Text="{Binding TargetCurrentLightPoise, StringFormat=F1, Mode=OneWay}" />

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Threading;
-using SilkySouls2.Memory;
 using SilkySouls2.Models;
 using SilkySouls2.Services;
 using SilkySouls2.Utilities;
+using SilkySouls2.Views;
 using static SilkySouls2.Memory.Offsets;
 
 namespace SilkySouls2.ViewModels
@@ -27,9 +27,8 @@ namespace SilkySouls2.ViewModels
         private bool _isRepeatActEnabled;
 
         private int _lastAct;
-        private int _forceAct;
 
-        // private ResistancesWindow _resistancesWindowWindow;
+        private ResistancesWindow _resistancesWindowWindow;
         private bool _isResistancesWindowOpen;
 
         private float _targetCurrentHeavyPoise;
@@ -38,6 +37,7 @@ namespace SilkySouls2.ViewModels
         private float _targetCurrentLightPoise;
         private float _targetMaxLightPoise;
         private bool _showLightPoise;
+        private bool _isLightPoiseImmune;
 
         private float _targetCurrentBleed;
         private float _targetMaxBleed;
@@ -56,23 +56,15 @@ namespace SilkySouls2.ViewModels
         private bool _showAllResistances;
 
         private bool _isAllDisableAiEnabled;
-        private bool _isAllNoDamageEnabled;
-        private bool _isAllNoDeathEnabled;
-        private bool _isAllRepeatActEnabled;
-
-
-        private readonly Dictionary<int, Forlorn> _forlorns;
-        private int _currentMapId;
+        
         private bool _isForlornAvailable;
         private int _selectedForlornIndex;
         private bool _isGuaranteedSpawnEnabled;
-        private Forlorn _currentForlorn;
         private string _currentAreaName = "No Forlorn in this area";
         
         private Forlorn _selectedForlorn;
         private ObservableCollection<Forlorn> _availableForlorns;
-
-
+        
         private readonly EnemyService _enemyService;
         private readonly DamageControlService _damageControlService;
         private readonly HotkeyManager _hotkeyManager;
@@ -146,6 +138,12 @@ namespace SilkySouls2.ViewModels
             {
                 IsValidTarget = false;
                 _enemyService.ClearLockedTarget();
+                TargetCurrentHealth = 0;
+                TargetCurrentLightPoise = 0;
+                TargetCurrentHeavyPoise = 0;
+                TargetCurrentBleed = 0;
+                TargetCurrentPoison = 0;
+                TargetCurrentToxic = 0;
                 return;
             }
         
@@ -154,20 +152,7 @@ namespace SilkySouls2.ViewModels
             if (targetId != _currentTargetId)
             {
             //     IsDisableTargetAiEnabled = _enemyService.IsTargetAiDisabled();
-            //     int forceActValue = _enemyService.GetForceAct();
-            //     if (forceActValue != 0)
-            //     {
-            //         IsRepeatActEnabled = true;
-            //         ForceAct = forceActValue;
-            //     }
-            //     else
-            //     {
-            //         ForceAct = 0;
-            //         IsRepeatActEnabled = false;
-            //     }
-                
-                //
-                // IsFreezeHealthEnabled = _enemyService.IsTargetNoDamageEnabled();
+            
                 _currentTargetId = targetId;
                 TargetMaxHeavyPoise = _enemyService.GetTargetResistance(GameManagerImp.PlayerCtrlOffsets.HeavyPoiseMax);
                 TargetMaxLightPoise = _enemyService.GetTargetResistance(GameManagerImp.PlayerCtrlOffsets.LightPoiseMax);
@@ -181,12 +166,12 @@ namespace SilkySouls2.ViewModels
                 TargetMaxBleed = IsBleedImmune
                     ? 0
                     : _enemyService.GetTargetResistance(GameManagerImp.PlayerCtrlOffsets.BleedMax);
-            
-                //     : _enemyService.GetTargetResistance(Offsets.WorldChrMan.ChrResistModule.FrostMax);
-                // AreCinderOptionsEnabled = _cinderService.IsTargetCinder();
-                // if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
-                // _resistancesWindowWindow.DataContext = null;
-                // _resistancesWindowWindow.DataContext = this;
+
+                IsLightPoiseImmune = TargetMaxLightPoise == 0;
+                
+                if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
+                _resistancesWindowWindow.DataContext = null;
+                _resistancesWindowWindow.DataContext = this;
             }
             TargetCurrentHealth = _enemyService.GetTargetHp();
             TargetMaxHealth = _enemyService.GetTargetMaxHp();
@@ -260,9 +245,8 @@ namespace SilkySouls2.ViewModels
                 {
                     _targetOptionsTimer.Stop();
                     _enemyService.ToggleCurrentActHook(false);
-                    // IsRepeatActEnabled = false;
                     ShowAllResistances = false;
-                    // IsResistancesWindowOpen = false;
+                    IsResistancesWindowOpen = false;
                     IsFreezeHealthEnabled = false;
                     _enemyService.ToggleTargetHook(false);
                     ShowHeavyPoise = false;
@@ -294,41 +278,41 @@ namespace SilkySouls2.ViewModels
                 ShowToxic = false;
             }
         
-            // if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
-            // _resistancesWindowWindow.DataContext = null;
-            // _resistancesWindowWindow.DataContext = this;
+            if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
+            _resistancesWindowWindow.DataContext = null;
+            _resistancesWindowWindow.DataContext = this;
         }
         
-        // public bool IsResistancesWindowOpen
-        // {
-        //     get => _isResistancesWindowOpen;
-        //     set
-        //     {
-        //         if (!SetProperty(ref _isResistancesWindowOpen, value)) return;
-        //         if (value)
-        //             OpenResistancesWindow();
-        //         else
-        //             CloseResistancesWindow();
-        //     }
-        // }
-        //
-        // private void OpenResistancesWindow()
-        // {
-        //     if (_resistancesWindowWindow != null && _resistancesWindowWindow.IsVisible) return;
-        //     _resistancesWindowWindow = new ResistancesWindow
-        //     {
-        //         DataContext = this
-        //     };
-        //     _resistancesWindowWindow.Closed += (s, e) => _isResistancesWindowOpen = false;
-        //     _resistancesWindowWindow.Show();
-        // }
-        //
-        // private void CloseResistancesWindow()
-        // {
-        //     if (_resistancesWindowWindow == null || !_resistancesWindowWindow.IsVisible) return;
-        //     _resistancesWindowWindow.Close();
-        //     _resistancesWindowWindow = null;
-        // }
+        public bool IsResistancesWindowOpen
+        {
+            get => _isResistancesWindowOpen;
+            set
+            {
+                if (!SetProperty(ref _isResistancesWindowOpen, value)) return;
+                if (value)
+                    OpenResistancesWindow();
+                else
+                    CloseResistancesWindow();
+            }
+        }
+        
+        private void OpenResistancesWindow()
+        {
+            if (_resistancesWindowWindow != null && _resistancesWindowWindow.IsVisible) return;
+            _resistancesWindowWindow = new ResistancesWindow
+            {
+                DataContext = this
+            };
+            _resistancesWindowWindow.Closed += (s, e) => _isResistancesWindowOpen = false;
+            _resistancesWindowWindow.Show();
+        }
+        
+        private void CloseResistancesWindow()
+        {
+            if (_resistancesWindowWindow == null || !_resistancesWindowWindow.IsVisible) return;
+            _resistancesWindowWindow.Close();
+            _resistancesWindowWindow = null;
+        }
     
         public bool IsRepeatActEnabled
         {
@@ -346,18 +330,6 @@ namespace SilkySouls2.ViewModels
             set => SetProperty(ref _lastAct, value);
         }
         
-        // public int ForceAct
-        // {
-        //     get => _forceAct;
-        //     set
-        //     {
-        //         if (!SetProperty(ref _forceAct, value)) return;
-        //         _enemyService.ForceAct(_forceAct);
-        //         if (_forceAct == 0) IsRepeatActEnabled = false;
-        //     }
-        // }
-        //
-        //
         public int TargetCurrentHealth
         {
             get => _targetCurrentHealth;
@@ -397,12 +369,13 @@ namespace SilkySouls2.ViewModels
                 _damageControlService.ToggleFreezeTargetHp(_isFreezeHealthEnabled);
             }
         }
-        //
-        // public bool ShowBleedAndNotImmune => ShowBleed && !IsBleedImmune;
-        // public bool ShowPoisonAndNotImmune => ShowPoison && !IsPoisonImmune;
-        // public bool ShowToxicAndNotImmune => ShowToxic && !IsToxicImmune;
-        // public bool ShowFrostAndNotImmune => ShowFrost && !IsFrostImmune;
-        //
+        
+        public bool ShowLightPoiseAndNotImmune => ShowLightPoise && !IsLightPoiseImmune;
+        public bool ShowBleedAndNotImmune => ShowBleed && !IsBleedImmune;
+        public bool ShowPoisonAndNotImmune => ShowPoison && !IsPoisonToxicImmune;
+        public bool ShowToxicAndNotImmune => ShowToxic && !IsPoisonToxicImmune;
+  
+        
         
         public float TargetCurrentHeavyPoise
         {
@@ -424,9 +397,9 @@ namespace SilkySouls2.ViewModels
             set
             {
                 SetProperty(ref _showHeavyPoise, value);
-                // if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
-                // _resistancesWindowWindow.DataContext = null;
-                // _resistancesWindowWindow.DataContext = this;
+                if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
+                _resistancesWindowWindow.DataContext = null;
+                _resistancesWindowWindow.DataContext = this;
             }
         }
         
@@ -436,9 +409,9 @@ namespace SilkySouls2.ViewModels
             set
             {
                 SetProperty(ref _showLightPoise, value);
-                // if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
-                // _resistancesWindowWindow.DataContext = null;
-                // _resistancesWindowWindow.DataContext = this;
+                if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
+                _resistancesWindowWindow.DataContext = null;
+                _resistancesWindowWindow.DataContext = this;
             }
         }
         
@@ -452,6 +425,12 @@ namespace SilkySouls2.ViewModels
         {
             get => _targetMaxLightPoise;
             set => SetProperty(ref _targetMaxLightPoise, value);
+        }
+        
+        public bool IsLightPoiseImmune
+        {
+            get => _isLightPoiseImmune;
+            set => SetProperty(ref _isLightPoiseImmune, value);
         }
         
         public float TargetCurrentBleed
@@ -472,9 +451,9 @@ namespace SilkySouls2.ViewModels
             set
             {
                 SetProperty(ref _showBleed, value);
-                // if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
-                // _resistancesWindowWindow.DataContext = null;
-                // _resistancesWindowWindow.DataContext = this;
+                if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
+                _resistancesWindowWindow.DataContext = null;
+                _resistancesWindowWindow.DataContext = this;
             }
         }
 
@@ -502,9 +481,9 @@ namespace SilkySouls2.ViewModels
             set
             {
                 SetProperty(ref _showPoison, value);
-                // if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
-                // _resistancesWindowWindow.DataContext = null;
-                // _resistancesWindowWindow.DataContext = this;
+                if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
+                _resistancesWindowWindow.DataContext = null;
+                _resistancesWindowWindow.DataContext = this;
             }
         }
         
@@ -532,9 +511,9 @@ namespace SilkySouls2.ViewModels
             set
             {
                 SetProperty(ref _showToxic, value);
-                // if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
-                // _resistancesWindowWindow.DataContext = null;
-                // _resistancesWindowWindow.DataContext = this;
+                if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
+                _resistancesWindowWindow.DataContext = null;
+                _resistancesWindowWindow.DataContext = this;
             }
         }
      
@@ -550,26 +529,8 @@ namespace SilkySouls2.ViewModels
                 }
             }
         }
-        //
-        //
-        // public float TargetSpeed
-        // {
-        //     get => _targetSpeed;
-        //     set
-        //     {
-        //         if (SetProperty(ref _targetSpeed, value))
-        //         {
-        //             _enemyService.SetTargetSpeed(value);
-        //         }
-        //     }
-        // }
-        //
-        // public void SetSpeed(float value)
-        // {
-        //     TargetSpeed = value;
-        // }
-        
 
+        
         public bool IsAllDisableAiEnabled
         {
             get => _isAllDisableAiEnabled;
@@ -581,20 +542,8 @@ namespace SilkySouls2.ViewModels
                 }
             }
         }
-       
-        // public bool IsAllRepeatActEnabled
-        // {
-        //     get => _isAllRepeatActEnabled;
-        //     set
-        //     {
-        //         if (SetProperty(ref _isAllRepeatActEnabled, value))
-        //         {
-        //             _enemyService.ToggleAllRepeatAct(_isAllRepeatActEnabled);
-        //         }
-        //     }
-        // }
-  
 
+        
         public ObservableCollection<Forlorn> AvailableForlorns 
         {
             get => _availableForlorns;
@@ -676,7 +625,6 @@ namespace SilkySouls2.ViewModels
                 _enemyService.ToggleTargetHook(true);
                 _targetOptionsTimer.Start();
             }
-            // if (IsAllRepeatActEnabled) _enemyService.ToggleAllRepeatAct(true);
             AreOptionsEnabled = true;
         }
         
@@ -685,7 +633,6 @@ namespace SilkySouls2.ViewModels
             _targetOptionsTimer.Stop();
             IsFreezeHealthEnabled = false;
             LastAct = 0;
-            // ForceAct = 0;
             AreOptionsEnabled = false;
         }
         

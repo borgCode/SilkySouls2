@@ -136,6 +136,9 @@
         <Compile Include="Views\PlayerTab.xaml.cs">
           <DependentUpon>PlayerTab.xaml</DependentUpon>
         </Compile>
+        <Compile Include="Views\ResistancesWindow.xaml.cs">
+          <DependentUpon>ResistancesWindow.xaml</DependentUpon>
+        </Compile>
         <Compile Include="Views\SettingsTab.xaml.cs">
           <DependentUpon>SettingsTab.xaml</DependentUpon>
         </Compile>
@@ -162,6 +165,7 @@
         <Page Include="Views\HealthWindow.xaml" />
         <Page Include="Views\ItemTab.xaml" />
         <Page Include="Views\PlayerTab.xaml" />
+        <Page Include="Views\ResistancesWindow.xaml" />
         <Page Include="Views\SettingsTab.xaml" />
         <Page Include="Views\TravelTab.xaml" />
         <Page Include="Views\UtilityTab.xaml" />

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props"
-            Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')"/>
+    <Import Project="..\packages\Costura.Fody.6.0.0\build\Costura.Fody.props" Condition="Exists('..\packages\Costura.Fody.6.0.0\build\Costura.Fody.props')" />
+    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
     <PropertyGroup>
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -37,16 +37,19 @@
         <Prefer32bit>false</Prefer32bit>
     </PropertyGroup>
     <ItemGroup>
+        <Reference Include="Costura, Version=6.0.0.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
+          <HintPath>..\packages\Costura.Fody.6.0.0\lib\netstandard2.0\Costura.dll</HintPath>
+        </Reference>
         <Reference Include="H.Hooks, Version=1.0.0.0, Culture=neutral, PublicKeyToken=603f13207e65c17b, processorArchitecture=MSIL">
           <HintPath>..\packages\H.Hooks.1.7.0\lib\net462\H.Hooks.dll</HintPath>
         </Reference>
         <Reference Include="mscorlib" />
-        <Reference Include="System"/>
+        <Reference Include="System" />
         <Reference Include="System.Buffers, Version=4.0.4.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
           <HintPath>..\packages\System.Buffers.4.6.0\lib\net462\System.Buffers.dll</HintPath>
         </Reference>
-        <Reference Include="System.Core"/>
-        <Reference Include="System.Data"/>
+        <Reference Include="System.Core" />
+        <Reference Include="System.Data" />
         <Reference Include="System.Memory, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
           <HintPath>..\packages\System.Memory.4.6.0\lib\net462\System.Memory.dll</HintPath>
         </Reference>
@@ -57,13 +60,13 @@
         <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.1.0\lib\net462\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
         </Reference>
-        <Reference Include="System.Xml"/>
+        <Reference Include="System.Xml" />
         <Reference Include="System.Xaml">
             <RequiredTargetFramework>4.0</RequiredTargetFramework>
         </Reference>
-        <Reference Include="WindowsBase"/>
-        <Reference Include="PresentationCore"/>
-        <Reference Include="PresentationFramework"/>
+        <Reference Include="WindowsBase" />
+        <Reference Include="PresentationCore" />
+        <Reference Include="PresentationFramework" />
         <Reference Include="Xceed.Wpf.AvalonDock, Version=4.7.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
           <HintPath>..\packages\Extended.Wpf.Toolkit.4.7.25104.5739\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
         </Reference>
@@ -86,6 +89,7 @@
             <SubType>Designer</SubType>
         </ApplicationDefinition>
         <Compile Include="Converters\BooleanAndConverter.cs" />
+        <Compile Include="Converters\GreaterThanZeroVisibilityConverter.cs" />
         <Compile Include="Converters\ImmuneFillConverter.cs" />
         <Compile Include="Converters\InverseBooleanConverter.cs" />
         <Compile Include="Converters\InverseBooleanToVisibilityConverter.cs" />
@@ -203,6 +207,7 @@
         <None Include="packages.config" />
     </ItemGroup>
     <ItemGroup>
+      <Content Include="FodyWeavers.xml" />
       <Content Include="Resources\DLL\SilkyDll.dll">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
@@ -210,5 +215,15 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
-    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
+    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+    <Import Project="..\packages\Fody.6.8.2\build\Fody.targets" Condition="Exists('..\packages\Fody.6.8.2\build\Fody.targets')" />
+    <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+      <PropertyGroup>
+        <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105.The missing file is {0}.</ErrorText>
+      </PropertyGroup>
+      <Error Condition="!Exists('..\packages\Fody.6.8.2\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.6.8.2\build\Fody.targets'))" />
+      <Error Condition="!Exists('..\packages\Costura.Fody.6.0.0\build\Costura.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.6.0.0\build\Costura.Fody.props'))" />
+      <Error Condition="!Exists('..\packages\Costura.Fody.6.0.0\build\Costura.Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.6.0.0\build\Costura.Fody.targets'))" />
+    </Target>
+    <Import Project="..\packages\Costura.Fody.6.0.0\build\Costura.Fody.targets" Condition="Exists('..\packages\Costura.Fody.6.0.0\build\Costura.Fody.targets')" />
 </Project>

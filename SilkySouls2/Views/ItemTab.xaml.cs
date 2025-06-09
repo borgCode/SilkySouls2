@@ -50,10 +50,7 @@ namespace SilkySouls2.Views
 
         private void MassSpawn_Click(object sender, RoutedEventArgs e) => _itemViewModel.MassSpawn();
 
-        private void Create_Click(object sender, RoutedEventArgs e)
-        {
-            throw new System.NotImplementedException();
-        }
+        private void Create_Click(object sender, RoutedEventArgs e) => _itemViewModel.ShowCreateLoadoutWindow();
 
         private void LoadPreset_Click(object sender, RoutedEventArgs e)
         {

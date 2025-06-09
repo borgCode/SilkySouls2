@@ -65,7 +65,7 @@ namespace SilkySouls2.ViewModels
 
             _loadoutTemplatesByName = LoadoutTemplates.All.ToDictionary(lt => lt.Name);
             
-            // LoadCustomLoadouts();
+            LoadCustomLoadouts();
             
             _loadouts = new ObservableCollection<string>(_loadoutTemplatesByName.Keys);
             
@@ -389,12 +389,8 @@ namespace SilkySouls2.ViewModels
         {
             var createLoadoutWindow = new CreateLoadoutWindow(_categories, _itemsByCategory, _loadoutTemplatesByName,
                 _customLoadoutTemplates, _infusionNames);
-            
-            
-            if (createLoadoutWindow.ShowDialog() == true)
-            {
-                RefreshLoadouts();
-            }
+
+            if (createLoadoutWindow.ShowDialog() == true) RefreshLoadouts();
         }
 
         private void RefreshLoadouts()

@@ -143,7 +143,7 @@ namespace SilkySouls2.ViewModels
                 if (SetProperty(ref _isSnowstormDisabled, value))
                 {
                     _utilityService.ToggleSnowstormHook(_isSnowstormDisabled);
-                    _utilityService.SetEventOff(GameIds.EventFlags.FrigidSnowstorm);
+                    if (AreButtonsEnabled) _utilityService.SetEventOff(GameIds.EventFlags.FrigidSnowstorm);
                 }
             }
         }
@@ -174,7 +174,11 @@ namespace SilkySouls2.ViewModels
 
         public void TryApplyOneTimeFeatures()
         {
-            if (IsSnowstormDisabled) _utilityService.ToggleSnowstormHook(true);
+            if (IsSnowstormDisabled)
+            {
+                _utilityService.ToggleSnowstormHook(true);
+                _utilityService.SetEventOff(GameIds.EventFlags.FrigidSnowstorm);
+            }
         }
     }
 }

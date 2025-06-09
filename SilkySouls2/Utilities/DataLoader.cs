@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using SilkySouls2.Models;
@@ -201,12 +202,103 @@ namespace SilkySouls2.Utilities
 
         public static Dictionary<string, LoadoutTemplate> LoadCustomLoadouts()
         {
-            throw new System.NotImplementedException();
+            Dictionary<string, LoadoutTemplate> customLoadouts = new Dictionary<string, LoadoutTemplate>();
+            
+            string appDataPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "SilkySouls2");
+            
+            string filePath = Path.Combine(appDataPath, "CustomLoadouts.csv");
+            
+            if (!File.Exists(filePath)) return customLoadouts;
+            
+            try
+            {
+                LoadoutTemplate currentLoadout = null;
+
+                using (var reader = new StreamReader(filePath))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        string[] parts = line.Split(',');
+
+                        if (parts[0] == "LOADOUT" && parts.Length > 1)
+                        {
+                            currentLoadout = new LoadoutTemplate
+                            {
+                                Name = parts[1],
+                                Items = new List<ItemTemplate>()
+                            };
+                        }
+                        else if (parts[0] == "ITEM" && currentLoadout != null)
+                        {
+                            int quantity = 1;
+                            
+                            if (parts.Length > 4)
+                            {
+                                int.TryParse(parts[4], out quantity);
+                            }
+
+                            currentLoadout.Items.Add(new ItemTemplate
+                            {
+                                ItemName = parts[1],
+                                Infusion = parts[2],
+                                Upgrade = int.Parse(parts[3]),
+                                Quantity = quantity
+                            });
+                        }
+                        else if (parts[0] == "END" && currentLoadout != null)
+                        {
+                            customLoadouts[currentLoadout.Name] = currentLoadout;
+                            currentLoadout = null;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // ignored
+            }
+
+            return customLoadouts;
         }
 
-        public static void SaveCustomLoadouts(Dictionary<string, LoadoutTemplate> customLoadoutTemplates)
+        public static void SaveCustomLoadouts(Dictionary<string, LoadoutTemplate> customLoadouts)
         {
-            throw new System.NotImplementedException();
+            string appDataPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "SilkySouls2");
+            
+            Directory.CreateDirectory(appDataPath);
+            string filePath = Path.Combine(appDataPath, "CustomLoadouts.csv");
+            
+            
+            try
+            {
+                using (var writer = new StreamWriter(filePath))
+                {
+                    foreach (var loadout in customLoadouts.Values)
+                    {
+                        if (!string.IsNullOrEmpty(loadout.Name))
+                        {
+                            writer.WriteLine($"LOADOUT,{loadout.Name}");
+
+                            foreach (var item in loadout.Items)
+                            {
+                                writer.WriteLine(
+                                    $"ITEM,{item.ItemName},{item.Infusion},{item.Upgrade},{item.Quantity}");
+                            }
+
+                            writer.WriteLine("END");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //Log exception if needed
+            }
         }
     }
 }

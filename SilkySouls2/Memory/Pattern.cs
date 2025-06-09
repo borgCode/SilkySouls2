@@ -102,12 +102,12 @@ namespace SilkySouls2.Memory
             None
         );
 
-        public static readonly Pattern InAirTimer = new Pattern(
-            new byte[] { 0xF3, 0x0F, 0x11, 0x4F, 0x10, 0x49 },
-            "xxxxxx",
-            0,
-            None
-        );
+        // public static readonly Pattern InAirTimer = new Pattern(
+        //     new byte[] { 0xF3, 0x0F, 0x11, 0x4F, 0x10, 0x49 },
+        //     "xxxxxx",
+        //     0,
+        //     None
+        // );
 
         public static readonly Pattern TriggersAndSpace = new Pattern(
             new byte[] { 0x4C, 0x8B, 0x7C, 0x24, 0x70, 0x48, 0x8B, 0x43 },

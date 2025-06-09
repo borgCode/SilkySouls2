@@ -546,13 +546,13 @@ namespace SilkySouls2.Properties {
         ///50                      push   rax
         ///48 b8 00 00 00 00 00    movabs rax,0x0
         ///00 00 00
+        ///48 8b 00                mov    rax,QWORD PTR [rax]
+        ///48 8b 80 d0 00 00 00    mov    rax,QWORD PTR [rax+0xd0]
         ///48 3b 41 08             cmp    rax,QWORD PTR [rcx+0x8]
-        ///0f 85 6d 02 00 00       jne    289 &lt;exit&gt;
-        ///ff 05 00 00 00 00       inc    DWORD PTR [rip+0x0]        # 22 &lt;_main+0x22&gt;
-        ///83 3d 00 00 00 00 78    cmp    DWORD PTR [rip+0x0],0x78        # 29 &lt;_main+0x29&gt;
-        ///0f 8e 5a 02 00 00       jle    289 &lt;exit&gt;
-        ///48 31 c0                xor    rax,rax
-        ///89 05 00 00 00 00       mov    DWORD P [rest of string was truncated]&quot;;.
+        ///0f 85 6c 02 00 00       jne    292 &lt;exit&gt;
+        ///ff 05 00 00 00 00       inc    DWORD PTR [rip+0x0]        # 2c &lt;_main+0x2c&gt;
+        ///83 3d 00 00 00 00 78    cmp    DWORD PTR [rip+0x0],0x78        # 33 &lt;_main+0x33&gt;
+        ///0f 8e 59 02  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string NoClip_RayCast {
             get {
@@ -584,18 +584,17 @@ namespace SilkySouls2.Properties {
         ///   Looks up a localized string similar to 52                      push   rdx
         ///48 ba 00 00 00 00 00    movabs rdx,0x0
         ///00 00 00
+        ///48 8b 12                mov    rdx,QWORD PTR [rdx]
+        ///48 8b 92 d0 00 00 00    mov    rdx,QWORD PTR [rdx+0xd0]
         ///48 39 c2                cmp    rdx,rax
-        ///0f 85 25 01 00 00       jne    139 &lt;original&gt;
+        ///0f 85 66 01 00 00       jne    184 &lt;original&gt;
         ///66 0f 6f b8 90 00 00    movdqa xmm7,XMMWORD PTR [rax+0x90]
         ///00
+        ///53                      push   rbx
+        ///41 50                   push   r8
         ///48 ba 00 00 00 00 00    movabs rdx,0x0
         ///00 00 00
-        ///f3 44 0f 10 ba 48 03    movss  xmm15,DWORD PTR [rdx+0x348]
-        ///00 00
-        ///45 0f c6 ff 00          shufps xmm15,xmm15,0x0
-        ///ba cd cc 4c 3e          mov    edx,0x3e4ccccd
-        ///66 44 0f 6e f2          movd   xmm14,edx
-        ///45 0f c6 f6 00        [rest of string was truncated]&quot;;.
+        ///48 8b 12                mov    rdx,QWORD PTR  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string NoClip_UpdateCoords {
             get {

@@ -109,8 +109,6 @@ namespace SilkySouls2.Memory
             
             TryPatternWithFallback("DamageControl", Patterns.DamageControl,
                 addr => Offsets.Hooks.DamageControl = addr.ToInt64(), saved);  
-            TryPatternWithFallback("InAirTimer", Patterns.InAirTimer,
-                addr => Offsets.Hooks.InAirTimer = addr.ToInt64(), saved);
             TryPatternWithFallback("TriggersAndSpace", Patterns.TriggersAndSpace,
                 addr => Offsets.Hooks.TriggersAndSpace = addr.ToInt64(), saved);
             TryPatternWithFallback("Ctrl", Patterns.Ctrl,

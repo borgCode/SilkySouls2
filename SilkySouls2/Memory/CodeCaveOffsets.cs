@@ -59,19 +59,18 @@ namespace SilkySouls2.Memory
 
         public const int PlayerNoDamage = 0x470;
 
-        // public enum NoClip
-        // {
-        //     InAirTimer = 0x4A0,
-        //     ZDirection = 0x4C0,
-        //     TriggersAndSpaceCheck = 0x4D0,
-        //     CtrlCheck = 0x530,
-        //     UpdateCoords = 0x540,
-        //     RayInput = 0xF00,
-        //     RayOutput = 0xF50,
-        //     MapId = 0xF80,
-        //     FrameCounter = 0xF84,
-        //     RayCastCode = 0xF90
-        // }
+        public enum NoClip
+        {
+            ZDirection = 0x4A0,
+            TriggersAndSpaceCheck = 0x4B0,
+            CtrlCheck = 0x510,
+            UpdateCoords = 0x1750,
+            RayInput = 0xF00,
+            RayOutput = 0xF50,
+            MapId = 0xF80,
+            FrameCounter = 0xF84,
+            RayCastCode = 0xF90
+        }
 
         public const int Killbox = 0x690;
 
@@ -109,32 +108,17 @@ namespace SilkySouls2.Memory
         public const int Snowstorm = 0xD00;
         public const int SpEffectParams = 0xD20;
         public const int SpEffectCode = 0xD30;
-
-        public const int DisableMemoryTimer = 0x1230;
-
-        public const int IvorySkip = 0x1300;
+        
+        public const int IvorySkip = 0x1400;
 
         public enum DisableTargetAi
         {
-            Array = 0x1400,
-            Count = 0x1500,
-            Code = 0x1510,
+            Array = 0x1500,
+            Count = 0x1600,
+            Code = 0x1610,
         }
 
-        public const int IvoryKnights = 0x1600;
-
-        public enum NoClip
-        {
-            InAirTimer = 0x4A0,
-            ZDirection = 0x4C0,
-            TriggersAndSpaceCheck = 0x4D0,
-            CtrlCheck = 0x530,
-            UpdateCoords = 0x540,
-            RayInput = 0xF00,
-            RayOutput = 0xF50,
-            MapId = 0xF80,
-            FrameCounter = 0xF84,
-            RayCastCode = 0xF90
-        }
+        public const int IvoryKnights = 0x1700;
+        
     }
 }

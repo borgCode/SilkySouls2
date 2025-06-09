@@ -95,6 +95,7 @@
         <Compile Include="Memory\DLLShared\SharedMemAddr.cs" />
         <Compile Include="Memory\NopManager.cs" />
         <Compile Include="Models\Item.cs" />
+        <Compile Include="Models\Loadout.cs" />
         <Compile Include="Models\NpcInfo.cs" />
         <Compile Include="Models\WarpLocation.cs" />
         <Compile Include="Models\CharacterState.cs" />
@@ -121,6 +122,9 @@
         <Compile Include="ViewModels\SettingsViewModel.cs" />
         <Compile Include="ViewModels\TravelViewModel.cs" />
         <Compile Include="ViewModels\UtilityViewModel.cs" />
+        <Compile Include="Views\CreateLoadoutWindow.xaml.cs">
+          <DependentUpon>CreateLoadoutWindow.xaml</DependentUpon>
+        </Compile>
         <Compile Include="Views\EnemyTab.xaml.cs">
           <DependentUpon>EnemyTab.xaml</DependentUpon>
         </Compile>
@@ -160,6 +164,7 @@
             <DependentUpon>MainWindow.xaml</DependentUpon>
             <SubType>Code</SubType>
         </Compile>
+        <Page Include="Views\CreateLoadoutWindow.xaml" />
         <Page Include="Views\EnemyTab.xaml" />
         <Page Include="Views\EventTab.xaml" />
         <Page Include="Views\HealthWindow.xaml" />

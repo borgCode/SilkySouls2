@@ -23,7 +23,7 @@
                 <CheckBox Grid.Row="0" Grid.Column="0" Content="Enable Hotkeys"
                                       IsChecked="{Binding IsEnableHotkeysEnabled}"
                                       Margin="0,0,0,0" />
-                <CheckBox Grid.Row="0" Grid.Column="1" Content="Fast Quitout (Skips dialogs and online check)"
+                <CheckBox Grid.Row="0" Grid.Column="1" Content="Faster Menu (Skips dialogs and online check)"
                           IsChecked="{Binding IsFastQuitoutEnabled}"
                           Margin="0,0,10,0" />
                 <CheckBox Grid.Row="1" Grid.Column="0" Content="Always On Top"

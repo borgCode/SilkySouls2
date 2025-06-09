@@ -198,5 +198,15 @@ namespace SilkySouls2.Utilities
 
             return infusionsMap;
         }
+
+        public static Dictionary<string, LoadoutTemplate> LoadCustomLoadouts()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public static void SaveCustomLoadouts(Dictionary<string, LoadoutTemplate> customLoadoutTemplates)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

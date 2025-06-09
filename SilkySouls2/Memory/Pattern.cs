@@ -66,6 +66,14 @@ namespace SilkySouls2.Memory
             0,
             None
         );
+
+        public static readonly Pattern BabyJump = new Pattern(
+            new byte[] { 0x0F, 0x29, 0x44, 0x24, 0x20, 0xFF, 0x50, 0x20, 0xF3 },
+            "xxxxxxxxx",
+            0,
+            None
+        );
+
         
         public static readonly Pattern EzStateSetEvent = new Pattern(
             new byte[] { 0x41, 0x0F, 0xB6, 0xF8, 0x48, 0x8B, 0x88 },

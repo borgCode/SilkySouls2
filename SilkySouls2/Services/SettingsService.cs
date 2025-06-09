@@ -40,5 +40,28 @@ namespace SilkySouls2.Services
                 _hookManager.UninstallHook(code.ToInt64());
             }
         }
+
+        public void ToggleBabyJumpFix(bool isEnabled)
+        {
+            var code = CodeCaveOffsets.Base + CodeCaveOffsets.BabyJump;
+
+            if (isEnabled)
+            {
+                var origin = Hooks.BabyJump;
+                var codeBytes = AsmLoader.GetAsmBytes("BabyJump");
+                var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt64());
+                Array.Copy(bytes, 0, codeBytes, 0x1 + 2, 8);
+                bytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 5, code + 0x33);
+                Array.Copy(bytes, 0, codeBytes, 0x2E + 1, 4);
+                
+                _memoryIo.WriteBytes(code, codeBytes);
+                _hookManager.InstallHook(code.ToInt64(), origin, new byte[]
+                    { 0x0F, 0x29, 0x44, 0x24, 0x20 });
+            }
+            else
+            {
+                _hookManager.UninstallHook(code.ToInt64());
+            }
+        }
     }
 }

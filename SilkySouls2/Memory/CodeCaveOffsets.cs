@@ -119,6 +119,7 @@ namespace SilkySouls2.Memory
         }
 
         public const int IvoryKnights = 0x1700;
-        
+
+        public const int BabyJump = 0x2000;
     }
 }

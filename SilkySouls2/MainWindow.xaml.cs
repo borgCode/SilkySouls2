@@ -126,7 +126,7 @@ namespace SilkySouls2
                 IsAttachedText.Text = "Attached to game";
                 IsAttachedText.Foreground = (SolidColorBrush)Application.Current.Resources["AttachedBrush"];
 
-                // LaunchGameButton.IsEnabled = false;
+                LaunchGameButton.IsEnabled = false;
 
 
                 if (!_hasScanned)
@@ -141,12 +141,6 @@ namespace SilkySouls2
                     ApplyLaunchFeatures();
                 }
                 
-                //
-                // if (!_hasAppliedNoLogo)
-                // {
-                //     _memoryIo.WriteBytes(Offsets.Patches.NoLogo, AsmLoader.GetAsmBytes("NoLogo"));
-                //     _hasAppliedNoLogo = true;
-                // }
 
                 if (!_hasAllocatedMemory)
                 {
@@ -163,7 +157,6 @@ namespace SilkySouls2
                     if (_loaded) return;
                     _loaded = true;
                     TryEnableFeatures();
-                    // TrySetGameStartPrefs();
                     _settingsViewModel.ApplyLoadedOptions();
                     if (_appliedOneTimeFeatures) return;
                     ApplyOneTimeFeatures();
@@ -181,14 +174,13 @@ namespace SilkySouls2
                 DisableFeatures();
                 _nopManager.ClearRegistry();
                 _dllManager.ResetState();
-                // _settingsViewModel.ResetAttached();
+                _settingsViewModel.ResetAttached();
                 _loaded = false;
                 _hasAllocatedMemory = false;
-                // _hasAppliedNoLogo = false;
                 _appliedOneTimeFeatures = false;
                 IsAttachedText.Text = "Not attached";
                 IsAttachedText.Foreground = (SolidColorBrush)Application.Current.Resources["NotAttachedBrush"];
-                // LaunchGameButton.IsEnabled = true;
+                LaunchGameButton.IsEnabled = true;
             }
         }
 

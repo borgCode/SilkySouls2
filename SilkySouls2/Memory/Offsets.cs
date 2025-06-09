@@ -68,14 +68,7 @@ namespace SilkySouls2.Memory
                 public const int ForceSaveFlag1 = 0x68;
                 public const int ForceSaveFlag2 = 0x1A2;
             }
-
-            //For locked target
-            public static class CharacterCtrlOffsets
-            {
-                public const int Operator = 0xE8;
-                public const int ChrAiManip = 0x18;
-                public const int ChrAi = 0x20;
-            }
+            
 
             public static class ChrCtrlOffsets
             {
@@ -243,6 +236,7 @@ namespace SilkySouls2.Memory
             public static long ConditionGroupSetFlag;
             public static long DisableTargetAi;
             public static long SetSharedFlag;
+            public static long BabyJump;
         }
 
         public static class Funcs

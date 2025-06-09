@@ -13,6 +13,7 @@ namespace SilkySouls2.ViewModels
         #region property setters
         private bool _isEnableHotkeysEnabled;
         private bool _isFastQuitoutEnabled;
+        private bool _isBabyJumpFixedEnabled;
         private bool _isAlwaysOnTopEnabled;
         private bool _isLoaded;
         
@@ -93,6 +94,21 @@ namespace SilkySouls2.ViewModels
                 }
             }
         }
+        public bool IsBabyJumpFixEnabled
+        {
+            get => _isBabyJumpFixedEnabled;
+            set
+            {
+                if (!SetProperty(ref _isBabyJumpFixedEnabled, value)) return;
+                SettingsManager.Default.BabyJump = value;
+                SettingsManager.Default.Save();
+                if (_isLoaded)
+                {
+                    _settingsService.ToggleBabyJumpFix(_isBabyJumpFixedEnabled);
+                }
+            }
+        }
+        
         
         public bool IsAlwaysOnTopEnabled
         {
@@ -572,6 +588,7 @@ namespace SilkySouls2.ViewModels
         {
             _isLoaded = true;
             if (IsFastQuitoutEnabled) _settingsService.ToggleFastQuitout(true);
+            if (IsBabyJumpFixEnabled) _settingsService.ToggleBabyJumpFix(true);
         }
         
         
@@ -584,6 +601,8 @@ namespace SilkySouls2.ViewModels
             IsAlwaysOnTopEnabled = SettingsManager.Default.AlwaysOnTop;
             _isFastQuitoutEnabled = SettingsManager.Default.FastQuitout;
             OnPropertyChanged(nameof(IsFastQuitoutEnabled));
+            _isBabyJumpFixedEnabled = SettingsManager.Default.BabyJump;
+            OnPropertyChanged(nameof(IsBabyJumpFixEnabled));
         }
 
         public void ResetAttached() => _isLoaded = false;

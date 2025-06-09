@@ -107,6 +107,25 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 50                      push   rax
+        ///48 a1 00 00 00 00 00    movabs rax,ds:0x0
+        ///00 00 00
+        ///48 8b 80 d0 00 00 00    mov    rax,QWORD PTR [rax+0xd0]
+        ///48 8b 80 f8 00 00 00    mov    rax,QWORD PTR [rax+0xf8]
+        ///48 8b 80 f0 00 00 00    mov    rax,QWORD PTR [rax+0xf0]
+        ///f3 0f 10 80 98 37 00    movss  xmm0,DWORD PTR [rax+0x3798]
+        ///00
+        ///58                      pop    rax
+        ///0f 29 44 24 20          movaps XMMWORD PTR [rsp+0x20],xmm0
+        ///e9 00 00 00 00          jmp    33 &lt;_main+0x33&gt;.
+        /// </summary>
+        internal static string BabyJump {
+            get {
+                return ResourceManager.GetString("BabyJump", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 83 ec 60             sub    rsp,0x60
         ///48 8d 0d 00 00 00 00    lea    rcx,[rip+0x0]        # b &lt;_main+0xb&gt;
         ///0f b7 15 00 00 00 00    movzx  edx,WORD PTR [rip+0x0]        # 12 &lt;_main+0x12&gt;

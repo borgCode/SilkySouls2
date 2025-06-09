@@ -431,5 +431,26 @@ namespace SilkySouls2.ViewModels
                 _loadoutTemplatesByName[loadout.Name] = loadout;
             }
         }
+        
+        public void SpawnLoadout()
+        {
+            if (string.IsNullOrEmpty(SelectedLoadoutName) || !_loadoutTemplatesByName.ContainsKey(SelectedLoadoutName))
+                return;
+
+            var selectedTemplate = _loadoutTemplatesByName[SelectedLoadoutName];
+
+            foreach (var template in selectedTemplate.Items)
+            {
+                foreach (var item in _allItems[template.ItemName])
+                {
+                    int infusionIndex = Array.IndexOf(_infusionNames, template.Infusion);
+                    int quantity = template.Quantity > 0 ? template.Quantity : item.StackSize;
+            
+                    _itemService.SpawnItem(item, template.Upgrade, quantity, infusionIndex);
+                    Thread.Sleep(10);
+                }
+            }
+        }
+        
     }
 }

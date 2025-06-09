@@ -9,7 +9,7 @@ namespace SilkySouls2.Utilities
         public static SettingsManager Default => _default ?? (_default = Load());
 
         public string HotkeyActionIds { get; set; } = "";
-        public string HotkeyValues { get; set; } = "";
+        public bool BabyJump { get; set; } 
         public bool EnableHotkeys { get; set; }
         public bool FastQuitout { get; set; }
         public bool AlwaysOnTop { get; set; }
@@ -37,6 +37,7 @@ namespace SilkySouls2.Utilities
                 var lines = new[]
                 {
                     $"HotkeyActionIds={HotkeyActionIds}",
+                    $"BabyJump={BabyJump}",
                     $"EnableHotkeys={EnableHotkeys}",
                     $"FastQuitout={FastQuitout}",
                     $"AlwaysOnTop={AlwaysOnTop}",
@@ -81,6 +82,10 @@ namespace SilkySouls2.Utilities
                                 case "EnableHotkeys":
                                     bool.TryParse(value, out bool eh);
                                     settings.EnableHotkeys = eh;
+                                    break;
+                                case "BabyJump":
+                                    bool.TryParse(value, out bool bj);
+                                    settings.BabyJump = bj;
                                     break;
                                 case "FastQuitout":
                                     bool.TryParse(value, out bool fq);

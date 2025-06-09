@@ -2455,4 +2455,17 @@ e9 00 00 00 00          jmp    45 &lt;entity_disabled+0x7&gt;</value>
 00
 e9 00 00 00 00          jmp    24 &lt;normal+0xd&gt;</value>
   </data>
+  <data name="BabyJump" xml:space="preserve">
+    <value>50                      push   rax
+48 a1 00 00 00 00 00    movabs rax,ds:0x0
+00 00 00
+48 8b 80 d0 00 00 00    mov    rax,QWORD PTR [rax+0xd0]
+48 8b 80 f8 00 00 00    mov    rax,QWORD PTR [rax+0xf8]
+48 8b 80 f0 00 00 00    mov    rax,QWORD PTR [rax+0xf0]
+f3 0f 10 80 98 37 00    movss  xmm0,DWORD PTR [rax+0x3798]
+00
+58                      pop    rax
+0f 29 44 24 20          movaps XMMWORD PTR [rsp+0x20],xmm0
+e9 00 00 00 00          jmp    33 &lt;_main+0x33&gt;</value>
+  </data>
 </root>

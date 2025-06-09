@@ -52,9 +52,6 @@ namespace SilkySouls2.Views
 
         private void Create_Click(object sender, RoutedEventArgs e) => _itemViewModel.ShowCreateLoadoutWindow();
 
-        private void LoadPreset_Click(object sender, RoutedEventArgs e)
-        {
-            throw new System.NotImplementedException();
-        }
+        private void LoadPreset_Click(object sender, RoutedEventArgs e) => _itemViewModel.SpawnLoadout();
     }
 }

@@ -114,6 +114,13 @@ namespace SilkySouls2.Memory
 
         public const int IvorySkip = 0x1300;
 
+        public enum DisableTargetAi
+        {
+            Array = 0x1400,
+            Count = 0x1500,
+            Code = 0x1510,
+        }
+
 
     }
 }

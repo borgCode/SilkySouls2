@@ -159,8 +159,8 @@ namespace SilkySouls2.Services
                 var inAirPlayerIdentifier = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
                 {
                     GameManagerImp.Offsets.PlayerCtrl,
-                    GameManagerImp.PlayerCtrlOffsets.ChrCullingGroupCtrlPtr,
-                    GameManagerImp.PlayerCtrlOffsets.ChrCullingGroupCtrl.InAirTimerEntity
+                    GameManagerImp.ChrCtrlOffsets.ChrCullingGroupCtrlPtr,
+                    GameManagerImp.ChrCtrlOffsets.ChrCullingGroupCtrl.InAirTimerEntity
                 }, false);
 
                 var bytes = BitConverter.GetBytes(inAirPlayerIdentifier.ToInt64());
@@ -208,9 +208,9 @@ namespace SilkySouls2.Services
                 var movement = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
                 {
                     GameManagerImp.Offsets.PlayerCtrl,
-                    GameManagerImp.PlayerCtrlOffsets.PlayerOperatorPtr,
-                    GameManagerImp.PlayerCtrlOffsets.PlayerOperator.ChrPadMan,
-                    GameManagerImp.PlayerCtrlOffsets.PlayerOperator.MovementEntity
+                    GameManagerImp.ChrCtrlOffsets.OperatorPtr,
+                    GameManagerImp.ChrCtrlOffsets.Operator.ChrPadMan,
+                    GameManagerImp.ChrCtrlOffsets.Operator.MovementEntity
                 }, true);
 
                 var cam = _memoryIo.ReadInt64((IntPtr)_memoryIo.ReadInt64(GameManagerImp.Base) +
@@ -334,8 +334,8 @@ namespace SilkySouls2.Services
         private IntPtr GetGravityPtr() => _memoryIo.FollowPointers(GameManagerImp.Base, new[]
         {
             GameManagerImp.Offsets.PlayerCtrl,
-            GameManagerImp.PlayerCtrlOffsets.ChrPhysicsCtrlPtr,
-            GameManagerImp.PlayerCtrlOffsets.ChrPhysicsCtrl.Gravity
+            GameManagerImp.ChrCtrlOffsets.ChrPhysicsCtrlPtr,
+            GameManagerImp.ChrCtrlOffsets.ChrPhysicsCtrl.Gravity
         }, false);
         
         public void ToggleKillboxHook(bool isEnabled)

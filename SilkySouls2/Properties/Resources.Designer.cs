@@ -240,6 +240,26 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 48 89 fa                mov    rdx,rdi
+        ///48 89 d9                mov    rcx,rbx
+        ///83 3d 00 00 00 00 00    cmp    DWORD PTR [rip+0x0],0x0        # d &lt;_main+0xd&gt;
+        ///0f 84 00 00 00 00       je     13 &lt;_main+0x13&gt;
+        ///50                      push   rax
+        ///57                      push   rdi
+        ///8b 3d 00 00 00 00       mov    edi,DWORD PTR [rip+0x0]        # 1b &lt;_main+0x1b&gt;
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
+        ///000000000025 &lt;loop_start&gt;:
+        ///83 ff 00                cmp    edi,0x0
+        ///7e 0d                   jle    37  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string DisableTargetAi {
+            get {
+                return ResourceManager.GetString("DisableTargetAi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to b8 0a 00 00 00          mov    eax,0xa
         ///e9 00 00 00 00          jmp    a &lt;_main+0xa&gt;.
         /// </summary>

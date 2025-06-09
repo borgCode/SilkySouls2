@@ -23,7 +23,7 @@ namespace SilkySouls2.ViewModels
         private long _currentTargetId;
         private float _targetSpeed;
         private bool _isFreezeHealthEnabled;
-        private bool _isFreezeTargetEnabled;
+        private bool _isDisableTargetAiEnabled;
         private bool _isRepeatActEnabled;
 
         private int _lastAct;
@@ -138,6 +138,8 @@ namespace SilkySouls2.ViewModels
             {
                 IsValidTarget = false;
                 _enemyService.ClearLockedTarget();
+                _isDisableTargetAiEnabled = false;
+                OnPropertyChanged(nameof(IsDisableTargetAiEnabled));
                 TargetCurrentHealth = 0;
                 TargetCurrentLightPoise = 0;
                 TargetCurrentHeavyPoise = 0;
@@ -151,23 +153,23 @@ namespace SilkySouls2.ViewModels
             long targetId = _enemyService.GetTargetId();
             if (targetId != _currentTargetId)
             {
-            //     IsDisableTargetAiEnabled = _enemyService.IsTargetAiDisabled();
+                IsDisableTargetAiEnabled = _enemyService.IsAiDisabled(targetId);
             
                 _currentTargetId = targetId;
-                TargetMaxHeavyPoise = _enemyService.GetTargetResistance(GameManagerImp.PlayerCtrlOffsets.HeavyPoiseMax);
-                TargetMaxLightPoise = _enemyService.GetTargetResistance(GameManagerImp.PlayerCtrlOffsets.LightPoiseMax);
+                TargetMaxHeavyPoise = _enemyService.GetTargetResistance(GameManagerImp.ChrCtrlOffsets.HeavyPoiseMax);
+                TargetMaxLightPoise = _enemyService.GetTargetResistance(GameManagerImp.ChrCtrlOffsets.LightPoiseMax);
                 (IsPoisonToxicImmune, IsBleedImmune) = _enemyService.GetImmunities();
                 TargetMaxPoison = IsPoisonToxicImmune
                     ? 0
-                    : _enemyService.GetTargetResistance(GameManagerImp.PlayerCtrlOffsets.PoisonMax);
+                    : _enemyService.GetTargetResistance(GameManagerImp.ChrCtrlOffsets.PoisonMax);
                 TargetMaxToxic = IsPoisonToxicImmune
                     ? 0
-                    : _enemyService.GetTargetResistance(GameManagerImp.PlayerCtrlOffsets.ToxicMax);
+                    : _enemyService.GetTargetResistance(GameManagerImp.ChrCtrlOffsets.ToxicMax);
                 TargetMaxBleed = IsBleedImmune
                     ? 0
-                    : _enemyService.GetTargetResistance(GameManagerImp.PlayerCtrlOffsets.BleedMax);
+                    : _enemyService.GetTargetResistance(GameManagerImp.ChrCtrlOffsets.BleedMax);
 
-                IsLightPoiseImmune = TargetMaxLightPoise == 0;
+                IsLightPoiseImmune = _enemyService.IsLightPoiseImmune();
                 
                 if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
                 _resistancesWindowWindow.DataContext = null;
@@ -178,17 +180,17 @@ namespace SilkySouls2.ViewModels
             LastAct = _enemyService.GetLastAct();
             
             TargetSpeed = _enemyService.GetTargetSpeed();
-            TargetCurrentHeavyPoise = _enemyService.GetTargetResistance(GameManagerImp.PlayerCtrlOffsets.HeavyPoiseCurrent);
-            TargetCurrentLightPoise = _enemyService.GetTargetResistance(GameManagerImp.PlayerCtrlOffsets.LightPoiseCurrent);
+            TargetCurrentHeavyPoise = _enemyService.GetTargetResistance(GameManagerImp.ChrCtrlOffsets.HeavyPoiseCurrent);
+            TargetCurrentLightPoise = _enemyService.GetTargetResistance(GameManagerImp.ChrCtrlOffsets.LightPoiseCurrent);
             TargetCurrentPoison = IsPoisonToxicImmune
                 ? 0
-                : _enemyService.GetTargetResistance(GameManagerImp.PlayerCtrlOffsets.PoisonCurrent);
+                : _enemyService.GetTargetResistance(GameManagerImp.ChrCtrlOffsets.PoisonCurrent);
             TargetCurrentToxic = IsPoisonToxicImmune
                 ? 0
-                : _enemyService.GetTargetResistance(GameManagerImp.PlayerCtrlOffsets.ToxicCurrent);
+                : _enemyService.GetTargetResistance(GameManagerImp.ChrCtrlOffsets.ToxicCurrent);
             TargetCurrentBleed = IsBleedImmune
                 ? 0
-                : _enemyService.GetTargetResistance(GameManagerImp.PlayerCtrlOffsets.BleedCurrent);
+                : _enemyService.GetTargetResistance(GameManagerImp.ChrCtrlOffsets.BleedCurrent);
             
         }
 
@@ -254,6 +256,18 @@ namespace SilkySouls2.ViewModels
                     ShowBleed = false;
                     ShowPoison = false;
                     ShowToxic = false;
+                }
+            }
+        }
+        
+        public bool IsDisableTargetAiEnabled
+        {
+            get => _isDisableTargetAiEnabled;
+            set
+            {
+                if (SetProperty(ref _isDisableTargetAiEnabled, value))
+                {
+                    _enemyService.ToggleTargetAi(_isDisableTargetAiEnabled);
                 }
             }
         }
@@ -375,7 +389,6 @@ namespace SilkySouls2.ViewModels
         public bool ShowPoisonAndNotImmune => ShowPoison && !IsPoisonToxicImmune;
         public bool ShowToxicAndNotImmune => ShowToxic && !IsPoisonToxicImmune;
   
-        
         
         public float TargetCurrentHeavyPoise
         {
@@ -625,6 +638,8 @@ namespace SilkySouls2.ViewModels
                 _enemyService.ToggleTargetHook(true);
                 _targetOptionsTimer.Start();
             }
+            _enemyService.ClearDisableEntities();
+            _enemyService.ToggleTargetAi(false);
             AreOptionsEnabled = true;
         }
         

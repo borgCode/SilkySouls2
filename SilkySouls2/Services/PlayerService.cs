@@ -22,20 +22,20 @@ namespace SilkySouls2.Services
         }
 
         public int GetHp() =>
-            _memoryIo.ReadInt32(GetPlayerCtrlField(GameManagerImp.PlayerCtrlOffsets.Hp));
+            _memoryIo.ReadInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Hp));
 
         public int GetMaxHp() =>
-            _memoryIo.ReadInt32(GetPlayerCtrlField(GameManagerImp.PlayerCtrlOffsets.MaxHp));
+            _memoryIo.ReadInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.MaxHp));
 
         public void SetHp(int hp) =>
-            _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.PlayerCtrlOffsets.Hp), hp);
+            _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Hp), hp);
 
 
         public int GetSp() =>
-            _memoryIo.ReadInt32(GetPlayerCtrlField(GameManagerImp.PlayerCtrlOffsets.Stamina));
+            _memoryIo.ReadInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Stamina));
 
         public void SetSp(int sp) =>
-            _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.PlayerCtrlOffsets.Stamina), sp);
+            _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Stamina), sp);
 
         private IntPtr GetPlayerCtrlField(int fieldOffset) =>
             _memoryIo.FollowPointers(GameManagerImp.Base, new[] { GameManagerImp.Offsets.PlayerCtrl, fieldOffset },
@@ -43,7 +43,7 @@ namespace SilkySouls2.Services
 
 
         public void ToggleNoDeath(bool isNoDeathEnabled) =>
-            _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.PlayerCtrlOffsets.MinHp),
+            _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.MinHp),
                 isNoDeathEnabled ? 1 : -99999);
 
         public void ToggleNoDamage(bool isNoDamageEnabled)
@@ -79,7 +79,7 @@ namespace SilkySouls2.Services
             return _memoryIo.FollowPointers(GameManagerImp.Base, new[]
             {
                 GameManagerImp.Offsets.PlayerCtrl,
-                GameManagerImp.PlayerCtrlOffsets.StatsPtr,
+                GameManagerImp.ChrCtrlOffsets.StatsPtr,
                 statOffset
             }, false);
         }
@@ -108,11 +108,11 @@ namespace SilkySouls2.Services
             var statsEntity = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
             {
                 GameManagerImp.Offsets.PlayerCtrl,
-                GameManagerImp.PlayerCtrlOffsets.StatsPtr
+                GameManagerImp.ChrCtrlOffsets.StatsPtr
             }, true);
 
-            var currentStatBytes = _memoryIo.ReadBytes(GetStatPtr(GameManagerImp.PlayerCtrlOffsets.Stats.Vigor), 22);
-            var currentLevel = _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.PlayerCtrlOffsets.Stats.SoulLevel));
+            var currentStatBytes = _memoryIo.ReadBytes(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.Vigor), 22);
+            var currentLevel = _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.SoulLevel));
 
             if (numOfLevels <= 0)
             {
@@ -126,7 +126,7 @@ namespace SilkySouls2.Services
             _memoryIo.WriteInt32(numOfLevelsIntLoc, numOfLevels);
             _memoryIo.WriteInt32(currentLevelLoc, currentLevel);
             _memoryIo.WriteInt32(newLevelLoc, currentLevel + numOfLevels);
-            var currentSouls = _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.PlayerCtrlOffsets.Stats.CurrentSouls));
+            var currentSouls = _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.CurrentSouls));
             _memoryIo.WriteInt32(currentSoulsLoc, currentSouls);
 
             var bytes = AsmLoader.GetAsmBytes("LevelUp");
@@ -158,12 +158,12 @@ namespace SilkySouls2.Services
             _memoryIo.RunThreadAndWaitForCompletion(code);
             if (numOfLevels <= 0) _memoryIo.WriteBytes(Patches.NegativeLevel + 1, new byte[] { 0x84 });
 
-            var newSouls = _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.PlayerCtrlOffsets.Stats.CurrentSouls));
+            var newSouls = _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.CurrentSouls));
             GiveSouls(currentSouls - newSouls);
         }
 
 
-        public int GetSoulLevel() => _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.PlayerCtrlOffsets.Stats.SoulLevel));
+        public int GetSoulLevel() => _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.SoulLevel));
 
         public float GetPlayerSpeed() => _memoryIo.ReadFloat(GetSpeedPtr());
 
@@ -174,7 +174,7 @@ namespace SilkySouls2.Services
             return _memoryIo.FollowPointers(GameManagerImp.Base, new[]
             {
                 GameManagerImp.Offsets.PlayerCtrl,
-                GameManagerImp.PlayerCtrlOffsets.Speed
+                GameManagerImp.ChrCtrlOffsets.Speed
             }, false);
         }
 
@@ -228,8 +228,8 @@ namespace SilkySouls2.Services
             var xyzPtr = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
             {
                 GameManagerImp.Offsets.PlayerCtrl,
-                GameManagerImp.PlayerCtrlOffsets.ChrPhysicsCtrlPtr,
-                GameManagerImp.PlayerCtrlOffsets.ChrPhysicsCtrl.Xyz
+                GameManagerImp.ChrCtrlOffsets.ChrPhysicsCtrlPtr,
+                GameManagerImp.ChrCtrlOffsets.ChrPhysicsCtrl.Xyz
             }, false);
 
             var coordBytes = _memoryIo.ReadBytes(xyzPtr, 12);
@@ -258,7 +258,7 @@ namespace SilkySouls2.Services
             var statsEntity = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
             {
                 GameManagerImp.Offsets.PlayerCtrl,
-                GameManagerImp.PlayerCtrlOffsets.StatsPtr
+                GameManagerImp.ChrCtrlOffsets.StatsPtr
             }, true);
 
             AsmHelper.WriteAbsoluteAddresses(codeBytes, new[]
@@ -271,7 +271,7 @@ namespace SilkySouls2.Services
         }
 
         public int GetSoulMemory() =>
-            _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.PlayerCtrlOffsets.Stats.SoulMemory));
+            _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.SoulMemory));
 
         public void RestoreSpellcasts()
         {
@@ -337,7 +337,7 @@ namespace SilkySouls2.Services
             var chrSpEffectCtrl = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
             {
                 GameManagerImp.Offsets.PlayerCtrl,
-                GameManagerImp.PlayerCtrlOffsets.ChrSpEffectCtrl
+                GameManagerImp.ChrCtrlOffsets.ChrSpEffectCtrl
             }, true);
 
             var setEffectFunc = Funcs.SetSpEffect;

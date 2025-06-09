@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using SilkySouls2.Memory;
 using SilkySouls2.Utilities;
 using static SilkySouls2.Memory.Offsets;
@@ -10,11 +13,13 @@ namespace SilkySouls2.Services
     {
         private readonly MemoryIo _memoryIo;
         private readonly HookManager _hookManager;
+        private readonly List<long> _disabledEntities = new List<long>();
+        private bool _disableTargetHookInstalled;
 
         public EnemyService(MemoryIo memoryIo, HookManager hookManager, DamageControlService damageControlService)
         {
             _memoryIo = memoryIo;
-            _hookManager = hookManager;
+            _hookManager = hookManager; 
         }
 
         public void ToggleForlornSpawn(bool isGuaranteedSpawnEnabled, int funcId = 0, int currentSelected = 0)
@@ -93,15 +98,15 @@ namespace SilkySouls2.Services
 
         public int GetTargetHp() =>
             _memoryIo.ReadInt32((IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
-                                PlayerCtrlOffsets.Hp);
+                                ChrCtrlOffsets.Hp);
 
         public int GetTargetMaxHp() =>
             _memoryIo.ReadInt32((IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
-                                PlayerCtrlOffsets.MaxHp);
+                                ChrCtrlOffsets.MaxHp);
 
         public void SetTargetHp(int health) =>
             _memoryIo.WriteInt32((IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
-                                 PlayerCtrlOffsets.Hp, health);
+                                 ChrCtrlOffsets.Hp, health);
 
         public long GetTargetId() => _memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr);
 
@@ -110,9 +115,9 @@ namespace SilkySouls2.Services
             var targetPtr = (IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr);
 
             float[] position = new float[3];
-            position[0] = _memoryIo.ReadFloat(targetPtr + PlayerCtrlOffsets.Coords);
-            position[1] = _memoryIo.ReadFloat(targetPtr + PlayerCtrlOffsets.Coords + 0x4);
-            position[2] = _memoryIo.ReadFloat(targetPtr + PlayerCtrlOffsets.Coords + 0x8);
+            position[0] = _memoryIo.ReadFloat(targetPtr + ChrCtrlOffsets.Coords);
+            position[1] = _memoryIo.ReadFloat(targetPtr + ChrCtrlOffsets.Coords + 0x4);
+            position[2] = _memoryIo.ReadFloat(targetPtr + ChrCtrlOffsets.Coords + 0x8);
 
             return position;
         }
@@ -127,11 +132,11 @@ namespace SilkySouls2.Services
             var chrParamPtr =
                 (IntPtr)_memoryIo.ReadInt64(
                     (IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
-                    PlayerCtrlOffsets.ChrParamPtr);
+                    ChrCtrlOffsets.ChrParamPtr);
 
             return (
-                _memoryIo.ReadInt32(chrParamPtr + PlayerCtrlOffsets.ChrParam.PoisonToxicResist) == 100,
-                _memoryIo.ReadInt32(chrParamPtr + PlayerCtrlOffsets.ChrParam.BleedResist) == 100
+                _memoryIo.ReadInt32(chrParamPtr + ChrCtrlOffsets.ChrParam.PoisonToxicResist) == 100,
+                _memoryIo.ReadInt32(chrParamPtr + ChrCtrlOffsets.ChrParam.BleedResist) == 100
             );
         }
 
@@ -193,15 +198,95 @@ namespace SilkySouls2.Services
 
         public void SetTargetSpeed(float value) => 
             _memoryIo.WriteFloat((IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
-                                PlayerCtrlOffsets.Speed, value);
+                                ChrCtrlOffsets.Speed, value);
         public float GetTargetSpeed() => 
             _memoryIo.ReadFloat((IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
-                                 PlayerCtrlOffsets.Speed);
+                                 ChrCtrlOffsets.Speed);
 
         public void ClearLockedTarget()
         {
             _memoryIo.WriteBytes(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr, new byte[] 
                 {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00});
+        }
+
+        public void ToggleTargetAi(bool isDisableTargetAiEnabled)
+        {
+            var chrAi = GetChrAi(GetTargetId());
+            var arrayLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DisableTargetAi.Array;
+            var countLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DisableTargetAi.Count;
+            var codeLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DisableTargetAi.Code;
+            
+            if (isDisableTargetAiEnabled)
+            {
+                if (_disabledEntities.Count >= 20) ClearDisableEntities();
+                
+                _disabledEntities.Add(chrAi);
+                _memoryIo.WriteInt64(arrayLoc + (_disabledEntities.Count - 1) * 8, chrAi);
+                _memoryIo.WriteInt32(countLoc, _disabledEntities.Count);
+                if (!_disableTargetHookInstalled)
+                {
+                    var origin = Hooks.DisableTargetAi;
+                    
+                    var bytes = AsmLoader.GetAsmBytes("DisableTargetAi");
+                    
+                    AsmHelper.WriteRelativeOffsets(bytes, new []
+                    {
+                        (codeLoc.ToInt64() + 0x6, countLoc.ToInt64(), 7, 0x6 + 2),
+                        (codeLoc.ToInt64() + 0xD, origin + 6, 6, 0xD + 2),
+                        (codeLoc.ToInt64() + 0x15, countLoc.ToInt64(), 6, 0x15 + 2),
+                        (codeLoc.ToInt64() + 0x39, origin + 6, 5, 0x39 + 1),
+                        (codeLoc.ToInt64() + 0x40, origin + 9, 5, 0x40 + 1),
+                    });
+
+                    var arrayLocBytes = BitConverter.GetBytes(arrayLoc.ToInt64());
+                    Array.Copy(arrayLocBytes, 0, bytes, 0x1B + 2, 8);
+                    
+                    _memoryIo.WriteBytes(codeLoc, bytes);
+                    _hookManager.InstallHook(codeLoc.ToInt64(), origin, new byte[]
+                        { 0x48, 0x89, 0xFA, 0x48, 0x89, 0xD9 });
+                    _disableTargetHookInstalled = true;
+                }
+              
+            }
+            else
+            {
+                _disabledEntities.Remove(chrAi);
+                for (int i = 0; i < _disabledEntities.Count; i++)
+                {
+                    _memoryIo.WriteInt64(arrayLoc + i * 8, _disabledEntities[i]);
+                }
+                _memoryIo.WriteInt32(countLoc, _disabledEntities.Count);
+                if (_disabledEntities.Count == 0)
+                {
+                    _hookManager.UninstallHook(codeLoc.ToInt64());
+                    ClearDisableEntities();
+                    _disableTargetHookInstalled = false;
+                }
+            }
+        }
+        public bool IsAiDisabled(long targetId) => _disabledEntities.Contains(GetChrAi(targetId));
+
+        private long GetChrAi(long targetId)
+        {
+            var operatorPtr = _memoryIo.ReadInt64((IntPtr)(targetId + ChrCtrlOffsets.OperatorPtr));
+            var chrAiManPtr = _memoryIo.ReadInt64((IntPtr)(operatorPtr + ChrCtrlOffsets.Operator.ChrAiManPtr));
+            var chrAi = _memoryIo.ReadInt64((IntPtr)(chrAiManPtr + ChrCtrlOffsets.ChrAiMan.ChrAi));
+            return chrAi;
+        }
+            
+
+        public void ClearDisableEntities()
+        {
+            _memoryIo.WriteBytes(CodeCaveOffsets.Base + (int) CodeCaveOffsets.DisableTargetAi.Array, new byte[0x100]);
+            _memoryIo.WriteInt32(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DisableTargetAi.Count, 0);
+            _disabledEntities.Clear();
+        }
+
+        public bool IsLightPoiseImmune()
+        {
+            var poiseStruct = _memoryIo.ReadInt64((IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
+                                 ChrCtrlOffsets.PoiseImmunityPtr);
+            return _memoryIo.ReadUInt8((IntPtr)poiseStruct + ChrCtrlOffsets.PoiseStuff.LightStaggerImmuneFlag) == 1;
         }
     }
 }

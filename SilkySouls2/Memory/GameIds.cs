@@ -14,7 +14,6 @@
             public const long VisibleAava = 537000012;
             public const long FrigidSnowstorm = 537010014;
             public static readonly long[] Dlc3Knights = { 537000020, 537000021 };
-            public static readonly long[] IvoryBlackKnights = { 537020035, 537020036, 537020037 };
             public static readonly long[] DarklurkerDungeonsLit = { 403000001, 403000002, 403000003 };
             public static readonly long[] Scepter = { 536000024, 536000010 };
         }

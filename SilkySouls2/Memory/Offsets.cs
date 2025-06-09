@@ -77,15 +77,15 @@ namespace SilkySouls2.Memory
                 public const int ChrAi = 0x20;
             }
 
-            public static class PlayerCtrlOffsets
+            public static class ChrCtrlOffsets
             {
 
                 public const int ChrParamPtr = 0x38;
                 public const int Coords = 0x90;
-                public const int CollisionPtr = 0xB8;
+                public const int PoiseImmunityPtr = 0xB8;
                 public const int ChrFlagsPtr = 0xD8;
                 public const int ChrActionCtrlPtr = 0xE0;
-                public const int PlayerOperatorPtr = 0xE8;
+                public const int OperatorPtr = 0xE8;
                 public const int ChrMotionCtrlPtr = 0xF8;
                 public const int ChrPhysicsCtrlPtr = 0x100;
                 public const int Hp = 0x168;
@@ -116,26 +116,24 @@ namespace SilkySouls2.Memory
                     public const int PoisonToxicResist = 0xB0;
                     public const int BleedResist = 0xB4;
                 }
-                
 
-                public static class Collision
+                public static class PoiseStuff
                 {
-                    public const int CollisionFlag = 0x62C;
+                    public const int LightStaggerImmuneFlag = 0x5E8;
                 }
-
-                public static class ChrFlags
-                {
-                    public const int Invincible = 0;
-                    public const int HideModel = 6;
-                }
-                
-
-                public static class PlayerOperator
+   
+                public static class Operator
                 {
                     public const int ChrPadMan = 0x18;
+                    public const int ChrAiManPtr = 0x18;
                     public const int MovementEntity = 0x98;
                 }
 
+                public static class ChrAiMan
+                {
+                    public const int ChrAi = 0x20;
+                }
+                
                 public static class ChrMotionCtrl
                 {
                     public const int MorphemeMotionCtrl = 0x28;
@@ -243,6 +241,7 @@ namespace SilkySouls2.Memory
             public static long EzStateSetEvent;
             public static long MapIdWrite;
             public static long ConditionGroupSetFlag;
+            public static long DisableTargetAi;
         }
 
         public static class Funcs

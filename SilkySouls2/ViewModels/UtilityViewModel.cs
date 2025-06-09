@@ -297,46 +297,12 @@ namespace SilkySouls2.ViewModels
         
         public void TryEnableFeatures()
         {
-            if (IsIvorySkipEnabled) _utilityService.SetMultipleEventOn(GameIds.EventFlags.IvoryBlackKnights);
             if (IsCreditSkipEnabled) _utilityService.ToggleCreditSkip(true);
-            // if (IsHitboxEnabled) _utilityService.ToggleHitboxView(true);
-            // if (IsSoundViewEnabled) _utilityService.ToggleSoundView(true);
-            // if (IsDrawEventEnabled) _utilityService.ToggleEventDraw(true);
-            // if (IsTargetingViewEnabled)
-            // {
-            //     _utilityService.PatchDebugDraw(true);
-            //     _utilityService.ToggleTargetingView(true);
-            // }
-            // if (IsHideMapEnabled) _utilityService.ToggleGroupMask(GroupMask.Map,true);
-            // if (IsHideObjectsEnabled) _utilityService.ToggleGroupMask(GroupMask.Obj,true);
-            // if (IsHideCharactersEnabled) _utilityService.ToggleGroupMask(GroupMask.Chr,true);
-            // if (IsHideSfxEnabled) _utilityService.ToggleGroupMask(GroupMask.Sfx,true);
-            // if (IsDisableEventEnabled) _utilityService.ToggleDisableEvent(true);
-            // if (IsDrawLowHitEnabled)
-            // {
-            //     IsHideMapEnabled = true;
-            //     _utilityService.ToggleHitIns(HitIns.LowHit, true);
-            // }
-            //
-            // if (IsDrawHighHitEnabled)
-            // {
-            //     IsHideMapEnabled = true;
-            //     _utilityService.ToggleHitIns(HitIns.HighHit, true);
-            // }
-            //
-            // if (IsDrawChrRagdollEnabled)
-            // {
-            //     _utilityService.PatchDebugDraw(true);
-            //     _utilityService.ToggleHitIns(HitIns.ChrRagdoll, true);
-            // }
-            // GameSpeed = _utilityService.GetGameSpeed();
-            // CameraFov = _utilityService.GetCameraFov();
             AreButtonsEnabled = true;
         }
         
         public void DisableFeatures()
         {
-            
             IsNoClipEnabled = false;
             AreButtonsEnabled = false;
         }
@@ -360,6 +326,5 @@ namespace SilkySouls2.ViewModels
             if (IsDrawRagdollsEnabled) _utilityService.ToggleRagdoll(true);
             if (IsSeeThroughWallsEnabled) _utilityService.ToggleRagdollEsp(true);
         }
-        
     }
 }

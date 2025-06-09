@@ -145,15 +145,15 @@ namespace SilkySouls2.ViewModels
 
         private void LoadStats()
         {
-            Vigor = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Vigor);
-            Endurance = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Endurance);
-            Vitality = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Vitality);
-            Attunement = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Attunement);
-            Strength = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Strength);
-            Dexterity = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Dexterity);
-            Adp = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Adp);
-            Intelligence = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Intelligence);
-            Faith = _playerService.GetPlayerStat(GameManagerImp.PlayerCtrlOffsets.Stats.Faith);
+            Vigor = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Vigor);
+            Endurance = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Endurance);
+            Vitality = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Vitality);
+            Attunement = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Attunement);
+            Strength = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Strength);
+            Dexterity = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Dexterity);
+            Adp = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Adp);
+            Intelligence = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Intelligence);
+            Faith = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Faith);
             SoulLevel = _playerService.GetSoulLevel();
             NewGame = _playerService.GetNewGame();
             PlayerSpeed = _playerService.GetPlayerSpeed();
@@ -549,7 +549,7 @@ namespace SilkySouls2.ViewModels
         
         public void SetStat(string statName, int value)
         {
-            var field = typeof(GameManagerImp.PlayerCtrlOffsets.Stats)
+            var field = typeof(GameManagerImp.ChrCtrlOffsets.Stats)
                 .GetField(statName, BindingFlags.Public | BindingFlags.Static);
             
             if (field != null)

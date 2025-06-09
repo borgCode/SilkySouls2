@@ -262,6 +262,11 @@ namespace SilkySouls2.Memory
 
             return Encoding.Unicode.GetString(bytes, 0, stringLength);
         }
+        
+        public void WriteInt64(IntPtr addr, long val)
+        {
+            WriteBytes(addr, BitConverter.GetBytes(val));
+        }
 
         public void WriteInt32(IntPtr addr, int val)
         {

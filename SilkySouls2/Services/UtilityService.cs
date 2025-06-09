@@ -204,40 +204,40 @@ namespace SilkySouls2.Services
                 
                 AsmHelper.WriteRelativeOffsets(codeBytes, new []
                 {
-                    (raycastCode.ToInt64() + 0x26, frameCounter.ToInt64(), 6, 0x26 + 2),
-                    (raycastCode.ToInt64() + 0x2C, frameCounter.ToInt64(), 7, 0x2C + 2),
-                    (raycastCode.ToInt64() + 0x3C, frameCounter.ToInt64(), 6, 0x3C + 2),
-                    (raycastCode.ToInt64() + 0x64, rayInput.ToInt64(), 7, 0x64 + 3),
-                    (raycastCode.ToInt64() + 0xA2, rayOutput.ToInt64(), 7, 0xA2 + 3),
-                    (raycastCode.ToInt64() + 0xB9, raycastFunc, 5, 0xB9 + 1),
-                    (raycastCode.ToInt64() + 0xC5, rayOutput.ToInt64() + 0x10, 7, 0xC5 + 2),
-                    (raycastCode.ToInt64() + 0xD2, rayInput.ToInt64(), 7, 0xD2 + 3),
-                    (raycastCode.ToInt64() + 0xFD, rayOutput.ToInt64(), 7, 0xFD + 3),
-                    (raycastCode.ToInt64() + 0x11B, raycastFunc, 5, 0x11B + 1),
-                    (raycastCode.ToInt64() + 0x127, rayOutput.ToInt64() + 0x10, 7, 0x127 + 2),
-                    (raycastCode.ToInt64() + 0x134, rayInput.ToInt64(), 7, 0x134 + 3),
-                    (raycastCode.ToInt64() + 0x15F, rayOutput.ToInt64(), 7, 0x15F + 3),
-                    (raycastCode.ToInt64() + 0x17D, raycastFunc, 5, 0x17D + 1),
-                    (raycastCode.ToInt64() + 0x189, rayOutput.ToInt64() + 0x10, 7, 0x189 + 2),
-                    (raycastCode.ToInt64() + 0x196, rayInput.ToInt64(), 7, 0x196 + 3),
-                    (raycastCode.ToInt64() + 0x1C1, rayOutput.ToInt64(), 7, 0x1C1 + 3),
-                    (raycastCode.ToInt64() + 0x1DF, raycastFunc, 5, 0x1DF + 1),
-                    (raycastCode.ToInt64() + 0x1EB, rayOutput.ToInt64() + 0x10, 7, 0x1EB + 2),
-                    (raycastCode.ToInt64() + 0x1F4, rayInput.ToInt64(), 7, 0x1F4 + 3),
-                    (raycastCode.ToInt64() + 0x21F, rayOutput.ToInt64(), 7, 0x21F + 3),
-                    (raycastCode.ToInt64() + 0x23D, raycastFunc, 5, 0x23D + 1),
-                    (raycastCode.ToInt64() + 0x249, rayOutput.ToInt64() + 0x10, 7, 0x249 + 2),
-                    (raycastCode.ToInt64() + 0x263, convertToMap, 5, 0x263 + 1),
-                    (raycastCode.ToInt64() + 0x26F, mapId.ToInt64(), 7, 0x26F + 3),
-                    (raycastCode.ToInt64() + 0x27A, convertToMapId, 5, 0x27A + 1),
-                    (raycastCode.ToInt64() + 0x293, rayCastHook + 0x7, 5, 0x293 + 1)
+                    (raycastCode.ToInt64() + 0x24, frameCounter.ToInt64(), 6, 0x24 + 2),
+                    (raycastCode.ToInt64() + 0x2A, frameCounter.ToInt64(), 7, 0x2A + 2),
+                    (raycastCode.ToInt64() + 0x3A, frameCounter.ToInt64(), 6, 0x3A + 2),
+                    (raycastCode.ToInt64() + 0x8B, rayInput.ToInt64(), 7, 0x8B + 3),
+                    (raycastCode.ToInt64() + 0xC9, rayOutput.ToInt64(), 7, 0xC9 + 3),
+                    (raycastCode.ToInt64() + 0xE0, raycastFunc, 5, 0xE0 + 1),
+                    (raycastCode.ToInt64() + 0xEC, rayOutput.ToInt64() + 0x10, 7, 0xEC + 2),
+                    (raycastCode.ToInt64() + 0xF9, rayInput.ToInt64(), 7, 0xF9 + 3),
+                    (raycastCode.ToInt64() + 0x124, rayOutput.ToInt64(), 7, 0x124 + 3),
+                    (raycastCode.ToInt64() + 0x142, raycastFunc, 5, 0x142 + 1),
+                    (raycastCode.ToInt64() + 0x14E, rayOutput.ToInt64() + 0x10, 7, 0x14E + 2),
+                    (raycastCode.ToInt64() + 0x15B, rayInput.ToInt64(), 7, 0x15B + 3),
+                    (raycastCode.ToInt64() + 0x186, rayOutput.ToInt64(), 7, 0x186 + 3),
+                    (raycastCode.ToInt64() + 0x1A4, raycastFunc, 5, 0x1A4 + 1),
+                    (raycastCode.ToInt64() + 0x1B0, rayOutput.ToInt64() + 0x10, 7, 0x1B0 + 2),
+                    (raycastCode.ToInt64() + 0x1BD, rayInput.ToInt64(), 7, 0x1BD + 3),
+                    (raycastCode.ToInt64() + 0x1E8, rayOutput.ToInt64(), 7, 0x1E8 + 3),
+                    (raycastCode.ToInt64() + 0x206, raycastFunc, 5, 0x206 + 1),
+                    (raycastCode.ToInt64() + 0x212, rayOutput.ToInt64() + 0x10, 7, 0x212 + 2),
+                    (raycastCode.ToInt64() + 0x21B, rayInput.ToInt64(), 7, 0x21B + 3),
+                    (raycastCode.ToInt64() + 0x246, rayOutput.ToInt64(), 7, 0x246 + 3),
+                    (raycastCode.ToInt64() + 0x264, raycastFunc, 5, 0x264 + 1),
+                    (raycastCode.ToInt64() + 0x270, rayOutput.ToInt64() + 0x10, 7, 0x270 + 2),
+                    (raycastCode.ToInt64() + 0x28A, convertToMap, 5, 0x28A + 1),
+                    (raycastCode.ToInt64() + 0x296, mapId.ToInt64(), 7, 0x296 + 3),
+                    (raycastCode.ToInt64() + 0x2A1, convertToMapId, 5, 0x2A1 + 1),
+                    (raycastCode.ToInt64() + 0x2EA, rayCastHook + 0x5, 5, 0x2EA + 1)
                 });
                 
                 AsmHelper.WriteAbsoluteAddresses(codeBytes, new []
                 {
-                    (GameManagerImp.Base.ToInt64(), 0x8 + 2),
-                    (GameManagerImp.Base.ToInt64(), 0x49 + 2),
-                    (rayOutput.ToInt64() + 0x18, 0x252 + 2)
+                    (GameManagerImp.Base.ToInt64(), 0x6 + 2),
+                    (GameManagerImp.Base.ToInt64(), 0x70 + 2),
+                    (rayOutput.ToInt64() + 0x18, 0x279 + 2)
                 });
 
                 _memoryIo.WriteBytes(raycastCode, codeBytes);
@@ -252,7 +252,7 @@ namespace SilkySouls2.Services
                 _hookManager.InstallHook(coordsCode.ToInt64(), coordsHook, 
                 new byte[] { 0x66, 0x0F, 0x7F, 0xB8, 0x90, 0x00, 0x00, 0x00 });
                 _hookManager.InstallHook(raycastCode.ToInt64(), rayCastHook, new byte[]
-                    { 0x48, 0x8D, 0x9E, 0xD8, 0x00, 0x00, 0x00 });
+                    { 0x48, 0x8D, 0x54, 0x24, 0x20 });
 
             }
             else

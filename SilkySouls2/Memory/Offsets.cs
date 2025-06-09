@@ -239,7 +239,7 @@ namespace SilkySouls2.Memory
             public static long FastQuitout;
             public static long InfinitePoise;
             public static long EzStateSetEvent;
-            public static long MapIdWrite;
+            public static long ProcessPhysics;
             public static long ConditionGroupSetFlag;
             public static long DisableTargetAi;
             public static long SetSharedFlag;

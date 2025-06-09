@@ -45,10 +45,10 @@ namespace SilkySouls2.Memory
             None
         );
 
-        public static readonly Pattern MapIdWrite = new Pattern(
-            new byte[] { 0x48, 0x8D, 0x9E, 0xD8, 0x00, 0x00, 0x00, 0x4C },
-            "xxxxxxxx",
-            0,
+        public static readonly Pattern ProcessPhysics = new Pattern(
+            new byte[] { 0x48, 0x8B, 0x8B, 0x00, 0x01, 0x00, 0x00, 0x48, 0x8D, 0x54, 0x24, 0x20 },
+            "xxxxxxxxxxxx",
+            7,
             None
         );
 

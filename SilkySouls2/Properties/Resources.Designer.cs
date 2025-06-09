@@ -542,17 +542,17 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 48 8d 9e d8 00 00 00    lea    rbx,[rsi+0xd8]
+        ///   Looks up a localized string similar to 48 8d 54 24 20          lea    rdx,[rsp+0x20]
         ///50                      push   rax
         ///48 b8 00 00 00 00 00    movabs rax,0x0
         ///00 00 00
         ///48 8b 00                mov    rax,QWORD PTR [rax]
         ///48 8b 80 d0 00 00 00    mov    rax,QWORD PTR [rax+0xd0]
         ///48 3b 41 08             cmp    rax,QWORD PTR [rcx+0x8]
-        ///0f 85 6c 02 00 00       jne    292 &lt;exit&gt;
-        ///ff 05 00 00 00 00       inc    DWORD PTR [rip+0x0]        # 2c &lt;_main+0x2c&gt;
-        ///83 3d 00 00 00 00 78    cmp    DWORD PTR [rip+0x0],0x78        # 33 &lt;_main+0x33&gt;
-        ///0f 8e 59 02  [rest of string was truncated]&quot;;.
+        ///0f 85 c5 02 00 00       jne    2e9 &lt;exit&gt;
+        ///ff 05 00 00 00 00       inc    DWORD PTR [rip+0x0]        # 2a &lt;_main+0x2a&gt;
+        ///83 3d 00 00 00 00 78    cmp    DWORD PTR [rip+0x0],0x78        # 31 &lt;_main+0x31&gt;
+        ///0f 8e b2 02  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string NoClip_RayCast {
             get {

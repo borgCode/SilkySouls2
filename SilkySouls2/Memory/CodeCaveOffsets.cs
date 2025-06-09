@@ -59,19 +59,19 @@ namespace SilkySouls2.Memory
 
         public const int PlayerNoDamage = 0x470;
 
-        public enum NoClip
-        {
-            InAirTimer = 0x4A0,
-            ZDirection = 0x4C0,
-            TriggersAndSpaceCheck = 0x4D0,
-            CtrlCheck = 0x530,
-            UpdateCoords = 0x540,
-            RayInput = 0xF00,
-            RayOutput = 0xF50,
-            MapId = 0xF80,
-            FrameCounter = 0xF84,
-            RayCastCode = 0xF90
-        }
+        // public enum NoClip
+        // {
+        //     InAirTimer = 0x4A0,
+        //     ZDirection = 0x4C0,
+        //     TriggersAndSpaceCheck = 0x4D0,
+        //     CtrlCheck = 0x530,
+        //     UpdateCoords = 0x540,
+        //     RayInput = 0xF00,
+        //     RayOutput = 0xF50,
+        //     MapId = 0xF80,
+        //     FrameCounter = 0xF84,
+        //     RayCastCode = 0xF90
+        // }
 
         public const int Killbox = 0x690;
 
@@ -123,7 +123,18 @@ namespace SilkySouls2.Memory
 
         public const int IvoryKnights = 0x1600;
 
-
-
+        public enum NoClip
+        {
+            InAirTimer = 0x4A0,
+            ZDirection = 0x4C0,
+            TriggersAndSpaceCheck = 0x4D0,
+            CtrlCheck = 0x530,
+            UpdateCoords = 0x540,
+            RayInput = 0xF00,
+            RayOutput = 0xF50,
+            MapId = 0xF80,
+            FrameCounter = 0xF84,
+            RayCastCode = 0xF90
+        }
     }
 }

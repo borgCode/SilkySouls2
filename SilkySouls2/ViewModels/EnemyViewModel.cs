@@ -95,41 +95,42 @@ namespace SilkySouls2.ViewModels
         {
             _hotkeyManager.RegisterAction("EnableTargetOptions",
                 () => { IsTargetOptionsEnabled = !IsTargetOptionsEnabled; });
-            // _hotkeyManager.RegisterAction("ShowAllResistances", () =>
-            // {
-            //     _showAllResistances = !_showAllResistances;
-            //     UpdateResistancesDisplay();
-            // });
-            _hotkeyManager.RegisterAction("FreezeHp", () => { IsFreezeHealthEnabled = !IsFreezeHealthEnabled; });
+            _hotkeyManager.RegisterAction("ShowAllResistances", () =>
+            {
+                ShowAllResistances = !ShowAllResistances;
+                UpdateResistancesDisplay();
+            });
+            _hotkeyManager.RegisterAction("FreezeHp", () =>
+            {
+                if (!IsValidTarget) return;
+                IsFreezeHealthEnabled = !IsFreezeHealthEnabled;
+            });
             _hotkeyManager.RegisterAction("KillTarget", () => {
                 if (!IsValidTarget) return;
                 SetTargetHealth(0);
             });
-            // _hotkeyManager.RegisterAction("DisableTargetAi",
-            //     () =>
-            //     {
-            //         if (!IsValidTarget) return;
-            //         IsDisableTargetAiEnabled = !IsDisableTargetAiEnabled;
-            //     });
-            // _hotkeyManager.RegisterAction("IncreaseTargetSpeed", () =>
-            // {
-            //     if (!IsValidTarget) return;
-            //     SetSpeed(Math.Min(5, TargetSpeed + 0.25f));
-            // });
-            // _hotkeyManager.RegisterAction("DecreaseTargetSpeed", () =>
-            // {
-            //     if (!IsValidTarget) return;
-            //     SetSpeed(Math.Max(0, TargetSpeed - 0.25f));
-            // });
-            // _hotkeyManager.RegisterAction("TargetRepeatAct", () =>
-            // {
-            //     if (!IsValidTarget) return;
-            //     IsRepeatActEnabled = !IsRepeatActEnabled;
-            // });
-            // _hotkeyManager.RegisterAction("DisableAi", () => { IsAllDisableAiEnabled = !IsAllDisableAiEnabled; });
-            // _hotkeyManager.RegisterAction("AllNoDeath", () => { IsAllNoDeathEnabled = !IsAllNoDeathEnabled; });
-            // _hotkeyManager.RegisterAction("AllNoDamage", () => { IsAllNoDamageEnabled = !IsAllNoDamageEnabled; });
-            // _hotkeyManager.RegisterAction("AllRepeatAct", () => { IsAllRepeatActEnabled = !IsAllRepeatActEnabled; });
+            _hotkeyManager.RegisterAction("DisableTargetAi",
+                () =>
+                {
+                    if (!IsValidTarget) return;
+                    IsDisableTargetAiEnabled = !IsDisableTargetAiEnabled;
+                });
+            _hotkeyManager.RegisterAction("IncreaseTargetSpeed", () =>
+            {
+                if (!IsValidTarget) return;
+                SetSpeed(Math.Min(5, TargetSpeed + 0.25f));
+            });
+            _hotkeyManager.RegisterAction("DecreaseTargetSpeed", () =>
+            {
+                if (!IsValidTarget) return;
+                SetSpeed(Math.Max(0, TargetSpeed - 0.25f));
+            });
+            _hotkeyManager.RegisterAction("TargetRepeatAct", () =>
+            {
+                if (!IsValidTarget) return;
+                IsRepeatActEnabled = !IsRepeatActEnabled;
+            });
+            _hotkeyManager.RegisterAction("DisableAi", () => { IsAllDisableAiEnabled = !IsAllDisableAiEnabled; });
         }
 
         private void TargetOptionsTimerTick(object sender, EventArgs e)
@@ -372,6 +373,11 @@ namespace SilkySouls2.ViewModels
                     _enemyService.SetTargetSpeed(value);
                 }
             }
+        }
+        
+        public void SetSpeed(float value)
+        {
+            TargetSpeed = value;
         }
         
         public bool IsFreezeHealthEnabled

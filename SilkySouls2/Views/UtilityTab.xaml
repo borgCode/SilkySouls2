@@ -298,9 +298,5 @@
                 </Grid>
             </StackPanel>
         </Border>
-        <!-- <Button Content="Inject" -->
-        <!--         Click="Inject_Dll" -->
-        <!--         Grid.Row="2" -->
-        <!--         Margin="0,2" /> -->
     </Grid>
 </UserControl>

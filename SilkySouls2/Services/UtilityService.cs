@@ -152,7 +152,9 @@ namespace SilkySouls2.Services
                 var ctrlHook = Hooks.Ctrl;
                 var coordsHook = Hooks.NoClipUpdateCoords;
                 var rayCastHook = Hooks.MapIdWrite;
-                
+
+
+                var gameManImp = GameManagerImp.Base;
                 
                 var zDirectionLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.ZDirection;
                 var codeBytes = AsmLoader.GetAsmBytes("NoClip_InAirTimer");

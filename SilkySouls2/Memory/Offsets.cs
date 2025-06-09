@@ -242,6 +242,7 @@ namespace SilkySouls2.Memory
             public static long MapIdWrite;
             public static long ConditionGroupSetFlag;
             public static long DisableTargetAi;
+            public static long SetSharedFlag;
         }
 
         public static class Funcs

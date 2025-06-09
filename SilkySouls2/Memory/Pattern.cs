@@ -60,6 +60,13 @@ namespace SilkySouls2.Memory
             None
         );
 
+        public static readonly Pattern SetSharedFlag = new Pattern(
+            new byte[] { 0x44, 0x88, 0x84, 0x08, 0xA1 },
+            "xxxxx",
+            0,
+            None
+        );
+        
         public static readonly Pattern EzStateSetEvent = new Pattern(
             new byte[] { 0x41, 0x0F, 0xB6, 0xF8, 0x48, 0x8B, 0x88 },
             "xxxxxxx",

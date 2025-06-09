@@ -407,6 +407,25 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 81 79 4c 80 7f 0a 00    cmp    DWORD PTR [rcx+0x4c],0xa7f80
+        ///75 0e                   jne    17 &lt;normal&gt;
+        ///48 85 c0                test   rax,rax
+        ///75 09                   jne    17 &lt;normal&gt;
+        ///41 83 f8 0f             cmp    r8d,0xf
+        ///75 03                   jne    17 &lt;normal&gt;
+        ///45 31 c0                xor    r8d,r8d
+        ///000000000017 &lt;normal&gt;:
+        ///44 88 84 08 a1 03 00    mov    BYTE PTR [rax+rcx*1+0x3a1],r8b
+        ///00
+        ///e9 00 00 00 00          jmp    24 &lt;normal+0xd&gt;.
+        /// </summary>
+        internal static string IvoryKnights {
+            get {
+                return ResourceManager.GetString("IvoryKnights", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 81 fa 78 46 02 20       cmp    edx,0x20024678
         ///75 12                   jne    1a &lt;check_next&gt;
         ///41 83 f8 01             cmp    r8d,0x1

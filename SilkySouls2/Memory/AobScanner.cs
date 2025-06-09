@@ -125,6 +125,8 @@ namespace SilkySouls2.Memory
                 addr => Offsets.Hooks.MapIdWrite = addr.ToInt64(), saved);
             TryPatternWithFallback("ConditionGroupSetFlag", Patterns.ConditionGroupSetFlag,
                 addr => Offsets.Hooks.ConditionGroupSetFlag = addr.ToInt64(), saved);
+            TryPatternWithFallback("SetSharedFlag", Patterns.SetSharedFlag,
+                addr => Offsets.Hooks.SetSharedFlag = addr.ToInt64(), saved);
 
             Offsets.Hooks.DisableTargetAi = Offsets.Patches.DisableAi.ToInt64() + 0x2C;
             
@@ -245,6 +247,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Hooks.ConditionGroupSetFlag: 0x{Offsets.Hooks.ConditionGroupSetFlag:X}");
             Console.WriteLine($"Hooks.DisableTargetAi: 0x{Offsets.Hooks.DisableTargetAi:X}");
             Console.WriteLine($"Hooks.InfinitePoise: 0x{Offsets.Hooks.InfinitePoise:X}");
+            Console.WriteLine($"Hooks.SetSharedFlag: 0x{Offsets.Hooks.SetSharedFlag:X}");
             //
             Console.WriteLine($"Funcs.WarpPrep: 0x{Offsets.Funcs.WarpPrep:X}");
             Console.WriteLine($"Funcs.BonfireWarp: 0x{Offsets.Funcs.BonfireWarp:X}");

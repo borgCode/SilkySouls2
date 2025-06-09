@@ -121,6 +121,9 @@ namespace SilkySouls2.Memory
             Code = 0x1510,
         }
 
+        public const int IvoryKnights = 0x1600;
+
+
 
     }
 }

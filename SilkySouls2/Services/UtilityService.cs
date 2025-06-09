@@ -459,6 +459,7 @@ namespace SilkySouls2.Services
         public void ToggleIvorySkip(bool isIvorySkipEnabled)
         {
             var code = CodeCaveOffsets.Base + CodeCaveOffsets.IvorySkip;
+            var knightsCode = CodeCaveOffsets.Base + CodeCaveOffsets.IvoryKnights;
 
             if (isIvorySkipEnabled)
             {
@@ -479,12 +480,22 @@ namespace SilkySouls2.Services
                 Array.Copy(jmpBytes, 0, bytes, 0xD6 + 1, 4);
                 
                 _memoryIo.WriteBytes(code, bytes);
+
+                var setSharedFlag = Hooks.SetSharedFlag;
+                bytes = AsmLoader.GetAsmBytes("IvoryKnights");
+                jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(setSharedFlag, 8, knightsCode + 0x24);
+                Array.Copy(jmpBytes, 0, bytes, 0x1F + 1, 4);
+                _memoryIo.WriteBytes(knightsCode, bytes);
+                
                 _hookManager.InstallHook(code.ToInt64(), origin, new byte[]
                     { 0x48, 0x89, 0x74, 0x24, 0x10 });
+                _hookManager.InstallHook(knightsCode.ToInt64(), setSharedFlag, new byte[]
+                    { 0x44, 0x88, 0x84, 0x08, 0xA1, 0x03, 0x00, 0x00 });
             }
             else
             {
                 _hookManager.UninstallHook(code.ToInt64());
+                _hookManager.UninstallHook(knightsCode.ToInt64());
             }
         }
     }

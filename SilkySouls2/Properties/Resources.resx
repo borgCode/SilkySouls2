@@ -2322,28 +2322,61 @@ ff c6                   inc    esi
 c3                      ret</value>
   </data>
   <data name="DisableMemoryTimer" xml:space="preserve">
-    <value>50                      push   rax
-48 8b 47 08             mov    rax,QWORD PTR [rdi+0x8]
-81 78 28 e0 2e 00 00    cmp    DWORD PTR [rax+0x28],0x2ee0
-75 0f                   jne    1d &lt;check_alonne&gt;
-48 31 c0                xor    rax,rax
-48 85 c0                test   rax,rax
-58                      pop    rax
-89 73 18                mov    DWORD PTR [rbx+0x18],esi
-e9 00 00 00 00          jmp    1d &lt;check_alonne&gt;
-00000000001d &lt;check_alonne&gt;:
-81 78 28 d8 d6 00 00    cmp    DWORD PTR [rax+0x28],0xd6d8
-75 0f                   jne    35 &lt;normal&gt;
-48 31 c0                xor    rax,rax
-48 85 c0                test   rax,rax
-58                      pop    rax
-89 73 18                mov    DWORD PTR [rbx+0x18],esi
-e9 00 00 00 00          jmp    35 &lt;normal&gt;
-000000000035 &lt;normal&gt;:
-58                      pop    rax
-80 7b 1d 00             cmp    BYTE PTR [rbx+0x1d],0x0
-89 73 18                mov    DWORD PTR [rbx+0x18],esi
-e9 00 00 00 00          jmp    42 &lt;normal+0xd&gt;</value>
+    <value>51                      push   rcx
+53                      push   rbx
+48 b9 00 00 00 00 00    movabs rcx,0x0
+00 00 00
+48 8b 09                mov    rcx,QWORD PTR [rcx]
+48 8b 49 38             mov    rcx,QWORD PTR [rcx+0x38]
+48 8b 49 08             mov    rcx,QWORD PTR [rcx+0x8]
+81 b9 bc 01 00 00 00    cmp    DWORD PTR [rcx+0x1bc],0x32240000
+00 24 32
+75 42                   jne    65 &lt;check_giant&gt;
+81 38 1a 04 00 00       cmp    DWORD PTR [rax],0x41a
+75 0e                   jne    39 &lt;phase2&gt;
+48 c7 c3 80 96 98 00    mov    rbx,0x989680
+66 48 0f 6e f3          movq   xmm6,rbx
+eb 7e                   jmp    b7 &lt;exit&gt;
+000000000039 &lt;phase2&gt;:
+81 38 2e 04 00 00       cmp    DWORD PTR [rax],0x42e
+75 0e                   jne    4f &lt;phase3&gt;
+48 c7 c3 80 96 98 00    mov    rbx,0x989680
+66 48 0f 6e f3          movq   xmm6,rbx
+eb 68                   jmp    b7 &lt;exit&gt;
+00000000004f &lt;phase3&gt;:
+81 38 38 04 00 00       cmp    DWORD PTR [rax],0x438
+75 5c                   jne    b3 &lt;normal&gt;
+48 c7 c3 80 96 98 00    mov    rbx,0x989680
+66 48 0f 6e f3          movq   xmm6,rbx
+eb 52                   jmp    b7 &lt;exit&gt;
+000000000065 &lt;check_giant&gt;:
+81 b9 bc 01 00 00 00    cmp    DWORD PTR [rcx+0x1bc],0x140a0000
+00 0a 14
+75 42                   jne    b3 &lt;normal&gt;
+81 38 0e 01 00 00       cmp    DWORD PTR [rax],0x10e
+75 0e                   jne    87 &lt;g_phase2&gt;
+48 c7 c3 80 96 98 00    mov    rbx,0x989680
+66 48 0f 6e f3          movq   xmm6,rbx
+eb 30                   jmp    b7 &lt;exit&gt;
+000000000087 &lt;g_phase2&gt;:
+81 38 22 01 00 00       cmp    DWORD PTR [rax],0x122
+75 0e                   jne    9d &lt;g_phase3&gt;
+48 c7 c3 80 96 98 00    mov    rbx,0x989680
+66 48 0f 6e f3          movq   xmm6,rbx
+eb 1a                   jmp    b7 &lt;exit&gt;
+00000000009d &lt;g_phase3&gt;:
+81 38 2c 01 00 00       cmp    DWORD PTR [rax],0x12c
+75 0e                   jne    b3 &lt;normal&gt;
+48 c7 c3 80 96 98 00    mov    rbx,0x989680
+66 48 0f 6e f3          movq   xmm6,rbx
+eb 04                   jmp    b7 &lt;exit&gt;
+0000000000b3 &lt;normal&gt;:
+66 0f 6e 30             movd   xmm6,DWORD PTR [rax]
+0000000000b7 &lt;exit&gt;:
+0f 5b f6                cvtdq2ps xmm6,xmm6
+5b                      pop    rbx
+59                      pop    rcx
+e9 00 00 00 00          jmp    c1 &lt;exit+0xa&gt;</value>
   </data>
   <data name="IvorySkip" xml:space="preserve">
     <value>81 fa 78 46 02 20       cmp    edx,0x20024678

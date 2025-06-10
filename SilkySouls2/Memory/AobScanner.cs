@@ -121,8 +121,8 @@ namespace SilkySouls2.Memory
                 addr => Offsets.Hooks.InfinitePoise = addr.ToInt64(), saved);
             TryPatternWithFallback("MapIdWrite", Patterns.ProcessPhysics,
                 addr => Offsets.Hooks.ProcessPhysics = addr.ToInt64(), saved);
-            TryPatternWithFallback("ConditionGroupSetFlag", Patterns.ConditionGroupSetFlag,
-                addr => Offsets.Hooks.ConditionGroupSetFlag = addr.ToInt64(), saved);
+            TryPatternWithFallback("EzStateCompareTimer", Patterns.EzStateCompareTimer,
+                addr => Offsets.Hooks.EzStateCompareTimer = addr.ToInt64(), saved);
             TryPatternWithFallback("SetSharedFlag", Patterns.SetSharedFlag,
                 addr => Offsets.Hooks.SetSharedFlag = addr.ToInt64(), saved);
             TryPatternWithFallback("BabyJump", Patterns.BabyJump,
@@ -244,11 +244,11 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Hooks.SetCurrectAct2: 0x{Offsets.Hooks.SetCurrectAct2:X}");
             Console.WriteLine($"Hooks.FastQuitout: 0x{Offsets.Hooks.FastQuitout:X}");
             Console.WriteLine($"Hooks.ProcessPhysics: 0x{Offsets.Hooks.ProcessPhysics:X}");
-            Console.WriteLine($"Hooks.ConditionGroupSetFlag: 0x{Offsets.Hooks.ConditionGroupSetFlag:X}");
             Console.WriteLine($"Hooks.DisableTargetAi: 0x{Offsets.Hooks.DisableTargetAi:X}");
             Console.WriteLine($"Hooks.InfinitePoise: 0x{Offsets.Hooks.InfinitePoise:X}");
             Console.WriteLine($"Hooks.SetSharedFlag: 0x{Offsets.Hooks.SetSharedFlag:X}");
             Console.WriteLine($"Hooks.BabyJump: 0x{Offsets.Hooks.BabyJump:X}");
+            Console.WriteLine($"Hooks.EzStateCompareTimer: 0x{Offsets.Hooks.EzStateCompareTimer:X}");
             
             Console.WriteLine($"Funcs.WarpPrep: 0x{Offsets.Funcs.WarpPrep:X}");
             Console.WriteLine($"Funcs.BonfireWarp: 0x{Offsets.Funcs.BonfireWarp:X}");

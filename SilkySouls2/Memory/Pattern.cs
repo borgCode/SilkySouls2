@@ -74,6 +74,12 @@ namespace SilkySouls2.Memory
             None
         );
 
+        public static readonly Pattern EzStateCompareTimer = new Pattern(
+            new byte[] { 0xF3, 0x0F, 0x11, 0x70, 0x18, 0x41 },
+            "xxxxxx",
+            -0x7B,
+            None
+        );
         
         public static readonly Pattern EzStateSetEvent = new Pattern(
             new byte[] { 0x41, 0x0F, 0xB6, 0xF8, 0x48, 0x8B, 0x88 },

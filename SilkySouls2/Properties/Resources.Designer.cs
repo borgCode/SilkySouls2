@@ -225,17 +225,19 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 50                      push   rax
-        ///48 8b 47 08             mov    rax,QWORD PTR [rdi+0x8]
-        ///81 78 28 e0 2e 00 00    cmp    DWORD PTR [rax+0x28],0x2ee0
-        ///75 0f                   jne    1d &lt;check_alonne&gt;
-        ///48 31 c0                xor    rax,rax
-        ///48 85 c0                test   rax,rax
-        ///58                      pop    rax
-        ///89 73 18                mov    DWORD PTR [rbx+0x18],esi
-        ///e9 00 00 00 00          jmp    1d &lt;check_alonne&gt;
-        ///00000000001d &lt;check_alonne&gt;:
-        ///81 78 28 d8 d6 00 00    cmp    DWORD PTR [rax+0x28],0xd6d [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to 51                      push   rcx
+        ///53                      push   rbx
+        ///48 b9 00 00 00 00 00    movabs rcx,0x0
+        ///00 00 00
+        ///48 8b 09                mov    rcx,QWORD PTR [rcx]
+        ///48 8b 49 38             mov    rcx,QWORD PTR [rcx+0x38]
+        ///48 8b 49 08             mov    rcx,QWORD PTR [rcx+0x8]
+        ///81 b9 bc 01 00 00 00    cmp    DWORD PTR [rcx+0x1bc],0x32240000
+        ///00 24 32
+        ///75 42                   jne    65 &lt;check_giant&gt;
+        ///81 38 1a 04 00 00       cmp    DWORD PTR [rax],0x41a
+        ///75 0e                   jne    39 &lt;phase2&gt;
+        ///48  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DisableMemoryTimer {
             get {

@@ -236,10 +236,10 @@
                               Margin="0,2" />
 
 
-                    <!-- <CheckBox Content="Disable Memory Timer" -->
-                    <!--           Grid.Column="0" Grid.Row="1" -->
-                    <!--           IsChecked="{Binding IsMemoryTimerDisabled}" -->
-                    <!--           Margin="0,2" /> -->
+                    <CheckBox Content="Disable Memory Timer"
+                              Grid.Column="0" Grid.Row="1"
+                              IsChecked="{Binding IsMemoryTimerDisabled}"
+                              Margin="0,2" />
                     
                 </Grid>
             </StackPanel>

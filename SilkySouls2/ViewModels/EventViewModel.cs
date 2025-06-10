@@ -179,6 +179,7 @@ namespace SilkySouls2.ViewModels
                 _utilityService.ToggleSnowstormHook(true);
                 _utilityService.SetEventOff(GameIds.EventFlags.FrigidSnowstorm);
             }
+            if (IsMemoryTimerDisabled) _utilityService.ToggleMemoryTimer(true);
         }
     }
 }

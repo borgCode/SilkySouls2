@@ -183,7 +183,7 @@
                     <CheckBox Content="Infinite Stamina"
                               IsChecked="{Binding IsInfiniteStaminaEnabled}"
                               Margin="0,2" />
-                    <CheckBox Content="No Goods / Arrow Consume"
+                    <CheckBox Content="Infinite Consumables / Arrows"
                               IsChecked="{Binding IsNoGoodsConsumeEnabled}"
                               Margin="0,2" />
                     <CheckBox Content="Infinite Casts"

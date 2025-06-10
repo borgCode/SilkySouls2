@@ -319,9 +319,9 @@ namespace SilkySouls2.Services
             _dllManager.InjectDrawDll();
         }
 
-        public void ToggleDrawEvent(bool isDrawEventEnabled)
+        public void ToggleDrawEvent(DrawType eventType, bool isDrawEventEnabled)
         {
-            _dllManager.ToggleRender(DrawType.Event, isDrawEventEnabled);
+            _dllManager.ToggleRender(eventType, isDrawEventEnabled);
         }
 
         public void ToggleDrawSound(bool isDrawSoundEnabled) =>

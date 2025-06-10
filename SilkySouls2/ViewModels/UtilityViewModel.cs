@@ -1,18 +1,24 @@
 ﻿using System;
-using SilkySouls2.Memory;
+using SilkySouls2.Memory.DLLShared;
 using SilkySouls2.Services;
 using SilkySouls2.Utilities;
 
 namespace SilkySouls2.ViewModels
 {
-    public class UtilityViewModel: BaseViewModel
+    public class UtilityViewModel : BaseViewModel
     {
-        
         private bool _isIvorySkipEnabled;
         private bool _isCreditSkipEnabled;
         private bool _is100DropEnabled;
         private bool _isDrawHitboxEnabled;
+
         private bool _isDrawEventEnabled;
+        private bool _isDrawEventGeneralEnabled;
+        private bool _isDrawEventSpawnEnabled;
+        private bool _isDrawEventInvasionEnabled;
+        private bool _isDrawEventLeashEnabled;
+
+
         private bool _isDrawSoundEnabled;
         private bool _isTargetingViewEnabled;
         private bool _isDrawRagdollEnabled;
@@ -20,31 +26,32 @@ namespace SilkySouls2.ViewModels
         private bool _isDrawCollisionEnabled;
         private bool _isColWireframeEnabled;
         private bool _isDrawKillboxEnabled;
-        
-        
+
+
         private bool _isHideCharactersEnabled;
         private bool _isHideMapEnabled;
-        
+
         private bool _areButtonsEnabled;
         private readonly HotkeyManager _hotkeyManager;
         private readonly UtilityService _utilityService;
         private readonly PlayerViewModel _playerViewModel;
-        
+
         private float _gameSpeed = 1.0f;
-        
+
         private const float DefaultNoclipMultiplier = 1f;
         private const uint BaseXSpeedHex = 0x3e4ccccd;
         private const uint BaseYSpeedHex = 0x3e19999a;
         private float _noClipSpeedMultiplier = DefaultNoclipMultiplier;
         private bool _isNoClipEnabled;
         private bool _wasNoDeathEnabled;
-        
-        public UtilityViewModel(UtilityService utilityService, HotkeyManager hotkeyManager, PlayerViewModel playerViewModel)
+
+        public UtilityViewModel(UtilityService utilityService, HotkeyManager hotkeyManager,
+            PlayerViewModel playerViewModel)
         {
             _playerViewModel = playerViewModel;
             _utilityService = utilityService;
             _hotkeyManager = hotkeyManager;
-            
+
             RegisterHotkeys();
         }
 
@@ -70,14 +77,14 @@ namespace SilkySouls2.ViewModels
             _hotkeyManager.RegisterAction("IncreaseGameSpeed", () => SetSpeed(Math.Min(10, GameSpeed + 0.50f)));
             _hotkeyManager.RegisterAction("DecreaseGameSpeed", () => SetSpeed(Math.Max(0, GameSpeed - 0.50f)));
         }
-        
-        
+
+
         public bool AreButtonsEnabled
         {
             get => _areButtonsEnabled;
             set => SetProperty(ref _areButtonsEnabled, value);
         }
-        
+
         public bool IsDrawHitboxEnabled
         {
             get => _isDrawHitboxEnabled;
@@ -87,17 +94,60 @@ namespace SilkySouls2.ViewModels
                 _utilityService.ToggleDrawHitbox(_isDrawHitboxEnabled);
             }
         }
-        
+
         public bool IsDrawEventEnabled
         {
             get => _isDrawEventEnabled;
             set
             {
                 if (!SetProperty(ref _isDrawEventEnabled, value)) return;
-                _utilityService.ToggleDrawEvent(_isDrawEventEnabled);
+                IsDrawEventGeneralEnabled = _isDrawEventEnabled;
+                IsDrawEventSpawnEnabled = _isDrawEventEnabled;
+                IsDrawEventInvasionEnabled = _isDrawEventEnabled;
+                IsDrawEventLeashEnabled = _isDrawEventEnabled;
             }
         }
-        
+
+        public bool IsDrawEventGeneralEnabled
+        {
+            get => _isDrawEventGeneralEnabled;
+            set
+            {
+                if (!SetProperty(ref _isDrawEventGeneralEnabled, value)) return;
+                _utilityService.ToggleDrawEvent(DrawType.EventGeneral, _isDrawEventGeneralEnabled);
+            }
+        }
+
+        public bool IsDrawEventSpawnEnabled
+        {
+            get => _isDrawEventSpawnEnabled;
+            set
+            {
+                if (!SetProperty(ref _isDrawEventSpawnEnabled, value)) return;
+                _utilityService.ToggleDrawEvent(DrawType.EventSpawn, _isDrawEventSpawnEnabled);
+            }
+        }
+
+        public bool IsDrawEventInvasionEnabled
+        {
+            get => _isDrawEventInvasionEnabled;
+            set
+            {
+                if (!SetProperty(ref _isDrawEventInvasionEnabled, value)) return;
+                _utilityService.ToggleDrawEvent(DrawType.EventInvasion, _isDrawEventInvasionEnabled);
+            }
+        }
+
+        public bool IsDrawEventLeashEnabled
+        {
+            get => _isDrawEventLeashEnabled;
+            set
+            {
+                if (!SetProperty(ref _isDrawEventLeashEnabled, value)) return;
+                _utilityService.ToggleDrawEvent(DrawType.EventLeash, _isDrawEventLeashEnabled);
+            }
+        }
+
         public bool IsDrawSoundEnabled
         {
             get => _isDrawSoundEnabled;
@@ -107,7 +157,7 @@ namespace SilkySouls2.ViewModels
                 _utilityService.ToggleDrawSound(_isDrawSoundEnabled);
             }
         }
-        
+
         public bool IsTargetingViewEnabled
         {
             get => _isTargetingViewEnabled;
@@ -117,8 +167,8 @@ namespace SilkySouls2.ViewModels
                 _utilityService.ToggleTargetingView(_isTargetingViewEnabled);
             }
         }
-        
-        
+
+
         public bool IsDrawRagdollsEnabled
         {
             get => _isDrawRagdollEnabled;
@@ -129,7 +179,7 @@ namespace SilkySouls2.ViewModels
                 if (!_isDrawRagdollEnabled) IsSeeThroughWallsEnabled = false;
             }
         }
-        
+
         public bool IsSeeThroughWallsEnabled
         {
             get => _isSeeThroughwallsEnabled;
@@ -139,7 +189,7 @@ namespace SilkySouls2.ViewModels
                 _utilityService.ToggleRagdollEsp(_isSeeThroughwallsEnabled);
             }
         }
-        
+
         public bool IsColWireframeEnabled
         {
             get => _isColWireframeEnabled;
@@ -149,7 +199,7 @@ namespace SilkySouls2.ViewModels
                 _utilityService.ToggleColWireframe(_isColWireframeEnabled);
             }
         }
-        
+
         public bool IsDrawKillboxEnabled
         {
             get => _isDrawKillboxEnabled;
@@ -160,7 +210,7 @@ namespace SilkySouls2.ViewModels
             }
         }
 
-        
+
         public bool IsDrawCollisionEnabled
         {
             get => _isDrawCollisionEnabled;
@@ -172,8 +222,7 @@ namespace SilkySouls2.ViewModels
             }
         }
 
-        
-        
+
         public bool IsHideCharactersEnabled
         {
             get => _isHideCharactersEnabled;
@@ -183,7 +232,7 @@ namespace SilkySouls2.ViewModels
                 _utilityService.ToggleHideChr(_isHideCharactersEnabled);
             }
         }
-        
+
         public bool IsHideMapEnabled
         {
             get => _isHideMapEnabled;
@@ -193,7 +242,7 @@ namespace SilkySouls2.ViewModels
                 _utilityService.ToggleHideMap(_isHideMapEnabled);
             }
         }
-        
+
         public bool IsCreditSkipEnabled
         {
             get => _isCreditSkipEnabled;
@@ -203,8 +252,8 @@ namespace SilkySouls2.ViewModels
                 _utilityService.ToggleCreditSkip(_isCreditSkipEnabled);
             }
         }
-        
-        
+
+
         public bool IsIvorySkipEnabled
         {
             get => _isIvorySkipEnabled;
@@ -214,7 +263,7 @@ namespace SilkySouls2.ViewModels
                 _utilityService.ToggleIvorySkip(_isIvorySkipEnabled);
             }
         }
-        
+
         public bool Is100DropEnabled
         {
             get => _is100DropEnabled;
@@ -224,7 +273,7 @@ namespace SilkySouls2.ViewModels
                 _utilityService.Toggle100Drop(_is100DropEnabled);
             }
         }
-        
+
         public bool IsNoClipEnabled
         {
             get => _isNoClipEnabled;
@@ -248,7 +297,7 @@ namespace SilkySouls2.ViewModels
                 }
             }
         }
-        
+
         public float NoClipSpeed
         {
             get => _noClipSpeedMultiplier;
@@ -260,7 +309,7 @@ namespace SilkySouls2.ViewModels
                 }
             }
         }
-        
+
         public void SetNoClipSpeed(float multiplier)
         {
             if (!IsNoClipEnabled) return;
@@ -280,7 +329,7 @@ namespace SilkySouls2.ViewModels
 
             _utilityService.SetNoClipSpeed(xBytes, yBytes);
         }
-        
+
         public float GameSpeed
         {
             get => _gameSpeed;
@@ -288,19 +337,19 @@ namespace SilkySouls2.ViewModels
             {
                 if (SetProperty(ref _gameSpeed, value))
                 {
-                   _utilityService.SetGameSpeed(value);
+                    _utilityService.SetGameSpeed(value);
                 }
             }
         }
-        
+
         public void SetSpeed(float value) => GameSpeed = value;
-        
+
         public void TryEnableFeatures()
         {
             if (IsCreditSkipEnabled) _utilityService.ToggleCreditSkip(true);
             AreButtonsEnabled = true;
         }
-        
+
         public void DisableFeatures()
         {
             IsNoClipEnabled = false;
@@ -315,7 +364,12 @@ namespace SilkySouls2.ViewModels
             if (IsCreditSkipEnabled) _utilityService.ToggleCreditSkip(true);
             if (IsIvorySkipEnabled) _utilityService.ToggleIvorySkip(true);
             if (IsDrawHitboxEnabled) _utilityService.ToggleDrawHitbox(true);
-            if (IsDrawEventEnabled) _utilityService.ToggleDrawEvent(true);
+
+            if (IsDrawEventGeneralEnabled) _utilityService.ToggleDrawEvent(DrawType.EventGeneral, true);
+            if (IsDrawEventSpawnEnabled) _utilityService.ToggleDrawEvent(DrawType.EventSpawn, true);
+            if (IsDrawEventInvasionEnabled) _utilityService.ToggleDrawEvent(DrawType.EventInvasion, true);
+            if (IsDrawEventLeashEnabled) _utilityService.ToggleDrawEvent(DrawType.EventLeash, true);
+
             if (IsDrawSoundEnabled) _utilityService.ToggleDrawSound(true);
             if (IsTargetingViewEnabled) _utilityService.ToggleTargetingView(true);
             if (IsHideMapEnabled) _utilityService.ToggleHideMap(true);

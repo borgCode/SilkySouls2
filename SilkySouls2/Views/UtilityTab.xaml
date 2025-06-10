@@ -219,7 +219,7 @@
                                Grid.Column="0" />
                 </Grid>
 
-                <Grid Margin="20,5,0,0">
+                <Grid Margin="10,5,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
@@ -227,6 +227,9 @@
                     </Grid.ColumnDefinitions>
 
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -244,14 +247,74 @@
                               Grid.Column="0" Grid.Row="1"
                               Margin="0,2" />
 
+                    <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="2" Margin="15,2,0,2">
+                        <CheckBox Content="General Logic"
+                                  IsChecked="{Binding IsDrawEventGeneralEnabled}"
+                                  IsEnabled="{Binding IsDrawEventEnabled}"
+                                  VerticalAlignment="Center"
+                                  Margin="0,0,5,0" />
+   
+                        <Border Background="#3498db"
+                                CornerRadius="10"
+                                Width="12"
+                                Height="12"
+                                Margin="5,0,0,0"
+                                VerticalAlignment="Center"
+                                ToolTip="Enemy aggro triggers and other logic triggers"
+                                ToolTipService.InitialShowDelay='100'>
+                            <TextBlock Text="i"
+                                       Foreground="White"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontWeight="Bold"
+                                       FontSize="10" />
+                        </Border>
+                    </StackPanel>
+
+                    <CheckBox Content="Spawn Triggers"
+                              IsChecked="{Binding IsDrawEventSpawnEnabled}"
+                              IsEnabled="{Binding IsDrawEventEnabled}"
+                              Grid.Column="0" Grid.Row="3"
+                              Margin="15,2,0,2" />
+
+                    <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="4" Margin="15,2,0,2">
+                        <CheckBox Content="Judgement"
+                                  IsChecked="{Binding IsDrawEventInvasionEnabled}"
+                                  IsEnabled="{Binding IsDrawEventEnabled}"
+                                  VerticalAlignment="Center"
+                                  Margin="0,0,5,0" />
+   
+                        <Border Background="#3498db"
+                                CornerRadius="10"
+                                Width="12"
+                                Height="12"
+                                Margin="5,0,0,0"
+                                VerticalAlignment="Center"
+                                ToolTip="Invasions and other judgement locations"
+                                ToolTipService.InitialShowDelay='100'>
+                            <TextBlock Text="i"
+                                       Foreground="White"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontWeight="Bold"
+                                       FontSize="10" />
+                        </Border>
+                    </StackPanel>
+
+                    <CheckBox Content="Leash Points"
+                              IsChecked="{Binding IsDrawEventLeashEnabled}"
+                              IsEnabled="{Binding IsDrawEventEnabled}"
+                              Grid.Column="0" Grid.Row="5"
+                              Margin="15,2,0,2" />
+
                     <CheckBox Content="Player Sound"
                               IsChecked="{Binding IsDrawSoundEnabled}"
-                              Grid.Column="0" Grid.Row="2"
+                              Grid.Column="0" Grid.Row="6"
                               Margin="0,2" />
 
                     <CheckBox Content="Enemy Targeting View"
                               IsChecked="{Binding IsTargetingViewEnabled}"
-                              Grid.Column="0" Grid.Row="3"
+                              Grid.Column="0" Grid.Row="7"
                               Margin="0,2" />
                     
                     <CheckBox Content="Hide Map"

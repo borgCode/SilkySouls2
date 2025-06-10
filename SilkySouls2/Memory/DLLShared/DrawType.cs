@@ -3,13 +3,16 @@
     public enum DrawType
     {
         Hitbox = 0,
-        Event = 1,
-        Sound = 2,
-        TargetingView = 3,
-        Ragdoll = 4,
-        RagdollEsp = 5,
-        Collision = 6,
-        CollisionWireframe = 7,
-        CollisionKillbox = 8,
+        Sound = 1,
+        TargetingView = 2,
+        Ragdoll = 3,
+        RagdollEsp = 4,
+        Collision = 5,
+        CollisionWireframe = 6,
+        CollisionKillbox = 7,
+        EventGeneral = 8,
+        EventSpawn = 9,
+        EventInvasion = 10,
+        EventLeash = 11,
     }
 }

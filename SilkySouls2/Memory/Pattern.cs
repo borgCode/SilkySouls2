@@ -68,9 +68,9 @@ namespace SilkySouls2.Memory
         );
 
         public static readonly Pattern BabyJump = new Pattern(
-            new byte[] { 0x0F, 0x29, 0x44, 0x24, 0x20, 0xFF, 0x50, 0x20, 0xF3 },
-            "xxxxxxxxx",
-            0,
+            new byte[] { 0x74, 0x12, 0xF3, 0x0F, 0x10, 0x83 },
+            "xxxxxx",
+            -0x11,
             None
         );
 

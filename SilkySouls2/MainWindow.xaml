@@ -1,7 +1,7 @@
 ﻿<Window x:Class="SilkySouls2.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="SilkySouls3"
+        Title="SilkySouls2"
         Height="640"
         Width="520"
         Background="{StaticResource BackgroundBrush}"
@@ -39,7 +39,7 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center" />
 
-                <TextBlock Text="SilkySouls3"
+                <TextBlock Text="SilkySouls2"
                            Grid.Column="1"
                            HorizontalAlignment="Left"
                            VerticalAlignment="Center"

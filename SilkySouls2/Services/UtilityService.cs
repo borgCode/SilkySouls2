@@ -149,7 +149,7 @@ namespace SilkySouls2.Services
                 var triggersAndSpaceHook = Hooks.TriggersAndSpace;
                 var ctrlHook = Hooks.Ctrl;
                 var coordsHook = Hooks.NoClipUpdateCoords;
-                var rayCastHook = 0x7ff759444f35;
+                var rayCastHook = Hooks.ProcessPhysics;
 
                 var zDirectionLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.ZDirection;
                 

@@ -31,6 +31,12 @@ namespace SilkySouls2.Services
             _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Hp), hp);
 
 
+        public void SetFullHp()
+        {
+            var full = _memoryIo.ReadInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.FullHpWithHollowing));
+            _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Hp), full);
+        }
+
         public int GetSp() =>
             _memoryIo.ReadInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Stamina));
 
@@ -375,7 +381,7 @@ namespace SilkySouls2.Services
                     ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 }
                     : new byte[] { 0x88, 0x81, 0xAC, 0x01, 0x00, 0x00 }
             );
-        
+
         public void ToggleNoSoulLoss(bool isEnabled) =>
             _memoryIo.WriteBytes(Patches.NoSoulLoss,
                 isEnabled

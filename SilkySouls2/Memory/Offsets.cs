@@ -84,6 +84,7 @@ namespace SilkySouls2.Memory
                 public const int Hp = 0x168;
                 public const int MinHp = 0x16C;
                 public const int MaxHp = 0x170;
+                public const int FullHpWithHollowing = 0x174;
                 public const int Stamina = 0x1AC;
                 public const int MaxStamina = 0x1B4;
                 public const int HeavyPoiseCurrent = 0x1B8;

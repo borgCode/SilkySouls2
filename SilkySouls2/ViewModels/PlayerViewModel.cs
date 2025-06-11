@@ -95,7 +95,6 @@ namespace SilkySouls2.ViewModels
 
                 CurrentHp = _playerService.GetHp();
                 CurrentMaxHp = _playerService.GetMaxHp();
-                // Souls = _playerService.GetPlayerStat(Offsets.GameManagerImp.PlayerCtrlOffsets.Stats.Souls);
                 PlayerSpeed = _playerService.GetPlayerSpeed();
                 int newSoulLevel = _playerService.GetSoulLevel();
                 SoulMemory = _playerService.GetSoulMemory();
@@ -196,7 +195,7 @@ namespace SilkySouls2.ViewModels
 
         public void SetMaxHp()
         {
-            _playerService.SetHp(CurrentMaxHp);
+            _playerService.SetFullHp();
         }
         
         public bool IsHealthWindowOpen

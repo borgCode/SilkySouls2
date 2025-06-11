@@ -127,6 +127,8 @@ namespace SilkySouls2.Memory
                 addr => Offsets.Hooks.SetSharedFlag = addr.ToInt64(), saved);
             TryPatternWithFallback("BabyJump", Patterns.BabyJump,
                 addr => Offsets.Hooks.BabyJump = addr.ToInt64(), saved);
+            TryPatternWithFallback("FogRender", Patterns.FogRender,
+                addr => Offsets.Hooks.FogRender = addr.ToInt64(), saved);
 
             Offsets.Hooks.DisableTargetAi = Offsets.Patches.DisableAi.ToInt64() + 0x2C;
             
@@ -249,6 +251,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Hooks.SetSharedFlag: 0x{Offsets.Hooks.SetSharedFlag:X}");
             Console.WriteLine($"Hooks.BabyJump: 0x{Offsets.Hooks.BabyJump:X}");
             Console.WriteLine($"Hooks.EzStateCompareTimer: 0x{Offsets.Hooks.EzStateCompareTimer:X}");
+            Console.WriteLine($"Hooks.FogRender: 0x{Offsets.Hooks.FogRender:X}");
             
             Console.WriteLine($"Funcs.WarpPrep: 0x{Offsets.Funcs.WarpPrep:X}");
             Console.WriteLine($"Funcs.BonfireWarp: 0x{Offsets.Funcs.BonfireWarp:X}");

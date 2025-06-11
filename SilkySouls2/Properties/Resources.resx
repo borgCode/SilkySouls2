@@ -2501,4 +2501,9 @@ f3 0f 10 80 98 37 00    movss  xmm0,DWORD PTR [rax+0x3798]
 0f 29 44 24 20          movaps XMMWORD PTR [rsp+0x20],xmm0
 e9 00 00 00 00          jmp    33 &lt;_main+0x33&gt;</value>
   </data>
+  <data name="TransparentFog" xml:space="preserve">
+    <value>4d 8b 80 18 1d 00 00    mov    r8,QWORD PTR [r8+0x1d18]
+c6 43 0b 00             mov    BYTE PTR [rbx+0xb],0x0
+e9 00 00 00 00          jmp    10 &lt;_main+0x10&gt;</value>
+  </data>
 </root>

@@ -80,7 +80,7 @@ namespace SilkySouls2.Memory
             -0x7B,
             None
         );
-        
+
         public static readonly Pattern EzStateSetEvent = new Pattern(
             new byte[] { 0x41, 0x0F, 0xB6, 0xF8, 0x48, 0x8B, 0x88 },
             "xxxxxxx",
@@ -88,13 +88,15 @@ namespace SilkySouls2.Memory
             None
         );
 
-        public static readonly Pattern ConditionGroupSetFlag = new Pattern(
-            new byte[] { 0x80, 0x7B, 0x1D, 0x00, 0x89, 0x73, 0x18, 0x74 },
-            "xxxxxxxx",
+
+        public static readonly Pattern FogRender = new Pattern(
+            new byte[] { 0x4D, 0x8B, 0x80, 0x18 },
+            "xxxx",
             0,
             None
         );
-        
+
+
         public static readonly Pattern FastQuitout = new Pattern(
             new byte[] { 0x48, 0x89, 0x84, 0x24, 0x50, 0x01, 0x00, 0x00, 0x83, 0x79, 0x10 },
             "xxxxxxxxxxx",
@@ -239,7 +241,7 @@ namespace SilkySouls2.Memory
             -0x2F,
             None
         );
-            
+
         public static readonly Pattern HavokRayCast = new Pattern(
             new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x80, 0x7D, 0x40, 0x00, 0x0F, 0x84, 0x80 },
             "x????xxxxxxx",

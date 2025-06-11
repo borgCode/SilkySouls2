@@ -24,7 +24,7 @@
                 BorderBrush="#333"
                 CornerRadius="3"
                 Margin="0,0,0,5">
-            <TabControl Margin="5">
+            <TabControl Margin="5" Height="130">
                 <TabItem Header="General">
                     <StackPanel Margin="10">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,3" VerticalAlignment="Center">
@@ -215,13 +215,13 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Text="Draw"
+                    <TextBlock Text="Rendering"
                                Grid.Column="0" />
                 </Grid>
 
                 <Grid Margin="10,5,0,0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="180" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
@@ -247,7 +247,7 @@
                               Grid.Column="0" Grid.Row="1"
                               Margin="0,2" />
 
-                    <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="2" Margin="15,2,0,2">
+                    <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="2" Margin="10,2,0,2">
                         <CheckBox Content="General Logic"
                                   IsChecked="{Binding IsDrawEventGeneralEnabled}"
                                   IsEnabled="{Binding IsDrawEventEnabled}"
@@ -275,10 +275,10 @@
                               IsChecked="{Binding IsDrawEventSpawnEnabled}"
                               IsEnabled="{Binding IsDrawEventEnabled}"
                               Grid.Column="0" Grid.Row="3"
-                              Margin="15,2,0,2" />
+                              Margin="10,2,0,2" />
 
-                    <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="4" Margin="15,2,0,2">
-                        <CheckBox Content="Judgement"
+                    <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="4" Margin="10,2,0,2">
+                        <CheckBox Content="Judgement (Invasions)"
                                   IsChecked="{Binding IsDrawEventInvasionEnabled}"
                                   IsEnabled="{Binding IsDrawEventEnabled}"
                                   VerticalAlignment="Center"
@@ -305,7 +305,7 @@
                               IsChecked="{Binding IsDrawEventLeashEnabled}"
                               IsEnabled="{Binding IsDrawEventEnabled}"
                               Grid.Column="0" Grid.Row="5"
-                              Margin="15,2,0,2" />
+                              Margin="10,2,0,2" />
 
                     <CheckBox Content="Player Sound"
                               IsChecked="{Binding IsDrawSoundEnabled}"
@@ -331,6 +331,11 @@
                     <!--           IsChecked="{Binding IsHideSfxEnabled}" -->
                     <!--           Grid.Column="1" Grid.Row="2" -->
                     <!--           Margin="0,2" /> -->
+                    
+                    <CheckBox Content="Transparent Fog"
+                              IsChecked="{Binding IsTransparentFogEnabled}"
+                              Grid.Column="1" Grid.Row="3"
+                              Margin="0,2" />
                     
                     <CheckBox Content="Draw Collision"
                               IsChecked="{Binding IsDrawCollisionEnabled}"

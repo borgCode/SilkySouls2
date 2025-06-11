@@ -30,6 +30,7 @@ namespace SilkySouls2.ViewModels
 
         private bool _isHideCharactersEnabled;
         private bool _isHideMapEnabled;
+        private bool _isTransparentFogEnabled;
 
         private bool _areButtonsEnabled;
         private readonly HotkeyManager _hotkeyManager;
@@ -242,6 +243,16 @@ namespace SilkySouls2.ViewModels
                 _utilityService.ToggleHideMap(_isHideMapEnabled);
             }
         }
+        
+        public bool IsTransparentFogEnabled
+        {
+            get => _isTransparentFogEnabled;
+            set
+            {
+                if (!SetProperty(ref _isTransparentFogEnabled, value)) return;
+                _utilityService.ToggleTransparentFog(_isTransparentFogEnabled);
+            }
+        }
 
         public bool IsCreditSkipEnabled
         {
@@ -379,6 +390,7 @@ namespace SilkySouls2.ViewModels
             if (IsDrawKillboxEnabled) _utilityService.ToggleDrawKillbox(true);
             if (IsDrawRagdollsEnabled) _utilityService.ToggleRagdoll(true);
             if (IsSeeThroughWallsEnabled) _utilityService.ToggleRagdollEsp(true);
+            if (IsTransparentFogEnabled) _utilityService.ToggleTransparentFog(true);
         }
     }
 }

@@ -123,5 +123,6 @@ namespace SilkySouls2.Memory
         public const int BabyJump = 0x2000;
 
         public const int DisableMemoryTimer = 0x2050;
+        public const int TransparentFog = 0x2150;
     }
 }

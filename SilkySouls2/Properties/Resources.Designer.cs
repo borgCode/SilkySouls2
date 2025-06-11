@@ -844,6 +844,17 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 4d 8b 80 18 1d 00 00    mov    r8,QWORD PTR [r8+0x1d18]
+        ///c6 43 0b 00             mov    BYTE PTR [rbx+0xb],0x0
+        ///e9 00 00 00 00          jmp    10 &lt;_main+0x10&gt;.
+        /// </summary>
+        internal static string TransparentFog {
+            get {
+                return ResourceManager.GetString("TransparentFog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 49 bc 00 00 00 00 00    movabs r12,0x0
         ///00 00 00
         ///49 be 00 00 00 00 00    movabs r14,0x0

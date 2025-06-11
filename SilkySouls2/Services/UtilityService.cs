@@ -441,6 +441,26 @@ namespace SilkySouls2.Services
                 _hookManager.UninstallHook(knightsCode.ToInt64());
             }
         }
+
+        public void ToggleTransparentFog(bool isTransparentFogEnabled)
+        {
+            var code = CodeCaveOffsets.Base + CodeCaveOffsets.TransparentFog;
+
+            if (isTransparentFogEnabled)
+            {
+                var origin = Hooks.FogRender;
+                var codeBytes = AsmLoader.GetAsmBytes("TransparentFog");
+                var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 7, code + 0x10);
+                Array.Copy(jmpBytes, 0, codeBytes, 0xB + 1, 4);
+                _memoryIo.WriteBytes(code, codeBytes);
+                _hookManager.InstallHook(code.ToInt64(), origin, new byte[]
+                    { 0x4D, 0x8B, 0x80, 0x18, 0x1D, 0x00, 0x00 });
+            }
+            else
+            {
+                _hookManager.UninstallHook(code.ToInt64());
+            }
+        }
     }
     
 }

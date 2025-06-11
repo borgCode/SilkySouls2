@@ -47,7 +47,7 @@
                 </Grid>
 
                 <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
-                    <TextBlock Text="Flag ID:" VerticalAlignment="Center" Margin="0,0,10,0" />
+                    <TextBlock Text="Event ID:" VerticalAlignment="Center" Margin="0,0,10,0" />
                     <TextBox Width="100" Text="{Binding FlagId}" Margin="0,0,10,0" />
 
                     <TextBlock Text="State:" VerticalAlignment="Center" Margin="0,0,10,0" />
@@ -62,6 +62,22 @@
                             Margin="10,0,0,0"
                             Click="SetFlag_Click"
                             />
+                    
+                    <Border Background="#3498db"
+                            CornerRadius="10"
+                            Width="12"
+                            Height="12"
+                            Margin="5,0,0,0"
+                            VerticalAlignment="Center"
+                            ToolTip="Set any event on or off if you know its Event ID"
+                            ToolTipService.InitialShowDelay='100'>
+                        <TextBlock Text="i"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontWeight="Bold"
+                                   FontSize="10" />
+                    </Border>
                 </StackPanel>
             </StackPanel>
         </Border>

@@ -257,6 +257,12 @@
                               IsChecked="{Binding IsMemoryTimerDisabled}"
                               Margin="0,2" />
                     
+                    <Button Content="Test"
+                              Grid.Column="0" Grid.Row="2"
+                              IsEnabled="{Binding AreButtonsEnabled}"
+                              Click="Test_Click"
+                              Margin="0,2" />
+                    
                 </Grid>
             </StackPanel>
         </Border>

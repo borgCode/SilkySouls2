@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Threading;
 using SilkySouls2.Models;
 using SilkySouls2.Services;
@@ -577,8 +578,11 @@ namespace SilkySouls2.ViewModels
                 if (!SetProperty(ref _selectedForlorn, value)) return;
                 CurrentAreaName = value?.AreaName ?? "No Forlorn selected";
                 IsForlornAvailable = value != null;
-                _selectedForlornIndex = 0;
                 OnPropertyChanged(nameof(ForlornIndexes));
+                
+                Application.Current.Dispatcher.BeginInvoke(new Action(() => {
+                    SelectedForlornIndex = 0;
+                }));
             }
         }
         

@@ -181,5 +181,18 @@ namespace SilkySouls2.ViewModels
             }
             if (IsMemoryTimerDisabled) _utilityService.ToggleMemoryTimer(true);
         }
+
+        public void Test()
+        {
+        
+        }
+
+        public void LightSinner()
+        {
+            _utilityService.SetObjState(GameIds.Area.Bastille, GameIds.Obj.SinnerLighting1);
+            _utilityService.SetObjState(GameIds.Area.Bastille, GameIds.Obj.SinnerLighting2);
+            _utilityService.SetObjState(GameIds.Area.Bastille, GameIds.Obj.SinnerLighting3);
+            _utilityService.SetObjState(GameIds.Area.Bastille, GameIds.Obj.SinnerLighting4);
+        }
     }
 }

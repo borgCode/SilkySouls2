@@ -18,6 +18,24 @@
             public static readonly long[] Scepter = { 536000024, 536000010 };
         }
 
+        public static class Area
+        {
+            public const long Bastille = 0xA100000;
+        }
+
+        public static class Obj
+        {
+            public struct SetObjState
+            {
+                public int ObjId;
+                public int State;
+            }
+
+            public static readonly SetObjState SinnerLighting1 = new SetObjState { ObjId = 10161002, State = 71 };
+            public static readonly SetObjState SinnerLighting2 = new SetObjState { ObjId = 10161000, State = 70 };
+            public static readonly SetObjState SinnerLighting3 = new SetObjState { ObjId = 10161003, State = 71 };
+            public static readonly SetObjState SinnerLighting4 = new SetObjState { ObjId = 10161001, State = 70 };
+        }
         
         public static class SpEffects
         {

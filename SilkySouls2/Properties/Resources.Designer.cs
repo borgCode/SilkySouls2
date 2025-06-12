@@ -829,6 +829,30 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 48 83 ec 28             sub    rsp,0x28
+        ///48 b9 00 00 00 00 00    movabs rcx,0x0
+        ///00 00 00
+        ///48 ba 00 00 00 00 00    movabs rdx,0x0
+        ///00 00 00
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
+        ///ff d0                   call   rax
+        ///48 8d 88 b8 00 00 00    lea    rcx,[rax+0xb8]
+        ///48 89 c2                mov    rdx,rax
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
+        ///ff d0                   call   rax
+        ///48 8b 48 48             mov    rcx,QWORD PTR [rax+0x48]
+        ///48 8b 01                mov    rax,QWORD PTR [rcx]
+        ///48  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string SetObjState {
+            get {
+                return ResourceManager.GetString("SetObjState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 7 &lt;_main+0x7&gt;
         ///48 b9 00 00 00 00 00    movabs rcx,0x0
         ///00 00 00

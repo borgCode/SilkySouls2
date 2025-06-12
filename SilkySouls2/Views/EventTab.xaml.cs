@@ -38,5 +38,10 @@ namespace SilkySouls2.Views
         private void SetFlag_Click(object sender, RoutedEventArgs e) => _eventViewModel.SetFlag();
 
         private void ActivateBrume_Click(object sender, RoutedEventArgs e) => _eventViewModel.ActivateBrume();
+
+        private void Test_Click(object sender, RoutedEventArgs e)
+        {
+            _eventViewModel.Test();
+        }
     }
 }

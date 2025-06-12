@@ -405,8 +405,8 @@ namespace SilkySouls2.Services
             if (isIvorySkipEnabled)
             {
                 var origin = Funcs.SetEvent;
-                var getComponent = Funcs.GetMapObjStateActComponent;
                 var getMapEntity = Funcs.GetMapEntityWithAreaIdAndObjId;
+                var getComponent = Funcs.GetMapObjStateActComponent;
 
                 var bytes = AsmLoader.GetAsmBytes("IvorySkip");
                 
@@ -460,6 +460,23 @@ namespace SilkySouls2.Services
             }
         }
 
+        public void SetObjState(long areaId, GameIds.Obj.SetObjState objData)
+        {
+            var getMapEntity = Funcs.GetMapEntityWithAreaIdAndObjId;
+            var getComponent = Funcs.GetMapObjStateActComponent;
+
+            var bytes = AsmLoader.GetAsmBytes("SetObjState");
+            AsmHelper.WriteAbsoluteAddresses(bytes, new []
+            {
+                (areaId, 0x4 + 2),
+                (objData.ObjId, 0xE + 2),
+                (getMapEntity, 0x18 + 2),
+                (getComponent, 0x2E + 2),
+                (objData.State, 0x41 + 2)
+            });
+            
+            _memoryIo.AllocateAndExecute(bytes);
+        }
     }
     
 }

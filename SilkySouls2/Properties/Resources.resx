@@ -2535,4 +2535,26 @@ ff d0                   call   rax
 48 81 c4 08 02 00 00    add    rsp,0x208
 c3                      ret</value>
   </data>
+  <data name="SetObjState" xml:space="preserve">
+    <value>48 83 ec 28             sub    rsp,0x28
+48 b9 00 00 00 00 00    movabs rcx,0x0
+00 00 00
+48 ba 00 00 00 00 00    movabs rdx,0x0
+00 00 00
+48 b8 00 00 00 00 00    movabs rax,0x0
+00 00 00
+ff d0                   call   rax
+48 8d 88 b8 00 00 00    lea    rcx,[rax+0xb8]
+48 89 c2                mov    rdx,rax
+48 b8 00 00 00 00 00    movabs rax,0x0
+00 00 00
+ff d0                   call   rax
+48 8b 48 48             mov    rcx,QWORD PTR [rax+0x48]
+48 8b 01                mov    rax,QWORD PTR [rcx]
+48 ba 00 00 00 00 00    movabs rdx,0x0
+00 00 00
+ff 50 30                call   QWORD PTR [rax+0x30]
+48 83 c4 28             add    rsp,0x28
+c3                      ret</value>
+  </data>
 </root>

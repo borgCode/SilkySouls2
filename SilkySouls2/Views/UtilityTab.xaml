@@ -332,10 +332,10 @@
                     <!--           Grid.Column="1" Grid.Row="2" -->
                     <!--           Margin="0,2" /> -->
                     
-                    <CheckBox Content="Transparent Fog"
-                              IsChecked="{Binding IsTransparentFogEnabled}"
-                              Grid.Column="1" Grid.Row="3"
-                              Margin="0,2" />
+                    <!-- <CheckBox Content="Transparent Fog" -->
+                    <!--           IsChecked="{Binding IsTransparentFogEnabled}" -->
+                    <!--           Grid.Column="1" Grid.Row="3" -->
+                    <!--           Margin="0,2" /> -->
                     
                     <CheckBox Content="Draw Collision"
                               IsChecked="{Binding IsDrawCollisionEnabled}"
@@ -366,5 +366,10 @@
                 </Grid>
             </StackPanel>
         </Border>
+        <Button Grid.Row="2" Content="Test"
+                IsEnabled="{Binding AreButtonsEnabled}"
+                Padding="5,3"
+                Click="Test_Click"
+                Margin="0,0,20,0" />
     </Grid>
 </UserControl>

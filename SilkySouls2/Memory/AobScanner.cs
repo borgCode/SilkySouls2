@@ -31,28 +31,10 @@ namespace SilkySouls2.Memory
                 }
             }
 
-            //
+  
             Offsets.GameManagerImp.Base = FindAddressByPattern(Patterns.GameManagerImp);
             Offsets.HkHardwareInfo.Base = FindAddressByPattern(Patterns.HkpPtrEntity);
-            // Offsets.GameMan.Base = FindAddressByPattern(Patterns.GameMan);
-            // Offsets.LuaEventMan.Base = FindAddressByPattern(Patterns.LuaEventMan);
-            // Offsets.SoloParamRepo.Base = FindAddressByPattern(Patterns.SoloParamRepo);
-            // Offsets.AiTargetingFlags.Base = FindAddressByPattern(Patterns.AiTargetingFlags);
-            // Offsets.EventFlagMan.Base = FindAddressByPattern(Patterns.EventFlagMan);
-            // Offsets.MenuMan.Base = FindAddressByPattern(Patterns.MenuMan);
-            // Offsets.DebugFlags.Base = FindAddressByPattern(Patterns.DebugFlags);
-            // Offsets.DebugEvent.Base = FindAddressByPattern(Patterns.DebugEvent);
-            // Offsets.MapItemMan.Base = FindAddressByPattern(Patterns.MapItemMan);
-            // Offsets.GameDataMan.Base = FindAddressByPattern(Patterns.GameDataMan);
-            // Offsets.DamageMan.Base = FindAddressByPattern(Patterns.DamageMan);
-            // Offsets.FieldArea.Base = FindAddressByPattern(Patterns.FieldArea);
-            // Offsets.GroupMask.Base = FindAddressByPattern(Patterns.GroupMask);
-            // Offsets.UserInputManager.Base = FindAddressByPattern(Patterns.UserInputManager);
-            // Offsets.HitIns.Base = FindAddressByPattern(Patterns.HitIns);
-            // Offsets.SprjFlipper.Base = FindAddressByPattern(Patterns.SprjFlipper);
-            // Offsets.WorldObjMan.Base = FindAddressByPattern(Patterns.WorldObjManImpl);
-            //
-            //
+    
             TryPatternWithFallback("InfiniteStam", Patterns.InfiniteStam, addr => Offsets.Patches.InfiniteStam = addr, saved);
             TryPatternWithFallback("InfiniteGoods", Patterns.InfiniteGoods, addr => Offsets.Patches.InfiniteGoods = addr, saved);
             TryPatternWithFallback("HideChrModels", Patterns.HideChrModels, addr => Offsets.Patches.HideChrModels = addr, saved);
@@ -177,6 +159,8 @@ namespace SilkySouls2.Memory
             Offsets.Funcs.UnlockBonfire = FindAddressByPattern(Patterns.UnlockBonfire).ToInt64();
             Offsets.Funcs.GetMapObjStateActComponent = FindAddressByPattern(Patterns.GetMapObjStateActComponent).ToInt64();
             Offsets.Funcs.GetMapEntityWithAreaIdAndObjId = FindAddressByPattern(Patterns.GetMapEntityWithAreaIdAndObjId).ToInt64();
+            Offsets.Funcs.GetNpcEventPram = FindAddressByPattern(Patterns.GetNpcEventParam).ToInt64();
+            Offsets.Funcs.ShowNpcMenu = FindAddressByPattern(Patterns.ShowNpcMenu).ToInt64();
             
             TryPatternWithFallback("SetRenderTargets",
                 Patterns.SetRenderTargetsWrapper,
@@ -189,23 +173,7 @@ namespace SilkySouls2.Memory
 #if DEBUG
             Console.WriteLine($"GameManagerImp.Base: 0x{Offsets.GameManagerImp.Base.ToInt64():X}");
             Console.WriteLine($"HkpPtrEntity.Base: 0x{Offsets.HkHardwareInfo.Base.ToInt64():X}");
-            // Console.WriteLine($"LuaEventMan.Base: 0x{Offsets.LuaEventMan.Base.ToInt64():X}");
-            // Console.WriteLine($"EventFlagMan.Base: 0x{Offsets.EventFlagMan.Base.ToInt64():X}");
-            // Console.WriteLine($"SoloParamRepo.Base: 0x{Offsets.SoloParamRepo.Base.ToInt64():X}");
-            // Console.WriteLine($"AiTargetingFlags.Base: 0x{Offsets.AiTargetingFlags.Base.ToInt64():X}");
-            // Console.WriteLine($"MenuMan.Base: 0x{Offsets.MenuMan.Base.ToInt64():X}");
-            // Console.WriteLine($"DebugFlags.Base: 0x{Offsets.DebugFlags.Base.ToInt64():X}");
-            // Console.WriteLine($"DebugEvent.Base: 0x{Offsets.DebugEvent.Base.ToInt64():X}");
-            // Console.WriteLine($"MapItemMan.Base: 0x{Offsets.MapItemMan.Base.ToInt64():X}");
-            // Console.WriteLine($"GameDataMan.Base: 0x{Offsets.GameDataMan.Base.ToInt64():X}");
-            // Console.WriteLine($"DamageMan.Base: 0x{Offsets.DamageMan.Base.ToInt64():X}");
-            // Console.WriteLine($"FieldArea.Base: 0x{Offsets.FieldArea.Base.ToInt64():X}");
-            // Console.WriteLine($"GroupMask.Base: 0x{Offsets.GroupMask.Base.ToInt64():X}");
-            // Console.WriteLine($"UserInputManager.Base: 0x{Offsets.UserInputManager.Base.ToInt64():X}");
-            // Console.WriteLine($"Mesh.Base: 0x{Offsets.HitIns.Base.ToInt64():X}");
-            // Console.WriteLine($"SprjFlipper.Base: 0x{Offsets.SprjFlipper.Base.ToInt64():X}");
-            // Console.WriteLine($"WorldObjMan.Base: 0x{Offsets.WorldObjMan.Base.ToInt64():X}");
-            //
+            
             Console.WriteLine($"Patches.InfiniteStam: 0x{Offsets.Patches.InfiniteStam.ToInt64():X}");
             Console.WriteLine($"Patches.InfiniteGoods: 0x{Offsets.Patches.InfiniteGoods.ToInt64():X}");
             Console.WriteLine($"Patches.HideChrModels: 0x{Offsets.Patches.HideChrModels.ToInt64():X}");
@@ -275,6 +243,8 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Funcs.UnlockBonfire: 0x{Offsets.Funcs.UnlockBonfire:X}");
             Console.WriteLine($"Funcs.GetMapObjStateActComponent: 0x{Offsets.Funcs.GetMapObjStateActComponent:X}");
             Console.WriteLine($"Funcs.GetMapEntityWithAreaIdAndObjId: 0x{Offsets.Funcs.GetMapEntityWithAreaIdAndObjId:X}");
+            Console.WriteLine($"Funcs.GetNpcEventPram: 0x{Offsets.Funcs.GetNpcEventPram:X}");
+            Console.WriteLine($"Funcs.ShowNpcMenu: 0x{Offsets.Funcs.ShowNpcMenu:X}");
 #endif
         }
 

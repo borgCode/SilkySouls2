@@ -1,4 +1,5 @@
 ﻿using System;
+using SilkySouls2.Memory;
 using SilkySouls2.Memory.DLLShared;
 using SilkySouls2.Services;
 using SilkySouls2.Utilities;
@@ -391,6 +392,11 @@ namespace SilkySouls2.ViewModels
             if (IsDrawRagdollsEnabled) _utilityService.ToggleRagdoll(true);
             if (IsSeeThroughWallsEnabled) _utilityService.ToggleRagdollEsp(true);
             if (IsTransparentFogEnabled) _utilityService.ToggleTransparentFog(true);
+        }
+
+        public void Test()
+        {
+            _utilityService.OpenNpcMenu(GameIds.NpcMenu.Chloanne);
         }
     }
 }

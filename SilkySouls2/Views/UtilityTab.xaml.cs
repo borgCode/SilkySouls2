@@ -16,6 +16,10 @@ namespace SilkySouls2.Views
         }
 
         private void ForceSave_Click(object sender, RoutedEventArgs e) => _utilityViewModel.ForceSave();
-        
+
+        private void Test_Click(object sender, RoutedEventArgs e)
+        {
+            _utilityViewModel.Test();
+        }
     }
 }

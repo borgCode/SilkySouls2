@@ -646,6 +646,30 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 48 81 ec 08 02 00 00    sub    rsp,0x208
+        ///48 8d 8c 24 80 01 00    lea    rcx,[rsp+0x180]
+        ///00
+        ///48 ba 00 00 00 00 00    movabs rdx,0x0
+        ///00 00 00
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
+        ///ff d0                   call   rax
+        ///49 bf 00 00 00 00 00    movabs r15,0x0
+        ///00 00 00
+        ///4d 8b 3f                mov    r15,QWORD PTR [r15]
+        ///49 8b 8f d0 00 00 00    mov    rcx,QWORD PTR [r15+0xd0]
+        ///48 8b 01                mov    rax,QWORD PTR [rcx]
+        ///48 8d 94 24 60 01 00    lea    rdx,[rsp+0x160]
+        ///00
+        ///ff 90 48 01 00 00   [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string OpenNpcMenu {
+            get {
+                return ResourceManager.GetString("OpenNpcMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 8b 05 00 00 00 00       mov    eax,DWORD PTR [rip+0x0]        # 6 &lt;_main+0x6&gt;
         ///e9 00 00 00 00          jmp    b &lt;_main+0xb&gt;.
         /// </summary>

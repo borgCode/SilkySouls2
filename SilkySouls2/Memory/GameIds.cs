@@ -18,10 +18,7 @@
             public static readonly long[] Scepter = { 536000024, 536000010 };
         }
 
-        public static class NpcMenu
-        {
-            public const long Chloanne = 76200000;
-        }
+
         
         
         public static class SpEffects

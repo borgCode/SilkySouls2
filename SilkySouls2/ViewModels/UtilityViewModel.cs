@@ -396,7 +396,7 @@ namespace SilkySouls2.ViewModels
 
         public void Test()
         {
-            _utilityService.OpenNpcMenu(GameIds.NpcMenu.Chloanne);
+           
         }
     }
 }

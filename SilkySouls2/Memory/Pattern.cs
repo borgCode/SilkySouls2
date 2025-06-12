@@ -277,21 +277,6 @@ namespace SilkySouls2.Memory
             0,
             None
         );
-
-        public static readonly Pattern GetNpcEventParam = new Pattern(
-            new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x48, 0x8D, 0x8D, 0x90, 0x0B },
-            "x????xxxxx",
-            0,
-            Call
-        );
-        
-        public static readonly Pattern ShowNpcMenu = new Pattern(
-            new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x48, 0x8D, 0x8D, 0x90, 0x0B },
-            "x????xxxxx",
-            0x50,
-            Call
-        );
-        
         
         public static readonly Pattern CurrentItemQuantityCheck = new Pattern(
             new byte[] { 0x48, 0x98, 0x8B, 0x8C, 0x82, 0xCC, 0x52 },

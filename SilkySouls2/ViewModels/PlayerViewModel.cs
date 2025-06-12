@@ -116,7 +116,7 @@ namespace SilkySouls2.ViewModels
             _hotkeyManager.RegisterAction("SavePos2", () => SavePos(1));
             _hotkeyManager.RegisterAction("RestorePos1", () => RestorePos(0));
             _hotkeyManager.RegisterAction("RestorePos2", () => RestorePos(1));
-            _hotkeyManager.RegisterAction("RTSR", () => SetHp(1));
+            _hotkeyManager.RegisterAction("RTSR", SetRtsr);
             _hotkeyManager.RegisterAction("NoDeath", () => { IsNoDeathEnabled = !IsNoDeathEnabled; });
             _hotkeyManager.RegisterAction("OneShot", () => { IsOneShotEnabled = !IsOneShotEnabled; });
             _hotkeyManager.RegisterAction("DealNoDamage", () => { IsDealNoDamageEnabled = !IsDealNoDamageEnabled; });
@@ -193,10 +193,10 @@ namespace SilkySouls2.ViewModels
             CurrentHp = hp;
         }
 
-        public void SetMaxHp()
-        {
-            _playerService.SetFullHp();
-        }
+        public void SetRtsr() => _playerService.SetRtsr();
+
+        public void SetMaxHp() =>_playerService.SetFullHp();
+  
         
         public bool IsHealthWindowOpen
         {

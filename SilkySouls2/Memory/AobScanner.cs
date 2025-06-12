@@ -159,8 +159,6 @@ namespace SilkySouls2.Memory
             Offsets.Funcs.UnlockBonfire = FindAddressByPattern(Patterns.UnlockBonfire).ToInt64();
             Offsets.Funcs.GetMapObjStateActComponent = FindAddressByPattern(Patterns.GetMapObjStateActComponent).ToInt64();
             Offsets.Funcs.GetMapEntityWithAreaIdAndObjId = FindAddressByPattern(Patterns.GetMapEntityWithAreaIdAndObjId).ToInt64();
-            Offsets.Funcs.GetNpcEventPram = FindAddressByPattern(Patterns.GetNpcEventParam).ToInt64();
-            Offsets.Funcs.ShowNpcMenu = FindAddressByPattern(Patterns.ShowNpcMenu).ToInt64();
             
             TryPatternWithFallback("SetRenderTargets",
                 Patterns.SetRenderTargetsWrapper,
@@ -243,8 +241,6 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Funcs.UnlockBonfire: 0x{Offsets.Funcs.UnlockBonfire:X}");
             Console.WriteLine($"Funcs.GetMapObjStateActComponent: 0x{Offsets.Funcs.GetMapObjStateActComponent:X}");
             Console.WriteLine($"Funcs.GetMapEntityWithAreaIdAndObjId: 0x{Offsets.Funcs.GetMapEntityWithAreaIdAndObjId:X}");
-            Console.WriteLine($"Funcs.GetNpcEventPram: 0x{Offsets.Funcs.GetNpcEventPram:X}");
-            Console.WriteLine($"Funcs.ShowNpcMenu: 0x{Offsets.Funcs.ShowNpcMenu:X}");
 #endif
         }
 

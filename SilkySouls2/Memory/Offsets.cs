@@ -266,8 +266,6 @@ namespace SilkySouls2.Memory
             public static long UnlockBonfire;
             public static long GetMapObjStateActComponent;
             public static long GetMapEntityWithAreaIdAndObjId;
-            public static long GetNpcEventPram;
-            public static long ShowNpcMenu;
         }
     }
 }

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Threading.Tasks;
 using SilkySouls2.Memory;
 using SilkySouls2.Memory.DLLShared;
 using SilkySouls2.Utilities;
@@ -462,19 +460,6 @@ namespace SilkySouls2.Services
             }
         }
 
-        public void OpenNpcMenu(long npcId)
-        {
-            var bytes = AsmLoader.GetAsmBytes("OpenNpcMenu");
-            AsmHelper.WriteAbsoluteAddresses(bytes, new []
-            {
-                (npcId, 0xF + 2),
-                (Funcs.GetNpcEventPram, 0x19 + 2),
-                (GameManagerImp.Base.ToInt64(), 0x25 + 2),
-                (Funcs.ShowNpcMenu, 0x62 + 2)
-            });
-            
-            _memoryIo.AllocateAndExecute(bytes);
-        }
     }
     
 }

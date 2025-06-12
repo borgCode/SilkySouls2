@@ -18,8 +18,6 @@
             public static readonly long[] Scepter = { 536000024, 536000010 };
         }
 
-
-        
         
         public static class SpEffects
         {

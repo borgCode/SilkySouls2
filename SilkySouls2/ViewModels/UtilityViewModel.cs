@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using SilkySouls2.Memory;
 using SilkySouls2.Memory.DLLShared;
+using SilkySouls2.Models;
 using SilkySouls2.Services;
 using SilkySouls2.Utilities;
 
@@ -47,12 +51,17 @@ namespace SilkySouls2.ViewModels
         private bool _isNoClipEnabled;
         private bool _wasNoDeathEnabled;
 
+
+        private Dictionary<int, string> _spellLookup = new Dictionary<int, string>();
+
         public UtilityViewModel(UtilityService utilityService, HotkeyManager hotkeyManager,
             PlayerViewModel playerViewModel)
         {
             _playerViewModel = playerViewModel;
             _utilityService = utilityService;
             _hotkeyManager = hotkeyManager;
+
+            _spellLookup = DataLoader.GetItemList("Spells").ToDictionary(s => s.Id, s => s.Name);
 
             RegisterHotkeys();
         }
@@ -393,10 +402,42 @@ namespace SilkySouls2.ViewModels
             if (IsSeeThroughWallsEnabled) _utilityService.ToggleRagdollEsp(true);
             if (IsTransparentFogEnabled) _utilityService.ToggleTransparentFog(true);
         }
+        
+        
+        private ObservableCollection<string> _availableSpells;
+        public ObservableCollection<string> AvailableSpells 
+        {
+            get => _availableSpells;
+            private set => SetProperty(ref _availableSpells, value);
+        }
+        
+        private ObservableCollection<string> _equippedSpells;
+        public ObservableCollection<string> EquippedSpells
+        {
+            get => _equippedSpells; 
+            private set => SetProperty(ref _equippedSpells, value);
+        }
+        
+        
+        public void RefreshSpells()
+        {
+            var inventorySpells = _utilityService.GetInventorySpells();
+            var equippedSpells = _utilityService.GetEquippedSpells();
+            
+            foreach (var inventorySpell in inventorySpells)
+            {
+                inventorySpell.Name = _spellLookup.TryGetValue(inventorySpell.Id, out string name) ? name : "Unknown";
+            }
+            
+            foreach (var equippedSpell in equippedSpells)
+            {
+                equippedSpell.Name = _spellLookup.TryGetValue(equippedSpell.Id, out string name) ? name : "Unknown";
+            }
+        }
 
         public void Test()
         {
-            
+            RefreshSpells();
         }
     }
 }

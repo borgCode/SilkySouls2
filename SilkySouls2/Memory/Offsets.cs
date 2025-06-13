@@ -44,6 +44,7 @@ namespace SilkySouls2.Memory
             public static class EventManagerOffsets
             {
                 public const int EventFlagManager = 0x20;
+                public const int EventPointManager = 0x30;
                 public const int EventBonfireManager = 0x58;
                 public const int WarpEventEntity = 0x70;
             }
@@ -58,9 +59,30 @@ namespace SilkySouls2.Memory
                 public static class Inventory
                 {
                     public const int InventoryLists = 0x10;
-                    public const int ItemInventory2BagList = 0x10;
+                    public const int ItemInventory2BagListPtr = 0x10;
                     public const int ItemInventory2BagListForSpells = 0xD0;
+
+                    public static class ItemInventory2BagList
+                    {
+                        public const int ItemInvetory2SpellListPtr = 0x259C8;
+                    }
+
+                    public static class ItemInvetory2SpellList
+                    {
+                        public const int ListStart = 0x10;
+                        public const int Count = 0x32;
+                        
+                    }
+
+                    public static class SpellEntry
+                    {
+                        public const int NextPtr = 0x8;
+                        public const int SpellId = 0x14;
+                        public const int IsEquipped = 0x1F;
+                    }
+                    
                 }
+                
             }
 
             public static class SaveLoadSystem
@@ -99,11 +121,14 @@ namespace SilkySouls2.Memory
                 public const int LightPoiseMax = 0x220;
                 public const int ChrCullingGroupCtrlPtr = 0x240;
                 public const int Speed = 0x2A8;
+                public const int EquippedSpellsPtr = 0x378;
+                public const int EquippedSpellsStart = 0x9B8;
                 public const int ChrSpEffectCtrl = 0x3E0;
                 
                 public const int StatsPtr = 0x490;
+
+            
                 
-                //TODO 4c0 flags
 
                 public static class ChrParam
                 {
@@ -266,6 +291,9 @@ namespace SilkySouls2.Memory
             public static long UnlockBonfire;
             public static long GetMapObjStateActComponent;
             public static long GetMapEntityWithAreaIdAndObjId;
+            public static long GetNavimeshLoc;
+            public static long DisableNaviMesh;
+            public static long GetWhiteDoorComponent;
         }
     }
 }

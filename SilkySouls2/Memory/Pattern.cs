@@ -306,6 +306,20 @@ namespace SilkySouls2.Memory
             None
         );
 
+        public static readonly Pattern DisableNaviMesh = new Pattern(
+            new byte[] { 0x48, 0x85, 0xC0, 0x0F, 0x84, 0x7F, 0x5B },
+            "xxxxxxx",
+            0,
+            None
+        );
+
+        public static readonly Pattern GetWhiteDoorComponent = new Pattern(
+            new byte[] { 0x0F, 0x95, 0xC1, 0x88, 0x88, 0x8A },
+            "xxxxxx",
+            -0x10,
+            Call
+        );
+
 
         public static readonly Pattern CreateSoundEvent = new Pattern(
             new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x84, 0xC0, 0x74, 0x4C, 0x48, 0x8B, 0x83 },

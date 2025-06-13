@@ -159,6 +159,13 @@ namespace SilkySouls2.Memory
             Offsets.Funcs.UnlockBonfire = FindAddressByPattern(Patterns.UnlockBonfire).ToInt64();
             Offsets.Funcs.GetMapObjStateActComponent = FindAddressByPattern(Patterns.GetMapObjStateActComponent).ToInt64();
             Offsets.Funcs.GetMapEntityWithAreaIdAndObjId = FindAddressByPattern(Patterns.GetMapEntityWithAreaIdAndObjId).ToInt64();
+            Offsets.Funcs.GetWhiteDoorComponent = FindAddressByPattern(Patterns.GetWhiteDoorComponent).ToInt64();
+            
+            FindMultipleCallsInFunction(Patterns.DisableNaviMesh, new Dictionary<Action<long>, int>
+            {
+                { addr => Offsets.Funcs.GetNavimeshLoc = addr, -0xD },
+                { addr => Offsets.Funcs.DisableNaviMesh = addr, 0xE },
+            });
             
             TryPatternWithFallback("SetRenderTargets",
                 Patterns.SetRenderTargetsWrapper,
@@ -241,6 +248,9 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Funcs.UnlockBonfire: 0x{Offsets.Funcs.UnlockBonfire:X}");
             Console.WriteLine($"Funcs.GetMapObjStateActComponent: 0x{Offsets.Funcs.GetMapObjStateActComponent:X}");
             Console.WriteLine($"Funcs.GetMapEntityWithAreaIdAndObjId: 0x{Offsets.Funcs.GetMapEntityWithAreaIdAndObjId:X}");
+            Console.WriteLine($"Funcs.GetNavimeshLoc: 0x{Offsets.Funcs.GetNavimeshLoc:X}");
+            Console.WriteLine($"Funcs.DisableNaviMesh: 0x{Offsets.Funcs.DisableNaviMesh:X}");
+            Console.WriteLine($"Funcs.GetWhiteDoorComponent: 0x{Offsets.Funcs.GetWhiteDoorComponent:X}");
 #endif
         }
 
@@ -352,6 +362,21 @@ namespace SilkySouls2.Memory
             }
 
             return addresses;
+        }
+        
+        private void FindMultipleCallsInFunction(Pattern basePattern, Dictionary<Action<long>, int> callMappings)
+        {
+            var baseInstructionAddr = FindAddressByPattern(basePattern);
+    
+            foreach (var mapping in callMappings)
+            {
+                var callInstructionAddr = IntPtr.Add(baseInstructionAddr, mapping.Value);
+        
+                int callOffset = _memoryIo.ReadInt32(IntPtr.Add(callInstructionAddr, 1));
+                var callTarget = IntPtr.Add(callInstructionAddr, callOffset + 5);
+        
+                mapping.Key(callTarget.ToInt64());
+            }
         }
     }
 }

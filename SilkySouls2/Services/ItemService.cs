@@ -43,7 +43,7 @@ namespace SilkySouls2.Services
             }, true);
             var itemIventory2BagList =
                 _memoryIo.ReadInt64(inventoryLists +
-                                    GameManagerImp.GameDataManagerOffsets.Inventory.ItemInventory2BagList);
+                                    GameManagerImp.GameDataManagerOffsets.Inventory.ItemInventory2BagListPtr);
             var dlBackAllocator =
                 _memoryIo.ReadInt64((IntPtr)_memoryIo.ReadInt64(GameManagerImp.Base) + GameManagerImp.Offsets.DLBackAllocator);
             

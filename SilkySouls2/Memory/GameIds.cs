@@ -35,6 +35,31 @@
             public static readonly SetObjState SinnerLighting2 = new SetObjState { ObjId = 10161000, State = 70 };
             public static readonly SetObjState SinnerLighting3 = new SetObjState { ObjId = 10161003, State = 71 };
             public static readonly SetObjState SinnerLighting4 = new SetObjState { ObjId = 10161001, State = 70 };
+            
+            public static readonly SetObjState GargoylesDoor = new SetObjState { ObjId = 10161051, State = 20 };
+        }
+
+        public static class Navimesh
+        {
+            public struct DisableNavimesh
+            {
+                public int EventId;
+                public int State;
+            }
+            
+            public static readonly DisableNavimesh GargoylesDoor = new DisableNavimesh { EventId = 400000, State = 0x100 };
+        }
+
+        public static class WhiteDoor
+        {
+            public struct DisableWhiteDoor
+            {
+                public int ObjId;
+                public int State;
+            }
+            
+            public static readonly DisableWhiteDoor GargoylesDoor = new DisableWhiteDoor { ObjId = 10160620, State = 0 };
+            
         }
         
         public static class SpEffects

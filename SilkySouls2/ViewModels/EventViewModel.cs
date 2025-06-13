@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using SilkySouls2.Memory;
 using SilkySouls2.Models;
 using SilkySouls2.Services;
@@ -184,7 +185,14 @@ namespace SilkySouls2.ViewModels
 
         public void Test()
         {
-        
+           
+        }
+
+        public void OpenGargsDoor()
+        {
+            _utilityService.SetObjState(GameIds.Area.Bastille, GameIds.Obj.GargoylesDoor);
+            _utilityService.DisableNavimesh(GameIds.Area.Bastille, GameIds.Navimesh.GargoylesDoor);
+            _utilityService.DisableWhiteDoor(GameIds.Area.Bastille, GameIds.WhiteDoor.GargoylesDoor);
         }
 
         public void LightSinner()

@@ -246,6 +246,32 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 48 b9 00 00 00 00 00    movabs rcx,0x0
+        ///00 00 00
+        ///48 ba 00 00 00 00 00    movabs rdx,0x0
+        ///00 00 00
+        ///49 b8 00 00 00 00 00    movabs r8,0x0
+        ///00 00 00
+        ///48 81 ec 08 01 00 00    sub    rsp,0x108
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
+        ///ff d0                   call   rax
+        ///48 89 c1                mov    rcx,rax
+        ///48 ba 00 00 00 00 00    movabs rdx,0x0
+        ///00 00 00
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
+        ///ff d0                   call   rax
+        ///48 81 c4 08 01 00 00    add    rsp,0x108
+        ///c3                [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string DisableNavimesh {
+            get {
+                return ResourceManager.GetString("DisableNavimesh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 81 fa 5e 1f 02 20    cmp    rdx,0x20021f5e
         ///75 03                   jne    c &lt;normal&gt;
         ///4d 31 c0                xor    r8,r8
@@ -277,6 +303,29 @@ namespace SilkySouls2.Properties {
         internal static string DisableTargetAi {
             get {
                 return ResourceManager.GetString("DisableTargetAi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 48 83 ec 28             sub    rsp,0x28
+        ///48 b9 00 00 00 00 00    movabs rcx,0x0
+        ///00 00 00
+        ///48 ba 00 00 00 00 00    movabs rdx,0x0
+        ///00 00 00
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
+        ///ff d0                   call   rax
+        ///48 89 c1                mov    rcx,rax
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
+        ///ff d0                   call   rax
+        ///c6 80 8a 00 00 00 00    mov    BYTE PTR [rax+0x8a],0x0
+        ///48 83 c4 28             add    rsp,0x28
+        ///c3                      ret.
+        /// </summary>
+        internal static string DisableWhiteDoorKeyGuide {
+            get {
+                return ResourceManager.GetString("DisableWhiteDoorKeyGuide", resourceCulture);
             }
         }
         

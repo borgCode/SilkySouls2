@@ -2557,4 +2557,41 @@ ff 50 30                call   QWORD PTR [rax+0x30]
 48 83 c4 28             add    rsp,0x28
 c3                      ret</value>
   </data>
+  <data name="DisableNavimesh" xml:space="preserve">
+    <value>48 b9 00 00 00 00 00    movabs rcx,0x0
+00 00 00
+48 ba 00 00 00 00 00    movabs rdx,0x0
+00 00 00
+49 b8 00 00 00 00 00    movabs r8,0x0
+00 00 00
+48 81 ec 08 01 00 00    sub    rsp,0x108
+48 b8 00 00 00 00 00    movabs rax,0x0
+00 00 00
+ff d0                   call   rax
+48 89 c1                mov    rcx,rax
+48 ba 00 00 00 00 00    movabs rdx,0x0
+00 00 00
+48 b8 00 00 00 00 00    movabs rax,0x0
+00 00 00
+ff d0                   call   rax
+48 81 c4 08 01 00 00    add    rsp,0x108
+c3                      ret</value>
+  </data>
+  <data name="DisableWhiteDoorKeyGuide" xml:space="preserve">
+    <value>48 83 ec 28             sub    rsp,0x28
+48 b9 00 00 00 00 00    movabs rcx,0x0
+00 00 00
+48 ba 00 00 00 00 00    movabs rdx,0x0
+00 00 00
+48 b8 00 00 00 00 00    movabs rax,0x0
+00 00 00
+ff d0                   call   rax
+48 89 c1                mov    rcx,rax
+48 b8 00 00 00 00 00    movabs rax,0x0
+00 00 00
+ff d0                   call   rax
+c6 80 8a 00 00 00 00    mov    BYTE PTR [rax+0x8a],0x0
+48 83 c4 28             add    rsp,0x28
+c3                      ret</value>
+  </data>
 </root>

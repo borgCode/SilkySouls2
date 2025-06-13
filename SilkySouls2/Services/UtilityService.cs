@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using SilkySouls2.Memory;
 using SilkySouls2.Memory.DLLShared;
+using SilkySouls2.Models;
 using SilkySouls2.Utilities;
 using static SilkySouls2.Memory.Offsets;
 
@@ -476,6 +478,98 @@ namespace SilkySouls2.Services
             });
             
             _memoryIo.AllocateAndExecute(bytes);
+        }
+
+        public void DisableNavimesh(long areaId, GameIds.Navimesh.DisableNavimesh naviData)
+        {
+            var eventPointMan = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+            {
+                GameManagerImp.Offsets.EventManager,
+                GameManagerImp.EventManagerOffsets.EventPointManager
+            }, true);
+
+            var getNaviLoc = Funcs.GetNavimeshLoc;
+            var disableNavi = Funcs.DisableNaviMesh;
+
+            var bytes = AsmLoader.GetAsmBytes("DisableNavimesh");
+            AsmHelper.WriteAbsoluteAddresses(bytes, new []
+            {
+                (eventPointMan.ToInt64(),  2),
+                (areaId, 0xA + 2),
+                (naviData.EventId, 0x14 + 2),
+                (getNaviLoc, 0x25 + 2),
+                (naviData.State, 0x34 + 2),
+                (disableNavi, 0x3E + 2)
+            });
+            
+            _memoryIo.AllocateAndExecute(bytes);
+        }
+
+        public void DisableWhiteDoor(long areaId, GameIds.WhiteDoor.DisableWhiteDoor whiteDoorData)
+        {
+            
+            var getMapEntity = Funcs.GetMapEntityWithAreaIdAndObjId;
+            var getComponent = Funcs.GetWhiteDoorComponent;
+
+            var bytes = AsmLoader.GetAsmBytes("DisableWhiteDoorKeyGuide");
+            AsmHelper.WriteAbsoluteAddresses(bytes, new []
+            {
+                (areaId, 0x4 + 2),
+                (whiteDoorData.ObjId, 0xE + 2),
+                (getMapEntity, 0x18 + 2),
+                (getComponent, 0x27 + 2)
+            });
+            
+            _memoryIo.AllocateAndExecute(bytes);
+        }
+
+        public List<InventorySpell> GetInventorySpells()
+        {
+            var spellBase = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+            {
+                GameManagerImp.Offsets.GameDataManager,
+                GameManagerImp.GameDataManagerOffsets.InventoryPtr,
+                GameManagerImp.GameDataManagerOffsets.Inventory.InventoryLists,
+                GameManagerImp.GameDataManagerOffsets.Inventory.ItemInventory2BagListPtr,
+                GameManagerImp.GameDataManagerOffsets.Inventory.ItemInventory2BagList.ItemInvetory2SpellListPtr,
+            }, true);
+
+            var count = _memoryIo.ReadUInt8(spellBase + GameManagerImp.GameDataManagerOffsets.Inventory.ItemInvetory2SpellList.Count);
+            if (count == 0) return new List<InventorySpell>();
+
+            List<InventorySpell> currentSpells = new List<InventorySpell>();
+            var current = (IntPtr) _memoryIo.ReadInt64(spellBase + GameManagerImp.GameDataManagerOffsets.Inventory.ItemInvetory2SpellList.ListStart);
+
+            for (int i = 0; i < count && current != IntPtr.Zero; i++)
+            {
+                var spellId = _memoryIo.ReadInt32(current + GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.SpellId);
+                var isEquipped = _memoryIo.ReadUInt8(current + GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.IsEquipped);
+                
+                currentSpells.Add(new InventorySpell(spellId, isEquipped == 2));
+                current = (IntPtr) _memoryIo.ReadInt64(current + GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.NextPtr);
+            }
+
+            return currentSpells;
+        }
+
+        public List<EquippedSpell> GetEquippedSpells()
+        {
+            var currentSpell = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+            {
+                GameManagerImp.Offsets.PlayerCtrl,
+                GameManagerImp.ChrCtrlOffsets.EquippedSpellsPtr,
+                GameManagerImp.ChrCtrlOffsets.EquippedSpellsStart
+            }, false);
+
+            List<EquippedSpell> currentSpells = new List<EquippedSpell>();
+
+            for (int i = 0; i < 14; i++)
+            {
+                currentSpells.Add(new EquippedSpell(_memoryIo.ReadInt32(currentSpell), i));
+                currentSpell += 0x10;
+            }
+
+            return currentSpells;
         }
     }
     

@@ -208,6 +208,12 @@ namespace SilkySouls2.Memory
             var bytes = ReadBytes(addr, 1);
             return bytes[0];
         }
+        
+        public uint ReadUInt16(IntPtr addr)
+        {
+            var bytes = ReadBytes(addr, 2);
+            return BitConverter.ToUInt16(bytes, 0);
+        }
 
         public uint ReadUInt32(IntPtr addr)
         {

@@ -423,7 +423,8 @@ namespace SilkySouls2.ViewModels
         }
         
         public int EquippedSlotsRows => (int)Math.Ceiling(NumOfSlots / 7.0);
-        
+        public bool HasAttunementSlots => NumOfSlots > 0;
+        public bool HasSpellsInInventory => AvailableSpells?.Count > 0;
         
         public void RefreshSpells()
         {
@@ -457,6 +458,8 @@ namespace SilkySouls2.ViewModels
             }
 
             OnPropertyChanged(nameof(EquippedSlotsRows));
+            OnPropertyChanged(nameof(HasAttunementSlots));
+            OnPropertyChanged(nameof(HasSpellsInInventory));
         }
 
         public void Test()

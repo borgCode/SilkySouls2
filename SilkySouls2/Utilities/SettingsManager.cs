@@ -20,6 +20,8 @@ namespace SilkySouls2.Utilities
         public double ResistancesWindowWidth { get; set; }
         public double ResistancesWindowLeft { get; set; }
         public double ResistancesWindowTop { get; set; }
+        public double AttunementWindowLeft { get; set; }
+        public double AttunementWindowTop { get; set; }
         public double HealthWindowLeft { get; set; }
         public double HealthWindowTop { get; set; }
 
@@ -48,6 +50,8 @@ namespace SilkySouls2.Utilities
                     $"ResistancesWindowWidth={ResistancesWindowWidth}",
                     $"ResistancesWindowLeft={ResistancesWindowLeft}",
                     $"ResistancesWindowTop={ResistancesWindowTop}",
+                    $"AttunementWindowLeft={AttunementWindowLeft}",
+                    $"AttunementWindowTop={AttunementWindowTop}",
                     $"HealthWindowLeft={HealthWindowLeft}",
                     $"HealthWindowTop={HealthWindowTop}",
                 };
@@ -130,6 +134,14 @@ namespace SilkySouls2.Utilities
                                 case "HealthWindowTop":
                                     double.TryParse(value, out double hwt);
                                     settings.HealthWindowTop = hwt;
+                                    break;
+                                case "AttunementWindowLeft":
+                                    double.TryParse(value, out double awl);
+                                    settings.AttunementWindowLeft = awl;
+                                    break;
+                                case "AttunementWindowTop":
+                                    double.TryParse(value, out double awt);
+                                    settings.AttunementWindowTop = awt;
                                     break;
                             }
                         }

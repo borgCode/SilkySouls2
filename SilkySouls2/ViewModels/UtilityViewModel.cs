@@ -498,7 +498,7 @@ namespace SilkySouls2.ViewModels
         
         public async void HandleSpellAttune(InventorySpell spell)
         {
-            
+            if (!AreButtonsEnabled) return;
             int emptySlots = EquippedSpells.Count(s => s.Id <= 0);
    
             if (spell.SlotReq > emptySlots)
@@ -519,6 +519,7 @@ namespace SilkySouls2.ViewModels
 
         public async void HandleUnAttune(int slotIndex)
         {
+            if (!AreButtonsEnabled) return;
             _utilityService.AttuneSpell(slotIndex, IntPtr.Zero);
             await Task.Delay(50);
             RefreshSpells();

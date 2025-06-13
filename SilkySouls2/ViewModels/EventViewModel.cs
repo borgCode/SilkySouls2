@@ -134,6 +134,13 @@ namespace SilkySouls2.ViewModels
             get => _areButtonsEnabled;
             set => SetProperty(ref _areButtonsEnabled, value);
         }
+
+        private bool _isAreaBastille;
+        public bool IsAreaBastille
+        {
+            get => _isAreaBastille;
+            set => SetProperty(ref _isAreaBastille, value);
+        }
         
         private bool _isSnowstormDisabled;
         public bool IsSnowstormDisabled
@@ -201,6 +208,11 @@ namespace SilkySouls2.ViewModels
             _utilityService.SetObjState(GameIds.Area.Bastille, GameIds.Obj.SinnerLighting2);
             _utilityService.SetObjState(GameIds.Area.Bastille, GameIds.Obj.SinnerLighting3);
             _utilityService.SetObjState(GameIds.Area.Bastille, GameIds.Obj.SinnerLighting4);
+        }
+
+        public void AreaChange(int currentArea)
+        {
+            IsAreaBastille = currentArea == GameIds.Area.Bastille;
         }
     }
 }

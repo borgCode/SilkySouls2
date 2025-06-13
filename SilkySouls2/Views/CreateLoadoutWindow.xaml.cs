@@ -77,6 +77,11 @@ namespace SilkySouls2.Views
             }
             
             DataContext = this;
+            
+            if (Application.Current.MainWindow != null)
+            {
+                Application.Current.MainWindow.Closing += (sender, args) => { Close(); };
+            }
         }
         
         public ObservableCollection<LoadoutTemplate> CustomLoadouts

@@ -12,6 +12,11 @@ namespace SilkySouls2.Views
         public AttunementWindow()
         {
             InitializeComponent();
+            
+            if (Application.Current.MainWindow != null)
+            {
+                Application.Current.MainWindow.Closing += (sender, args) => { Close(); };
+            }
         }
 
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

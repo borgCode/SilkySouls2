@@ -235,34 +235,44 @@
 
                 <Grid Margin="10,0,0,0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-
-                    <CheckBox Grid.Column="0" Grid.Row="0" Content="Disable Frigid Snowstorm"
-                              IsChecked="{Binding IsSnowstormDisabled}"
-                              Margin="0,2" />
-
-
-                    <CheckBox Content="Disable Memory Timer"
-                              Grid.Column="0" Grid.Row="1"
-                              IsChecked="{Binding IsMemoryTimerDisabled}"
-                              Margin="0,2" />
                     
-                    <Button Content="Test"
-                              Grid.Column="0" Grid.Row="2"
-                              IsEnabled="{Binding AreButtonsEnabled}"
-                              Click="Test_Click"
-                              Margin="0,2" />
+                    <StackPanel Grid.Column="0">
+                        <CheckBox Content="Disable Frigid Snowstorm"
+                                  IsChecked="{Binding IsSnowstormDisabled}"
+                                  Margin="0,2" />
+                        <CheckBox Content="Disable Memory Timer"
+                                  IsChecked="{Binding IsMemoryTimerDisabled}"
+                                  Margin="0,2" />
+                    </StackPanel>
                     
+                    <UniformGrid Grid.Column="1" 
+                                 Columns="2"
+                                 Margin="10,0,0,0">
+                        <Button Content="Open Gargs door"
+                                Click="OpenGargs_Click"
+                                Margin="2">
+                            <Button.IsEnabled>
+                                <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                    <Binding Path="AreButtonsEnabled"/>
+                                    <Binding Path="IsAreaBastille"/>
+                       
+                                </MultiBinding>
+                            </Button.IsEnabled>
+                        </Button>
+                        <Button Content="Light Sinner Fires"
+                                Click="LightSinner_Click"
+                                Margin="2">
+                            <Button.IsEnabled>
+                                <MultiBinding Converter="{StaticResource BooleanAndConverter}">
+                                    <Binding Path="AreButtonsEnabled"/>
+                                    <Binding Path="IsAreaBastille"/>
+                                </MultiBinding>
+                            </Button.IsEnabled>
+                        </Button>
+                    </UniformGrid>
                 </Grid>
             </StackPanel>
         </Border>

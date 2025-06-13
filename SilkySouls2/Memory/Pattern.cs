@@ -34,7 +34,14 @@ namespace SilkySouls2.Memory
             0,
             Mov64
         );
-        
+
+        public static readonly Pattern MapId = new Pattern(
+            new byte[] { 0x8B, 0x44, 0x24, 0x40, 0x89, 0x05 },
+            "xxxxxx",
+            0x4,
+            Mov32
+        );
+
         
         // Hooks
 

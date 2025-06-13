@@ -43,5 +43,9 @@ namespace SilkySouls2.Views
         {
             _eventViewModel.Test();
         }
+
+        private void OpenGargs_Click(object sender, RoutedEventArgs e) => _eventViewModel.OpenGargsDoor();
+
+        private void LightSinner_Click(object sender, RoutedEventArgs e) => _eventViewModel.LightSinner();
     }
 }

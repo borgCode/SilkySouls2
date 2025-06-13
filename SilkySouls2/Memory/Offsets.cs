@@ -217,6 +217,8 @@ namespace SilkySouls2.Memory
             }
         }
 
+        public static IntPtr MapId;
+
         public static class Patches
         {
             public static IntPtr InfiniteStam;

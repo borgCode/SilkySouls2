@@ -98,7 +98,7 @@ namespace SilkySouls2
 
             _gameLoadedTimer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromMilliseconds(1)
+                Interval = TimeSpan.FromMilliseconds(25)
             };
             _gameLoadedTimer.Tick += Timer_Tick;
             _gameLoadedTimer.Start();
@@ -117,6 +117,8 @@ namespace SilkySouls2
 
         private bool _appliedOneTimeFeatures;
         private bool _hasAppliedLaunchFeatures;
+        private int _storedArea;
+        private int _currentArea;
 
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -140,7 +142,14 @@ namespace SilkySouls2
                 {
                     ApplyLaunchFeatures();
                 }
+
                 
+                _currentArea = _memoryIo.ReadInt32(Offsets.MapId);
+                if (_currentArea != _storedArea)
+                {
+                    _eventViewModel.AreaChange(_currentArea);
+                    _storedArea = _currentArea;
+                }
 
                 if (!_hasAllocatedMemory)
                 {

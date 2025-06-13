@@ -34,6 +34,8 @@ namespace SilkySouls2.Memory
   
             Offsets.GameManagerImp.Base = FindAddressByPattern(Patterns.GameManagerImp);
             Offsets.HkHardwareInfo.Base = FindAddressByPattern(Patterns.HkpPtrEntity);
+            Offsets.MapId = FindAddressByPattern(Patterns.MapId);
+    
     
             TryPatternWithFallback("InfiniteStam", Patterns.InfiniteStam, addr => Offsets.Patches.InfiniteStam = addr, saved);
             TryPatternWithFallback("InfiniteGoods", Patterns.InfiniteGoods, addr => Offsets.Patches.InfiniteGoods = addr, saved);
@@ -185,6 +187,7 @@ namespace SilkySouls2.Memory
 #if DEBUG
             Console.WriteLine($"GameManagerImp.Base: 0x{Offsets.GameManagerImp.Base.ToInt64():X}");
             Console.WriteLine($"HkpPtrEntity.Base: 0x{Offsets.HkHardwareInfo.Base.ToInt64():X}");
+            Console.WriteLine($"MapId: 0x{Offsets.MapId.ToInt64():X}");
             
             Console.WriteLine($"Patches.InfiniteStam: 0x{Offsets.Patches.InfiniteStam.ToInt64():X}");
             Console.WriteLine($"Patches.InfiniteGoods: 0x{Offsets.Patches.InfiniteGoods.ToInt64():X}");

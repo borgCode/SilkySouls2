@@ -215,6 +215,18 @@ namespace SilkySouls2.Memory
                 public const int PlayerCoords = 0x1A0;
             }
         }
+
+        public static class FeEntity
+        {
+            public static IntPtr Base;
+
+            public static class AtnSlotChain
+            {
+                public const int Ptr1 = 0x8;
+                public const int Ptr2 = 0x138;
+                public const int NumOfSlots = 0x174;
+            }
+        }
         
 
         public static class Patches
@@ -294,6 +306,9 @@ namespace SilkySouls2.Memory
             public static long GetNavimeshLoc;
             public static long DisableNaviMesh;
             public static long GetWhiteDoorComponent;
+            public static long AttuneSpell;
+            public static long GetNumOfSpellslots1;
+            public static long GetNumOfSpellslots2;
         }
     }
 }

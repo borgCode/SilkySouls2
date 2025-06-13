@@ -366,10 +366,15 @@
                 </Grid>
             </StackPanel>
         </Border>
-        <Button Grid.Row="2" Content="Test"
+        <Button Grid.Row="2" Content="Attunement"
                 IsEnabled="{Binding AreButtonsEnabled}"
                 Padding="5,3"
-                Click="Test_Click"
+                Click="OpenAttunement_Click"
                 Margin="0,0,20,0" />
+        <!-- <Button Grid.Row="2" Content="Test" -->
+        <!--         IsEnabled="{Binding AreButtonsEnabled}" -->
+        <!--         Padding="5,3" -->
+        <!--         Click="Test_Click" -->
+        <!--         Margin="0,0,20,0" /> -->
     </Grid>
 </UserControl>

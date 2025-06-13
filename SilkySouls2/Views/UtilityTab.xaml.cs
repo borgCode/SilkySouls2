@@ -21,5 +21,7 @@ namespace SilkySouls2.Views
         {
             _utilityViewModel.Test();
         }
+
+        private void OpenAttunement_Click(object sender, RoutedEventArgs e) => _utilityViewModel.OpenAttunementWindow();
     }
 }

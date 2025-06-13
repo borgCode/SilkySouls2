@@ -34,6 +34,7 @@ namespace SilkySouls2.Memory
   
             Offsets.GameManagerImp.Base = FindAddressByPattern(Patterns.GameManagerImp);
             Offsets.HkHardwareInfo.Base = FindAddressByPattern(Patterns.HkpPtrEntity);
+            Offsets.FeEntity.Base = FindAddressByPattern(Patterns.FeEntity);
     
             TryPatternWithFallback("InfiniteStam", Patterns.InfiniteStam, addr => Offsets.Patches.InfiniteStam = addr, saved);
             TryPatternWithFallback("InfiniteGoods", Patterns.InfiniteGoods, addr => Offsets.Patches.InfiniteGoods = addr, saved);
@@ -160,11 +161,18 @@ namespace SilkySouls2.Memory
             Offsets.Funcs.GetMapObjStateActComponent = FindAddressByPattern(Patterns.GetMapObjStateActComponent).ToInt64();
             Offsets.Funcs.GetMapEntityWithAreaIdAndObjId = FindAddressByPattern(Patterns.GetMapEntityWithAreaIdAndObjId).ToInt64();
             Offsets.Funcs.GetWhiteDoorComponent = FindAddressByPattern(Patterns.GetWhiteDoorComponent).ToInt64();
+            Offsets.Funcs.AttuneSpell = FindAddressByPattern(Patterns.AttuneSpell).ToInt64();
             
             FindMultipleCallsInFunction(Patterns.DisableNaviMesh, new Dictionary<Action<long>, int>
             {
                 { addr => Offsets.Funcs.GetNavimeshLoc = addr, -0xD },
                 { addr => Offsets.Funcs.DisableNaviMesh = addr, 0xE },
+            });
+            
+            FindMultipleCallsInFunction(Patterns.GetNumOfSpellSlots, new Dictionary<Action<long>, int>
+            {
+                { addr => Offsets.Funcs.GetNumOfSpellslots1 = addr, -0x12 },
+                { addr => Offsets.Funcs.GetNumOfSpellslots2 = addr, -0x8 },
             });
             
             TryPatternWithFallback("SetRenderTargets",
@@ -178,6 +186,7 @@ namespace SilkySouls2.Memory
 #if DEBUG
             Console.WriteLine($"GameManagerImp.Base: 0x{Offsets.GameManagerImp.Base.ToInt64():X}");
             Console.WriteLine($"HkpPtrEntity.Base: 0x{Offsets.HkHardwareInfo.Base.ToInt64():X}");
+            Console.WriteLine($"FeEntity.Base: 0x{Offsets.FeEntity.Base.ToInt64():X}");
             
             Console.WriteLine($"Patches.InfiniteStam: 0x{Offsets.Patches.InfiniteStam.ToInt64():X}");
             Console.WriteLine($"Patches.InfiniteGoods: 0x{Offsets.Patches.InfiniteGoods.ToInt64():X}");
@@ -251,6 +260,9 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Funcs.GetNavimeshLoc: 0x{Offsets.Funcs.GetNavimeshLoc:X}");
             Console.WriteLine($"Funcs.DisableNaviMesh: 0x{Offsets.Funcs.DisableNaviMesh:X}");
             Console.WriteLine($"Funcs.GetWhiteDoorComponent: 0x{Offsets.Funcs.GetWhiteDoorComponent:X}");
+            Console.WriteLine($"Funcs.AttuneSpell: 0x{Offsets.Funcs.AttuneSpell:X}");
+            Console.WriteLine($"Funcs.GetNumOfSpellslots1: 0x{Offsets.Funcs.GetNumOfSpellslots1:X}");
+            Console.WriteLine($"Funcs.GetNumOfSpellslots2: 0x{Offsets.Funcs.GetNumOfSpellslots2:X}");
 #endif
         }
 

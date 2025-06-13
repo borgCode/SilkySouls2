@@ -107,6 +107,26 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 48 b9 00 00 00 00 00    movabs rcx,0x0
+        ///00 00 00
+        ///48 ba 00 00 00 00 00    movabs rdx,0x0
+        ///00 00 00
+        ///49 b8 00 00 00 00 00    movabs r8,0x0
+        ///00 00 00
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
+        ///48 83 ec 20             sub    rsp,0x20
+        ///ff d0                   call   rax
+        ///48 83 c4 20             add    rsp,0x20
+        ///c3                      ret.
+        /// </summary>
+        internal static string AttuneSpell {
+            get {
+                return ResourceManager.GetString("AttuneSpell", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 50                      push   rax
         ///48 a1 00 00 00 00 00    movabs rax,ds:0x0
         ///00 00 00
@@ -390,6 +410,30 @@ namespace SilkySouls2.Properties {
         internal static string Gestures {
             get {
                 return ResourceManager.GetString("Gestures", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 49 bf 00 00 00 00 00    movabs r15,0x0
+        ///00 00 00
+        ///48 bb 00 00 00 00 00    movabs rbx,0x0
+        ///00 00 00
+        ///48 89 d9                mov    rcx,rbx
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
+        ///48 83 ec 40             sub    rsp,0x40
+        ///ff d0                   call   rax
+        ///48 89 d9                mov    rcx,rbx
+        ///89 c7                   mov    edi,eax
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
+        ///ff d0                   call   rax
+        ///01 c7                   add    edi,eax
+        ///41 89 3f                mov    DWORD PT [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string GetNumOfSlots {
+            get {
+                return ResourceManager.GetString("GetNumOfSlots", resourceCulture);
             }
         }
         

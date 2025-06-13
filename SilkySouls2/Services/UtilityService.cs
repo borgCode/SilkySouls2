@@ -441,26 +441,7 @@ namespace SilkySouls2.Services
                 _hookManager.UninstallHook(knightsCode.ToInt64());
             }
         }
-
-        public void ToggleTransparentFog(bool isTransparentFogEnabled)
-        {
-            var code = CodeCaveOffsets.Base + CodeCaveOffsets.TransparentFog;
-
-            if (isTransparentFogEnabled)
-            {
-                var origin = Hooks.FogRender;
-                var codeBytes = AsmLoader.GetAsmBytes("TransparentFog");
-                var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 7, code + 0x10);
-                Array.Copy(jmpBytes, 0, codeBytes, 0xB + 1, 4);
-                _memoryIo.WriteBytes(code, codeBytes);
-                _hookManager.InstallHook(code.ToInt64(), origin, new byte[]
-                    { 0x4D, 0x8B, 0x80, 0x18, 0x1D, 0x00, 0x00 });
-            }
-            else
-            {
-                _hookManager.UninstallHook(code.ToInt64());
-            }
-        }
+        
 
         public void SetObjState(long areaId, GameIds.Obj.SetObjState objData)
         {
@@ -544,8 +525,8 @@ namespace SilkySouls2.Services
             {
                 var spellId = _memoryIo.ReadInt32(current + GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.SpellId);
                 var isEquipped = _memoryIo.ReadUInt8(current + GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.IsEquipped);
-                
-                currentSpells.Add(new InventorySpell(spellId, isEquipped == 2));
+                Console.WriteLine(spellId);
+                currentSpells.Add(new InventorySpell(spellId, isEquipped == 2, current));
                 current = (IntPtr) _memoryIo.ReadInt64(current + GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.NextPtr);
             }
 
@@ -554,12 +535,7 @@ namespace SilkySouls2.Services
 
         public List<EquippedSpell> GetEquippedSpells()
         {
-            var currentSpell = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
-            {
-                GameManagerImp.Offsets.PlayerCtrl,
-                GameManagerImp.ChrCtrlOffsets.EquippedSpellsPtr,
-                GameManagerImp.ChrCtrlOffsets.EquippedSpellsStart
-            }, false);
+            var currentSpell = GetCurrentSpellPtr();
 
             List<EquippedSpell> currentSpells = new List<EquippedSpell>();
 
@@ -570,6 +546,81 @@ namespace SilkySouls2.Services
             }
 
             return currentSpells;
+        }
+
+        private IntPtr GetCurrentSpellPtr()
+        {
+            return _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+            {
+                GameManagerImp.Offsets.PlayerCtrl,
+                GameManagerImp.ChrCtrlOffsets.EquippedSpellsPtr,
+                GameManagerImp.ChrCtrlOffsets.EquippedSpellsStart
+            }, false);
+        }
+
+        public int GetNumOfTakenSlots()
+        {
+            var inventory = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+            {
+                GameManagerImp.Offsets.GameDataManager,
+                GameManagerImp.GameDataManagerOffsets.InventoryPtr
+            }, true);
+            var getNumOfSlots1 = Funcs.GetNumOfSpellslots1;
+            var getNumOfSlots2 = Funcs.GetNumOfSpellslots2;
+            var slotsLoc = CodeCaveOffsets.Base + CodeCaveOffsets.NumOfSpellSlots;
+
+            var bytes = AsmLoader.GetAsmBytes("GetNumOfSlots");
+            
+            AsmHelper.WriteAbsoluteAddresses(bytes, new []
+            {
+                (slotsLoc.ToInt64(), 2),
+                (inventory.ToInt64(), 0xA + 2),
+                (getNumOfSlots1, 0x17 + 2),
+                (getNumOfSlots2, 0x2C + 2)
+            });
+
+            _memoryIo.AllocateAndExecute(bytes);
+
+
+            return _memoryIo.ReadInt32(slotsLoc);
+        }
+
+        public int GetNumOfSlots()
+        {
+            var slotsLoc = _memoryIo.FollowPointers(FeEntity.Base, new[]
+            {
+                FeEntity.AtnSlotChain.Ptr1,
+                FeEntity.AtnSlotChain.Ptr2,
+                FeEntity.AtnSlotChain.NumOfSlots,
+            }, false);
+            return _memoryIo.ReadInt32(slotsLoc);
+        }
+        
+        
+
+        public void AttuneSpell(int slotIndex, IntPtr entryAddr)
+        {
+            var inventoryLists = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+            {
+                GameManagerImp.Offsets.GameDataManager,
+                GameManagerImp.GameDataManagerOffsets.InventoryPtr,
+                GameManagerImp.GameDataManagerOffsets.Inventory.InventoryLists,
+            }, true);
+
+            var attuneFunc = Funcs.AttuneSpell;
+
+            var bytes = AsmLoader.GetAsmBytes("AttuneSpell");
+            AsmHelper.WriteAbsoluteAddresses(bytes, new []
+            {
+                (inventoryLists.ToInt64(), 2),
+                (slotIndex + 0x1C, 0xA + 2),
+                (entryAddr.ToInt64(), 0x14 + 2),
+                (attuneFunc, 0x1E + 2)
+            });
+            
+            _memoryIo.AllocateAndExecute(bytes);
+            
+            
         }
     }
     

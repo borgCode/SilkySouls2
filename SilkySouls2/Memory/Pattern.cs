@@ -35,6 +35,12 @@ namespace SilkySouls2.Memory
             Mov64
         );
 
+        public static readonly Pattern FeEntity = new Pattern(
+            new byte[] { 0x75, 0x0F, 0x48, 0x8B, 0x3D, 0x00, 0x00, 0x00, 0x00 },
+            "xxxxx????",
+            2,
+            Mov64);
+
 
         // Hooks
 
@@ -42,6 +48,13 @@ namespace SilkySouls2.Memory
             new byte[] { 0x48, 0x0F, 0x4F, 0xC6, 0x8B, 0x00 },
             "xxxxxx",
             0x6,
+            None
+        );
+        
+        public static readonly Pattern GetNumOfSpellSlots = new Pattern(
+            new byte[] { 0x03, 0xF8, 0x89, 0xBE },
+            "xxxx",
+            0,
             None
         );
 
@@ -220,6 +233,14 @@ namespace SilkySouls2.Memory
             0x9,
             Call
         );
+
+        public static readonly Pattern AttuneSpell = new Pattern(
+            new byte[] { 0x83, 0xFA, 0x29, 0x77, 0x1C },
+            "xxxxx",
+            0,
+            None
+        );
+
 
         public static readonly Pattern UnlockBonfire = new Pattern(
             new byte[] { 0x48, 0x8B, 0x4E, 0x58, 0x8B, 0x10, 0x44 },

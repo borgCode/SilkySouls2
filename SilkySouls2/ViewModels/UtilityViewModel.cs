@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using SilkySouls2.Memory;
 using SilkySouls2.Memory.DLLShared;
 using SilkySouls2.Models;
 using SilkySouls2.Services;
 using SilkySouls2.Utilities;
+using SilkySouls2.Views;
 
 namespace SilkySouls2.ViewModels
 {
@@ -37,6 +39,8 @@ namespace SilkySouls2.ViewModels
         private bool _isHideMapEnabled;
         private bool _isTransparentFogEnabled;
 
+        private AttunementWindow _attunementWindow;
+
         private bool _areButtonsEnabled;
         private readonly HotkeyManager _hotkeyManager;
         private readonly UtilityService _utilityService;
@@ -62,6 +66,9 @@ namespace SilkySouls2.ViewModels
             _hotkeyManager = hotkeyManager;
 
             _spellLookup = DataLoader.GetItemList("Spells").ToDictionary(s => s.Id, s => s.Name);
+            
+            AvailableSpells = new ObservableCollection<InventorySpell>();
+            EquippedSpells = new ObservableCollection<EquippedSpell>();
 
             RegisterHotkeys();
         }
@@ -254,16 +261,6 @@ namespace SilkySouls2.ViewModels
             }
         }
         
-        public bool IsTransparentFogEnabled
-        {
-            get => _isTransparentFogEnabled;
-            set
-            {
-                if (!SetProperty(ref _isTransparentFogEnabled, value)) return;
-                _utilityService.ToggleTransparentFog(_isTransparentFogEnabled);
-            }
-        }
-
         public bool IsCreditSkipEnabled
         {
             get => _isCreditSkipEnabled;
@@ -400,44 +397,110 @@ namespace SilkySouls2.ViewModels
             if (IsDrawKillboxEnabled) _utilityService.ToggleDrawKillbox(true);
             if (IsDrawRagdollsEnabled) _utilityService.ToggleRagdoll(true);
             if (IsSeeThroughWallsEnabled) _utilityService.ToggleRagdollEsp(true);
-            if (IsTransparentFogEnabled) _utilityService.ToggleTransparentFog(true);
         }
         
         
-        private ObservableCollection<string> _availableSpells;
-        public ObservableCollection<string> AvailableSpells 
+        private ObservableCollection<InventorySpell> _availableSpells;
+        public ObservableCollection<InventorySpell> AvailableSpells 
         {
             get => _availableSpells;
             private set => SetProperty(ref _availableSpells, value);
         }
         
-        private ObservableCollection<string> _equippedSpells;
-        public ObservableCollection<string> EquippedSpells
+        private ObservableCollection<EquippedSpell> _equippedSpells;
+        public ObservableCollection<EquippedSpell> EquippedSpells
         {
             get => _equippedSpells; 
             private set => SetProperty(ref _equippedSpells, value);
         }
+
+        private int _numOfSlots;
+        public int NumOfSlots
+        {
+            get => _numOfSlots; 
+            private set => SetProperty(ref _numOfSlots, value);
+        }
+        
+        public int EquippedSlotsRows => (int)Math.Ceiling(NumOfSlots / 7.0);
         
         
         public void RefreshSpells()
         {
             var inventorySpells = _utilityService.GetInventorySpells();
             var equippedSpells = _utilityService.GetEquippedSpells();
+
+            var actualEquipped = equippedSpells.Take(NumOfSlots).ToList();
             
             foreach (var inventorySpell in inventorySpells)
             {
                 inventorySpell.Name = _spellLookup.TryGetValue(inventorySpell.Id, out string name) ? name : "Unknown";
             }
             
-            foreach (var equippedSpell in equippedSpells)
+            foreach (var equippedSpell in actualEquipped)
             {
-                equippedSpell.Name = _spellLookup.TryGetValue(equippedSpell.Id, out string name) ? name : "Unknown";
+                if (equippedSpell.Id <= 0) equippedSpell.Name = "Empty Slot";
+                else equippedSpell.Name = _spellLookup.TryGetValue(equippedSpell.Id, out string name) ? name : "Unknown";
             }
+            
+            EquippedSpells.Clear();
+            foreach (var spell in actualEquipped)
+            {
+                EquippedSpells.Add(spell);
+            }
+   
+            AvailableSpells.Clear();
+            foreach (var spell in inventorySpells)
+            {
+                AvailableSpells.Add(spell);
+            }
+
+            OnPropertyChanged(nameof(EquippedSlotsRows));
         }
 
         public void Test()
         {
+                
+        }
+        
+        
+        public void OpenAttunementWindow()
+        {
+            if (_attunementWindow != null && _attunementWindow.IsVisible) 
+            {
+                _attunementWindow.Activate(); 
+                return;
+            }
+            NumOfSlots = _utilityService.GetNumOfTakenSlots();
+            Console.WriteLine(NumOfSlots);
             RefreshSpells();
+            _attunementWindow = new AttunementWindow
+            {
+                DataContext = this
+            };
+            
+            _attunementWindow.Closed += (s, e) => _attunementWindow = null;
+    
+            _attunementWindow.Show();
+        }
+        
+        private int GetFirstAvailableSlot()
+        {
+            for (int i = 0; i < EquippedSpells.Count; i++)
+            {
+                if (EquippedSpells[i].Id <= 0)
+                {
+                    return i;
+                }
+            }
+            return -1; 
+        }
+        
+        public async void HandleSpellAttune(IntPtr spellEntryAddress)
+        {
+            _utilityService.AttuneSpell(GetFirstAvailableSlot(), spellEntryAddress);
+            await Task.Delay(50);
+            RefreshSpells();
+                
         }
     }
 }

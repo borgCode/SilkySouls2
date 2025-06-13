@@ -9,6 +9,7 @@
        Title="AttunementWindow" Height="450" Width="800">
     <Window.Resources>
         <converters:BoolToBorderBrushConverter x:Key="BoolToBorderBrushConverter" />
+        <converters:SpellIdToVisibilityConverter x:Key="SpellIdToVisibilityConverter" />
     </Window.Resources>
     <Grid>
        <Grid.RowDefinitions>
@@ -24,19 +25,21 @@
            </ItemsControl.ItemsPanel>
            <ItemsControl.ItemTemplate>
                <DataTemplate>
-                   <Border BorderBrush="Gray"
-                           BorderThickness="1"
-                          
-                           Padding="5"
-                           Margin="2"
-                           Height="60"
-                           Width="80">
-                       <TextBlock Text="{Binding Name}"
-                                  HorizontalAlignment="Center"
-                                  VerticalAlignment="Center"
-                                  TextAlignment="Center"
-                                  TextWrapping="Wrap"
-                              />
+                   <Border BorderBrush="Gray" BorderThickness="1" Margin="2" Height="60" Width="80">
+                       <Grid>
+                           <TextBlock Text="{Binding Name}" 
+                                      HorizontalAlignment="Center" 
+                                      VerticalAlignment="Center" 
+                                      TextAlignment="Center" 
+                                      TextWrapping="Wrap"/>
+                           <TextBlock Text="✕" Width="18" Height="18" FontSize="11"
+                                   HorizontalAlignment="Right" VerticalAlignment="Top"
+                                   Background="Transparent"
+                                   Foreground="#FF0000" Cursor="Hand"
+                                   Visibility="{Binding Id, Converter={StaticResource SpellIdToVisibilityConverter}}"
+                                   MouseLeftButtonDown="UnequipSpell_Click"
+                                   />
+                       </Grid>
                    </Border>
                </DataTemplate>
            </ItemsControl.ItemTemplate>

@@ -94,6 +94,7 @@
         <Compile Include="Converters\ImmuneFillConverter.cs" />
         <Compile Include="Converters\InverseBooleanConverter.cs" />
         <Compile Include="Converters\InverseBooleanToVisibilityConverter.cs" />
+        <Compile Include="Converters\SpellIdToVisibilityConverter.cs" />
         <Compile Include="Converters\StringToVisibilityConverter.cs" />
         <Compile Include="Memory\DLLShared\DllManager.cs" />
         <Compile Include="Memory\DLLShared\DrawType.cs" />

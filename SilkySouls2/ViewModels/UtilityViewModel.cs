@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using SilkySouls2.Memory;
 using SilkySouls2.Memory.DLLShared;
 using SilkySouls2.Models;
@@ -426,6 +427,7 @@ namespace SilkySouls2.ViewModels
         
         public void RefreshSpells()
         {
+            NumOfSlots = _utilityService.GetTotalAvailableSlots();
             var inventorySpells = _utilityService.GetInventorySpells();
             var equippedSpells = _utilityService.GetEquippedSpells();
 
@@ -470,8 +472,7 @@ namespace SilkySouls2.ViewModels
                 _attunementWindow.Activate(); 
                 return;
             }
-            NumOfSlots = _utilityService.GetNumOfTakenSlots();
-            Console.WriteLine(NumOfSlots);
+            NumOfSlots = _utilityService.GetTotalAvailableSlots();
             RefreshSpells();
             _attunementWindow = new AttunementWindow
             {
@@ -495,12 +496,32 @@ namespace SilkySouls2.ViewModels
             return -1; 
         }
         
-        public async void HandleSpellAttune(IntPtr spellEntryAddress)
+        public async void HandleSpellAttune(InventorySpell spell)
         {
-            _utilityService.AttuneSpell(GetFirstAvailableSlot(), spellEntryAddress);
+            
+            int emptySlots = EquippedSpells.Count(s => s.Id <= 0);
+   
+            if (spell.SlotReq > emptySlots)
+            {
+                MessageBox.Show($"Cannot attune spell. Requires {spell.SlotReq} slots but only {emptySlots} available.", 
+                    "Insufficient Slots", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+   
+            int slotIndex = GetFirstAvailableSlot();
+            if (slotIndex != -1)
+            {
+                _utilityService.AttuneSpell(slotIndex, spell.EntryAddress);
+                await Task.Delay(50);
+                RefreshSpells();
+            }
+        }
+
+        public async void HandleUnAttune(int slotIndex)
+        {
+            _utilityService.AttuneSpell(slotIndex, IntPtr.Zero);
             await Task.Delay(50);
             RefreshSpells();
-                
         }
     }
 }

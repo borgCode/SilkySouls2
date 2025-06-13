@@ -79,6 +79,7 @@ namespace SilkySouls2.Memory
                         public const int NextPtr = 0x8;
                         public const int SpellId = 0x14;
                         public const int IsEquipped = 0x1F;
+                        public const int SlotReq = 0x21;
                     }
                     
                 }
@@ -215,19 +216,6 @@ namespace SilkySouls2.Memory
                 public const int PlayerCoords = 0x1A0;
             }
         }
-
-        public static class FeEntity
-        {
-            public static IntPtr Base;
-
-            public static class AtnSlotChain
-            {
-                public const int Ptr1 = 0x8;
-                public const int Ptr2 = 0x138;
-                public const int NumOfSlots = 0x174;
-            }
-        }
-        
 
         public static class Patches
         {

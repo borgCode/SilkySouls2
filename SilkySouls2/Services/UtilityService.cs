@@ -525,8 +525,8 @@ namespace SilkySouls2.Services
             {
                 var spellId = _memoryIo.ReadInt32(current + GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.SpellId);
                 var isEquipped = _memoryIo.ReadUInt8(current + GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.IsEquipped);
-                Console.WriteLine(spellId);
-                currentSpells.Add(new InventorySpell(spellId, isEquipped == 2, current));
+                var slotReq = _memoryIo.ReadUInt8(current + GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.SlotReq);
+                currentSpells.Add(new InventorySpell(spellId, isEquipped == 2, current, slotReq));
                 current = (IntPtr) _memoryIo.ReadInt64(current + GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.NextPtr);
             }
 
@@ -558,7 +558,7 @@ namespace SilkySouls2.Services
             }, false);
         }
 
-        public int GetNumOfTakenSlots()
+        public int GetTotalAvailableSlots()
         {
             var inventory = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
             {
@@ -584,20 +584,7 @@ namespace SilkySouls2.Services
 
             return _memoryIo.ReadInt32(slotsLoc);
         }
-
-        public int GetNumOfSlots()
-        {
-            var slotsLoc = _memoryIo.FollowPointers(FeEntity.Base, new[]
-            {
-                FeEntity.AtnSlotChain.Ptr1,
-                FeEntity.AtnSlotChain.Ptr2,
-                FeEntity.AtnSlotChain.NumOfSlots,
-            }, false);
-            return _memoryIo.ReadInt32(slotsLoc);
-        }
         
-        
-
         public void AttuneSpell(int slotIndex, IntPtr entryAddr)
         {
             var inventoryLists = _memoryIo.FollowPointers(GameManagerImp.Base, new[]

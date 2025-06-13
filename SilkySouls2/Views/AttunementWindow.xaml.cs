@@ -21,9 +21,21 @@ namespace SilkySouls2.Views
             {
                 var border = sender as Border;
                 var spell = border.DataContext as InventorySpell;
-                viewModel.HandleSpellAttune(spell.EntryAddress);
+                viewModel.HandleSpellAttune(spell);
             }
             
+        }
+
+        private void UnequipSpell_Click(object sender, MouseButtonEventArgs e)
+        {
+            var textBlock = sender as TextBlock;
+
+            if (textBlock?.DataContext is EquippedSpell spell)
+            {
+                var viewModel = this.DataContext as UtilityViewModel;
+                int index = viewModel.EquippedSpells.IndexOf(spell);
+                viewModel.HandleUnAttune(index);
+            }
         }
     }
 }

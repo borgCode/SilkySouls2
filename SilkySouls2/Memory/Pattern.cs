@@ -34,14 +34,8 @@ namespace SilkySouls2.Memory
             0,
             Mov64
         );
-
-        public static readonly Pattern FeEntity = new Pattern(
-            new byte[] { 0x75, 0x0F, 0x48, 0x8B, 0x3D, 0x00, 0x00, 0x00, 0x00 },
-            "xxxxx????",
-            2,
-            Mov64);
-
-
+        
+        
         // Hooks
 
         public static readonly Pattern HpWrite = new Pattern(

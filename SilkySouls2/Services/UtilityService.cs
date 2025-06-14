@@ -560,6 +560,8 @@ namespace SilkySouls2.Services
 
         public int GetTotalAvailableSlots()
         {
+            RefreshSpellSlots();
+            
             var inventory = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
             {
                 GameManagerImp.Offsets.GameDataManager,
@@ -584,7 +586,28 @@ namespace SilkySouls2.Services
 
             return _memoryIo.ReadInt32(slotsLoc);
         }
-        
+
+        private void RefreshSpellSlots()
+        {
+            var bagList = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+            {
+                GameManagerImp.Offsets.GameDataManager,
+                GameManagerImp.GameDataManagerOffsets.InventoryPtr,
+                GameManagerImp.GameDataManagerOffsets.Inventory.InventoryLists,
+                GameManagerImp.GameDataManagerOffsets.Inventory.ItemInventory2BagListPtr,
+            }, true);
+
+            var refreshFunc = Funcs.UpdateSpellSlots;
+            var bytes = AsmLoader.GetAsmBytes("UpdateSpellSlots");
+            
+            AsmHelper.WriteAbsoluteAddresses(bytes, new []
+            {
+                (bagList.ToInt64(), 2),
+                (refreshFunc, 0xA + 2)
+            });
+            _memoryIo.AllocateAndExecute(bytes);
+        }
+
         public void AttuneSpell(int slotIndex, IntPtr entryAddr)
         {
             var inventoryLists = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
@@ -606,7 +629,6 @@ namespace SilkySouls2.Services
             });
             
             _memoryIo.AllocateAndExecute(bytes);
-            
             
         }
     }

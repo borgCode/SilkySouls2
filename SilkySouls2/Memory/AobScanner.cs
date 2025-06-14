@@ -163,6 +163,7 @@ namespace SilkySouls2.Memory
             Offsets.Funcs.GetMapEntityWithAreaIdAndObjId = FindAddressByPattern(Patterns.GetMapEntityWithAreaIdAndObjId).ToInt64();
             Offsets.Funcs.GetWhiteDoorComponent = FindAddressByPattern(Patterns.GetWhiteDoorComponent).ToInt64();
             Offsets.Funcs.AttuneSpell = FindAddressByPattern(Patterns.AttuneSpell).ToInt64();
+            Offsets.Funcs.UpdateSpellSlots = FindAddressByPattern(Patterns.UpdateSpellSlots).ToInt64();
             
             FindMultipleCallsInFunction(Patterns.DisableNaviMesh, new Dictionary<Action<long>, int>
             {
@@ -264,6 +265,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Funcs.AttuneSpell: 0x{Offsets.Funcs.AttuneSpell:X}");
             Console.WriteLine($"Funcs.GetNumOfSpellslots1: 0x{Offsets.Funcs.GetNumOfSpellslots1:X}");
             Console.WriteLine($"Funcs.GetNumOfSpellslots2: 0x{Offsets.Funcs.GetNumOfSpellslots2:X}");
+            Console.WriteLine($"Funcs.UpdateSpellSlots: 0x{Offsets.Funcs.UpdateSpellSlots:X}");
 #endif
         }
 

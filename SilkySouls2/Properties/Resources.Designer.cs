@@ -1018,6 +1018,22 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 48 b9 00 00 00 00 00    movabs rcx,0x0
+        ///00 00 00
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
+        ///48 83 ec 20             sub    rsp,0x20
+        ///ff d0                   call   rax
+        ///48 83 c4 20             add    rsp,0x20
+        ///c3                      ret.
+        /// </summary>
+        internal static string UpdateSpellSlots {
+            get {
+                return ResourceManager.GetString("UpdateSpellSlots", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 60970000,Titanite Shard,99,0,0
         ///60975000,Large Titanite Shard,99,0,0
         ///60980000,Titanite Chunk,99,0,0

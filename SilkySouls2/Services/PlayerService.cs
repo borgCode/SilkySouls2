@@ -172,9 +172,9 @@ namespace SilkySouls2.Services
 
             var newSouls = _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.CurrentSouls));
             GiveSouls(currentSouls - newSouls);
+            
         }
-
-
+        
         public int GetSoulLevel() => _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.SoulLevel));
 
         public float GetPlayerSpeed() => _memoryIo.ReadFloat(GetSpeedPtr());

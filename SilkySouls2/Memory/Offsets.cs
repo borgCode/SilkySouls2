@@ -299,6 +299,7 @@ namespace SilkySouls2.Memory
             public static long AttuneSpell;
             public static long GetNumOfSpellslots1;
             public static long GetNumOfSpellslots2;
+            public static long UpdateSpellSlots;
         }
     }
 }

@@ -250,6 +250,14 @@ namespace SilkySouls2.Memory
             Call
         );
 
+        public static readonly Pattern UpdateSpellSlots = new Pattern(
+            new byte[] { 0x0F, 0xB6, 0x8E, 0xED, 0x59 },
+            "xxxxx",
+            -0x18,
+            None
+        );
+
+
         public static readonly Pattern GetMapObjStateActComponent = new Pattern(
             new byte[] { 0x75, 0x08, 0x48, 0x8B, 0x01, 0x48, 0x8B, 0x40, 0x40 },
             "xxxxxxxxx",

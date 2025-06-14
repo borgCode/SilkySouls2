@@ -366,6 +366,7 @@ namespace SilkySouls2.ViewModels
         public void TryEnableFeatures()
         {
             if (IsCreditSkipEnabled) _utilityService.ToggleCreditSkip(true);
+            if (_attunementWindow != null && _attunementWindow.IsVisible) RefreshSpells();
             AreButtonsEnabled = true;
         }
 

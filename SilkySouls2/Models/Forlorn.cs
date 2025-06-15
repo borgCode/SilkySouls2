@@ -36,7 +36,7 @@
             new[] { "Black Gulch" });
 
         public static readonly Forlorn Drangleic = new Forlorn( "Drangleic Castle", 4012000,
-            new[] { "Drangleic Gate", "Left-side Entrance Hall", "Pre-Dragonriders" });
+            new[] { "Drangleic Gate", "Pre-Dragonriders", "Left-side Entrance Hall" }); 
 
         public static readonly Forlorn UndeadCrypt = new Forlorn( "Undead Crypt", 4020000,
             new[] { "Forlorn #1", "Forlorn #2" });

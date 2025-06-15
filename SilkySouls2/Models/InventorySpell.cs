@@ -17,5 +17,6 @@ namespace SilkySouls2.Models
         public bool IsEquipped { get; set; }
         public IntPtr EntryAddress { get; set; }
         public int SlotReq { get; set; }
+        public SpellType Type { get; set; }
     }
 }

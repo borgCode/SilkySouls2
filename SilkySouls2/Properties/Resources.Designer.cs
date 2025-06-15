@@ -107,6 +107,29 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 31010000,Soul Arrow,Sorcery
+        ///31020000,Great Soul Arrow,Sorcery
+        ///31030000,Heavy Soul Arrow,Sorcery
+        ///31040000,Great Heavy Soul Arrow,Sorcery
+        ///31050000,Homing Soul Arrow,Sorcery
+        ///31060000,Heavy Homing Soul Arrow,Sorcery
+        ///31070000,Homing Soulmass,Sorcery
+        ///31080000,Homing Crystal Soulmass,Sorcery
+        ///31090000,Soul Spear,Sorcery
+        ///31100000,Crystal Soul Spear,Sorcery
+        ///31110000,Shockwave,Sorcery
+        ///31120000,Soul Spear Barrage,Sorcery
+        ///31130000,Soul Shower,Sorcery
+        ///31140000,Soul Greatsword,Sorcery
+        ///31150000,Soul Vortex,So [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string AttunementSpells {
+            get {
+                return ResourceManager.GetString("AttunementSpells", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 b9 00 00 00 00 00    movabs rcx,0x0
         ///00 00 00
         ///48 ba 00 00 00 00 00    movabs rdx,0x0

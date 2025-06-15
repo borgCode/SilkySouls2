@@ -16,6 +16,7 @@
         <converters:SpellIdToVisibilityConverter x:Key="SpellIdToVisibilityConverter" />
         <xcad:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
         <xcad:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters:SpellTypeToBrushConverter x:Key="SpellTypeToBrushConverter" />
     </Window.Resources>
 
     <Grid>
@@ -145,17 +146,25 @@
                                 <Border
                                     BorderBrush="{Binding IsEquipped, Converter={StaticResource BoolToBorderBrushConverter}}"
                                     BorderThickness="1"
-                                    Padding="8"
+                                    Padding="0"
                                     Background="Transparent"
                                     MouseLeftButtonDown="Border_MouseLeftButtonDown"
                                     Margin="2"
                                     Height="60"
                                     Width="80">
-                                    <TextBlock Text="{Binding Name}"
-                                               HorizontalAlignment="Center"
-                                               VerticalAlignment="Center"
-                                               TextAlignment="Center"
-                                               TextWrapping="Wrap" />
+                                    <Grid>
+                                        <TextBlock Text="{Binding Name}"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"
+                                                   TextAlignment="Center"
+                                                   TextWrapping="Wrap" />
+                                        
+                                        <Ellipse Width="10" Height="10"
+                                                 HorizontalAlignment="Right"
+                                                 VerticalAlignment="Top"
+                                                 Margin="0,2,2,0"
+                                                 Fill="{Binding Type, Converter={StaticResource SpellTypeToBrushConverter}}" />
+                                    </Grid>
                                 </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>

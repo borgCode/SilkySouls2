@@ -2638,4 +2638,112 @@ ff d0                   call   rax
 48 83 c4 20             add    rsp,0x20
 c3                      ret</value>
   </data>
+  <data name="AttunementSpells" xml:space="preserve">
+    <value>31010000,Soul Arrow,Sorcery
+31020000,Great Soul Arrow,Sorcery
+31030000,Heavy Soul Arrow,Sorcery
+31040000,Great Heavy Soul Arrow,Sorcery
+31050000,Homing Soul Arrow,Sorcery
+31060000,Heavy Homing Soul Arrow,Sorcery
+31070000,Homing Soulmass,Sorcery
+31080000,Homing Crystal Soulmass,Sorcery
+31090000,Soul Spear,Sorcery
+31100000,Crystal Soul Spear,Sorcery
+31110000,Shockwave,Sorcery
+31120000,Soul Spear Barrage,Sorcery
+31130000,Soul Shower,Sorcery
+31140000,Soul Greatsword,Sorcery
+31150000,Soul Vortex,Sorcery
+31160000,Soul Bolt,Sorcery
+31170000,Soul Geyser,Sorcery
+31180000,Magic Weapon,Sorcery
+31190000,Great Magic Weapon,Sorcery
+31200000,Crystal Magic Weapon,Sorcery
+31210000,Strong Magic Shield,Sorcery
+31220000,Yearn,Sorcery
+31230000,Hush,Sorcery
+31240000,Fall Control,Sorcery
+31250000,Hidden Weapon,Sorcery
+31260000,Repair,Sorcery
+31270000,Cast Light,Sorcery
+31280000,Chameleon,Sorcery
+31290000,Unleash Magic,Sorcery
+31300000,Soul Flash,Sorcery
+31310000,Focus Souls,Sorcery
+32010000,Heal,Miracle
+32020000,Med Heal,Miracle
+32030000,Great Heal Excerpt,Miracle
+32040000,Great Heal,Miracle
+32050000,Soothing Sunlight,Miracle
+32060000,Replenishment,Miracle
+32070000,Resplendent Life,Miracle
+32080000,Bountiful Sunlight,Miracle
+32090000,Caressing Prayer,Miracle
+32100000,Force,Miracle
+32110000,Wrath of the Gods,Miracle
+32120000,Emit Force,Miracle
+32130000,Heavenly Thunder,Miracle
+32140000,Lightning Spear,Miracle
+32150000,Great Lightning Spear,Miracle
+32160000,Sunlight Spear,Miracle
+32170000,Soul Appease,Miracle
+32180000,Blinding Bolt,Miracle
+32190000,Magic Barrier,Miracle
+32200000,Great Magic Barrier,Miracle
+32210000,Homeward,Miracle
+32220000,Guidance,Miracle
+32230000,Sacred Oath,Miracle
+32240000,Unveil,Miracle
+32250000,Perseverance,Miracle
+32260000,Sunlight Blade,Miracle
+32300000,Denial,Miracle
+32310000,Splintering Lightning Spear,Miracle
+33010000,Fireball,Pyromancy
+33020000,Fire Orb,Pyromancy
+33030000,Great Fireball,Pyromancy
+33040000,Great Chaos Fireball,Pyromancy
+33050000,Firestorm,Pyromancy
+33060000,Fire Tempest,Pyromancy
+33070000,Chaos Storm,Pyromancy
+33080000,Combustion,Pyromancy
+33090000,Great Combustion,Pyromancy
+33100000,Fire Whip,Pyromancy
+33110000,Poison Mist,Pyromancy
+33120000,Toxic Mist,Pyromancy
+33130000,Acid Surge,Pyromancy
+33140000,Lingering Flame,Pyromancy
+33150000,Flame Swathe,Pyromancy
+33160000,Forbidden Sun,Pyromancy
+33170000,Flame Weapon,Pyromancy
+33180000,Flash Sweat,Pyromancy
+33190000,Iron Flesh,Pyromancy
+33200000,Warmth,Pyromancy
+33210000,Immolation,Pyromancy
+33300000,Fire Snake,Pyromancy
+33310000,Dance of Fire,Pyromancy
+33320000,Outcry,Pyromancy
+34010000,Dark Orb,Hex
+34020000,Dark Hail,Hex
+34030000,Dark Fog,Hex
+34040000,Affinity,Hex
+34050000,Dead Again,Hex
+34060000,Dark Weapon,Hex
+34070000,Whisper of Despair,Hex
+34080000,Repel,Hex
+34090000,Twisted Barricade,Hex
+34100000,Numbness,Hex
+34300000,Dark Greatsword,Hex
+34310000,Recollection,Hex
+35010000,Scraps of Life,Hex
+35020000,Darkstorm,Hex
+35030000,Resonant Soul,Hex
+35040000,Great Resonant Soul,Hex
+35050000,Climax,Hex
+35060000,Resonant Flesh,Hex
+35070000,Resonant Weapon,Hex
+35080000,Lifedrain Patch,Hex
+35090000,Profound Still,Hex
+35300000,Promised Walk of Peace,Hex
+35310000,Dark Dance,Hex</value>
+  </data>
 </root>

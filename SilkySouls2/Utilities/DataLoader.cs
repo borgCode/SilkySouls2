@@ -300,5 +300,39 @@ namespace SilkySouls2.Utilities
                 //Log exception if needed
             }
         }
+
+        public static Dictionary<int, AttunementSpell> GetAttunementSpells()
+        {
+            Dictionary<int, AttunementSpell> spells = new Dictionary<int, AttunementSpell>();
+    
+            string csvData = Properties.Resources.ResourceManager.GetString("AttunementSpells");
+    
+            if (string.IsNullOrEmpty(csvData)) return spells;
+    
+            using (StringReader reader = new StringReader(csvData))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    if (string.IsNullOrWhiteSpace(line)) continue;
+            
+                    string[] parts = line.Split(',');
+            
+                    if (parts.Length >= 3)
+                    {
+                        int spellId = int.Parse(parts[0], NumberStyles.Integer, CultureInfo.InvariantCulture);
+                        string name = parts[1].Trim();
+                        string typeString = parts[2].Trim();
+                
+                        if (Enum.TryParse<SpellType>(typeString, out SpellType spellType))
+                        {
+                            spells.Add(spellId, new AttunementSpell(spellId, name, spellType));
+                        }
+                    }
+                }
+            }
+    
+            return spells;
+        }
     }
 }

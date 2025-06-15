@@ -57,7 +57,7 @@ namespace SilkySouls2.ViewModels
         private bool _wasNoDeathEnabled;
 
 
-        private Dictionary<int, string> _spellLookup = new Dictionary<int, string>();
+        private Dictionary<int, AttunementSpell> _spellLookup = new Dictionary<int, AttunementSpell>();
 
         public UtilityViewModel(UtilityService utilityService, HotkeyManager hotkeyManager,
             PlayerViewModel playerViewModel)
@@ -66,14 +66,13 @@ namespace SilkySouls2.ViewModels
             _utilityService = utilityService;
             _hotkeyManager = hotkeyManager;
 
-            _spellLookup = DataLoader.GetItemList("Spells").ToDictionary(s => s.Id, s => s.Name);
+            _spellLookup = DataLoader.GetAttunementSpells();
             
             AvailableSpells = new ObservableCollection<InventorySpell>();
             EquippedSpells = new ObservableCollection<EquippedSpell>();
 
             RegisterHotkeys();
         }
-
         private void RegisterHotkeys()
         {
             _hotkeyManager.RegisterAction("ForceSave", () =>
@@ -437,13 +436,22 @@ namespace SilkySouls2.ViewModels
             
             foreach (var inventorySpell in inventorySpells)
             {
-                inventorySpell.Name = _spellLookup.TryGetValue(inventorySpell.Id, out string name) ? name : "Unknown";
+                if (_spellLookup.TryGetValue(inventorySpell.Id, out AttunementSpell spell))
+                {
+                    inventorySpell.Name = spell.Name;
+                    inventorySpell.Type = spell.Type;  
+                }
+                else
+                {
+                    inventorySpell.Name = "Unknown";
+                    inventorySpell.Type = SpellType.Hex; 
+                }
             }
             
             foreach (var equippedSpell in actualEquipped)
             {
                 if (equippedSpell.Id <= 0) equippedSpell.Name = "Empty Slot";
-                else equippedSpell.Name = _spellLookup.TryGetValue(equippedSpell.Id, out string name) ? name : "Unknown";
+                else equippedSpell.Name = _spellLookup.TryGetValue(equippedSpell.Id, out AttunementSpell spell) ? spell.Name : "Unknown";
             }
             
             EquippedSpells.Clear();
@@ -452,8 +460,12 @@ namespace SilkySouls2.ViewModels
                 EquippedSpells.Add(spell);
             }
    
+            var sortedInventorySpells = inventorySpells
+                .OrderBy(s => _spellLookup.TryGetValue(s.Id, out AttunementSpell spell) ? spell.Type : SpellType.Hex)
+                .ThenBy(s => s.Name)
+                .ToList();
             AvailableSpells.Clear();
-            foreach (var spell in inventorySpells)
+            foreach (var spell in sortedInventorySpells)
             {
                 AvailableSpells.Add(spell);
             }

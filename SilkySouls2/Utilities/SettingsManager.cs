@@ -24,6 +24,7 @@ namespace SilkySouls2.Utilities
         public double AttunementWindowTop { get; set; }
         public double HealthWindowLeft { get; set; }
         public double HealthWindowTop { get; set; }
+        public bool EnableUpdateChecks { get; set; } = true;
 
         private static string SettingsPath => Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -54,6 +55,7 @@ namespace SilkySouls2.Utilities
                     $"AttunementWindowTop={AttunementWindowTop}",
                     $"HealthWindowLeft={HealthWindowLeft}",
                     $"HealthWindowTop={HealthWindowTop}",
+                    $"EnableUpdateChecks={EnableUpdateChecks}",
                 };
 
                 File.WriteAllLines(SettingsPath, lines);
@@ -142,6 +144,10 @@ namespace SilkySouls2.Utilities
                                 case "AttunementWindowTop":
                                     double.TryParse(value, out double awt);
                                     settings.AttunementWindowTop = awt;
+                                    break;
+                                case "EnableUpdateChecks":
+                                    bool.TryParse(value, out bool euc);
+                                    settings.EnableUpdateChecks = euc;
                                     break;
                             }
                         }

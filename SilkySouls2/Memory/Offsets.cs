@@ -35,7 +35,6 @@ namespace SilkySouls2.Memory
             
             public static class CameraManagerOffsets
             {
-                //TODO 0x18 FREE CAMERA 
                 public const int IngameCameraOperatorPtr = 0x28;
                 public const int MapId = 0x45C;
                 

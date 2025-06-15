@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Windows.Threading;
 using SilkySouls2.Memory;
@@ -42,7 +40,6 @@ namespace SilkySouls2.ViewModels
         private bool _isNoHollowingEnabled;
         private bool _isInfinitePoiseEnabled;
         private bool _isAutoSetNewGameSevenEnabled;
-        private bool _isNoRollEnabled;
 
         private int _vigor;
         private int _attunement;

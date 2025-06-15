@@ -104,7 +104,12 @@ namespace SilkySouls2
             _gameLoadedTimer.Start();
 
 
-            // VersionChecker.CheckForUpdates(AppVersion, this);
+            VersionChecker.UpdateVersionText(AppVersion);
+            
+            if (SettingsManager.Default.EnableUpdateChecks)
+            {
+                VersionChecker.CheckForUpdates(this);
+            }
         }
 
         private bool _loaded;
@@ -254,6 +259,7 @@ namespace SilkySouls2
             _nopManager.RestoreAll();
         }
         
-        private void LaunchGame_Click(object sender, RoutedEventArgs e) => Task.Run(GameLauncher.LaunchDarkSouls2);
+       private void LaunchGame_Click(object sender, RoutedEventArgs e) => Task.Run(GameLauncher.LaunchDarkSouls2);
+       private void CheckUpdate_Click(object sender, RoutedEventArgs e) => VersionChecker.CheckForUpdates(this, true);
     }
 }

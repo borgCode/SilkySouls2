@@ -111,18 +111,34 @@
                               SelectedItem="{Binding SelectedNpc}" />
 
                     <WrapPanel Grid.Row="1" Grid.Column="1" Margin="0,3,0,0">
+                        
+                        <Border Background="#3498db"
+                                CornerRadius="10"
+                                Width="12"
+                                Height="12"
+                                Margin="0,0,10,0"
+                                VerticalAlignment="Center"
+                                ToolTip="Setting Alive/Dead requires reload of area"
+                                ToolTipService.InitialShowDelay='100'>
+                            <TextBlock Text="i"
+                                       Foreground="White"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontWeight="Bold"
+                                       FontSize="10" />
+                        </Border>
                         <Button Content="Set Alive" Padding="10,5" Margin="0,0,5,0"
                                 IsEnabled="{Binding AreButtonsEnabled}"
                                 Click="SetAlive_Click" />
                         <Button Content="Set Dead" Padding="10,5" Margin="0,0,5,0"
                                 IsEnabled="{Binding AreButtonsEnabled}"
                                 Click="SetDead_Click" />
-                        <Button Content="Set Friendly" Padding="10,5" Margin="0,0,5,0"
-                                IsEnabled="{Binding AreButtonsEnabled}"
-                                Click="SetFriendly_Click" />
-                        <Button Content="Set Hostile" Padding="10,5" Margin="0,0,5,0"
-                                IsEnabled="{Binding AreButtonsEnabled}"
-                                Click="SetHostile_Click" />
+                        <!-- <Button Content="Set Friendly" Padding="10,5" Margin="0,0,5,0" -->
+                        <!--         IsEnabled="{Binding AreButtonsEnabled}" -->
+                        <!--         Click="SetFriendly_Click" /> -->
+                        <!-- <Button Content="Set Hostile" Padding="10,5" Margin="0,0,5,0" -->
+                        <!--         IsEnabled="{Binding AreButtonsEnabled}" -->
+                        <!--         Click="SetHostile_Click" /> -->
                         <Button Content="Move to Majula" Padding="10,5" Margin="0,0,5,0"
                                 IsEnabled="{Binding CanMoveToMajula}"
                                 Click="MovetoMajula_Click" />
@@ -240,6 +256,9 @@
                     </Grid.ColumnDefinitions>
                     
                     <StackPanel Grid.Column="0">
+                        <CheckBox Content="Skip Ivory Gank"
+                                  IsChecked="{Binding IsIvorySkipEnabled}"
+                                  Margin="0,2" />
                         <CheckBox Content="Disable Frigid Snowstorm"
                                   IsChecked="{Binding IsSnowstormDisabled}"
                                   Margin="0,2" />

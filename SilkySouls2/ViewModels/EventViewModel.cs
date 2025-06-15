@@ -188,6 +188,18 @@ namespace SilkySouls2.ViewModels
                 _utilityService.SetEventOff(GameIds.EventFlags.FrigidSnowstorm);
             }
             if (IsMemoryTimerDisabled) _utilityService.ToggleMemoryTimer(true);
+            if (IsIvorySkipEnabled) _utilityService.ToggleIvorySkip(true);
+        }
+        
+        private bool _isIvorySkipEnabled;
+        public bool IsIvorySkipEnabled
+        {
+            get => _isIvorySkipEnabled;
+            set
+            {
+                if (!SetProperty(ref _isIvorySkipEnabled, value)) return;
+                _utilityService.ToggleIvorySkip(_isIvorySkipEnabled);
+            }
         }
 
         public void Test()

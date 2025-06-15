@@ -28,10 +28,6 @@
                 <TabItem Header="General">
                     <StackPanel Margin="10">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,3" VerticalAlignment="Center">
-                            <CheckBox Content="Skip Ivory Gank"
-                                      IsChecked="{Binding IsIvorySkipEnabled}"
-                                      VerticalAlignment="Center"
-                                      Margin="0,0,20,0" />
                             <CheckBox Content="Skip Credits"
                                       IsChecked="{Binding IsCreditSkipEnabled}"
                                       VerticalAlignment="Center"

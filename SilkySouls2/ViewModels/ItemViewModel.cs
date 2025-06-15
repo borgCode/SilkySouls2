@@ -291,6 +291,7 @@ namespace SilkySouls2.ViewModels
 
                 Items = _itemsByCategory[_selectedCategory];
                 SelectedItem = Items.FirstOrDefault();
+                SelectedMassSpawnCategory = SelectedCategory;
             }
         }
         

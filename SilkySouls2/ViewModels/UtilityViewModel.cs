@@ -15,7 +15,6 @@ namespace SilkySouls2.ViewModels
 {
     public class UtilityViewModel : BaseViewModel
     {
-        private bool _isIvorySkipEnabled;
         private bool _isCreditSkipEnabled;
         private bool _is100DropEnabled;
         private bool _isDrawHitboxEnabled;
@@ -272,16 +271,6 @@ namespace SilkySouls2.ViewModels
         }
 
 
-        public bool IsIvorySkipEnabled
-        {
-            get => _isIvorySkipEnabled;
-            set
-            {
-                if (!SetProperty(ref _isIvorySkipEnabled, value)) return;
-                _utilityService.ToggleIvorySkip(_isIvorySkipEnabled);
-            }
-        }
-
         public bool Is100DropEnabled
         {
             get => _is100DropEnabled;
@@ -381,7 +370,6 @@ namespace SilkySouls2.ViewModels
         {
             if (Is100DropEnabled) _utilityService.Toggle100Drop(true);
             if (IsCreditSkipEnabled) _utilityService.ToggleCreditSkip(true);
-            if (IsIvorySkipEnabled) _utilityService.ToggleIvorySkip(true);
             if (IsDrawHitboxEnabled) _utilityService.ToggleDrawHitbox(true);
 
             if (IsDrawEventGeneralEnabled) _utilityService.ToggleDrawEvent(DrawType.EventGeneral, true);

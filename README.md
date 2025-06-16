@@ -33,6 +33,6 @@ Make sure the three files and the folder are in the same place when you use the 
   by [thefifthmatt](https://github.com/thefifthmatt)
 - [Smithbox](https://github.com/vawser/Smithbox) - For looking at different game params and maps
   by [vawser](https://github.com/vawser)
-- Faladryn for making the App Icon
+- Faladryn for making the app icon
 - [pseudostripy](https://github.com/pseudostripy) - For helping me with offsets for the baby jump fix
 - b3lyp - Great write up on how baby jumps work in DS2

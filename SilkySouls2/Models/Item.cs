@@ -7,6 +7,7 @@
         public int StackSize { get; set; }
         public int InfuseId { get; set; }
         public int MaxUpgrade { get; set; }
+        public float Durability { get; set; }
         public string CategoryName { get; set; }
         
     }

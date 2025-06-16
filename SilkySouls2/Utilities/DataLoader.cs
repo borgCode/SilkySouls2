@@ -148,7 +148,7 @@ namespace SilkySouls2.Utilities
 
                     string[] parts = line.Split(',');
 
-                    if (parts.Length >= 5)
+                    if (parts.Length >= 6)
                     {
                         items.Add(new Item
                         {
@@ -157,6 +157,7 @@ namespace SilkySouls2.Utilities
                             StackSize = int.Parse(parts[2]),
                             MaxUpgrade = int.Parse(parts[3]),
                             InfuseId = int.Parse(parts[4]),
+                            Durability = float.Parse(parts[5], CultureInfo.InvariantCulture),
                             CategoryName = listName
                         });
                     }
@@ -185,14 +186,13 @@ namespace SilkySouls2.Utilities
 
                     if (parts.Length >= 11)
                     {
-                        int[] infusions = new int[10]; 
+                        int[] infusions = new int[10];
                         for (int i = 1; i < 11; i++)
                         {
                             infusions[i - 1] = int.Parse(parts[i]);
                         }
-                        
+
                         infusionsMap.Add(int.Parse(parts[0]), infusions);
-                        
                     }
                 }
             }
@@ -203,15 +203,15 @@ namespace SilkySouls2.Utilities
         public static Dictionary<string, LoadoutTemplate> LoadCustomLoadouts()
         {
             Dictionary<string, LoadoutTemplate> customLoadouts = new Dictionary<string, LoadoutTemplate>();
-            
+
             string appDataPath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 "SilkySouls2");
-            
+
             string filePath = Path.Combine(appDataPath, "CustomLoadouts.csv");
-            
+
             if (!File.Exists(filePath)) return customLoadouts;
-            
+
             try
             {
                 LoadoutTemplate currentLoadout = null;
@@ -234,7 +234,7 @@ namespace SilkySouls2.Utilities
                         else if (parts[0] == "ITEM" && currentLoadout != null)
                         {
                             int quantity = 1;
-                            
+
                             if (parts.Length > 4)
                             {
                                 int.TryParse(parts[4], out quantity);
@@ -269,11 +269,11 @@ namespace SilkySouls2.Utilities
             string appDataPath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 "SilkySouls2");
-            
+
             Directory.CreateDirectory(appDataPath);
             string filePath = Path.Combine(appDataPath, "CustomLoadouts.csv");
-            
-            
+
+
             try
             {
                 using (var writer = new StreamWriter(filePath))
@@ -304,34 +304,34 @@ namespace SilkySouls2.Utilities
         public static Dictionary<int, AttunementSpell> GetAttunementSpells()
         {
             Dictionary<int, AttunementSpell> spells = new Dictionary<int, AttunementSpell>();
-    
+
             string csvData = Properties.Resources.ResourceManager.GetString("AttunementSpells");
-    
+
             if (string.IsNullOrEmpty(csvData)) return spells;
-    
+
             using (StringReader reader = new StringReader(csvData))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
                     if (string.IsNullOrWhiteSpace(line)) continue;
-            
+
                     string[] parts = line.Split(',');
-            
+
                     if (parts.Length >= 3)
                     {
                         int spellId = int.Parse(parts[0], NumberStyles.Integer, CultureInfo.InvariantCulture);
                         string name = parts[1].Trim();
                         string typeString = parts[2].Trim();
-                
-                        if (Enum.TryParse<SpellType>(typeString, out SpellType spellType))
+
+                        if (Enum.TryParse(typeString, out SpellType spellType))
                         {
                             spells.Add(spellId, new AttunementSpell(spellId, name, spellType));
                         }
                     }
                 }
             }
-    
+
             return spells;
         }
     }

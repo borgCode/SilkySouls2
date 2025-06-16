@@ -80,7 +80,7 @@ namespace SilkySouls2.Services
         public void ForceSave()
         {
             var saveLoadSystem = _memoryIo.ReadInt64((IntPtr)_memoryIo.ReadInt64(GameManagerImp.Base) +
-                                                     GameManagerImp.Offsets.SaveLoadSystem);
+                                                     GameManagerImp.Offsets.SaveLoadSystemPtr);
             _memoryIo.WriteInt32((IntPtr)saveLoadSystem + GameManagerImp.SaveLoadSystem.ForceSaveFlag1, 2);
             _memoryIo.WriteByte((IntPtr)saveLoadSystem + GameManagerImp.SaveLoadSystem.ForceSaveFlag2, 1);
         }

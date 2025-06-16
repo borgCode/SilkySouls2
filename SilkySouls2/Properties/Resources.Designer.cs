@@ -963,6 +963,21 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 83 ec 0c                sub    esp,0xc
+        ///8d 05 00 00 00 00       lea    eax,ds:0x0
+        ///50                      push   eax
+        ///b9 00 00 00 00          mov    ecx,0x0
+        ///e8 fc ff ff ff          call   10 &lt;_main+0x10&gt;
+        ///83 c4 0c                add    esp,0xc
+        ///c3                      ret.
+        /// </summary>
+        internal static string SetSpEffect32 {
+            get {
+                return ResourceManager.GetString("SetSpEffect32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 7 &lt;_main+0x7&gt;
         ///48 b9 00 00 00 00 00    movabs rcx,0x0
         ///00 00 00
@@ -971,9 +986,9 @@ namespace SilkySouls2.Properties {
         ///48 83 c4 48             add    rsp,0x48
         ///c3                      ret.
         /// </summary>
-        internal static string SetSpEffect {
+        internal static string SetSpEffect64 {
             get {
-                return ResourceManager.GetString("SetSpEffect", resourceCulture);
+                return ResourceManager.GetString("SetSpEffect64", resourceCulture);
             }
         }
         

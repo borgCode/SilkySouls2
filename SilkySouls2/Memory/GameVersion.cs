@@ -12,6 +12,7 @@ namespace SilkySouls2.Memory
     {
         public GameEdition Edition { get; set; }
         public string PatchVersion { get; set; }
+        public long FileSize { get; set; }
     }
 
     public static class GameVersion
@@ -29,10 +30,15 @@ namespace SilkySouls2.Memory
             if (VersionMap.TryGetValue(fileSize, out var version))
             {
                 Current = version;
+                Current.FileSize = fileSize;
             }
             else
             {
-                Current = new GameVersionInfo { Edition = GameEdition.Scholar, PatchVersion = "Unknown"};
+                Current = new GameVersionInfo
+                {
+                    Edition = GameEdition.Scholar, PatchVersion = "Unknown",
+                    FileSize = fileSize
+                };
             }
         }
     }

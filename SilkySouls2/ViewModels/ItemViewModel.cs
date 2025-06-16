@@ -338,6 +338,7 @@ namespace SilkySouls2.ViewModels
             {
                 if (SetProperty(ref _selectedAutoSpawnWeapon, value))
                 {
+                    if (!AutoSpawnEnabled) return;
                     _itemService.SetAutoSpawnWeapon(SelectedAutoSpawnWeapon.Id);
                 }
             }

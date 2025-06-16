@@ -143,7 +143,7 @@ namespace SilkySouls2
                     Console.WriteLine($"Base: 0x{_memoryIo.BaseAddress.ToInt64():X}");
                 }
 
-                return;
+                
 
                 if (!_hasAppliedLaunchFeatures)
                 {

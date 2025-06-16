@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using SilkySouls2.Memory;
 using SilkySouls2.Utilities;
 using static SilkySouls2.Memory.Offsets;
@@ -172,9 +170,8 @@ namespace SilkySouls2.Services
 
             var newSouls = _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.CurrentSouls));
             GiveSouls(currentSouls - newSouls);
-            
         }
-        
+
         public int GetSoulLevel() => _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.SoulLevel));
 
         public float GetPlayerSpeed() => _memoryIo.ReadFloat(GetSpeedPtr());
@@ -190,23 +187,60 @@ namespace SilkySouls2.Services
             }, false);
         }
 
-        public void ToggleNoGoodsConsume(bool isNoGoodsConsumeEnabled) =>
-            _memoryIo.WriteBytes(Patches.InfiniteGoods,
-                isNoGoodsConsumeEnabled
-                    ? new byte[] { 0x90, 0x90, 0x90, 0x90 }
-                    : new byte[] { 0x66, 0x29, 0x73, 0x20 });
+        public void ToggleNoGoodsConsume(bool isNoGoodsConsumeEnabled)
+        {
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
+            {
+                _memoryIo.WriteBytes(Patches.InfiniteGoods,
+                    isNoGoodsConsumeEnabled
+                        ? new byte[] { 0x90, 0x90, 0x90, 0x90 }
+                        : new byte[] { 0x66, 0x29, 0x73, 0x20 });
+            }
+            else
+            {
+                _memoryIo.WriteBytes(Patches.InfiniteGoods,
+                    isNoGoodsConsumeEnabled
+                        ? new byte[] { 0x90, 0x90, 0x90, 0x90 }
+                        : new byte[] { 0x66, 0x29, 0x5E, 0x18 }
+                );
+            }
+        }
 
-        public void ToggleInfiniteCasts(bool isInfiniteCastsEnabled) =>
-            _memoryIo.WriteBytes(Patches.InfiniteCasts,
-                isInfiniteCastsEnabled
-                    ? new byte[] { 0x90, 0x90, 0x90 }
-                    : new byte[] { 0x88, 0x4D, 0x20 });
+        public void ToggleInfiniteCasts(bool isInfiniteCastsEnabled)
+        {
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
+            {
+                _memoryIo.WriteBytes(Patches.InfiniteCasts,
+                    isInfiniteCastsEnabled
+                        ? new byte[] { 0x90, 0x90, 0x90 }
+                        : new byte[] { 0x88, 0x4D, 0x20 });
+            }
+            else
+            {
+                _memoryIo.WriteBytes(Patches.InfiniteCasts,
+                    isInfiniteCastsEnabled
+                        ? new byte[] { 0x90, 0x90, 0x90 }
+                        : new byte[] { 0x88, 0x43, 0x18 });
+            }
+        }
 
-        public void ToggleInfiniteDurability(bool isInfiniteDuraEnabled) =>
-            _memoryIo.WriteBytes(Patches.InfiniteDurability,
-                isInfiniteDuraEnabled
-                    ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 }
-                    : new byte[] { 0xF3, 0x0F, 0x11, 0xB4, 0xC3, 0x94, 0x00, 0x00, 0x00 });
+        public void ToggleInfiniteDurability(bool isInfiniteDuraEnabled)
+        {
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
+            {
+                _memoryIo.WriteBytes(Patches.InfiniteDurability,
+                    isInfiniteDuraEnabled
+                        ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 }
+                        : new byte[] { 0xF3, 0x0F, 0x11, 0xB4, 0xC3, 0x94, 0x00, 0x00, 0x00 });
+            }
+            else
+            {
+                _memoryIo.WriteBytes(Patches.InfiniteDurability,
+                    isInfiniteDuraEnabled
+                        ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, }
+                        : new byte[] { 0xF3, 0x0F, 0x11, 0x47, 0x6C });
+            }
+        }
 
         public void SavePos(int index)
         {
@@ -362,16 +396,36 @@ namespace SilkySouls2.Services
             _memoryIo.WriteByte(spEffectParams + 0xE, restoreHumanity.Param2);
             _memoryIo.WriteByte(spEffectParams + 0xF, restoreHumanity.Param3);
 
-            var codeBytes = AsmLoader.GetAsmBytes("SetSpEffect");
-            var bytes = BitConverter.GetBytes(chrSpEffectCtrl.ToInt64());
-            Array.Copy(bytes, 0, codeBytes, 0x7 + 2, 8);
-            AsmHelper.WriteRelativeOffsets(codeBytes, new[]
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
             {
-                (code.ToInt64(), spEffectParams.ToInt64(), 7, 0x0 + 3),
-                (code.ToInt64() + 0x15, setEffectFunc, 5, 0x15 + 1)
-            });
+                var codeBytes = AsmLoader.GetAsmBytes("SetSpEffect64");
+                var bytes = BitConverter.GetBytes(chrSpEffectCtrl.ToInt64());
+                Array.Copy(bytes, 0, codeBytes, 0x7 + 2, 8);
+                AsmHelper.WriteRelativeOffsets(codeBytes, new[]
+                {
+                    (code.ToInt64(), spEffectParams.ToInt64(), 7, 0x0 + 3),
+                    (code.ToInt64() + 0x15, setEffectFunc, 5, 0x15 + 1)
+                });
 
-            _memoryIo.WriteBytes(code, codeBytes);
+                _memoryIo.WriteBytes(code, codeBytes);
+            }
+            else
+            {
+                var codeBytes = AsmLoader.GetAsmBytes("SetSpEffect32");
+
+                var bytes = BitConverter.GetBytes(spEffectParams.ToInt32());
+                Array.Copy(bytes, 0, codeBytes, 0x3 + 2, 4);
+                bytes = BitConverter.GetBytes(chrSpEffectCtrl.ToInt32());
+                Array.Copy(bytes, 0, codeBytes, 0xA + 1, 4);
+
+                AsmHelper.WriteRelativeOffsets(codeBytes, new[]
+                {
+                    (code.ToInt64() + 0xF, setEffectFunc, 5, 0xF + 1)
+                });
+
+                _memoryIo.WriteBytes(code, codeBytes);
+            }
+            
             _memoryIo.RunThread(code);
         }
 
@@ -392,7 +446,7 @@ namespace SilkySouls2.Services
             _memoryIo.WriteBytes(Patches.NoSoulLoss,
                 isEnabled
                     ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 }
-                    : new byte[] { 0x89, 0x90, 0xEC, 0x00, 0x00, 0x00 } 
+                    : new byte[] { 0x89, 0x90, 0xEC, 0x00, 0x00, 0x00 }
             );
     }
 }

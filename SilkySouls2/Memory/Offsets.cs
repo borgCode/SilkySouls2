@@ -4,26 +4,58 @@ namespace SilkySouls2.Memory
 {
     public static class Offsets
     {
-
         public static class GameManagerImp
         {
             public static IntPtr Base;
 
             public static class Offsets
             {
-                public const int CharacterManager = 0x18;
-                public const int CameraManager = 0x20;
-                public const int EnemyGeneratorManager = 0x40;
-                public const int EventManager = 0x70;
-                public const int GameDataManager = 0xA8;
-                public const int SaveLoadSystem = 0xB8;
-                public const int PlayerCtrl = 0xD0;
-                public const int PxWorld = 0x660;
-                public const int ViewMatrixPtr = 0x1158;
-                public const int DLBackAllocator = 0x22E0;
-                public const int Quitout = 0x24B1;
-                public const int LoadingFlag = 0x24BC;
+                static Offsets()
+                {
+
+                    if (GameVersion.Current.Edition == GameEdition.Scholar)
+                    {
+                        CharacterManager = 0x18;
+                        CameraManager = 0x20;
+                        EventManager = 0x70;
+                        GameDataManager = 0xA8;
+                        SaveLoadSystemPtr = 0xB8;
+                        PlayerCtrl = 0xD0;
+                        PxWorld = 0x660;
+                        ViewMatrixPtr = 0x1158;
+                        DLBackAllocator = 0x22E0;
+                        Quitout = 0x24B1;
+                        LoadingFlag = 0x24BC;
+                    }
+                    else
+                    {
+                        CharacterManager = 0x18;
+                        CameraManager = 0x1C;
+                        EventManager = 0x44;
+                        GameDataManager = 0x60;
+                        SaveLoadSystemPtr = 0x68;
+                        PlayerCtrl = 0x74;
+                        // PxWorld = 0x280;
+                        // ViewMatrixPtr = 0x1154;
+                        // DLBackAllocator = 0x22DC;
+                        // Quitout = 0x0;
+                        // LoadingFlag = 0x24B8;
+                    }
+                }
+
+                public static int CharacterManager { get; private set; }
+                public static int CameraManager { get; private set; }
+                public static int EventManager { get; private set; }
+                public static int GameDataManager { get; private set; }
+                public static int SaveLoadSystemPtr { get; private set; }
+                public static int PlayerCtrl { get; private set; }
+                public static int PxWorld { get; private set; }
+                public static int ViewMatrixPtr { get; private set; }
+                public static int DLBackAllocator { get; private set; }
+                public static int Quitout { get; private set; }
+                public static int LoadingFlag { get; private set; }
             }
+
 
             public static class CharacterManagerOffsets
             {
@@ -31,15 +63,7 @@ namespace SilkySouls2.Memory
                 public const int PlayerStatusParam = 0xD8;
                 public const int StartingWeapon = 0x278;
             }
-            
-            
-            public static class CameraManagerOffsets
-            {
-                public const int IngameCameraOperatorPtr = 0x28;
-                public const int MapId = 0x45C;
-                
-            }
-            
+
             public static class EventManagerOffsets
             {
                 public const int EventFlagManager = 0x20;
@@ -50,16 +74,48 @@ namespace SilkySouls2.Memory
 
             public static class GameDataManagerOffsets
             {
-                public const int InventoryPtr = 0x10;
-                public const int NewGamePtr = 0xC0;
-                public const int NewGame = 0x68;
+                static GameDataManagerOffsets()
+                {
+                    if (GameVersion.Current.Edition == GameEdition.Scholar)
+                    {
+                        InventoryPtr = 0x10;
+                        NewGamePtr = 0xC0;
+                        NewGame = 0x68;
+                    }
+                    else
+                    {
+                        InventoryPtr = 0x08; 
+                        NewGamePtr = 0x60;   
+                        NewGame = 0x68; 
+                    }
+                }
+
+                public static int InventoryPtr { get; private set; }
+                public static int NewGamePtr { get; private set; }
+                public static int NewGame { get; private set; }
 
 
                 public static class Inventory
                 {
-                    public const int InventoryLists = 0x10;
-                    public const int ItemInventory2BagListPtr = 0x10;
-                    public const int ItemInventory2BagListForSpells = 0xD0;
+                    static Inventory()
+                    {
+                        if (GameVersion.Current.Edition == GameEdition.Scholar)
+                        {
+                            InventoryLists = 0x10;
+                            ItemInventory2BagListPtr = 0x10;
+                            ItemInventory2BagListForSpells = 0xD0;
+                        }
+                        else
+                        {
+                            InventoryLists = 0x8;
+                            ItemInventory2BagListPtr = 0x8;
+                            // ItemInventory2BagListForSpells = 0xD0;
+                        }
+                    }
+
+                    public static int InventoryLists  { get; private set; }
+                    public static int ItemInventory2BagListPtr  { get; private set; }
+                    public static int ItemInventory2BagListForSpells  { get; private set; }
 
                     public static class ItemInventory2BagList
                     {
@@ -70,7 +126,6 @@ namespace SilkySouls2.Memory
                     {
                         public const int ListStart = 0x10;
                         public const int Count = 0x32;
-                        
                     }
 
                     public static class SpellEntry
@@ -80,9 +135,7 @@ namespace SilkySouls2.Memory
                         public const int IsEquipped = 0x1F;
                         public const int SlotReq = 0x21;
                     }
-                    
                 }
-                
             }
 
             public static class SaveLoadSystem
@@ -90,45 +143,96 @@ namespace SilkySouls2.Memory
                 public const int ForceSaveFlag1 = 0x68;
                 public const int ForceSaveFlag2 = 0x1A2;
             }
-            
+
 
             public static class ChrCtrlOffsets
             {
+                static ChrCtrlOffsets()
+                {
+                    if (GameVersion.Current.Edition == GameEdition.Scholar)
+                    {
+                        ChrParamPtr = 0x38;
+                        Coords = 0x90;
+                        PoiseImmunityPtr = 0xB8;
+                        OperatorPtr = 0xE8;
+                        ChrPhysicsCtrlPtr = 0x100;
+                        Hp = 0x168;
+                        MinHp = 0x16C;
+                        MaxHp = 0x170;
+                        FullHpWithHollowing = 0x174;
+                        Stamina = 0x1AC;
+                        HeavyPoiseCurrent = 0x1B8;
+                        HeavyPoiseMax = 0x1C0;
+                        PoisonCurrent = 0x1C4;
+                        PoisonMax = 0x1CC;
+                        BleedCurrent = 0x1D0;
+                        BleedMax = 0x1D8;
+                        ToxicCurrent = 0x200;
+                        ToxicMax = 0x208;
+                        LightPoiseCurrent = 0x218;
+                        LightPoiseMax = 0x220;
+                        Speed = 0x2A8;
+                        EquippedSpellsPtr = 0x378;
+                        EquippedSpellsStart = 0x9B8;
+                        ChrSpEffectCtrl = 0x3E0;
+                        StatsPtr = 0x490;
+                    }
+                    else
+                    {
+                        // ChrParamPtr = 0x34;
+                        Coords = 0x80;
+                        // PoiseImmunityPtr = 0xB4;
+                        // OperatorPtr = 0xE4;
+                        ChrPhysicsCtrlPtr = 0xB8;
+                        Hp = 0xFC;
+                        MinHp = 0x100;
+                        MaxHp = 0x104;
+                        FullHpWithHollowing = 0x108;
+                        Stamina = 0x140;
+                        // HeavyPoiseCurrent = 0x1B4;
+                        // HeavyPoiseMax = 0x1BC;
+                        // PoisonCurrent = 0x1C0;
+                        // PoisonMax = 0x1C8;
+                        // BleedCurrent = 0x1CC;
+                        // BleedMax = 0x1D4;
+                        // ToxicCurrent = 0x1FC;
+                        // ToxicMax = 0x204;
+                        // LightPoiseCurrent = 0x214;
+                        // LightPoiseMax = 0x21C;
+                        Speed = 0x208;
+                        // EquippedSpellsPtr = 0x374;
+                        // EquippedSpellsStart = 0x9B4;
+                        ChrSpEffectCtrl = 0x308;
+                        StatsPtr = 0x378;
+                    }
+                }
 
-                public const int ChrParamPtr = 0x38;
-                public const int Coords = 0x90;
-                public const int PoiseImmunityPtr = 0xB8;
-                public const int ChrFlagsPtr = 0xD8;
-                public const int ChrActionCtrlPtr = 0xE0;
-                public const int OperatorPtr = 0xE8;
-                public const int ChrMotionCtrlPtr = 0xF8;
-                public const int ChrPhysicsCtrlPtr = 0x100;
-                public const int Hp = 0x168;
-                public const int MinHp = 0x16C;
-                public const int MaxHp = 0x170;
-                public const int FullHpWithHollowing = 0x174;
-                public const int Stamina = 0x1AC;
-                public const int MaxStamina = 0x1B4;
-                public const int HeavyPoiseCurrent = 0x1B8;
-                public const int HeavyPoiseMax = 0x1C0;
-                public const int PoisonCurrent = 0x1C4;
-                public const int PoisonMax = 0x1CC;
-                public const int BleedCurrent = 0x1D0;
-                public const int BleedMax = 0x1D8;
-                public const int ToxicCurrent = 0x200;
-                public const int ToxicMax = 0x208;
-                public const int LightPoiseCurrent = 0x218;
-                public const int LightPoiseMax = 0x220;
-                public const int ChrCullingGroupCtrlPtr = 0x240;
-                public const int Speed = 0x2A8;
-                public const int EquippedSpellsPtr = 0x378;
-                public const int EquippedSpellsStart = 0x9B8;
-                public const int ChrSpEffectCtrl = 0x3E0;
-                
-                public const int StatsPtr = 0x490;
+                public static int ChrParamPtr { get; private set; }
+                public static int Coords { get; private set; }
+                public static int PoiseImmunityPtr { get; private set; }
+                public static int OperatorPtr { get; private set; }
+                public static int ChrPhysicsCtrlPtr { get; private set; }
+                public static int Hp { get; private set; }
+                public static int MinHp { get; private set; }
+                public static int MaxHp { get; private set; }
+                public static int FullHpWithHollowing { get; private set; }
+                public static int Stamina { get; private set; }
+                public static int HeavyPoiseCurrent { get; private set; }
+                public static int HeavyPoiseMax { get; private set; }
+                public static int PoisonCurrent { get; private set; }
+                public static int PoisonMax { get; private set; }
+                public static int BleedCurrent { get; private set; }
+                public static int BleedMax { get; private set; }
+                public static int ToxicCurrent { get; private set; }
+                public static int ToxicMax { get; private set; }
+                public static int LightPoiseCurrent { get; private set; }
+                public static int LightPoiseMax { get; private set; }
+                public static int Speed { get; private set; }
+                public static int EquippedSpellsPtr { get; private set; }
+                public static int EquippedSpellsStart { get; private set; }
+                public static int ChrSpEffectCtrl { get; private set; }
+                public static int StatsPtr { get; private set; }
 
-            
-                
 
                 public static class ChrParam
                 {
@@ -140,7 +244,7 @@ namespace SilkySouls2.Memory
                 {
                     public const int LightStaggerImmuneFlag = 0x5E8;
                 }
-   
+
                 public static class Operator
                 {
                     public const int ChrPadMan = 0x18;
@@ -153,40 +257,80 @@ namespace SilkySouls2.Memory
                     public const int ChrAi = 0x20;
                 }
                 
-                public static class ChrMotionCtrl
-                {
-                    public const int MorphemeMotionCtrl = 0x28;
-                    public const int MorphemeChrCtrl = 0x30;
-                }
 
                 public static class ChrPhysicsCtrl
                 {
-                    public const int Gravity = 0x134;
-                    public const int Xyz = 0x1C0; //Read only
-                }
-
-                public static class ChrCullingGroupCtrl
-                {
-                    public const int InAirTimerEntity = 0x90;
+                    static ChrPhysicsCtrl()
+                    {
+                        if (GameVersion.Current.Edition == GameEdition.Scholar)
+                        {
+                            Gravity = 0x134;
+                            Xyz = 0x1C0;
+                        }
+                        else
+                        {
+                            Gravity = 0x11C;
+                            Xyz = 0x70;
+                        }
+                    }
+                    public static int Gravity { get; private set; }
+                    public static int Xyz { get; private set; }
                 }
                 
+
                 public static class Stats
                 {
-                    public const int Vigor = 0x08;
-                    public const int Endurance = 0x0A;
-                    public const int Vitality = 0x0C;
-                    public const int Attunement = 0x0E;
-                    public const int Strength = 0x10;
-                    public const int Dexterity = 0x12;
-                    public const int Intelligence = 0x14;
-                    public const int Faith = 0x16;
-                    public const int Adp = 0x18;
-                    public const int SoulLevel = 0xD0;
-                    public const int CurrentSouls = 0xEC;
-                    public const int SoulMemory = 0xF4;
+                    static Stats()
+                    {
+                        var version = GameVersion.Current;
+       
+                        if (version.Edition == GameEdition.Scholar)
+                        {
+                            Vigor = 0x08;
+                            Endurance = 0x0A;
+                            Vitality = 0x0C;
+                            Attunement = 0x0E;
+                            Strength = 0x10;
+                            Dexterity = 0x12;
+                            Intelligence = 0x14;
+                            Faith = 0x16;
+                            Adp = 0x18;
+                            SoulLevel = 0xD0;
+                            CurrentSouls = 0xEC;
+                            SoulMemory = 0xF4;
+                        }
+                        else 
+                        {
+                            Vigor = 0x04;
+                            Endurance = 0x06;
+                            Vitality = 0x08;
+                            Attunement = 0x0A;
+                            Strength = 0x0C;
+                            Dexterity = 0x0E;
+                            Intelligence = 0x10;
+                            Faith = 0x12;
+                            Adp = 0x14;
+                            SoulLevel = 0xCC;
+                            CurrentSouls = 0xE8;
+                            SoulMemory = 0xF0;
+                        }
+                    }
+
+                    public static int Vigor { get; private set; }
+                    public static int Endurance { get; private set; }
+                    public static int Vitality { get; private set; }
+                    public static int Attunement { get; private set; }
+                    public static int Strength { get; private set; }
+                    public static int Dexterity { get; private set; }
+                    public static int Intelligence { get; private set; }
+                    public static int Faith { get; private set; }
+                    public static int Adp { get; private set; }
+                    public static int SoulLevel { get; private set; }
+                    public static int CurrentSouls { get; private set; }
+                    public static int SoulMemory { get; private set; }
                 }
             }
-            
+
             public static class DLAllocator
             {
                 public const int FeOperatorFrontend = 0x10;
@@ -198,7 +342,7 @@ namespace SilkySouls2.Memory
                 }
             }
         }
-        
+
 
         public static class HkHardwareInfo
         {
@@ -207,7 +351,7 @@ namespace SilkySouls2.Memory
             public const int HkpChrRigidBodyPtr = 0x1F8;
             public const int HkpChrRigidBody = 0x18;
             public const int HkpRigidBodyPtr = 0x8;
-            
+
 
             public static class HkpRigidBody
             {
@@ -236,8 +380,8 @@ namespace SilkySouls2.Memory
             public static IntPtr NoHollowing;
             public static IntPtr NoSoulLoss;
         }
-        
-        
+
+
         public static class Hooks
         {
             public static long SetAreaVariable; // Sets which of the forlorns should spawn
@@ -265,7 +409,6 @@ namespace SilkySouls2.Memory
             public static long BabyJump;
             public static long EzStateCompareTimer;
             public static long FogRender;
-            
         }
 
         public static class Funcs
@@ -299,6 +442,16 @@ namespace SilkySouls2.Memory
             public static long GetNumOfSpellslots1;
             public static long GetNumOfSpellslots2;
             public static long UpdateSpellSlots;
+        }
+
+        private static int GetVanillaOffset(string playerctrl, string versionPatchVersion)
+        {
+            return 0x0;
+        }
+
+        private static int GetScholarOffset(string playerctrl, string versionPatchVersion)
+        {
+            return 0xD0;
         }
     }
 }

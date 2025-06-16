@@ -64,7 +64,7 @@ namespace SilkySouls2.ViewModels
         private const float DefaultSpeed = 1f;
         private const float Epsilon = 0.0001f;
 
-        private bool _pauseUpdates;
+        private bool _pauseUpdates = true;
         private bool _areOptionsEnabled;
         private readonly DispatcherTimer _timer;
 
@@ -617,8 +617,6 @@ namespace SilkySouls2.ViewModels
     
             if (IsNoDeathEnabled) _playerService.ToggleNoDeath(true);
             
-            // if (IsNoRollEnabled)
-            //     _playerService.ToggleNoRoll(true);
             AreOptionsEnabled = true;
             LoadStats();
             _timer.Start();
@@ -639,6 +637,7 @@ namespace SilkySouls2.ViewModels
             if (IsNoSoulGainEnabled) _playerService.ToggleNoSoulGain(true);
             if (IsNoSoulLossEnabled) _playerService.ToggleNoSoulLoss(true);
             if (IsNoHollowingEnabled) _playerService.ToggleNoHollowing(true);
+            _pauseUpdates = false;
         }
 
         public void DisableFeatures()

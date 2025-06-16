@@ -84,7 +84,7 @@
                     Param2 = 0x00,
                     Param3 = 0x00
                 };
-
+                
                 public static readonly SpEffectData BonfireRest = new SpEffectData
                 {
                     EffectId = 110000010,

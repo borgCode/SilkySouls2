@@ -409,21 +409,43 @@ namespace SilkySouls2.Memory
 
         public void AllocCodeCave()
         {
-            IntPtr searchRangeStart = BaseAddress - 0x40000000;
-            IntPtr searchRangeEnd = BaseAddress - 0x30000;
-            uint codeCaveSize = 0x3000;
-            IntPtr allocatedMemory;
-
-            for (IntPtr addr = searchRangeEnd; addr.ToInt64() > searchRangeStart.ToInt64(); addr -= 0x10000)
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
             {
-                allocatedMemory = Kernel32.VirtualAllocEx(ProcessHandle, addr, codeCaveSize);
+                IntPtr searchRangeStart = BaseAddress - 0x40000000;
+                IntPtr searchRangeEnd = BaseAddress - 0x30000;
+                uint codeCaveSize = 0x3000;
+                IntPtr allocatedMemory;
 
-                if (allocatedMemory != IntPtr.Zero)
+                for (IntPtr addr = searchRangeEnd; addr.ToInt64() > searchRangeStart.ToInt64(); addr -= 0x10000)
                 {
-                    CodeCaveOffsets.Base = allocatedMemory;
-                    break;
+                    allocatedMemory = Kernel32.VirtualAllocEx(ProcessHandle, addr, codeCaveSize);
+
+                    if (allocatedMemory != IntPtr.Zero)
+                    {
+                        CodeCaveOffsets.Base = allocatedMemory;
+                        break;
+                    }
                 }
             }
+            else
+            {
+                IntPtr moduleEnd = new IntPtr(BaseAddress.ToInt64() + GameVersion.Current.FileSize);
+                IntPtr searchRangeStart = moduleEnd + 0x10000;
+                IntPtr searchRangeEnd = BaseAddress + 0x7F000000;
+                uint codeCaveSize = 0x3000;
+                IntPtr allocatedMemory;
+
+                for (IntPtr addr = searchRangeStart; addr.ToInt64() < searchRangeEnd.ToInt64(); addr += 0x10000)
+                {
+                    allocatedMemory = Kernel32.VirtualAllocEx(ProcessHandle, addr, codeCaveSize);
+                    if (allocatedMemory != IntPtr.Zero)
+                    {
+                        CodeCaveOffsets.Base = allocatedMemory;
+                        break;
+                    }
+                }
+            }
+            
         }
 
         public bool InjectDll(string dllPath)

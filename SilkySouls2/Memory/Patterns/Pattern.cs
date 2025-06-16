@@ -23,6 +23,7 @@
     public enum AddressingMode
     {
         Absolute,
-        Relative
+        Relative,
+        Direct32 
     }
 }

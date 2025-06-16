@@ -103,6 +103,7 @@
         <Compile Include="Memory\DLLShared\DllManager.cs" />
         <Compile Include="Memory\DLLShared\DrawType.cs" />
         <Compile Include="Memory\DLLShared\SharedMemAddr.cs" />
+        <Compile Include="Memory\GameVersion.cs" />
         <Compile Include="Memory\NopManager.cs" />
         <Compile Include="Memory\Patterns\Pattern.cs" />
         <Compile Include="Memory\Patterns\Patterns32.cs" />

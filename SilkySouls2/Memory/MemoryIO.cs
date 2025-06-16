@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Text;
 using System.Timers;
@@ -321,21 +322,42 @@ namespace SilkySouls2.Memory
 
         internal IntPtr FollowPointers(IntPtr baseAddress, int[] offsets, bool readFinalPtr)
         {
-            ulong ptr = ReadUInt64(baseAddress);
-
-            for (int i = 0; i < offsets.Length - 1; i++)
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
             {
-                ptr = ReadUInt64((IntPtr)ptr + offsets[i]);
+                ulong ptr = ReadUInt64(baseAddress);
+
+                for (int i = 0; i < offsets.Length - 1; i++)
+                {
+                    ptr = ReadUInt64((IntPtr)ptr + offsets[i]);
+                }
+
+                IntPtr finalAddress = (IntPtr)ptr + offsets[offsets.Length - 1];
+
+                if (readFinalPtr)
+                    return (IntPtr)ReadUInt64(finalAddress);
+
+
+                return finalAddress;
             }
+            else
+            {
+                uint ptr = ReadUInt32(baseAddress);
 
-            IntPtr finalAddress = (IntPtr)ptr + offsets[offsets.Length - 1];
+                for (int i = 0; i < offsets.Length - 1; i++)
+                {
+                    ptr = ReadUInt32((IntPtr)ptr + offsets[i]);
+                }
 
-            if (readFinalPtr)
-                return (IntPtr)ReadUInt64(finalAddress);
+                IntPtr finalAddress = (IntPtr)ptr + offsets[offsets.Length - 1];
 
+                if (readFinalPtr)
+                    return (IntPtr)ReadUInt32(finalAddress);
 
-            return finalAddress;
+                return finalAddress;
+            }
+            
         }
+        
 
         public void SetBitValue(IntPtr addr, byte flagMask, bool setValue)
         {
@@ -375,7 +397,13 @@ namespace SilkySouls2.Memory
 
         public bool IsGameLoaded()
         {
-            return (IntPtr)ReadUInt64((IntPtr)ReadUInt64(Offsets.GameManagerImp.Base) +
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
+            {
+                return (IntPtr)ReadUInt64((IntPtr)ReadUInt64(Offsets.GameManagerImp.Base) +
+                                          Offsets.GameManagerImp.Offsets.PlayerCtrl) != IntPtr.Zero;
+            }
+
+            return (IntPtr)ReadUInt32((IntPtr)ReadUInt32(Offsets.GameManagerImp.Base) +
                                       Offsets.GameManagerImp.Offsets.PlayerCtrl) != IntPtr.Zero;
         }
 
@@ -475,6 +503,14 @@ namespace SilkySouls2.Memory
                 return IntPtr.Zero;
 
             return Kernel32.GetProcAddress(moduleHandle, procName);
+        }
+        
+        public long GetFileSize()
+        {
+            if (TargetProcess.MainModule == null) return 0;
+            var fileInfo = new FileInfo(TargetProcess.MainModule.FileName);
+            return fileInfo.Length;
+
         }
     }
 }

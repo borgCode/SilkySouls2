@@ -102,8 +102,7 @@ namespace SilkySouls2
             };
             _gameLoadedTimer.Tick += Timer_Tick;
             _gameLoadedTimer.Start();
-
-
+            
             VersionChecker.UpdateVersionText(AppVersion);
             
             if (SettingsManager.Default.EnableUpdateChecks)
@@ -130,18 +129,21 @@ namespace SilkySouls2
         {
             if (_memoryIo.IsAttached)
             {
+                
                 IsAttachedText.Text = "Attached to game";
                 IsAttachedText.Foreground = (SolidColorBrush)Application.Current.Resources["AttachedBrush"];
 
                 LaunchGameButton.IsEnabled = false;
-
-
+                
                 if (!_hasScanned)
                 {
-                    _aobScanner.Scan();
+                    GameVersion.DetectVersion(_memoryIo.GetFileSize());
+                    _aobScanner.Scan(GameVersion.Current.Edition == GameEdition.Scholar);
                     _hasScanned = true;
                     Console.WriteLine($"Base: 0x{_memoryIo.BaseAddress.ToInt64():X}");
                 }
+
+                return;
 
                 if (!_hasAppliedLaunchFeatures)
                 {
@@ -189,6 +191,7 @@ namespace SilkySouls2
                 _nopManager.ClearRegistry();
                 _dllManager.ResetState();
                 _settingsViewModel.ResetAttached();
+                _hasScanned = false;
                 _loaded = false;
                 _hasAllocatedMemory = false;
                 _appliedOneTimeFeatures = false;

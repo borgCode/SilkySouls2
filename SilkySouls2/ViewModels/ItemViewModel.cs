@@ -14,21 +14,23 @@ namespace SilkySouls2.ViewModels
     public class ItemViewModel : BaseViewModel
     {
         private readonly ItemService _itemService;
-        
+
         private ILookup<string, Item> _allItems;
+
         private readonly Dictionary<string, ObservableCollection<Item>> _itemsByCategory =
             new Dictionary<string, ObservableCollection<Item>>();
+
         private readonly ObservableCollection<Item> _searchResultsCollection = new ObservableCollection<Item>();
-        
+
         public string[] _infusionNames =
             { "Normal", "Fire", "Magic", "Lightning", "Dark", "Poison", "Bleed", "Raw", "Enchanted", "Mundane" };
 
         public Dictionary<int, int[]> _infusionDict;
-        
+
         private ObservableCollection<string> _loadouts;
         private Dictionary<string, LoadoutTemplate> _loadoutTemplatesByName = new Dictionary<string, LoadoutTemplate>();
-        
-        
+
+
         public ItemViewModel(ItemService itemService)
         {
             _itemService = itemService;
@@ -46,7 +48,7 @@ namespace SilkySouls2.ViewModels
             Categories.Add("Spells");
             Categories.Add("Upgrade Materials");
             Categories.Add("Weapons");
-            
+
             _itemsByCategory.Add("Ammo", new ObservableCollection<Item>(DataLoader.GetItemList("Ammo")));
             _itemsByCategory.Add("Armor", new ObservableCollection<Item>(DataLoader.GetItemList("Armor")));
             _itemsByCategory.Add("Consumables", new ObservableCollection<Item>(DataLoader.GetItemList("Consumables")));
@@ -57,24 +59,24 @@ namespace SilkySouls2.ViewModels
             _itemsByCategory.Add("Upgrade Materials",
                 new ObservableCollection<Item>(DataLoader.GetItemList("UpgradeMaterials")));
             _itemsByCategory.Add("Weapons", new ObservableCollection<Item>(DataLoader.GetItemList("Weapons")));
-            
+
             _allItems = _itemsByCategory.Values.SelectMany(x => x).ToLookup(i => i.Name);
 
             _infusionDict = DataLoader.GetInfusions();
 
 
             _loadoutTemplatesByName = LoadoutTemplates.All.ToDictionary(lt => lt.Name);
-            
+
             LoadCustomLoadouts();
-            
+
             _loadouts = new ObservableCollection<string>(_loadoutTemplatesByName.Keys);
-            
+
             SelectedLoadoutName = Loadouts.FirstOrDefault();
             SelectedCategory = Categories.FirstOrDefault();
             SelectedMassSpawnCategory = Categories.FirstOrDefault();
             SelectedAutoSpawnWeapon = WeaponList.FirstOrDefault();
         }
-        
+
 
         private bool _areOptionsEnabled;
 
@@ -174,9 +176,10 @@ namespace SilkySouls2.ViewModels
 
             Items = _searchResultsCollection;
         }
-        
+
 
         private Item _selectedItem;
+
         public Item SelectedItem
         {
             get => _selectedItem;
@@ -184,7 +187,7 @@ namespace SilkySouls2.ViewModels
             {
                 SetProperty(ref _selectedItem, value);
                 if (_selectedItem == null) return;
-                
+
                 QuantityEnabled = _selectedItem.StackSize > 1;
                 MaxQuantity = _selectedItem.StackSize;
                 SelectedQuantity = _selectedItem.StackSize;
@@ -198,19 +201,20 @@ namespace SilkySouls2.ViewModels
                         AvailableInfusions.Add(_infusionNames[i]);
                     }
                 }
-                
+
                 CanInfuse = AvailableInfusions.Count > 1;
                 if (!CanInfuse) SelectedInfusionType = "Normal";
-                
+
                 CanUpgrade = _selectedItem.MaxUpgrade > 0;
                 if (!CanUpgrade) SelectedUpgrade = 0;
                 else MaxUpgradeLevel = _selectedItem.MaxUpgrade;
-                
+
                 if (SelectedUpgrade > MaxUpgradeLevel) SelectedUpgrade = MaxUpgradeLevel;
             }
         }
-        
+
         private int _selectedQuantity = 1;
+
         public int SelectedQuantity
         {
             get => _selectedQuantity;
@@ -220,59 +224,67 @@ namespace SilkySouls2.ViewModels
                 SetProperty(ref _selectedQuantity, clampedValue);
             }
         }
-        
+
         private int _maxQuantity;
+
         public int MaxQuantity
         {
             get => _maxQuantity;
             private set => SetProperty(ref _maxQuantity, value);
         }
-        
+
         private bool _canUpgrade;
+
         public bool CanUpgrade
         {
             get => _canUpgrade;
             private set => SetProperty(ref _canUpgrade, value);
         }
-        
+
         private int _maxUpgradeLevel = 10;
+
         public int MaxUpgradeLevel
         {
             get => _maxUpgradeLevel;
             private set => SetProperty(ref _maxUpgradeLevel, value);
         }
-        
+
         private int _selectedUpgrade;
+
         public int SelectedUpgrade
         {
             get => _selectedUpgrade;
             set => SetProperty(ref _selectedUpgrade, Math.Max(0, Math.Min(value, MaxUpgradeLevel)));
         }
 
-        
+
         private bool _quantityEnabled;
+
         public bool QuantityEnabled
         {
             get => _quantityEnabled;
             private set => SetProperty(ref _quantityEnabled, value);
         }
-        
+
         private bool _canInfuse;
+
         public bool CanInfuse
         {
             get => _canInfuse;
             private set => SetProperty(ref _canInfuse, value);
         }
-        
+
         private string _selectedInfusionType = "Normal";
+
         public string SelectedInfusionType
         {
             get => _selectedInfusionType;
             set => SetProperty(ref _selectedInfusionType, value);
         }
-        
-        
+
+
         private string _selectedCategory;
+
         public string SelectedCategory
         {
             get => _selectedCategory;
@@ -294,38 +306,43 @@ namespace SilkySouls2.ViewModels
                 SelectedMassSpawnCategory = SelectedCategory;
             }
         }
-        
+
         private string _selectedMassSpawnCategory;
+
         public string SelectedMassSpawnCategory
         {
             get => _selectedMassSpawnCategory;
             set => SetProperty(ref _selectedMassSpawnCategory, value);
         }
-        
+
         private bool _autoSpawnEnabled;
+
         public bool AutoSpawnEnabled
         {
             get => _autoSpawnEnabled;
-            set  {
+            set
+            {
                 if (SetProperty(ref _autoSpawnEnabled, value))
                 {
                     _itemService.SetAutoSpawnWeapon(!_autoSpawnEnabled ? 3400000 : SelectedAutoSpawnWeapon.Id);
                 }
             }
         }
-        
+
         private Item _selectedAutoSpawnWeapon;
+
         public Item SelectedAutoSpawnWeapon
         {
             get => _selectedAutoSpawnWeapon;
-            set  {
+            set
+            {
                 if (SetProperty(ref _selectedAutoSpawnWeapon, value))
                 {
                     _itemService.SetAutoSpawnWeapon(SelectedAutoSpawnWeapon.Id);
                 }
             }
         }
-        
+
         public ObservableCollection<Item> WeaponList => new ObservableCollection<Item>(_itemsByCategory["Weapons"]);
 
         public ObservableCollection<string> Loadouts
@@ -333,8 +350,9 @@ namespace SilkySouls2.ViewModels
             get => _loadouts;
             private set => SetProperty(ref _loadouts, value);
         }
-        
+
         private string _selectedLoadoutName;
+
         public string SelectedLoadoutName
         {
             get => _selectedLoadoutName;
@@ -345,7 +363,8 @@ namespace SilkySouls2.ViewModels
         {
             if (_selectedItem == null) return;
 
-            _itemService.SpawnItem(_selectedItem, SelectedUpgrade, SelectedQuantity, Array.IndexOf(_infusionNames, SelectedInfusionType));
+            _itemService.SpawnItem(_selectedItem, SelectedUpgrade, SelectedQuantity,
+                Array.IndexOf(_infusionNames, SelectedInfusionType), _selectedItem.Durability);
         }
 
         public void TryEnableFeatures()
@@ -366,7 +385,7 @@ namespace SilkySouls2.ViewModels
                 {
                     foreach (var weapon in _itemsByCategory[SelectedMassSpawnCategory])
                     {
-                        _itemService.SpawnItem(weapon, 0, 1, 0);
+                        _itemService.SpawnItem(weapon, 0, 1, 0, weapon.Durability);
                         Thread.Sleep(10);
                     }
                 }
@@ -374,7 +393,7 @@ namespace SilkySouls2.ViewModels
                 {
                     foreach (var item in _itemsByCategory[SelectedMassSpawnCategory])
                     {
-                        _itemService.SpawnItem(item, 0, item.StackSize, 0);
+                        _itemService.SpawnItem(item, 0, item.StackSize, 0, item.Durability);
                         Thread.Sleep(10);
                     }
                 }
@@ -385,7 +404,7 @@ namespace SilkySouls2.ViewModels
         {
             if (AutoSpawnEnabled) _itemService.SetAutoSpawnWeapon(SelectedAutoSpawnWeapon.Id);
         }
-        
+
         public void ShowCreateLoadoutWindow()
         {
             var createLoadoutWindow = new CreateLoadoutWindow(_categories, _itemsByCategory, _loadoutTemplatesByName,
@@ -397,7 +416,7 @@ namespace SilkySouls2.ViewModels
         private void RefreshLoadouts()
         {
             _loadoutTemplatesByName = LoadoutTemplates.All.ToDictionary(lt => lt.Name);
-            
+
             foreach (var loadout in _customLoadoutTemplates.Values)
             {
                 if (!string.IsNullOrEmpty(loadout.Name))
@@ -405,7 +424,7 @@ namespace SilkySouls2.ViewModels
                     _loadoutTemplatesByName[loadout.Name] = loadout;
                 }
             }
-            
+
             _loadouts.Clear();
             foreach (var entry in _loadoutTemplatesByName)
             {
@@ -414,16 +433,18 @@ namespace SilkySouls2.ViewModels
                     _loadouts.Add(entry.Key);
                 }
             }
-            
+
             if (string.IsNullOrEmpty(SelectedLoadoutName) || !_loadoutTemplatesByName.ContainsKey(SelectedLoadoutName))
             {
                 SelectedLoadoutName = _loadouts.FirstOrDefault();
             }
+
             SaveCustomLoadouts();
         }
-        
+
         private Dictionary<string, LoadoutTemplate> _customLoadoutTemplates = new Dictionary<string, LoadoutTemplate>();
         private void SaveCustomLoadouts() => DataLoader.SaveCustomLoadouts(_customLoadoutTemplates);
+
         private void LoadCustomLoadouts()
         {
             _customLoadoutTemplates = DataLoader.LoadCustomLoadouts();
@@ -432,7 +453,7 @@ namespace SilkySouls2.ViewModels
                 _loadoutTemplatesByName[loadout.Name] = loadout;
             }
         }
-        
+
         public void SpawnLoadout()
         {
             if (string.IsNullOrEmpty(SelectedLoadoutName) || !_loadoutTemplatesByName.ContainsKey(SelectedLoadoutName))
@@ -446,12 +467,11 @@ namespace SilkySouls2.ViewModels
                 {
                     int infusionIndex = Array.IndexOf(_infusionNames, template.Infusion);
                     int quantity = template.Quantity > 0 ? template.Quantity : item.StackSize;
-            
-                    _itemService.SpawnItem(item, template.Upgrade, quantity, infusionIndex);
+
+                    _itemService.SpawnItem(item, template.Upgrade, quantity, infusionIndex, item.Durability);
                     Thread.Sleep(10);
                 }
             }
         }
-        
     }
 }

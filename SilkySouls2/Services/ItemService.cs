@@ -16,7 +16,7 @@ namespace SilkySouls2.Services
             _memoryIo = memoryIo;
         }
 
-        public void SpawnItem(Item selectedItem,  int selectedUpgrade, int selectedQuantity, int selectedInfusion)
+        public void SpawnItem(Item selectedItem,  int selectedUpgrade, int selectedQuantity, int selectedInfusion, float durability = 0.0f)
         {
 
             var shouldProcessFlag = CodeCaveOffsets.Base + (int)CodeCaveOffsets.ItemSpawn.ShouldProcessFlag;
@@ -52,7 +52,7 @@ namespace SilkySouls2.Services
             
             _memoryIo.WriteInt32(maxQuantity, selectedItem.StackSize);
             _memoryIo.WriteInt32(itemStruct + 0x4, selectedItem.Id);
-            _memoryIo.WriteFloat(itemStruct + 0x8, -1f);
+            _memoryIo.WriteFloat(itemStruct + 0x8, durability);
             _memoryIo.WriteInt16(itemStruct + 0xC, (short)selectedQuantity);
             _memoryIo.WriteByte(itemStruct + 0xE, (byte) selectedUpgrade);
             _memoryIo.WriteByte(itemStruct + 0xF, (byte) selectedInfusion);

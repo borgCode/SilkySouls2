@@ -464,7 +464,7 @@
                 <TextBlock Grid.Column="0" Text="Souls to give:" VerticalAlignment="Center" />
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="10,0,0,0">
-                    <xctk:IntegerUpDown x:Name="SoulsUpDown"
+                    <xctk:IntegerUpDown
                                         Value="{Binding Souls}"
                                         TextAlignment="Center"
                                         Width="120"
@@ -475,7 +475,6 @@
                                         LostFocus="Stat_LostFocus"
                                         Loaded="StatUpDowns_Loaded"
                                         GotFocus="PauseUpdates_GotFocus"
-                                        Tag="Souls"
                                         IsEnabled="{Binding AreOptionsEnabled}"
                                         BorderBrush="#3F3F46" />
 

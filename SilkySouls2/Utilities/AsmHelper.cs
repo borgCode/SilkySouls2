@@ -39,16 +39,24 @@ namespace SilkySouls2.Utilities
             }
         }
         
-        
         public static byte[] GetAbsAddressBytes(long address)
             => BitConverter.GetBytes(address);
         
-        public static void WriteAbsoluteAddresses(byte[] bytes, (long address, int destinationIndex)[] addresses)
+        public static void WriteAbsoluteAddresses64(byte[] bytes, (long address, int destinationIndex)[] addresses)
         {
             foreach (var (address, destinationIndex) in addresses)
             {
                 var addressBytes = GetAbsAddressBytes(address);
                 Array.Copy(addressBytes, 0, bytes, destinationIndex, 8);
+            }
+        }
+        
+        public static void WriteAbsoluteAddresses32(byte[] bytes, (long address, int destinationIndex)[] addresses)
+        {
+            foreach (var (address, destinationIndex) in addresses)
+            {
+                var addressBytes = BitConverter.GetBytes((int)address);
+                Array.Copy(addressBytes, 0, bytes, destinationIndex, 4);
             }
         }
     }

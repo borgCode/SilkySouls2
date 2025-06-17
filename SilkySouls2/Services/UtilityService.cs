@@ -31,7 +31,7 @@ namespace SilkySouls2.Services
 
             var setEventFunc = Funcs.SetEvent;
             var bytes = AsmLoader.GetAsmBytes("SetEventOn");
-            AsmHelper.WriteAbsoluteAddresses(bytes, new[]
+            AsmHelper.WriteAbsoluteAddresses64(bytes, new[]
             {
                 (eventFlagMan.ToInt64(), 0x0 + 2),
                 (gameId, 0xA + 2),
@@ -59,7 +59,7 @@ namespace SilkySouls2.Services
 
             var setEventFunc = Funcs.SetEvent;
             var bytes = AsmLoader.GetAsmBytes("SetEventOff");
-            AsmHelper.WriteAbsoluteAddresses(bytes, new[]
+            AsmHelper.WriteAbsoluteAddresses64(bytes, new[]
             {
                 (eventFlagMan.ToInt64(), 0x0 + 2),
                 (gameId, 0xA + 2),
@@ -173,7 +173,7 @@ namespace SilkySouls2.Services
                 _memoryIo.WriteBytes(ctrlCode, codeBytes);
                 
                 codeBytes = AsmLoader.GetAsmBytes("NoClip_UpdateCoords");
-                AsmHelper.WriteAbsoluteAddresses(codeBytes, new []
+                AsmHelper.WriteAbsoluteAddresses64(codeBytes, new []
                 {
                     (GameManagerImp.Base.ToInt64(), 0x1 + 2),
                     (GameManagerImp.Base.ToInt64(), 0x29 + 2),
@@ -233,7 +233,7 @@ namespace SilkySouls2.Services
                     (raycastCode.ToInt64() + 0x2EA, rayCastHook + 0x5, 5, 0x2EA + 1)
                 });
                 
-                AsmHelper.WriteAbsoluteAddresses(codeBytes, new []
+                AsmHelper.WriteAbsoluteAddresses64(codeBytes, new []
                 {
                     (GameManagerImp.Base.ToInt64(), 0x6 + 2),
                     (GameManagerImp.Base.ToInt64(), 0x70 + 2),
@@ -412,7 +412,7 @@ namespace SilkySouls2.Services
 
                 var bytes = AsmLoader.GetAsmBytes("IvorySkip");
                 
-                AsmHelper.WriteAbsoluteAddresses(bytes, new []
+                AsmHelper.WriteAbsoluteAddresses64(bytes, new []
                 {
                   (getMapEntity, 0x5C + 2),
                   (getComponent, 0x66 + 2),
@@ -449,7 +449,7 @@ namespace SilkySouls2.Services
             var getComponent = Funcs.GetMapObjStateActComponent;
 
             var bytes = AsmLoader.GetAsmBytes("SetObjState");
-            AsmHelper.WriteAbsoluteAddresses(bytes, new []
+            AsmHelper.WriteAbsoluteAddresses64(bytes, new []
             {
                 (areaId, 0x4 + 2),
                 (objData.ObjId, 0xE + 2),
@@ -473,7 +473,7 @@ namespace SilkySouls2.Services
             var disableNavi = Funcs.DisableNaviMesh;
 
             var bytes = AsmLoader.GetAsmBytes("DisableNavimesh");
-            AsmHelper.WriteAbsoluteAddresses(bytes, new []
+            AsmHelper.WriteAbsoluteAddresses64(bytes, new []
             {
                 (eventPointMan.ToInt64(),  2),
                 (areaId, 0xA + 2),
@@ -493,7 +493,7 @@ namespace SilkySouls2.Services
             var getComponent = Funcs.GetWhiteDoorComponent;
 
             var bytes = AsmLoader.GetAsmBytes("DisableWhiteDoorKeyGuide");
-            AsmHelper.WriteAbsoluteAddresses(bytes, new []
+            AsmHelper.WriteAbsoluteAddresses64(bytes, new []
             {
                 (areaId, 0x4 + 2),
                 (whiteDoorData.ObjId, 0xE + 2),
@@ -573,7 +573,7 @@ namespace SilkySouls2.Services
 
             var bytes = AsmLoader.GetAsmBytes("GetNumOfSlots");
             
-            AsmHelper.WriteAbsoluteAddresses(bytes, new []
+            AsmHelper.WriteAbsoluteAddresses64(bytes, new []
             {
                 (slotsLoc.ToInt64(), 2),
                 (inventory.ToInt64(), 0xA + 2),
@@ -600,7 +600,7 @@ namespace SilkySouls2.Services
             var refreshFunc = Funcs.UpdateSpellSlots;
             var bytes = AsmLoader.GetAsmBytes("UpdateSpellSlots");
             
-            AsmHelper.WriteAbsoluteAddresses(bytes, new []
+            AsmHelper.WriteAbsoluteAddresses64(bytes, new []
             {
                 (bagList.ToInt64(), 2),
                 (refreshFunc, 0xA + 2)
@@ -620,7 +620,7 @@ namespace SilkySouls2.Services
             var attuneFunc = Funcs.AttuneSpell;
 
             var bytes = AsmLoader.GetAsmBytes("AttuneSpell");
-            AsmHelper.WriteAbsoluteAddresses(bytes, new []
+            AsmHelper.WriteAbsoluteAddresses64(bytes, new []
             {
                 (inventoryLists.ToInt64(), 2),
                 (slotIndex + 0x1C, 0xA + 2),

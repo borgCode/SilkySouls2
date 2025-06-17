@@ -458,6 +458,20 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to b8 00 00 00 00          mov    eax,0x0
+        ///50                      push   eax
+        ///b9 00 00 00 00          mov    ecx,0x0
+        ///b8 00 00 00 00          mov    eax,0x0
+        ///ff d0                   call   eax
+        ///c3                      ret.
+        /// </summary>
+        internal static string GiveSouls32 {
+            get {
+                return ResourceManager.GetString("GiveSouls32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 b9 00 00 00 00 00    movabs rcx,0x0
         ///00 00 00
         ///48 ba 00 00 00 00 00    movabs rdx,0x0
@@ -469,9 +483,9 @@ namespace SilkySouls2.Properties {
         ///48 83 c4 48             add    rsp,0x48
         ///c3                      ret.
         /// </summary>
-        internal static string GiveSouls {
+        internal static string GiveSouls64 {
             get {
-                return ResourceManager.GetString("GiveSouls", resourceCulture);
+                return ResourceManager.GetString("GiveSouls64", resourceCulture);
             }
         }
         

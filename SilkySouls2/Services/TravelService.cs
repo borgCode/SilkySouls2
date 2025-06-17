@@ -146,7 +146,7 @@ namespace SilkySouls2.Services
             }, true);
             
             var bytes = AsmLoader.GetAsmBytes("UnlockAllBonfires");
-            AsmHelper.WriteAbsoluteAddresses(bytes, new []
+            AsmHelper.WriteAbsoluteAddresses64(bytes, new []
             {
                
                 (bonfireManager.ToInt64(), 2),

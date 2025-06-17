@@ -42,7 +42,36 @@
             2,
             AddressingMode.Absolute
         );
-        
+
+        public static readonly Pattern NoSoulGain = new Pattern(
+            new byte[] { 0xD9, 0x6D, 0x16, 0xE8 },
+            "xxxx",
+            3,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern NoHollowing = new Pattern(
+            new byte[] { 0x88, 0x45, 0x0B, 0x79 },
+            "xxxx",
+            0x22,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern NoSoulLoss = new Pattern(
+            new byte[] { 0x75, 0x0A, 0xC7, 0x80, 0xE8 },
+            "xxxxx",
+            2,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern Hidden = new Pattern(
+            new byte[] { 0x0F, 0x84, 0x3D, 0x02, 0x00, 0x00, 0x85 },
+            "xxxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+
         
         
         
@@ -56,6 +85,16 @@
             1,
             5
         );
+
+        public static readonly Pattern GiveSouls = new Pattern(
+            new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0xC6, 0x86, 0x04, 0x07 },
+            "x????xxxx",
+            0,
+            AddressingMode.Relative,
+            1,
+            5
+        );
+
     }
     
 }

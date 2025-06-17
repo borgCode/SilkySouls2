@@ -64,7 +64,7 @@ namespace SilkySouls2.Services
             {
                 var bytes = AsmLoader.GetAsmBytes("ItemSpawn");
             
-                AsmHelper.WriteAbsoluteAddresses(bytes, new []
+                AsmHelper.WriteAbsoluteAddresses64(bytes, new []
                 {
                     (itemIventory2BagList, 0x1D + 2),
                     (getCurrentQuantity, 0x3C + 2),

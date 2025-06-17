@@ -232,10 +232,19 @@ namespace SilkySouls2.Memory
                     addr => Offsets.Patches.InfiniteDurability = addr, saved);
                 TryPatternWithFallback("InfiniteCasts", Patterns32.InfiniteCasts,
                     addr => Offsets.Patches.InfiniteCasts = addr, saved);
+                TryPatternWithFallback("NoSoulGain", Patterns32.NoSoulGain,
+                    addr => Offsets.Patches.NoSoulGain = addr, saved);
+                TryPatternWithFallback("NoHollowing", Patterns32.NoHollowing,
+                    addr => Offsets.Patches.NoHollowing = addr, saved);
+                TryPatternWithFallback("NoSoulLoss", Patterns32.NoSoulLoss,
+                    addr => Offsets.Patches.NoSoulLoss = addr, saved);
+                TryPatternWithFallback("Hidden", Patterns32.Hidden,
+                    addr => Offsets.Patches.Hidden = addr, saved);
                 
                 
                 
                 Offsets.Funcs.SetSpEffect = FindAddressByPattern(Patterns32.SetSpEffect).ToInt32();
+                Offsets.Funcs.GiveSouls = FindAddressByPattern(Patterns32.GiveSouls).ToInt32();
                 
                 using (var writer = new StreamWriter(savePath))
                 {

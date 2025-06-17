@@ -577,7 +577,7 @@ e9 00 00 00 00          jmp    184 &lt;original&gt;
 00
 e9 00 00 00 00          jmp    192 &lt;original+0xe&gt;</value>
   </data>
-  <data name="GiveSouls" xml:space="preserve">
+  <data name="GiveSouls64" xml:space="preserve">
     <value>48 b9 00 00 00 00 00    movabs rcx,0x0
 00 00 00
 48 ba 00 00 00 00 00    movabs rdx,0x0
@@ -2747,6 +2747,14 @@ c3                      ret</value>
 b9 00 00 00 00          mov    ecx,0x0
 e8 fc ff ff ff          call   10 &lt;_main+0x10&gt;
 83 c4 0c                add    esp,0xc
+c3                      ret</value>
+  </data>
+  <data name="GiveSouls32" xml:space="preserve">
+    <value>b8 00 00 00 00          mov    eax,0x0
+50                      push   eax
+b9 00 00 00 00          mov    ecx,0x0
+b8 00 00 00 00          mov    eax,0x0
+ff d0                   call   eax
 c3                      ret</value>
   </data>
 </root>

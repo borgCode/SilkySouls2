@@ -141,7 +141,7 @@ namespace SilkySouls2.Services
 
             var bytes = AsmLoader.GetAsmBytes("LevelUp");
 
-            AsmHelper.WriteAbsoluteAddresses(bytes, new[]
+            AsmHelper.WriteAbsoluteAddresses64(bytes, new[]
             {
                 (levelLookUp, 0x18 + 2),
                 (statsEntity.ToInt64(), 0x4D + 2),
@@ -299,7 +299,6 @@ namespace SilkySouls2.Services
 
         public void GiveSouls(int souls)
         {
-            var codeBytes = AsmLoader.GetAsmBytes("GiveSouls");
             var giveSoulsFunc = Funcs.GiveSouls;
             var statsEntity = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
             {
@@ -307,13 +306,28 @@ namespace SilkySouls2.Services
                 GameManagerImp.ChrCtrlOffsets.StatsPtr
             }, true);
 
-            AsmHelper.WriteAbsoluteAddresses(codeBytes, new[]
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
             {
-                (statsEntity.ToInt64(), 0x0 + 2),
-                (souls, 0x0A + 2),
-                (giveSoulsFunc, 0x18 + 2)
-            });
-            _memoryIo.AllocateAndExecute(codeBytes);
+                var codeBytes = AsmLoader.GetAsmBytes("GiveSouls64");
+                AsmHelper.WriteAbsoluteAddresses64(codeBytes, new[]
+                {
+                    (statsEntity.ToInt64(), 0x0 + 2),
+                    (souls, 0x0A + 2),
+                    (giveSoulsFunc, 0x18 + 2)
+                });
+                _memoryIo.AllocateAndExecute(codeBytes);
+            }
+            else
+            {
+                var codeBytes = AsmLoader.GetAsmBytes("GiveSouls32");
+                AsmHelper.WriteAbsoluteAddresses32(codeBytes, new[]
+                {
+                    (souls, 0x0 + 1),
+                    (statsEntity.ToInt64(), 0x06 + 1),
+                    (giveSoulsFunc, 0xb + 1)
+                });
+                _memoryIo.AllocateAndExecute(codeBytes);
+            }
         }
 
         public int GetSoulMemory() =>
@@ -330,7 +344,7 @@ namespace SilkySouls2.Services
             var func = Funcs.RestoreSpellcasts;
 
             var codeBytes = AsmLoader.GetAsmBytes("RestoreSpellcasts");
-            AsmHelper.WriteAbsoluteAddresses(codeBytes, new[]
+            AsmHelper.WriteAbsoluteAddresses64(codeBytes, new[]
             {
                 (inventoryBag.ToInt64(), 0x0 + 2),
                 (func, 0x20 + 2)
@@ -425,7 +439,7 @@ namespace SilkySouls2.Services
 
                 _memoryIo.WriteBytes(code, codeBytes);
             }
-            
+
             _memoryIo.RunThread(code);
         }
 
@@ -435,18 +449,44 @@ namespace SilkySouls2.Services
             else _nopManager.RestoreNop(Patches.NoSoulGain.ToInt64());
         }
 
-        public void ToggleNoHollowing(bool isEnabled) =>
-            _memoryIo.WriteBytes(Patches.NoHollowing,
-                isEnabled
-                    ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 }
-                    : new byte[] { 0x88, 0x81, 0xAC, 0x01, 0x00, 0x00 }
-            );
+        public void ToggleNoHollowing(bool isEnabled)
+        {
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
+            {
+                _memoryIo.WriteBytes(Patches.NoHollowing,
+                    isEnabled
+                        ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 }
+                        : new byte[] { 0x88, 0x81, 0xAC, 0x01, 0x00, 0x00 }
+                );
+            }
+            else
+            {
+                _memoryIo.WriteBytes(Patches.NoHollowing,
+                    isEnabled
+                        ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 }
+                        : new byte[] { 0x88, 0x91, 0xA8, 0x01, 0x00, 0x00 }
+                );
+            }
+        }
 
-        public void ToggleNoSoulLoss(bool isEnabled) =>
-            _memoryIo.WriteBytes(Patches.NoSoulLoss,
-                isEnabled
-                    ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 }
-                    : new byte[] { 0x89, 0x90, 0xEC, 0x00, 0x00, 0x00 }
-            );
+        public void ToggleNoSoulLoss(bool isEnabled)
+        {
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
+            {
+                _memoryIo.WriteBytes(Patches.NoSoulLoss,
+                    isEnabled
+                        ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 }
+                        : new byte[] { 0x89, 0x90, 0xEC, 0x00, 0x00, 0x00 }
+                );
+            } 
+            else 
+            {
+                _memoryIo.WriteBytes(Patches.NoSoulLoss,
+                    isEnabled
+                        ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 }
+                        : new byte[] { 0xC7, 0x80, 0xE8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+                );
+            }
+        }
     }
 }

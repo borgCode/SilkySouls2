@@ -246,6 +246,25 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 53                      push   ebx
+        ///56                      push   esi
+        ///8b 75 0c                mov    esi,DWORD PTR [ebp+0xc]
+        ///83 7e 34 00             cmp    DWORD PTR [esi+0x34],0x0
+        ///74 52                   je     5d &lt;skip&gt;
+        ///50                      push   eax
+        ///a1 00 00 00 00          mov    eax,ds:0x0
+        ///8b 40 74                mov    eax,DWORD PTR [eax+0x74]
+        ///3b 41 10                cmp    eax,DWORD PTR [ecx+0x10]
+        ///74 43                   je     5c &lt;exit&gt;
+        ///3b 42 5c                cmp    eax,DWORD PTR [edx+ [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string DamageControl32 {
+            get {
+                return ResourceManager.GetString("DamageControl32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 0f 29 74 24 20          movaps XMMWORD PTR [rsp+0x20],xmm6
         ///41 83 78 34 00          cmp    DWORD PTR [r8+0x34],0x0
         ///74 6a                   je     76 &lt;skip&gt;
@@ -259,9 +278,9 @@ namespace SilkySouls2.Properties {
         ///49 3b 41 68             cmp    rax,QWORD PTR [r9+0x68]
         ///74 06                 [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string DamageControl {
+        internal static string DamageControl64 {
             get {
-                return ResourceManager.GetString("DamageControl", resourceCulture);
+                return ResourceManager.GetString("DamageControl64", resourceCulture);
             }
         }
         

@@ -35,21 +35,40 @@ namespace SilkySouls2.Services
             
             var lockedTarget = CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr;
             var hookLoc = Offsets.Hooks.DamageControl;
-            
-            var codeBytes = AsmLoader.GetAsmBytes("DamageControl");
-            
-            var bytes = BitConverter.GetBytes(Offsets.GameManagerImp.Base.ToInt64());
-            Array.Copy(bytes, 0, codeBytes, 0xD + 2, 8);
-            AsmHelper.WriteRelativeOffsets(codeBytes, new []
+
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
             {
-                (_damageControlCode.ToInt64() + 0x32, _freezeTargetFlag.ToInt64(), 7, 0x32 + 2),
-                (_damageControlCode.ToInt64() + 0x3B, lockedTarget.ToInt64(), 7, 0x3B + 3),
-                (_damageControlCode.ToInt64() + 0x51, _oneShotFlag.ToInt64(), 7, 0x51 + 2),
-                (_damageControlCode.ToInt64() + 0x64, _dealNoDamageFlag.ToInt64(), 7, 0x64 + 2),
-                (_damageControlCode.ToInt64() + 0x76, hookLoc + 0x5, 5, 0x76 + 1)
-            });
+                var codeBytes = AsmLoader.GetAsmBytes("DamageControl64");
             
-            _memoryIo.WriteBytes(_damageControlCode, codeBytes);
+                var bytes = BitConverter.GetBytes(Offsets.GameManagerImp.Base.ToInt64());
+                Array.Copy(bytes, 0, codeBytes, 0xD + 2, 8);
+                AsmHelper.WriteRelativeOffsets(codeBytes, new []
+                {
+                    (_damageControlCode.ToInt64() + 0x32, _freezeTargetFlag.ToInt64(), 7, 0x32 + 2),
+                    (_damageControlCode.ToInt64() + 0x3B, lockedTarget.ToInt64(), 7, 0x3B + 3),
+                    (_damageControlCode.ToInt64() + 0x51, _oneShotFlag.ToInt64(), 7, 0x51 + 2),
+                    (_damageControlCode.ToInt64() + 0x64, _dealNoDamageFlag.ToInt64(), 7, 0x64 + 2),
+                    (_damageControlCode.ToInt64() + 0x76, hookLoc + 0x5, 5, 0x76 + 1)
+                });
+            
+                _memoryIo.WriteBytes(_damageControlCode, codeBytes);
+            }
+            else
+            {
+                var codeBytes = AsmLoader.GetAsmBytes("DamageControl32");
+                
+                AsmHelper.WriteAbsoluteAddresses32(codeBytes, new []
+                {
+                    (Offsets.GameManagerImp.Base.ToInt64(), 0xC + 1),
+                    (_freezeTargetFlag.ToInt64(), 0x1E + 2),
+                    (lockedTarget.ToInt64(), 0x27 + 1),
+                    (_oneShotFlag.ToInt64(), 0x3A + 2),
+                    (_dealNoDamageFlag.ToInt64(), 0x4C + 2)
+                });
+                var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 5, _damageControlCode + 0x62);
+                Array.Copy(jmpBytes, 0, codeBytes, 0x5D + 1, 4);
+                _memoryIo.WriteBytes(_damageControlCode, codeBytes);
+            }
         }
         
         public void ToggleOneShot(bool enabled)
@@ -95,11 +114,11 @@ namespace SilkySouls2.Services
         }
         private void EnsureHookInstalled()
         {
-            if (!_hookManager.IsHookInstalled(_damageControlCode.ToInt64()))
-            {
-                _hookManager.InstallHook(_damageControlCode.ToInt64(), Offsets.Hooks.DamageControl,
-                    new byte[] { 0x0F, 0x29, 0x74, 0x24, 0x20});
-            }
+            if (_hookManager.IsHookInstalled(_damageControlCode.ToInt64())) return;
+            _hookManager.InstallHook(_damageControlCode.ToInt64(), Offsets.Hooks.DamageControl,
+                GameVersion.Current.Edition == GameEdition.Scholar
+                    ? new byte[] { 0x0F, 0x29, 0x74, 0x24, 0x20 }
+                    : new byte[] { 0x53, 0x56, 0x8B, 0x75, 0x0C });
         }
         
         private void CheckAndRemoveHookIfNeeded()

@@ -250,6 +250,8 @@ namespace SilkySouls2.Memory
                     addr => Offsets.Hooks.LockedTarget = addr.ToInt32(), saved);
                 TryPatternWithFallback("InfinitePoise", Patterns32.InfinitePoise,
                     addr => Offsets.Hooks.InfinitePoise = addr.ToInt32(), saved);
+                TryPatternWithFallback("DamageControl", Patterns32.DamageControl,
+                    addr => Offsets.Hooks.DamageControl = addr.ToInt32(), saved);
                 
                 
                 var setCurrectActLocs = FindAddressesByPattern(Patterns32.SetCurrentAct, 2);

@@ -156,7 +156,13 @@
             AddressingMode.Absolute
         );
 
-
+        public static readonly Pattern DamageControl = new Pattern(
+            new byte[] { 0x8B, 0x45, 0x10, 0x8B, 0x17 },
+            "xxxxx",
+            -0x17,
+            AddressingMode.Absolute
+        );
+        
     }
     
 }

@@ -346,7 +346,7 @@ c3                      ret
 48 89 bb c0 00 00 00    mov    QWORD PTR [rbx+0xc0],rdi
 e9 00 00 00 00          jmp    13 &lt;_main+0x13&gt;</value>
   </data>
-  <data name="DamageControl" xml:space="preserve">
+  <data name="DamageControl64" xml:space="preserve">
     <value>0f 29 74 24 20          movaps XMMWORD PTR [rsp+0x20],xmm6
 41 83 78 34 00          cmp    DWORD PTR [r8+0x34],0x0
 74 6a                   je     76 &lt;skip&gt;
@@ -2855,5 +2855,39 @@ eb 07                   jmp    1b &lt;exit&gt;
 e9 fc ff ff ff          jmp    1d &lt;exit+0x2&gt;
 
 </value>
+  </data>
+  <data name="DamageControl32" xml:space="preserve">
+    <value>53                      push   ebx
+56                      push   esi
+8b 75 0c                mov    esi,DWORD PTR [ebp+0xc]
+83 7e 34 00             cmp    DWORD PTR [esi+0x34],0x0
+74 52                   je     5d &lt;skip&gt;
+50                      push   eax
+a1 00 00 00 00          mov    eax,ds:0x0
+8b 40 74                mov    eax,DWORD PTR [eax+0x74]
+3b 41 10                cmp    eax,DWORD PTR [ecx+0x10]
+74 43                   je     5c &lt;exit&gt;
+3b 42 5c                cmp    eax,DWORD PTR [edx+0x5c]
+75 3e                   jne    5c &lt;exit&gt;
+80 3d 00 00 00 00 00    cmp    BYTE PTR ds:0x0,0x0
+74 13                   je     3a &lt;check_oneshot&gt;
+a1 00 00 00 00          mov    eax,ds:0x0
+3b 41 10                cmp    eax,DWORD PTR [ecx+0x10]
+75 09                   jne    3a &lt;check_oneshot&gt;
+c7 46 34 00 00 00 00    mov    DWORD PTR [esi+0x34],0x0
+eb 22                   jmp    5c &lt;exit&gt;
+003a &lt;check_oneshot&gt;:
+80 3d 00 00 00 00 00    cmp    BYTE PTR ds:0x0,0x0
+74 09                   je     4c &lt;check_dealNoDamage&gt;
+c7 46 34 7f 96 98 00    mov    DWORD PTR [esi+0x34],0x98967f
+eb 10                   jmp    5c &lt;exit&gt;
+004c &lt;check_dealNoDamage&gt;:
+80 3d 00 00 00 00 00    cmp    BYTE PTR ds:0x0,0x0
+74 07                   je     5c &lt;exit&gt;
+c7 46 34 00 00 00 00    mov    DWORD PTR [esi+0x34],0x0
+005c &lt;exit&gt;:
+58                      pop    eax
+005d &lt;skip&gt;:
+e9 fc ff ff ff          jmp    5e &lt;skip+0x1&gt;</value>
   </data>
 </root>

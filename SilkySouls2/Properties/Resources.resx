@@ -650,7 +650,7 @@ c7 47 08 47 00 00 00    mov    DWORD PTR [rdi+0x8],0x47
 000000000015 &lt;exit&gt;:
 e9 00 00 00 00          jmp    1a &lt;exit+0x5&gt;</value>
   </data>
-  <data name="InfinitePoise" xml:space="preserve">
+  <data name="InfinitePoise64" xml:space="preserve">
     <value>50                      push   rax
 48 b8 00 00 00 00 00    movabs rax,0x0
 00 00 00
@@ -2840,5 +2840,20 @@ a3 00 00 00 00          mov    ds:0x0,eax
 89 81 5c 02 00 00       mov    DWORD PTR [ecx+0x25c],eax
 5b                      pop    ebx
 e9 fc ff ff ff          jmp    42 &lt;normal+0x8&gt;</value>
+  </data>
+  <data name="InfinitePoise32" xml:space="preserve">
+    <value>50                      push   eax
+a1 00 00 00 00          mov    eax,ds:0x0
+39 48 74                cmp    DWORD PTR [eax+0x74],ecx
+75 09                   jne    14 &lt;normal&gt;
+83 bb ec 05 00 00 ff    cmp    DWORD PTR [ebx+0x5ec],0xffffffff
+eb 07                   jmp    1b &lt;exit&gt;
+0014 &lt;normal&gt;:
+83 bb ec 05 00 00 00    cmp    DWORD PTR [ebx+0x5ec],0x0
+001b &lt;exit&gt;:
+58                      pop    eax
+e9 fc ff ff ff          jmp    1d &lt;exit+0x2&gt;
+
+</value>
   </data>
 </root>

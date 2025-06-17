@@ -490,6 +490,27 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 50                      push   eax
+        ///a1 00 00 00 00          mov    eax,ds:0x0
+        ///39 48 74                cmp    DWORD PTR [eax+0x74],ecx
+        ///75 09                   jne    14 &lt;normal&gt;
+        ///83 bb ec 05 00 00 ff    cmp    DWORD PTR [ebx+0x5ec],0xffffffff
+        ///eb 07                   jmp    1b &lt;exit&gt;
+        ///0014 &lt;normal&gt;:
+        ///83 bb ec 05 00 00 00    cmp    DWORD PTR [ebx+0x5ec],0x0
+        ///001b &lt;exit&gt;:
+        ///58                      pop    eax
+        ///e9 fc ff ff ff          jmp    1d &lt;exit+0x2&gt;
+        ///
+        ///.
+        /// </summary>
+        internal static string InfinitePoise32 {
+            get {
+                return ResourceManager.GetString("InfinitePoise32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 50                      push   rax
         ///48 b8 00 00 00 00 00    movabs rax,0x0
         ///00 00 00
@@ -504,9 +525,9 @@ namespace SilkySouls2.Properties {
         ///58                      pop    rax
         ///e9 00 00 00 00          jm [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string InfinitePoise {
+        internal static string InfinitePoise64 {
             get {
-                return ResourceManager.GetString("InfinitePoise", resourceCulture);
+                return ResourceManager.GetString("InfinitePoise64", resourceCulture);
             }
         }
         

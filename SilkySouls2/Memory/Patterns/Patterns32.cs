@@ -148,7 +148,15 @@
             7,
             AddressingMode.Absolute
         );
-        
+
+        public static readonly Pattern InfinitePoise = new Pattern(
+            new byte[] { 0x83, 0xBB, 0xEC, 0x05, 0x00, 0x00, 0x00, 0x0F, 0x95, 0x45, 0xFF },
+            "xxxxxxxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+
     }
     
 }

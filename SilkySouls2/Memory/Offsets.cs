@@ -421,7 +421,7 @@ namespace SilkySouls2.Memory
             public static long ParamLookUp;
             public static long SetRenderTargets;
             public static long CreateSoundEvent;
-            public static long LevelLookUp;
+            public static long LevelLookup;
             public static long LevelUp;
             public static long CurrentItemQuantityCheck;
             public static long ItemGive;

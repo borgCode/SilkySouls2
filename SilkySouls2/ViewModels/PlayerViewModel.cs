@@ -545,12 +545,12 @@ namespace SilkySouls2.ViewModels
         
         public void SetStat(string statName, int value)
         {
-            var field = typeof(GameManagerImp.ChrCtrlOffsets.Stats)
-                .GetField(statName, BindingFlags.Public | BindingFlags.Static);
-            
-            if (field != null)
+            var property = typeof(GameManagerImp.ChrCtrlOffsets.Stats)
+                .GetProperty(statName, BindingFlags.Public | BindingFlags.Static);
+    
+            if (property != null)
             {
-                int statOffset = (int)field.GetValue(null);
+                int statOffset = (int)property.GetValue(null);
                 _playerService.SetPlayerStat(statOffset, (byte)value);
             }
             else

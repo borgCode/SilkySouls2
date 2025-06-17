@@ -95,6 +95,23 @@
             5
         );
 
+        public static readonly Pattern LevelUp = new Pattern(
+            new byte[] { 0x84, 0xC0, 0x0F, 0x84, 0xAA, 0x00, 0x00, 0x00, 0x8B, 0x0B },
+            "xxxxxxxxxx",
+            -0x2F,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern LevelLookup = new Pattern(
+            new byte[] { 0x75, 0x0B, 0x50, 0xE8, 0x00, 0x00, 0x00, 0x00, 0x83, 0xC4, 0x04, 0xEB, 0x02 },
+            "xxxx????xxxxx",
+            0x3,
+            AddressingMode.Relative,
+            1,
+            5
+        );
+
+
     }
     
 }

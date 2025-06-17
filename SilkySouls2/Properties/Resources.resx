@@ -665,7 +665,7 @@ eb 06                   jmp    26 &lt;exit&gt;
 58                      pop    rax
 e9 00 00 00 00          jmp    2c &lt;exit+0x6&gt;</value>
   </data>
-  <data name="LevelUp" xml:space="preserve">
+  <data name="LevelUp64" xml:space="preserve">
     <value>8b 0d 00 00 00 00       mov    ecx,DWORD PTR [rip+0x0]        # 6 &lt;_main+0x6&gt;
 ff c1                   inc    ecx
 ba 00 00 00 00          mov    edx,0x0
@@ -2755,6 +2755,47 @@ c3                      ret</value>
 b9 00 00 00 00          mov    ecx,0x0
 b8 00 00 00 00          mov    eax,0x0
 ff d0                   call   eax
+c3                      ret</value>
+  </data>
+  <data name="LevelUp32" xml:space="preserve">
+    <value>8b 35 00 00 00 00       mov    esi,DWORD PTR ds:0x0
+46                      inc    esi
+bf 00 00 00 00          mov    edi,0x0
+80 3d 00 00 00 00 01    cmp    BYTE PTR ds:0x0,0x1
+74 16                   je     2b &lt;skip_lookup&gt;
+bb 00 00 00 00          mov    ebx,0x0
+001a &lt;loop_start&gt;:
+56                      push   esi
+ff d3                   call   ebx
+83 c4 04                add    esp,0x4
+01 c7                   add    edi,eax
+46                      inc    esi
+3b 35 00 00 00 00       cmp    esi,DWORD PTR ds:0x0
+7e ef                   jle    1a &lt;loop_start&gt;
+002b &lt;skip_lookup&gt;:
+89 3d 00 00 00 00       mov    DWORD PTR ds:0x0,edi
+8b 0d 00 00 00 00       mov    ecx,DWORD PTR ds:0x0
+39 f9                   cmp    ecx,edi
+7d 26                   jge    61 &lt;enough_souls&gt;
+29 cf                   sub    edi,ecx
+57                      push   edi
+b9 00 00 00 00          mov    ecx,0x0
+b8 00 00 00 00          mov    eax,0x0
+ff d0                   call   eax
+b9 00 00 00 00          mov    ecx,0x0
+8b 89 e8 00 00 00       mov    ecx,DWORD PTR [ecx+0xe8]
+89 0d 00 00 00 00       mov    DWORD PTR ds:0x0,ecx
+8b 15 00 00 00 00       mov    edx,DWORD PTR ds:0x0
+0061 &lt;enough_souls&gt;:
+29 d1                   sub    ecx,edx
+89 0d 00 00 00 00       mov    DWORD PTR ds:0x0,ecx
+81 ec e0 00 00 00       sub    esp,0xe0
+8d 05 00 00 00 00       lea    eax,ds:0x0
+50                      push   eax
+b9 00 00 00 00          mov    ecx,0x0
+b8 00 00 00 00          mov    eax,0x0
+ff d0                   call   eax
+81 c4 e0 00 00 00       add    esp,0xe0
 c3                      ret</value>
   </data>
 </root>

@@ -640,6 +640,27 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 8b 35 00 00 00 00       mov    esi,DWORD PTR ds:0x0
+        ///46                      inc    esi
+        ///bf 00 00 00 00          mov    edi,0x0
+        ///80 3d 00 00 00 00 01    cmp    BYTE PTR ds:0x0,0x1
+        ///74 16                   je     2b &lt;skip_lookup&gt;
+        ///bb 00 00 00 00          mov    ebx,0x0
+        ///001a &lt;loop_start&gt;:
+        ///56                      push   esi
+        ///ff d3                   call   ebx
+        ///83 c4 04                add    esp,0x4
+        ///01 c7                   add    edi,eax
+        ///46                      inc    esi
+        ///3b 35 00 00 00 00       cmp    esi [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string LevelUp32 {
+            get {
+                return ResourceManager.GetString("LevelUp32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 8b 0d 00 00 00 00       mov    ecx,DWORD PTR [rip+0x0]        # 6 &lt;_main+0x6&gt;
         ///ff c1                   inc    ecx
         ///ba 00 00 00 00          mov    edx,0x0
@@ -654,9 +675,9 @@ namespace SilkySouls2.Properties {
         ///41 ff d7                call   r15
         ///4 [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string LevelUp {
+        internal static string LevelUp64 {
             get {
-                return ResourceManager.GetString("LevelUp", resourceCulture);
+                return ResourceManager.GetString("LevelUp64", resourceCulture);
             }
         }
         

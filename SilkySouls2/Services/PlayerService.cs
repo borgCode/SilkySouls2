@@ -112,7 +112,7 @@ namespace SilkySouls2.Services
             var soulsAfterLevelUp = buffer + 0xF8;
 
             var giveSouls = Funcs.GiveSouls;
-            var levelLookUp = Funcs.LevelLookUp;
+            var levelLookUp = Funcs.LevelLookup;
             var levelUp = Funcs.LevelUp;
 
             var statsEntity = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
@@ -139,32 +139,60 @@ namespace SilkySouls2.Services
             var currentSouls = _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.CurrentSouls));
             _memoryIo.WriteInt32(currentSoulsLoc, currentSouls);
 
-            var bytes = AsmLoader.GetAsmBytes("LevelUp");
-
-            AsmHelper.WriteAbsoluteAddresses64(bytes, new[]
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
             {
-                (levelLookUp, 0x18 + 2),
-                (statsEntity.ToInt64(), 0x4D + 2),
-                (giveSouls, 0x57 + 2),
-                (statsEntity.ToInt64(), 0x6C + 2),
-                (statsEntity.ToInt64(), 0x90 + 2),
-                (levelUp, 0xA8 + 2)
-            });
+                var bytes = AsmLoader.GetAsmBytes("LevelUp64");
 
-            AsmHelper.WriteRelativeOffsets(bytes, new[]
+                AsmHelper.WriteAbsoluteAddresses64(bytes, new[]
+                {
+                    (levelLookUp, 0x18 + 2),
+                    (statsEntity.ToInt64(), 0x4D + 2),
+                    (giveSouls, 0x57 + 2),
+                    (statsEntity.ToInt64(), 0x6C + 2),
+                    (statsEntity.ToInt64(), 0x90 + 2),
+                    (levelUp, 0xA8 + 2)
+                });
+
+                AsmHelper.WriteRelativeOffsets(bytes, new[]
+                {
+                    (code.ToInt64(), currentLevelLoc.ToInt64(), 6, 0x0 + 2),
+                    (code.ToInt64() + 0xD, negativeFlag.ToInt64(), 7, 0xD + 2),
+                    (code.ToInt64() + 0x33, newLevelLoc.ToInt64(), 6, 0x33 + 2),
+                    (code.ToInt64() + 0x3B, requiredSouls.ToInt64(), 6, 0x3B + 2),
+                    (code.ToInt64() + 0x41, currentSoulsLoc.ToInt64(), 6, 0x41 + 2),
+                    (code.ToInt64() + 0x7C, currentSoulsLoc.ToInt64(), 6, 0x7C + 2),
+                    (code.ToInt64() + 0x82, requiredSouls.ToInt64(), 6, 0x82 + 2),
+                    (code.ToInt64() + 0x8A, soulsAfterLevelUp.ToInt64(), 6, 0x8A + 2),
+                    (code.ToInt64() + 0x9A, buffer.ToInt64(), 7, 0x9A + 3)
+                });
+
+                _memoryIo.WriteBytes(code, bytes);
+            }
+            else
             {
-                (code.ToInt64(), currentLevelLoc.ToInt64(), 6, 0x0 + 2),
-                (code.ToInt64() + 0xD, negativeFlag.ToInt64(), 7, 0xD + 2),
-                (code.ToInt64() + 0x33, newLevelLoc.ToInt64(), 6, 0x33 + 2),
-                (code.ToInt64() + 0x3B, requiredSouls.ToInt64(), 6, 0x3B + 2),
-                (code.ToInt64() + 0x41, currentSoulsLoc.ToInt64(), 6, 0x41 + 2),
-                (code.ToInt64() + 0x7C, currentSoulsLoc.ToInt64(), 6, 0x7C + 2),
-                (code.ToInt64() + 0x82, requiredSouls.ToInt64(), 6, 0x82 + 2),
-                (code.ToInt64() + 0x8A, soulsAfterLevelUp.ToInt64(), 6, 0x8A + 2),
-                (code.ToInt64() + 0x9A, buffer.ToInt64(), 7, 0x9A + 3)
-            });
-
-            _memoryIo.WriteBytes(code, bytes);
+                var bytes = AsmLoader.GetAsmBytes("LevelUp32");
+                AsmHelper.WriteAbsoluteAddresses32(bytes, new []
+                {
+                    (currentLevelLoc.ToInt64(), 2),
+                    (negativeFlag.ToInt64(), 0xC + 2),
+                    (levelLookUp, 0x15 + 1),
+                    (newLevelLoc.ToInt64(), 0x23 + 2),
+                    (requiredSouls.ToInt64(), 0x2B + 2),
+                    (currentSoulsLoc.ToInt64(), 0x31 + 2),
+                    (statsEntity.ToInt64(), 0x3E + 1),
+                    (giveSouls, 0x43 + 1),
+                    (statsEntity.ToInt64(), 0x4A + 1),
+                    (currentSoulsLoc.ToInt64(), 0x55 + 2),
+                    (requiredSouls.ToInt64(), 0x5B + 2),
+                    (soulsAfterLevelUp.ToInt64(), 0x63 + 2 ),
+                    (buffer.ToInt64(), 0x6F + 2),
+                    (statsEntity.ToInt64(), 0x76 + 1),
+                    (levelUp, 0x7B + 1)
+                });
+                _memoryIo.WriteBytes(code, bytes);
+            }
+            
+            
             _memoryIo.RunThreadAndWaitForCompletion(code);
             if (numOfLevels <= 0) _memoryIo.WriteBytes(Patches.NegativeLevel + 1, new byte[] { 0x84 });
 

@@ -157,7 +157,7 @@ namespace SilkySouls2.Memory
                 Offsets.Funcs.ParamLookUp = FindAddressByPattern(Patterns64.ParamLookUp).ToInt64();
                 Offsets.Funcs.SetEvent = FindAddressByPattern(Patterns64.SetEvent).ToInt64();
                 Offsets.Funcs.GiveSouls = FindAddressByPattern(Patterns64.GiveSouls).ToInt64();
-                Offsets.Funcs.LevelLookUp = FindAddressByPattern(Patterns64.LevelLookUp).ToInt64();
+                Offsets.Funcs.LevelLookup = FindAddressByPattern(Patterns64.LevelLookUp).ToInt64();
                 Offsets.Funcs.LevelUp = FindAddressByPattern(Patterns64.LevelUp).ToInt64();
                 Offsets.Patches.NegativeLevel = (IntPtr)Offsets.Funcs.LevelUp + 0x38;
 
@@ -245,6 +245,9 @@ namespace SilkySouls2.Memory
                 
                 Offsets.Funcs.SetSpEffect = FindAddressByPattern(Patterns32.SetSpEffect).ToInt32();
                 Offsets.Funcs.GiveSouls = FindAddressByPattern(Patterns32.GiveSouls).ToInt32();
+                Offsets.Funcs.LevelUp = FindAddressByPattern(Patterns32.LevelUp).ToInt32();
+                Offsets.Funcs.LevelLookup = FindAddressByPattern(Patterns32.LevelLookup).ToInt32();
+                Offsets.Patches.NegativeLevel = (IntPtr)Offsets.Funcs.LevelUp + 0x31;
                 
                 using (var writer = new StreamWriter(savePath))
                 {
@@ -310,7 +313,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Funcs.ParamLookUp: 0x{Offsets.Funcs.ParamLookUp:X}");
             Console.WriteLine($"Funcs.SetRenderTargets: 0x{Offsets.Funcs.SetRenderTargets:X}");
             Console.WriteLine($"Funcs.CreateSoundEvent: 0x{Offsets.Funcs.CreateSoundEvent:X}");
-            Console.WriteLine($"Funcs.LevelLookUp: 0x{Offsets.Funcs.LevelLookUp:X}");
+            Console.WriteLine($"Funcs.LevelLookUp: 0x{Offsets.Funcs.LevelLookup:X}");
             Console.WriteLine($"Funcs.LevelUp: 0x{Offsets.Funcs.LevelUp:X}");
             Console.WriteLine($"Funcs.CurrentItemQuantityCheck: 0x{Offsets.Funcs.CurrentItemQuantityCheck:X}");
             Console.WriteLine($"Funcs.ItemGive: 0x{Offsets.Funcs.ItemGive:X}");

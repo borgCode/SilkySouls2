@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using SilkySouls2.Memory;
 using SilkySouls2.Utilities;
 using static SilkySouls2.Memory.Offsets;
@@ -19,7 +17,7 @@ namespace SilkySouls2.Services
         public EnemyService(MemoryIo memoryIo, HookManager hookManager, DamageControlService damageControlService)
         {
             _memoryIo = memoryIo;
-            _hookManager = hookManager; 
+            _hookManager = hookManager;
         }
 
         public void ToggleForlornSpawn(bool isGuaranteedSpawnEnabled, int funcId = 0, int currentSelected = 0)
@@ -80,15 +78,30 @@ namespace SilkySouls2.Services
             {
                 var saveTargetHook = Hooks.LockedTarget;
                 var savedTargetPtr = CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr;
-                byte[] saveTargetPtrBytes = AsmLoader.GetAsmBytes("SaveTargetPtr");
-                byte[] bytes = AsmHelper.GetRelOffsetBytes(saveTargetPtrCode.ToInt64(), savedTargetPtr.ToInt64(), 7);
-                Array.Copy(bytes, 0, saveTargetPtrBytes, 0x3, 4);
-                bytes = AsmHelper.GetRelOffsetBytes(saveTargetPtrCode.ToInt64() + 0xE, saveTargetHook + 0x7, 5);
-                Array.Copy(bytes, 0, saveTargetPtrBytes, 0xE + 1, 4);
+                if (GameVersion.Current.Edition == GameEdition.Scholar)
+                {
+                    byte[] saveTargetPtrBytes = AsmLoader.GetAsmBytes("SaveTargetPtr64");
+                    byte[] bytes =
+                        AsmHelper.GetRelOffsetBytes(saveTargetPtrCode.ToInt64(), savedTargetPtr.ToInt64(), 7);
+                    Array.Copy(bytes, 0, saveTargetPtrBytes, 0x3, 4);
+                    bytes = AsmHelper.GetRelOffsetBytes(saveTargetPtrCode.ToInt64() + 0xE, saveTargetHook + 0x7, 5);
+                    Array.Copy(bytes, 0, saveTargetPtrBytes, 0xE + 1, 4);
 
-                _memoryIo.WriteBytes(saveTargetPtrCode, saveTargetPtrBytes);
-                _hookManager.InstallHook(saveTargetPtrCode.ToInt64(), saveTargetHook,
-                    new byte[] { 0x48, 0x89, 0xBB, 0xC0, 0x00, 0x00, 0x00 });
+                    _memoryIo.WriteBytes(saveTargetPtrCode, saveTargetPtrBytes);
+                    _hookManager.InstallHook(saveTargetPtrCode.ToInt64(), saveTargetHook,
+                        new byte[] { 0x48, 0x89, 0xBB, 0xC0, 0x00, 0x00, 0x00 });
+                }
+                else
+                {
+                    byte[] saveTargetPtrBytes = AsmLoader.GetAsmBytes("SaveTargetPtr32");
+                    var bytes = BitConverter.GetBytes(savedTargetPtr.ToInt32());
+                    Array.Copy(bytes, 0, saveTargetPtrBytes, 0x6 + 2, 4);
+                    bytes = AsmHelper.GetRelOffsetBytes(saveTargetPtrCode.ToInt64() + 0xC, saveTargetHook + 0x6, 5);
+                    Array.Copy(bytes, 0, saveTargetPtrBytes, 0xC + 1, 4);
+                    _memoryIo.WriteBytes(saveTargetPtrCode, saveTargetPtrBytes);
+                    _hookManager.InstallHook(saveTargetPtrCode.ToInt64(), saveTargetHook,
+                        new byte[] { 0x89, 0xB7, 0xB8, 0x00, 0x00, 0x00 });
+                }
             }
             else
             {
@@ -96,23 +109,63 @@ namespace SilkySouls2.Services
             }
         }
 
-        public int GetTargetHp() =>
-            _memoryIo.ReadInt32((IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
-                                ChrCtrlOffsets.Hp);
+        public int GetTargetHp()
+        {
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
+            {
+                return _memoryIo.ReadInt32(
+                    (IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
+                    ChrCtrlOffsets.Hp);
+            }
 
-        public int GetTargetMaxHp() =>
-            _memoryIo.ReadInt32((IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
-                                ChrCtrlOffsets.MaxHp);
+            return _memoryIo.ReadInt32(
+                (IntPtr)_memoryIo.ReadInt32(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
+                ChrCtrlOffsets.Hp);
+        }
 
-        public void SetTargetHp(int health) =>
-            _memoryIo.WriteInt32((IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
-                                 ChrCtrlOffsets.Hp, health);
+        public int GetTargetMaxHp()
+        {
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
+            {
+                return _memoryIo.ReadInt32(
+                    (IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
+                    ChrCtrlOffsets.MaxHp);
+            }
 
-        public long GetTargetId() => _memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr);
+            return _memoryIo.ReadInt32(
+                (IntPtr)_memoryIo.ReadInt32(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
+                ChrCtrlOffsets.MaxHp);
+        }
+
+        public void SetTargetHp(int health)
+        {
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
+            {
+                _memoryIo.WriteInt32(
+                    (IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
+                    ChrCtrlOffsets.Hp, health);
+            }
+            else
+            {
+                _memoryIo.WriteInt32(
+                    (IntPtr)_memoryIo.ReadInt32(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
+                    ChrCtrlOffsets.Hp, health);
+            }
+        }
+
+        public long GetTargetId()
+        {
+            return GameVersion.Current.Edition == GameEdition.Scholar
+                ? _memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr)
+                : _memoryIo.ReadInt32(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr);
+        }
 
         public float[] GetTargetPos()
         {
-            var targetPtr = (IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr);
+            
+            var targetPtr = (IntPtr) (GameVersion.Current.Edition == GameEdition.Scholar
+                ? _memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr)
+                : _memoryIo.ReadInt32(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr));
 
             float[] position = new float[3];
             position[0] = _memoryIo.ReadFloat(targetPtr + ChrCtrlOffsets.Coords);
@@ -123,15 +176,19 @@ namespace SilkySouls2.Services
         }
 
         public void ToggleDisableAi(bool isAllDisableAiEnabled) =>
-            _memoryIo.WriteByte(Patches.DisableAi, isAllDisableAiEnabled ? 0xEB : 0x7F );
+            _memoryIo.WriteByte(Patches.DisableAi, isAllDisableAiEnabled ? 0xEB : 0x7F);
 
         public int GetLastAct() => _memoryIo.ReadInt32(CodeCaveOffsets.Base + (int)CodeCaveOffsets.RepeatAct.AttackId);
 
         public (bool PoisonToxic, bool Bleed) GetImmunities()
         {
-            var chrParamPtr =
-                (IntPtr)_memoryIo.ReadInt64(
+            
+            var chrParamPtr = GameVersion.Current.Edition == GameEdition.Scholar
+                ? (IntPtr)_memoryIo.ReadInt64(
                     (IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
+                    ChrCtrlOffsets.ChrParamPtr)
+                : (IntPtr)_memoryIo.ReadInt32(
+                    (IntPtr)_memoryIo.ReadInt32(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
                     ChrCtrlOffsets.ChrParamPtr);
 
             return (
@@ -140,15 +197,21 @@ namespace SilkySouls2.Services
             );
         }
 
-        public float GetTargetResistance(int offset) =>
-                _memoryIo.ReadFloat(
+        public float GetTargetResistance(int offset)
+        {
+            
+            return GameVersion.Current.Edition == GameEdition.Scholar
+                ? _memoryIo.ReadFloat(
                     (IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
+                    offset)
+                : _memoryIo.ReadFloat(
+                    (IntPtr)_memoryIo.ReadInt32(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
                     offset);
-        
+        }
+
 
         public void ToggleCurrentActHook(bool isEnabled)
         {
-           
             var code = CodeCaveOffsets.Base + (int)CodeCaveOffsets.RepeatAct.Code;
             var code2 = CodeCaveOffsets.Base + (int)CodeCaveOffsets.RepeatAct.Code2;
 
@@ -160,30 +223,70 @@ namespace SilkySouls2.Services
                 var currectActOrigin = Hooks.SetCurrectAct;
                 var currectActOrigin2 = Hooks.SetCurrectAct2;
 
-                var codeBytes = AsmLoader.GetAsmBytes("RepeatAct");
-                AsmHelper.WriteRelativeOffsets(codeBytes, new []
+                if (GameVersion.Current.Edition == GameEdition.Scholar)
                 {
-                    (code.ToInt64() + 0x8, lockedTargetPtr.ToInt64(), 7, 0x8 + 3),
-                    (code.ToInt64() + 0x28, repeatFlagLoc.ToInt64(), 7, 0x28 + 2),
-                    (code.ToInt64() + 0x31, attackId.ToInt64(), 6, 0x31 + 2),
-                    (code.ToInt64() + 0x3F, attackId.ToInt64(), 6, 0x3F + 2),
-                });
-                
-                _memoryIo.WriteBytes(code, codeBytes);
-                AsmHelper.WriteRelativeOffsets(codeBytes, new []
-                {
-                    (code2.ToInt64() + 0x8, lockedTargetPtr.ToInt64(), 7, 0x8 + 3),
-                    (code2.ToInt64() + 0x28, repeatFlagLoc.ToInt64(), 7, 0x28 + 2),
-                    (code2.ToInt64() + 0x31, attackId.ToInt64(), 6, 0x31 + 2),
-                    (code2.ToInt64() + 0x3F, attackId.ToInt64(), 6, 0x3F + 2),
-                });
-                
-                _memoryIo.WriteBytes(code2, codeBytes);
+                    var codeBytes = AsmLoader.GetAsmBytes("RepeatAct64");
+                    AsmHelper.WriteRelativeOffsets(codeBytes, new[]
+                    {
+                        (code.ToInt64() + 0x8, lockedTargetPtr.ToInt64(), 7, 0x8 + 3),
+                        (code.ToInt64() + 0x28, repeatFlagLoc.ToInt64(), 7, 0x28 + 2),
+                        (code.ToInt64() + 0x31, attackId.ToInt64(), 6, 0x31 + 2),
+                        (code.ToInt64() + 0x3F, attackId.ToInt64(), 6, 0x3F + 2),
+                    });
 
-                _hookManager.InstallHook(code.ToInt64(), currectActOrigin, new byte[]
-                    { 0x83, 0x89, 0x50, 0x03, 0x00, 0x00, 0x01 });
-                _hookManager.InstallHook(code2.ToInt64(), currectActOrigin2, new byte[]
-                    { 0x83, 0x89, 0x50, 0x03, 0x00, 0x00, 0x01 });
+                    _memoryIo.WriteBytes(code, codeBytes);
+                    AsmHelper.WriteRelativeOffsets(codeBytes, new[]
+                    {
+                        (code2.ToInt64() + 0x8, lockedTargetPtr.ToInt64(), 7, 0x8 + 3),
+                        (code2.ToInt64() + 0x28, repeatFlagLoc.ToInt64(), 7, 0x28 + 2),
+                        (code2.ToInt64() + 0x31, attackId.ToInt64(), 6, 0x31 + 2),
+                        (code2.ToInt64() + 0x3F, attackId.ToInt64(), 6, 0x3F + 2),
+                    });
+
+                    _memoryIo.WriteBytes(code2, codeBytes);
+
+                    _hookManager.InstallHook(code.ToInt64(), currectActOrigin, new byte[]
+                        { 0x83, 0x89, 0x50, 0x03, 0x00, 0x00, 0x01 });
+                    _hookManager.InstallHook(code2.ToInt64(), currectActOrigin2, new byte[]
+                        { 0x83, 0x89, 0x50, 0x03, 0x00, 0x00, 0x01 });
+                }
+
+                else
+                {
+                    var codeBytes = AsmLoader.GetAsmBytes("RepeatAct32");
+                    AsmHelper.WriteAbsoluteAddresses32(codeBytes, new[]
+                    {
+                        (lockedTargetPtr.ToInt64(), 0x1 + 2),
+                        (repeatFlagLoc.ToInt64(), 0x1B + 2),
+                        (attackId.ToInt64(), 0x24 + 1),
+                        (attackId.ToInt64(), 0x35 + 1),
+                    });
+                    AsmHelper.WriteJumpOffsets(codeBytes, new[]
+                    {
+                        (currectActOrigin, 6, code + 0x30, 0x30 + 1),
+                        (currectActOrigin, 6, code + 0x41, 0x41 + 1),
+                    });
+                    _memoryIo.WriteBytes(code, codeBytes);
+
+                    AsmHelper.WriteAbsoluteAddresses32(codeBytes, new[]
+                    {
+                        (lockedTargetPtr.ToInt64(), 0x1 + 2),
+                        (repeatFlagLoc.ToInt64(), 0x1B + 2),
+                        (attackId.ToInt64(), 0x24 + 1),
+                        (attackId.ToInt64(), 0x35 + 1),
+                    });
+                    AsmHelper.WriteJumpOffsets(codeBytes, new[]
+                    {
+                        (currectActOrigin2, 6, code2 + 0x30, 0x30 + 1),
+                        (currectActOrigin2, 6, code2 + 0x41, 0x41 + 1),
+                    });
+                    _memoryIo.WriteBytes(code2, codeBytes);
+
+                    _hookManager.InstallHook(code.ToInt64(), currectActOrigin, new byte[]
+                        { 0x89, 0x81, 0x5C, 0x02, 0x00, 0x00 });
+                    _hookManager.InstallHook(code2.ToInt64(), currectActOrigin2, new byte[]
+                        { 0x89, 0x81, 0x5C, 0x02, 0x00, 0x00 });
+                }
             }
             else
             {
@@ -196,17 +299,43 @@ namespace SilkySouls2.Services
             _memoryIo.WriteByte(CodeCaveOffsets.Base + (int)CodeCaveOffsets.RepeatAct.RepeatFlag,
                 isRepeatActEnabled ? 1 : 0);
 
-        public void SetTargetSpeed(float value) => 
-            _memoryIo.WriteFloat((IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
-                                ChrCtrlOffsets.Speed, value);
-        public float GetTargetSpeed() => 
-            _memoryIo.ReadFloat((IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
-                                 ChrCtrlOffsets.Speed);
+        public void SetTargetSpeed(float value)
+        {
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
+            {
+                _memoryIo.WriteFloat((IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
+                                     ChrCtrlOffsets.Speed, value);
+            }
+            else
+            {
+                _memoryIo.WriteFloat((IntPtr)_memoryIo.ReadInt32(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
+                                     ChrCtrlOffsets.Speed, value);
+            }
+        }
+
+        public float GetTargetSpeed()
+        {
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
+            {
+                return _memoryIo.ReadFloat((IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
+                                           ChrCtrlOffsets.Speed);
+            }
+            return _memoryIo.ReadFloat((IntPtr)_memoryIo.ReadInt32(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
+                                       ChrCtrlOffsets.Speed);
+        }
 
         public void ClearLockedTarget()
         {
-            _memoryIo.WriteBytes(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr, new byte[] 
-                {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00});
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
+            {
+                _memoryIo.WriteBytes(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr, new byte[]
+                    { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
+            }
+            else
+            {
+                _memoryIo.WriteBytes(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr, new byte[]
+                    { 0x00, 0x00, 0x00, 0x00 });
+            }
         }
 
         public void ToggleTargetAi(bool isDisableTargetAiEnabled)
@@ -215,21 +344,21 @@ namespace SilkySouls2.Services
             var arrayLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DisableTargetAi.Array;
             var countLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DisableTargetAi.Count;
             var codeLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DisableTargetAi.Code;
-            
+
             if (isDisableTargetAiEnabled)
             {
                 if (_disabledEntities.Count >= 20) ClearDisableEntities();
-                
+
                 _disabledEntities.Add(chrAi);
                 _memoryIo.WriteInt64(arrayLoc + (_disabledEntities.Count - 1) * 8, chrAi);
                 _memoryIo.WriteInt32(countLoc, _disabledEntities.Count);
                 if (!_disableTargetHookInstalled)
                 {
                     var origin = Hooks.DisableTargetAi;
-                    
+
                     var bytes = AsmLoader.GetAsmBytes("DisableTargetAi");
-                    
-                    AsmHelper.WriteRelativeOffsets(bytes, new []
+
+                    AsmHelper.WriteRelativeOffsets(bytes, new[]
                     {
                         (codeLoc.ToInt64() + 0x6, countLoc.ToInt64(), 7, 0x6 + 2),
                         (codeLoc.ToInt64() + 0xD, origin + 6, 6, 0xD + 2),
@@ -240,13 +369,12 @@ namespace SilkySouls2.Services
 
                     var arrayLocBytes = BitConverter.GetBytes(arrayLoc.ToInt64());
                     Array.Copy(arrayLocBytes, 0, bytes, 0x1B + 2, 8);
-                    
+
                     _memoryIo.WriteBytes(codeLoc, bytes);
                     _hookManager.InstallHook(codeLoc.ToInt64(), origin, new byte[]
                         { 0x48, 0x89, 0xFA, 0x48, 0x89, 0xD9 });
                     _disableTargetHookInstalled = true;
                 }
-              
             }
             else
             {
@@ -255,6 +383,7 @@ namespace SilkySouls2.Services
                 {
                     _memoryIo.WriteInt64(arrayLoc + i * 8, _disabledEntities[i]);
                 }
+
                 _memoryIo.WriteInt32(countLoc, _disabledEntities.Count);
                 if (_disabledEntities.Count == 0)
                 {
@@ -264,6 +393,7 @@ namespace SilkySouls2.Services
                 }
             }
         }
+
         public bool IsAiDisabled(long targetId) => _disabledEntities.Contains(GetChrAi(targetId));
 
         private long GetChrAi(long targetId)
@@ -273,19 +403,25 @@ namespace SilkySouls2.Services
             var chrAi = _memoryIo.ReadInt64((IntPtr)(chrAiManPtr + ChrCtrlOffsets.ChrAiMan.ChrAi));
             return chrAi;
         }
-            
+
 
         public void ClearDisableEntities()
         {
-            _memoryIo.WriteBytes(CodeCaveOffsets.Base + (int) CodeCaveOffsets.DisableTargetAi.Array, new byte[0x100]);
+            _memoryIo.WriteBytes(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DisableTargetAi.Array, new byte[0x100]);
             _memoryIo.WriteInt32(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DisableTargetAi.Count, 0);
             _disabledEntities.Clear();
         }
 
         public bool IsLightPoiseImmune()
         {
-            var poiseStruct = _memoryIo.ReadInt64((IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
-                                 ChrCtrlOffsets.PoiseImmunityPtr);
+            var targetPtr = GameVersion.Current.Edition == GameEdition.Scholar
+                ? _memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr)
+                : _memoryIo.ReadInt32(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr);
+       
+            var poiseStruct = GameVersion.Current.Edition == GameEdition.Scholar
+                ? _memoryIo.ReadInt64((IntPtr)targetPtr + ChrCtrlOffsets.PoiseImmunityPtr)
+                : _memoryIo.ReadInt32((IntPtr)targetPtr + ChrCtrlOffsets.PoiseImmunityPtr);
+       
             return _memoryIo.ReadUInt8((IntPtr)poiseStruct + ChrCtrlOffsets.PoiseStuff.LightStaggerImmuneFlag) == 1;
         }
     }

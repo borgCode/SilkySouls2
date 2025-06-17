@@ -34,7 +34,7 @@ namespace SilkySouls2.Utilities
         {
             foreach (var (hookLocation, originalInstrLen, customCodeAddr, destinationIndex) in jumpOffsets)
             {
-                var originOffsetBytes = GetJmpOriginOffsetBytes(hookLocation, originalInstrLen, customCodeAddr);
+                var originOffsetBytes = GetJmpOriginOffsetBytes(hookLocation, originalInstrLen, customCodeAddr + 5);
                 Array.Copy(originOffsetBytes, 0, bytes, destinationIndex, 4);
             }
         }

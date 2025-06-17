@@ -179,26 +179,26 @@ namespace SilkySouls2.Memory
                     }
                     else
                     {
-                        // ChrParamPtr = 0x34;
+                        ChrParamPtr = 0x20;
                         Coords = 0x80;
-                        // PoiseImmunityPtr = 0xB4;
-                        // OperatorPtr = 0xE4;
+                        PoiseImmunityPtr = 0x94; 
+                        OperatorPtr = 0xAC;
                         ChrPhysicsCtrlPtr = 0xB8;
                         Hp = 0xFC;
                         MinHp = 0x100;
                         MaxHp = 0x104;
                         FullHpWithHollowing = 0x108;
                         Stamina = 0x140;
-                        // HeavyPoiseCurrent = 0x1B4;
-                        // HeavyPoiseMax = 0x1BC;
-                        // PoisonCurrent = 0x1C0;
-                        // PoisonMax = 0x1C8;
-                        // BleedCurrent = 0x1CC;
-                        // BleedMax = 0x1D4;
-                        // ToxicCurrent = 0x1FC;
-                        // ToxicMax = 0x204;
-                        // LightPoiseCurrent = 0x214;
-                        // LightPoiseMax = 0x21C;
+                        HeavyPoiseCurrent = 0x14C;
+                        HeavyPoiseMax = 0x154;
+                        PoisonCurrent = 0x158;
+                        PoisonMax = 0x160;
+                        BleedCurrent = 0x164;
+                        BleedMax = 0x16C;
+                        ToxicCurrent = 0x194;
+                        ToxicMax = 0x19C;
+                        LightPoiseCurrent = 0x1AC;
+                        LightPoiseMax = 0x1B4;
                         Speed = 0x208;
                         // EquippedSpellsPtr = 0x374;
                         // EquippedSpellsStart = 0x9B4;

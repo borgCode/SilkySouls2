@@ -847,6 +847,25 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 53                      push   ebx
+        ///8b 1d 00 00 00 00       mov    ebx,DWORD PTR ds:0x0
+        ///85 db                   test   ebx,ebx
+        ///74 2f                   je     3a &lt;normal&gt;
+        ///8b 9b ac 00 00 00       mov    ebx,DWORD PTR [ebx+0xac]
+        ///8b 5b 0c                mov    ebx,DWORD PTR [ebx+0xc]
+        ///8b 5b 10                mov    ebx,DWORD PTR [ebx+0x10]
+        ///39 cb                   cmp    ebx,ecx
+        ///75 1f                   jne    3a &lt;normal&gt;
+        ///80 3d 00 00 00 00 01    cmp    BYTE PTR ds:0x0,0x1
+        ///75 11                   jne    35 [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string RepeatAct32 {
+            get {
+                return ResourceManager.GetString("RepeatAct32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 83 89 50 03 00 00 01    or     DWORD PTR [rcx+0x350],0x1
         ///50                      push   rax
         ///48 8b 05 00 00 00 00    mov    rax,QWORD PTR [rip+0x0]        # f &lt;_main+0xf&gt;
@@ -859,9 +878,30 @@ namespace SilkySouls2.Properties {
         ///75 1d                   jne    45 &lt;normal&gt;
         /// [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string RepeatAct {
+        internal static string RepeatAct64 {
             get {
-                return ResourceManager.GetString("RepeatAct", resourceCulture);
+                return ResourceManager.GetString("RepeatAct64", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to b9 00 00 00 00          mov    ecx,0x0
+        ///83 ec 20                sub    esp,0x20
+        ///8d 04 24                lea    eax,[esp]
+        ///50                      push   eax
+        ///51                      push   ecx
+        ///8b 49 08                mov    ecx,DWORD PTR [ecx+0x8]
+        ///b8 00 00 c8 42          mov    eax,0x42c80000
+        ///66 0f 6e c0             movd   xmm0,eax
+        ///f3 0f 11 04 24          movss  DWORD PTR [esp],xmm0
+        ///b8 00 00 00 00          mov    eax,0x0
+        ///ff d0                   call   eax
+        ///83 c4 20                add    esp,0x20
+        ///c3  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string RestoreSpellcasts32 {
+            get {
+                return ResourceManager.GetString("RestoreSpellcasts32", resourceCulture);
             }
         }
         
@@ -878,9 +918,9 @@ namespace SilkySouls2.Properties {
         ///48 81 c4 38 01 00 00    add    rsp,0x138
         ///c3                      ret.
         /// </summary>
-        internal static string RestoreSpellcasts {
+        internal static string RestoreSpellcasts64 {
             get {
-                return ResourceManager.GetString("RestoreSpellcasts", resourceCulture);
+                return ResourceManager.GetString("RestoreSpellcasts64", resourceCulture);
             }
         }
         
@@ -907,13 +947,24 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 89 b7 b8 00 00 00       mov    DWORD PTR [edi+0xb8],esi
+        ///89 35 00 00 00 00       mov    DWORD PTR ds:0x0,esi
+        ///e9 fc ff ff ff          jmp    d &lt;_main+0xd&gt;.
+        /// </summary>
+        internal static string SaveTargetPtr32 {
+            get {
+                return ResourceManager.GetString("SaveTargetPtr32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 89 3d 00 00 00 00    mov    QWORD PTR [rip+0x0],rdi        # 7 &lt;_main+0x7&gt;
         ///48 89 bb c0 00 00 00    mov    QWORD PTR [rbx+0xc0],rdi
         ///e9 00 00 00 00          jmp    13 &lt;_main+0x13&gt;.
         /// </summary>
-        internal static string SaveTargetPtr {
+        internal static string SaveTargetPtr64 {
             get {
-                return ResourceManager.GetString("SaveTargetPtr", resourceCulture);
+                return ResourceManager.GetString("SaveTargetPtr64", resourceCulture);
             }
         }
         

@@ -237,7 +237,7 @@
    
                 <CheckBox Grid.Column="2" 
                           IsChecked="{Binding IsDisableSoulMemWriteEnabled}"
-                          Content="Exclude Soul Memory when editing"
+                          Content="Exclude Soul Memory when stat editing"
                           VerticalAlignment="Center" 
                           Margin="25,0,5,0" />
                 

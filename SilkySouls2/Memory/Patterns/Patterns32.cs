@@ -78,7 +78,12 @@
             AddressingMode.Absolute
         );
 
-
+        public static readonly Pattern DisableAi = new Pattern(
+            new byte[] { 0x83, 0x7B, 0x18, 0x00, 0x7F },
+            "xxxxx",
+            4,
+            AddressingMode.Absolute
+        );
 
         
         
@@ -119,7 +124,31 @@
             5
         );
 
+        public static readonly Pattern RestoreSpellcasts = new Pattern(
+            new byte[] { 0x55, 0x8B, 0xEC, 0x83, 0xEC, 0x3C, 0xF3, 0x0F, 0x10, 0x45, 0x08 },
+            "xxxxxxxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
 
+        
+        
+        // Hooks
+
+        public static readonly Pattern LockedTarget = new Pattern(
+            new byte[] { 0x89, 0xB7, 0xB8, 0x00, 0x00, 0x00, 0xEB },
+            "xxxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+        
+        public static readonly Pattern SetCurrentAct = new Pattern(
+            new byte[]{ 0x83, 0x89, 0x50, 0x02, 0x00, 0x00, 0x01 },
+            "xxxxxxx",
+            7,
+            AddressingMode.Absolute
+        );
+        
     }
     
 }

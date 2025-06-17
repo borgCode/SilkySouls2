@@ -105,7 +105,7 @@
             AddressingMode.Absolute
         );
 
-        public static readonly Pattern SetCurrectAct = new Pattern(
+        public static readonly Pattern SetCurrentAct = new Pattern(
             new byte[] { 0x83, 0x89, 0x50, 0x03, 0x00, 0x00, 0x01 },
             "xxxxxxx",
             0,

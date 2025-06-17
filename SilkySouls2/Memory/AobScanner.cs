@@ -131,7 +131,7 @@ namespace SilkySouls2.Memory
 
                 Offsets.Hooks.DisableTargetAi = Offsets.Patches.DisableAi.ToInt64() + 0x2C;
 
-                var setCurrectActLocs = FindAddressesByPattern(Patterns64.SetCurrectAct, 2);
+                var setCurrectActLocs = FindAddressesByPattern(Patterns64.SetCurrentAct, 2);
                 if (setCurrectActLocs.Count < 2 || setCurrectActLocs[0] == IntPtr.Zero)
                 {
                     if (saved.TryGetValue("SetCurrectAct", out var value))
@@ -243,13 +243,37 @@ namespace SilkySouls2.Memory
                     addr => Offsets.Patches.NoSoulLoss = addr, saved);
                 TryPatternWithFallback("Hidden", Patterns32.Hidden,
                     addr => Offsets.Patches.Hidden = addr, saved);
+                TryPatternWithFallback("DisableAi", Patterns32.DisableAi,
+                    addr => Offsets.Patches.DisableAi = addr, saved);
                 
+                TryPatternWithFallback("LockedTarget", Patterns32.LockedTarget,
+                    addr => Offsets.Hooks.LockedTarget = addr.ToInt32(), saved);
+                
+                
+                var setCurrectActLocs = FindAddressesByPattern(Patterns32.SetCurrentAct, 2);
+                if (setCurrectActLocs.Count < 2 || setCurrectActLocs[0] == IntPtr.Zero)
+                {
+                    if (saved.TryGetValue("SetCurrectAct", out var value))
+                    {
+                        Offsets.Hooks.SetCurrectAct = value;
+                        Offsets.Hooks.SetCurrectAct2 = saved["SetCurrectAct2"];
+                    }
+                }
+                else
+                {
+                    Offsets.Hooks.SetCurrectAct = setCurrectActLocs[0].ToInt32();
+                    Offsets.Hooks.SetCurrectAct2 = setCurrectActLocs[1].ToInt32();
+                    saved["SetCurrectAct"] = setCurrectActLocs[0].ToInt32();
+                    saved["SetCurrectAct2"] = setCurrectActLocs[1].ToInt32();
+                }
                 
                 
                 Offsets.Funcs.SetSpEffect = FindAddressByPattern(Patterns32.SetSpEffect).ToInt32();
                 Offsets.Funcs.GiveSouls = FindAddressByPattern(Patterns32.GiveSouls).ToInt32();
                 Offsets.Funcs.LevelUp = FindAddressByPattern(Patterns32.LevelUp).ToInt32();
                 Offsets.Funcs.LevelLookup = FindAddressByPattern(Patterns32.LevelLookup).ToInt32();
+                Offsets.Funcs.RestoreSpellcasts = FindAddressByPattern(Patterns32.RestoreSpellcasts).ToInt32();
+                
                 Offsets.Patches.NegativeLevel = (IntPtr)Offsets.Funcs.LevelUp + 0x31;
                 Offsets.Patches.SoulMemWrite1 = FindAddressByPattern(Patterns32.SoulMemWrite);
                 Offsets.Patches.SoulMemWrite2 = Offsets.Patches.SoulMemWrite1 + 0x4A;

@@ -461,6 +461,7 @@
             </Border>
 
             <Border Grid.Column="1"
+                    IsEnabled="{Binding IsScholar}"
                     BorderThickness="1"
                     BorderBrush="#333"
                     CornerRadius="3"

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
+using SilkySouls2.Memory;
 using SilkySouls2.Models;
 using SilkySouls2.Services;
 using SilkySouls2.Utilities;
@@ -26,6 +27,8 @@ namespace SilkySouls2.ViewModels
         private bool _isFreezeHealthEnabled;
         private bool _isDisableTargetAiEnabled;
         private bool _isRepeatActEnabled;
+
+        private bool _isScholar;
 
         private int _lastAct;
 
@@ -586,6 +589,12 @@ namespace SilkySouls2.ViewModels
             }
         }
         
+        public bool IsScholar
+        {
+            get => _isScholar;
+            private set => SetProperty(ref _isScholar, value);
+        }
+        
         public bool IsForlornAvailable
         {
             get => _isForlornAvailable;
@@ -664,6 +673,7 @@ namespace SilkySouls2.ViewModels
         public void TryApplyOneTimeFeatures()
         {
             if (IsAllDisableAiEnabled) _enemyService.ToggleDisableAi(true);
+            IsScholar = GameVersion.Current.Edition == GameEdition.Scholar;
         }
     }
 }

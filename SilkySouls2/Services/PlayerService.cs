@@ -363,22 +363,43 @@ namespace SilkySouls2.Services
 
         public void RestoreSpellcasts()
         {
-            var inventoryBag = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
-            {
-                GameManagerImp.Offsets.GameDataManager,
-                GameManagerImp.GameDataManagerOffsets.InventoryPtr,
-                GameManagerImp.GameDataManagerOffsets.Inventory.ItemInventory2BagListForSpells
-            }, true);
             var func = Funcs.RestoreSpellcasts;
-
-            var codeBytes = AsmLoader.GetAsmBytes("RestoreSpellcasts");
-            AsmHelper.WriteAbsoluteAddresses64(codeBytes, new[]
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
             {
-                (inventoryBag.ToInt64(), 0x0 + 2),
-                (func, 0x20 + 2)
-            });
+                var inventoryBag = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+                {
+                    GameManagerImp.Offsets.GameDataManager,
+                    GameManagerImp.GameDataManagerOffsets.InventoryPtr,
+                    GameManagerImp.GameDataManagerOffsets.Inventory.ItemInventory2BagListForSpells
+                }, true);
+                
+                var codeBytes = AsmLoader.GetAsmBytes("RestoreSpellcasts64");
+                AsmHelper.WriteAbsoluteAddresses64(codeBytes, new[]
+                {
+                    (inventoryBag.ToInt64(), 0x0 + 2),
+                    (func, 0x20 + 2)
+                });
 
-            _memoryIo.AllocateAndExecute(codeBytes);
+                _memoryIo.AllocateAndExecute(codeBytes);
+            }
+            else
+            {
+                var inventoryBag = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+                {
+                    GameManagerImp.Offsets.GameDataManager,
+                    GameManagerImp.GameDataManagerOffsets.InventoryPtr,
+                    GameManagerImp.GameDataManagerOffsets.Inventory.InventoryLists
+                }, true);
+                
+                var codeBytes = AsmLoader.GetAsmBytes("RestoreSpellcasts32");
+                AsmHelper.WriteAbsoluteAddresses32(codeBytes, new []
+                {
+                    (inventoryBag.ToInt64(), 1),
+                    (func, 0x1E + 1)
+                });
+                _memoryIo.AllocateAndExecute(codeBytes);
+            }
+            
         }
 
         public void ToggleSilent(bool isSilentEnabled)

@@ -19,7 +19,6 @@ namespace SilkySouls2.Memory
 
             if (is64Bit)
             {
-
                 string appData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     "SilkySouls2");
                 Directory.CreateDirectory(appData);
@@ -93,7 +92,6 @@ namespace SilkySouls2.Memory
                     addr => Offsets.Hooks.EzStateSetEvent = addr.ToInt64(), saved);
                 TryPatternWithFallback("HpWrite", Patterns64.HpWrite,
                     addr => Offsets.Hooks.HpWrite = addr.ToInt64(), saved);
-                Offsets.Hooks.OneShot = Offsets.Hooks.HpWrite - 0xB;
 
                 TryPatternWithFallback("WarpCoordWrite", Patterns64.WarpCoordWrite,
                     addr => Offsets.Hooks.WarpCoordWrite = addr.ToInt64(), saved);
@@ -245,6 +243,10 @@ namespace SilkySouls2.Memory
                     addr => Offsets.Patches.Hidden = addr, saved);
                 TryPatternWithFallback("DisableAi", Patterns32.DisableAi,
                     addr => Offsets.Patches.DisableAi = addr, saved);
+                TryPatternWithFallback("Silent", Patterns32.Silent,
+                    addr => Offsets.Patches.Silent = addr, saved);
+                TryPatternWithFallback("Ng7", Patterns32.Ng7Patch,
+                    addr => Offsets.Patches.Ng7 = addr, saved);
                 
                 TryPatternWithFallback("LockedTarget", Patterns32.LockedTarget,
                     addr => Offsets.Hooks.LockedTarget = addr.ToInt32(), saved);
@@ -252,6 +254,8 @@ namespace SilkySouls2.Memory
                     addr => Offsets.Hooks.InfinitePoise = addr.ToInt32(), saved);
                 TryPatternWithFallback("DamageControl", Patterns32.DamageControl,
                     addr => Offsets.Hooks.DamageControl = addr.ToInt32(), saved);
+                TryPatternWithFallback("HpWrite", Patterns32.HpWrite,
+                    addr => Offsets.Hooks.HpWrite = addr.ToInt32(), saved);
                 
                 
                 var setCurrectActLocs = FindAddressesByPattern(Patterns32.SetCurrentAct, 2);
@@ -277,6 +281,7 @@ namespace SilkySouls2.Memory
                 Offsets.Funcs.LevelUp = FindAddressByPattern(Patterns32.LevelUp).ToInt32();
                 Offsets.Funcs.LevelLookup = FindAddressByPattern(Patterns32.LevelLookup).ToInt32();
                 Offsets.Funcs.RestoreSpellcasts = FindAddressByPattern(Patterns32.RestoreSpellcasts).ToInt32();
+                Offsets.Funcs.CreateSoundEvent = FindAddressByPattern(Patterns32.CreateSoundEvent).ToInt32();
                 
                 Offsets.Patches.NegativeLevel = (IntPtr)Offsets.Funcs.LevelUp + 0x31;
                 Offsets.Patches.SoulMemWrite1 = FindAddressByPattern(Patterns32.SoulMemWrite);
@@ -318,13 +323,11 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Hooks.CompareEventRandValue: 0x{Offsets.Hooks.CompareEventRandValue:X}");
             Console.WriteLine($"Hooks.HpWrite: 0x{Offsets.Hooks.HpWrite:X}");
             Console.WriteLine($"Hooks.EzStateSetEvent: 0x{Offsets.Hooks.EzStateSetEvent:X}");
-            Console.WriteLine($"Hooks.OneShot: 0x{Offsets.Hooks.OneShot:X}");
             Console.WriteLine($"Hooks.WarpCoordWrite: 0x{Offsets.Hooks.WarpCoordWrite:X}");
             Console.WriteLine($"Hooks.LockedTarget: 0x{Offsets.Hooks.LockedTarget:X}");
             Console.WriteLine($"Hooks.CreditSkip: 0x{Offsets.Hooks.CreditSkip:X}");
             Console.WriteLine($"Hooks.NumOfDrops: 0x{Offsets.Hooks.NumOfDrops:X}");
             Console.WriteLine($"Hooks.DamageControl: 0x{Offsets.Hooks.DamageControl:X}");
-            Console.WriteLine($"Hooks.InAirTimer: 0x{Offsets.Hooks.InAirTimer:X}");
             Console.WriteLine($"Hooks.TriggersAndSpace: 0x{Offsets.Hooks.TriggersAndSpace:X}");
             Console.WriteLine($"Hooks.Ctrl: 0x{Offsets.Hooks.Ctrl:X}");
             Console.WriteLine($"Hooks.NoClipUpdateCoords: 0x{Offsets.Hooks.NoClipUpdateCoords:X}");

@@ -84,6 +84,21 @@
             4,
             AddressingMode.Absolute
         );
+        
+        public static readonly Pattern Silent = new Pattern(
+            new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x84, 0xC0, 0x74, 0x3F, 0x8B, 0x86 },
+            "x????xxxxxx",
+            -0xB,
+            AddressingMode.Absolute
+        );
+
+
+        public static readonly Pattern Ng7Patch = new Pattern(
+            new byte[] { 0xC7, 0x47, 0x68, 0x01 },
+            "xxxx",
+            0,
+            AddressingMode.Absolute
+        );
 
         
         
@@ -131,6 +146,15 @@
             AddressingMode.Absolute
         );
 
+        public static readonly Pattern CreateSoundEvent = new Pattern(
+            new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x84, 0xC0, 0x74, 0x3F, 0x8B, 0x86 },
+            "x????xxxxxx",
+            0,
+            AddressingMode.Relative,
+            1,
+            5
+        );
+
         
         
         // Hooks
@@ -162,7 +186,13 @@
             -0x17,
             AddressingMode.Absolute
         );
-        
+
+        public static readonly Pattern HpWrite = new Pattern(
+            new byte[] { 0x89, 0x8E, 0xFC, 0x00, 0x00, 0x00, 0x8B, 0x02 },
+            "xxxxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
     }
     
 }

@@ -17,6 +17,8 @@ namespace SilkySouls2.Memory
 
         public void InstallNop(long address, int length)
         {
+            if (_nopRegistry.ContainsKey(address))
+                return;
             byte[] originalBytes = _memoryIo.ReadBytes((IntPtr)address, length);
             byte[] nopBytes = Enumerable.Repeat((byte)0x90, length).ToArray();
         

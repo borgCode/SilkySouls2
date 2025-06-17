@@ -425,7 +425,7 @@ Shalquoir,104370,103870,0
 
 </value>
   </data>
-  <data name="PlayerNoDamage" xml:space="preserve">
+  <data name="PlayerNoDamage64" xml:space="preserve">
     <value>51                      push   rcx
 48 b9 00 00 00 00 00    movabs rcx,0x0
 00 00 00
@@ -2889,5 +2889,17 @@ c7 46 34 00 00 00 00    mov    DWORD PTR [esi+0x34],0x0
 58                      pop    eax
 005d &lt;skip&gt;:
 e9 fc ff ff ff          jmp    5e &lt;skip+0x1&gt;</value>
+  </data>
+  <data name="PlayerNoDamage32" xml:space="preserve">
+    <value>50                      push   eax
+a1 00 00 00 00          mov    eax,ds:0x0
+8b 40 74                mov    eax,DWORD PTR [eax+0x74]
+39 f0                   cmp    eax,esi
+75 06                   jne    13 &lt;exit&gt;
+8b 8e fc 00 00 00       mov    ecx,DWORD PTR [esi+0xfc]
+0013 &lt;exit&gt;:
+58                      pop    eax
+89 8e fc 00 00 00       mov    DWORD PTR [esi+0xfc],ecx
+e9 fc ff ff ff          jmp    1b &lt;exit+0x8&gt;</value>
   </data>
 </root>

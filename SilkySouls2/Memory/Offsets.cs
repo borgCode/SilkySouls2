@@ -12,7 +12,6 @@ namespace SilkySouls2.Memory
             {
                 static Offsets()
                 {
-
                     if (GameVersion.Current.Edition == GameEdition.Scholar)
                     {
                         CharacterManager = 0x18;
@@ -21,7 +20,7 @@ namespace SilkySouls2.Memory
                         GameDataManager = 0xA8;
                         SaveLoadSystemPtr = 0xB8;
                         PlayerCtrl = 0xD0;
-                        PxWorld = 0x660;
+                        PxWorldPtr = 0x660;
                         ViewMatrixPtr = 0x1158;
                         DLBackAllocator = 0x22E0;
                         Quitout = 0x24B1;
@@ -35,7 +34,7 @@ namespace SilkySouls2.Memory
                         GameDataManager = 0x60;
                         SaveLoadSystemPtr = 0x68;
                         PlayerCtrl = 0x74;
-                        // PxWorld = 0x280;
+                        PxWorldPtr = 0x280;
                         // ViewMatrixPtr = 0x1154;
                         // DLBackAllocator = 0x22DC;
                         // Quitout = 0x0;
@@ -49,7 +48,7 @@ namespace SilkySouls2.Memory
                 public static int GameDataManager { get; private set; }
                 public static int SaveLoadSystemPtr { get; private set; }
                 public static int PlayerCtrl { get; private set; }
-                public static int PxWorld { get; private set; }
+                public static int PxWorldPtr { get; private set; }
                 public static int ViewMatrixPtr { get; private set; }
                 public static int DLBackAllocator { get; private set; }
                 public static int Quitout { get; private set; }
@@ -84,9 +83,9 @@ namespace SilkySouls2.Memory
                     }
                     else
                     {
-                        InventoryPtr = 0x08; 
-                        NewGamePtr = 0x60;   
-                        NewGame = 0x68; 
+                        InventoryPtr = 0x08;
+                        NewGamePtr = 0x60;
+                        NewGame = 0x68;
                     }
                 }
 
@@ -113,9 +112,9 @@ namespace SilkySouls2.Memory
                         }
                     }
 
-                    public static int InventoryLists  { get; private set; }
-                    public static int ItemInventory2BagListPtr  { get; private set; }
-                    public static int ItemInventory2BagListForSpells  { get; private set; }
+                    public static int InventoryLists { get; private set; }
+                    public static int ItemInventory2BagListPtr { get; private set; }
+                    public static int ItemInventory2BagListForSpells { get; private set; }
 
                     public static class ItemInventory2BagList
                     {
@@ -181,7 +180,7 @@ namespace SilkySouls2.Memory
                     {
                         ChrParamPtr = 0x20;
                         Coords = 0x80;
-                        PoiseImmunityPtr = 0x94; 
+                        PoiseImmunityPtr = 0x94;
                         OperatorPtr = 0xAC;
                         ChrPhysicsCtrlPtr = 0xB8;
                         Hp = 0xFC;
@@ -256,7 +255,7 @@ namespace SilkySouls2.Memory
                 {
                     public const int ChrAi = 0x20;
                 }
-                
+
 
                 public static class ChrPhysicsCtrl
                 {
@@ -273,17 +272,18 @@ namespace SilkySouls2.Memory
                             Xyz = 0x70;
                         }
                     }
+
                     public static int Gravity { get; private set; }
                     public static int Xyz { get; private set; }
                 }
-                
+
 
                 public static class Stats
                 {
                     static Stats()
                     {
                         var version = GameVersion.Current;
-       
+
                         if (version.Edition == GameEdition.Scholar)
                         {
                             Vigor = 0x08;
@@ -299,7 +299,7 @@ namespace SilkySouls2.Memory
                             CurrentSouls = 0xEC;
                             SoulMemory = 0xF4;
                         }
-                        else 
+                        else
                         {
                             Vigor = 0x04;
                             Endurance = 0x06;
@@ -331,6 +331,35 @@ namespace SilkySouls2.Memory
                 }
             }
 
+            public static class PxWorld
+            {
+                static PxWorld()
+                {
+                    if (GameVersion.Current.Edition == GameEdition.Scholar)
+                    {
+                        HkpWorld = 0x18;
+                        HkpChrRigidBodyArray = 0x1F8;
+                        HkpChrRigidBody = 0x18;
+                        HkpRigidBodyPtr = 0x8;
+                        PlayerCoords = 0x1A0;
+                    }
+                    else
+                    {
+                        HkpWorld = 0xC;
+                        HkpChrRigidBodyArray = 0x168;
+                        HkpChrRigidBody = 0xC;
+                        HkpRigidBodyPtr = 0x4;
+                        PlayerCoords = 0x120;
+                    }
+                }
+
+                public static int HkpWorld { get; private set; }
+                public static int HkpChrRigidBodyArray { get; private set; }
+                public static int HkpChrRigidBody { get; private set; }
+                public static int HkpRigidBodyPtr { get; private set; }
+                public static int PlayerCoords { get; private set; }
+            }
+
             public static class DLAllocator
             {
                 public const int FeOperatorFrontend = 0x10;
@@ -347,17 +376,6 @@ namespace SilkySouls2.Memory
         public static class HkHardwareInfo
         {
             public static IntPtr Base;
-            public const int HkpWorld = 0x58;
-            public const int HkpChrRigidBodyPtr = 0x1F8;
-            public const int HkpChrRigidBody = 0x18;
-            public const int HkpRigidBodyPtr = 0x8;
-
-
-            public static class HkpRigidBody
-            {
-                public const int PlayerIdentifier = 0x150;
-                public const int PlayerCoords = 0x1A0;
-            }
         }
 
         public static IntPtr MapId;
@@ -389,13 +407,11 @@ namespace SilkySouls2.Memory
             public static long SetAreaVariable; // Sets which of the forlorns should spawn
             public static long CompareEventRandValue; // Checks if forlorn should spawn
             public static long HpWrite;
-            public static long OneShot; // Also Deal no damage 
             public static long WarpCoordWrite;
             public static long LockedTarget;
             public static long CreditSkip;
             public static long NumOfDrops;
             public static long DamageControl;
-            public static long InAirTimer;
             public static long TriggersAndSpace;
             public static long Ctrl;
             public static long NoClipUpdateCoords;

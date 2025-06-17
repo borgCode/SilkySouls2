@@ -63,14 +63,28 @@ namespace SilkySouls2.Services
 
             if (isNoDamageEnabled)
             {
-                var codeBytes = AsmLoader.GetAsmBytes("PlayerNoDamage");
-                var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt64());
-                Array.Copy(bytes, 0, codeBytes, 0x1 + 2, 8);
-                bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 6, code + 0x2C);
-                Array.Copy(bytes, 0, codeBytes, 0x27 + 1, 4);
-                _memoryIo.WriteBytes(code, codeBytes);
+                if (GameVersion.Current.Edition == GameEdition.Scholar)
+                {
+                    var codeBytes = AsmLoader.GetAsmBytes("PlayerNoDamage64");
+                    var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt64());
+                    Array.Copy(bytes, 0, codeBytes, 0x1 + 2, 8);
+                    bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 6, code + 0x2C);
+                    Array.Copy(bytes, 0, codeBytes, 0x27 + 1, 4);
+                    _memoryIo.WriteBytes(code, codeBytes);
 
-                _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[] { 0x89, 0x83, 0x68, 0x01, 0x00, 0x00 });
+                    _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[] { 0x89, 0x83, 0x68, 0x01, 0x00, 0x00 });
+                }
+                else
+                {
+                    var codeBytes = AsmLoader.GetAsmBytes("PlayerNoDamage32");
+                    var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt32());
+                    Array.Copy(bytes, 0, codeBytes, 0x1 + 1, 4);
+                    bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 6, code + 0x1F);
+                    Array.Copy(bytes, 0, codeBytes, 0x1A + 1, 4);
+                    _memoryIo.WriteBytes(code, codeBytes);
+                    _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[] { 0x89, 0x8E, 0xFC, 0x00, 0x00, 0x00 });
+                }
+                
             }
             else
             {
@@ -288,13 +302,14 @@ namespace SilkySouls2.Services
         }
 
         private IntPtr GetPositionPtr() =>
-            _memoryIo.FollowPointers(HkHardwareInfo.Base, new[]
+            _memoryIo.FollowPointers(GameManagerImp.Base, new[]
             {
-                HkHardwareInfo.HkpWorld,
-                HkHardwareInfo.HkpChrRigidBodyPtr,
-                HkHardwareInfo.HkpChrRigidBody,
-                HkHardwareInfo.HkpRigidBodyPtr,
-                HkHardwareInfo.HkpRigidBody.PlayerCoords
+                GameManagerImp.Offsets.PxWorldPtr,
+                GameManagerImp.PxWorld.HkpWorld,
+                GameManagerImp.PxWorld.HkpChrRigidBodyArray,
+                GameManagerImp.PxWorld.HkpChrRigidBody,
+                GameManagerImp.PxWorld.HkpRigidBodyPtr,
+                GameManagerImp.PxWorld.PlayerCoords
             }, false);
 
         public (float x, float y, float z) GetCoords()
@@ -404,7 +419,11 @@ namespace SilkySouls2.Services
 
         public void ToggleSilent(bool isSilentEnabled)
         {
-            if (isSilentEnabled) _nopManager.InstallNop(Patches.Silent.ToInt64(), 5);
+            if (isSilentEnabled)
+            {
+                _nopManager.InstallNop(Patches.Silent.ToInt64(),
+                    GameVersion.Current.Edition == GameEdition.Scholar ? 5 : 16);
+            }
             else _nopManager.RestoreNop(Patches.Silent.ToInt64());
         }
 

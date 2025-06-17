@@ -867,6 +867,24 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 50                      push   eax
+        ///a1 00 00 00 00          mov    eax,ds:0x0
+        ///8b 40 74                mov    eax,DWORD PTR [eax+0x74]
+        ///39 f0                   cmp    eax,esi
+        ///75 06                   jne    13 &lt;exit&gt;
+        ///8b 8e fc 00 00 00       mov    ecx,DWORD PTR [esi+0xfc]
+        ///0013 &lt;exit&gt;:
+        ///58                      pop    eax
+        ///89 8e fc 00 00 00       mov    DWORD PTR [esi+0xfc],ecx
+        ///e9 fc ff ff ff          jmp    1b &lt;exit+0x8&gt;.
+        /// </summary>
+        internal static string PlayerNoDamage32 {
+            get {
+                return ResourceManager.GetString("PlayerNoDamage32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 51                      push   rcx
         ///48 b9 00 00 00 00 00    movabs rcx,0x0
         ///00 00 00
@@ -880,9 +898,9 @@ namespace SilkySouls2.Properties {
         ///89 83 68 01 00 00       mov    DWORD PTR [rbx+0x168],eax
         ///e9 00 00 00 00          jmp    2c &lt;exit+0xc&gt;.
         /// </summary>
-        internal static string PlayerNoDamage {
+        internal static string PlayerNoDamage64 {
             get {
-                return ResourceManager.GetString("PlayerNoDamage", resourceCulture);
+                return ResourceManager.GetString("PlayerNoDamage64", resourceCulture);
             }
         }
         

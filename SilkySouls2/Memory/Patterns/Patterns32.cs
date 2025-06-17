@@ -71,6 +71,14 @@
             AddressingMode.Absolute
         );
 
+        public static readonly Pattern SoulMemWrite = new Pattern(
+            new byte[] { 0x89, 0x81, 0xF0, 0x00, 0x00, 0x00, 0x8B, 0x81 },
+            "xxxxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+
 
         
         

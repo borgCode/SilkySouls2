@@ -40,6 +40,8 @@ namespace SilkySouls2.ViewModels
         private bool _isNoHollowingEnabled;
         private bool _isInfinitePoiseEnabled;
         private bool _isAutoSetNewGameSevenEnabled;
+        
+        private bool _isDisableSoulMemWriteEnabled;
 
         private int _vigor;
         private int _attunement;
@@ -477,6 +479,12 @@ namespace SilkySouls2.ViewModels
         // }
         //
         
+        public bool IsDisableSoulMemWriteEnabled
+        {
+            get => _isDisableSoulMemWriteEnabled;
+            set => SetProperty(ref _isDisableSoulMemWriteEnabled, value);
+        }
+        
         public int Vigor
         {
             get => _vigor;
@@ -551,7 +559,9 @@ namespace SilkySouls2.ViewModels
             if (property != null)
             {
                 int statOffset = (int)property.GetValue(null);
+                if (IsDisableSoulMemWriteEnabled) _playerService.ToggleSoulMemWrite(true);
                 _playerService.SetPlayerStat(statOffset, (byte)value);
+                if (IsDisableSoulMemWriteEnabled) _playerService.ToggleSoulMemWrite(false);
             }
             else
             {

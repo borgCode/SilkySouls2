@@ -447,6 +447,14 @@
             AddressingMode.Absolute
         );
 
+        public static readonly Pattern SoulMemWrite = new Pattern(
+            new byte[] { 0x8B, 0x00, 0x89, 0x81, 0xF4 },
+            "xxxxx",
+            2,
+            AddressingMode.Absolute
+        );
+
+
         public static readonly Pattern DisableAi = new Pattern(
             new byte[] { 0x7F, 0x59, 0x48, 0x8D },
             "xxxx",

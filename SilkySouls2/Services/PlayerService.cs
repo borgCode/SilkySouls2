@@ -171,7 +171,7 @@ namespace SilkySouls2.Services
             else
             {
                 var bytes = AsmLoader.GetAsmBytes("LevelUp32");
-                AsmHelper.WriteAbsoluteAddresses32(bytes, new []
+                AsmHelper.WriteAbsoluteAddresses32(bytes, new[]
                 {
                     (currentLevelLoc.ToInt64(), 2),
                     (negativeFlag.ToInt64(), 0xC + 2),
@@ -184,15 +184,15 @@ namespace SilkySouls2.Services
                     (statsEntity.ToInt64(), 0x4A + 1),
                     (currentSoulsLoc.ToInt64(), 0x55 + 2),
                     (requiredSouls.ToInt64(), 0x5B + 2),
-                    (soulsAfterLevelUp.ToInt64(), 0x63 + 2 ),
+                    (soulsAfterLevelUp.ToInt64(), 0x63 + 2),
                     (buffer.ToInt64(), 0x6F + 2),
                     (statsEntity.ToInt64(), 0x76 + 1),
                     (levelUp, 0x7B + 1)
                 });
                 _memoryIo.WriteBytes(code, bytes);
             }
-            
-            
+
+
             _memoryIo.RunThreadAndWaitForCompletion(code);
             if (numOfLevels <= 0) _memoryIo.WriteBytes(Patches.NegativeLevel + 1, new byte[] { 0x84 });
 
@@ -506,14 +506,44 @@ namespace SilkySouls2.Services
                         ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 }
                         : new byte[] { 0x89, 0x90, 0xEC, 0x00, 0x00, 0x00 }
                 );
-            } 
-            else 
+            }
+            else
             {
                 _memoryIo.WriteBytes(Patches.NoSoulLoss,
                     isEnabled
                         ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 }
                         : new byte[] { 0xC7, 0x80, 0xE8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
                 );
+            }
+        }
+
+        public void ToggleSoulMemWrite(bool isEnabled)
+        {
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
+            {
+                if (isEnabled)
+                {
+                    _memoryIo.WriteBytes(Patches.SoulMemWrite1, new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 });
+                    _memoryIo.WriteBytes(Patches.SoulMemWrite2, new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 });
+                }
+                else
+                {
+                    _memoryIo.WriteBytes(Patches.SoulMemWrite1, new byte[] { 0x89, 0x81, 0xF4, 0x00, 0x00, 0x00 });
+                    _memoryIo.WriteBytes(Patches.SoulMemWrite2, new byte[] { 0x89, 0x81, 0xFC, 0x00, 0x00, 0x00 });
+                }
+            }
+            else
+            {
+                if (isEnabled)
+                {
+                    _memoryIo.WriteBytes(Patches.SoulMemWrite1, new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 });
+                    _memoryIo.WriteBytes(Patches.SoulMemWrite2, new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 });
+                }
+                else
+                {
+                    _memoryIo.WriteBytes(Patches.SoulMemWrite1, new byte[] { 0x89, 0x81, 0xF0, 0x00, 0x00, 0x00 });
+                    _memoryIo.WriteBytes(Patches.SoulMemWrite2, new byte[] { 0x89, 0x91, 0xF8, 0x00, 0x00, 0x00 });
+                }
             }
         }
     }

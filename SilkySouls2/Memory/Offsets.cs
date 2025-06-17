@@ -379,6 +379,8 @@ namespace SilkySouls2.Memory
             public static IntPtr NoSoulGain;
             public static IntPtr NoHollowing;
             public static IntPtr NoSoulLoss;
+            public static IntPtr SoulMemWrite1;
+            public static IntPtr SoulMemWrite2;
         }
 
 

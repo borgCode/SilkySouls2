@@ -72,6 +72,9 @@ namespace SilkySouls2.Memory
                 TryPatternWithFallback("NoSoulLoss", Patterns64.NoSoulLoss,
                     addr => Offsets.Patches.NoSoulLoss = addr,
                     saved);
+                
+                Offsets.Patches.SoulMemWrite1 = FindAddressByPattern(Patterns64.SoulMemWrite);
+                Offsets.Patches.SoulMemWrite2 = Offsets.Patches.SoulMemWrite1 + 0x56;
                 // TryPatternWithFallback("FreeCam", FreeCamPatch, addr => Offsets.Patches.FreeCam = addr, saved);
                 //
                 // TryPatternWithFallback("OverrideGeneratorStartPositionRandom",
@@ -248,6 +251,8 @@ namespace SilkySouls2.Memory
                 Offsets.Funcs.LevelUp = FindAddressByPattern(Patterns32.LevelUp).ToInt32();
                 Offsets.Funcs.LevelLookup = FindAddressByPattern(Patterns32.LevelLookup).ToInt32();
                 Offsets.Patches.NegativeLevel = (IntPtr)Offsets.Funcs.LevelUp + 0x31;
+                Offsets.Patches.SoulMemWrite1 = FindAddressByPattern(Patterns32.SoulMemWrite);
+                Offsets.Patches.SoulMemWrite2 = Offsets.Patches.SoulMemWrite1 + 0x4A;
                 
                 using (var writer = new StreamWriter(savePath))
                 {
@@ -277,6 +282,8 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Patches.NoSoulGain: 0x{Offsets.Patches.NoSoulGain.ToInt64():X}");
             Console.WriteLine($"Patches.NoHollowing: 0x{Offsets.Patches.NoHollowing.ToInt64():X}");
             Console.WriteLine($"Patches.NoSoulLoss: 0x{Offsets.Patches.NoSoulLoss.ToInt64():X}");
+            Console.WriteLine($"Patches.SoulMemWrite1: 0x{Offsets.Patches.SoulMemWrite1.ToInt64():X}");
+            Console.WriteLine($"Patches.SoulMemWrite2: 0x{Offsets.Patches.SoulMemWrite2.ToInt64():X}");
             
            
             Console.WriteLine($"Hooks.SetAreaVariable: 0x{Offsets.Hooks.SetAreaVariable:X}");

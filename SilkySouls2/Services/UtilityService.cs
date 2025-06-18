@@ -414,10 +414,21 @@ namespace SilkySouls2.Services
 
         public void SetNoClipSpeed(byte[] xBytes, byte[] yBytes)
         {
-            _memoryIo.WriteBytes(CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.UpdateCoords + 0xA4 + 1,
-                xBytes);
-            _memoryIo.WriteBytes(CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.UpdateCoords + 0x60 + 1,
-                yBytes);
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
+            {
+                _memoryIo.WriteBytes(CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.UpdateCoords + 0xA4 + 1,
+                    xBytes);
+                _memoryIo.WriteBytes(CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.UpdateCoords + 0x60 + 1,
+                    yBytes);
+            }
+            else
+            {
+                _memoryIo.WriteBytes(CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.UpdateCoords + 0x71 + 1,
+                    xBytes);
+                _memoryIo.WriteBytes(CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.UpdateCoords + 0x3E + 1,
+                    yBytes);
+            }
+            
         }
 
         private IntPtr GetGravityPtr() => _memoryIo.FollowPointers(GameManagerImp.Base, new[]
@@ -434,20 +445,34 @@ namespace SilkySouls2.Services
             if (isEnabled)
             {
                 var hookLoc = Hooks.KillboxFlagSet;
-                var playerCtrl = _memoryIo.ReadInt64((IntPtr)_memoryIo.ReadInt64(GameManagerImp.Base) +
-                                                     GameManagerImp.Offsets.PlayerCtrl);
-                
-                var codeBytes = AsmLoader.GetAsmBytes("Killbox");
-                var bytes = BitConverter.GetBytes(playerCtrl);
-                Array.Copy(bytes, 0, codeBytes, 0x1 + 2, 8);
-                AsmHelper.WriteRelativeOffsets(codeBytes, new[]
+                if (GameVersion.Current.Edition == GameEdition.Scholar)
                 {
-                    (code.ToInt64() + 0x21, hookLoc + 0xA, 5, 0x21 + 1)
-                });
+                    var codeBytes = AsmLoader.GetAsmBytes("Killbox64");
+                    var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt64());
+                    Array.Copy(bytes, 0, codeBytes, 0x1 + 2, 8);
+                    AsmHelper.WriteRelativeOffsets(codeBytes, new[]
+                    {
+                        (code.ToInt64() + 0x2b, hookLoc + 0xA, 5, 0x2b + 1)
+                    });
                 
-                _memoryIo.WriteBytes(code, codeBytes);
-                _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[]
-                    { 0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00 });
+                    _memoryIo.WriteBytes(code, codeBytes);
+                    _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[]
+                        { 0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00 });
+                }
+                else
+                {
+                    var codeBytes = AsmLoader.GetAsmBytes("Killbox32");
+                    var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt32());
+                    Array.Copy(bytes, 0, codeBytes, 0x1 + 1, 4);
+                    bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 6, code + 0x1C);
+                    Array.Copy(bytes, 0, codeBytes, 0x18 + 1, 4);
+                    _memoryIo.WriteBytes(code, codeBytes);
+                    _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[]
+                        { 0x53,0x89, 0xE3, 0x83, 0xEC, 0x08});
+                    
+                }
+                
+                
             }
             else
             {

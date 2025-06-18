@@ -72,7 +72,7 @@ namespace SilkySouls2.Memory
             RayCastCode = 0xF90
         }
 
-        public const int Killbox = 0x690;
+        public const int Killbox = 0x670;
 
         public enum RepeatAct
         {

@@ -769,23 +769,45 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 50                      push   eax
+        ///a1 00 00 00 00          mov    eax,ds:0x0
+        ///8b 40 74                mov    eax,DWORD PTR [eax+0x74]
+        ///3b 41 10                cmp    eax,DWORD PTR [ecx+0x10]
+        ///75 04                   jne    12 &lt;normal&gt;
+        ///58                      pop    eax
+        ///c2 04 00                ret    0x4
+        ///0012 &lt;normal&gt;:
+        ///53                      push   ebx
+        ///89 e3                   mov    ebx,esp
+        ///83 ec 08                sub    esp,0x8
+        ///e9 fc ff ff ff          jmp    19 &lt;normal+0x7&gt;.
+        /// </summary>
+        internal static string Killbox32 {
+            get {
+                return ResourceManager.GetString("Killbox32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 53                      push   rbx
         ///48 bb 00 00 00 00 00    movabs rbx,0x0
         ///00 00 00
+        ///48 8b 1b                mov    rbx,QWORD PTR [rbx]
+        ///48 8b 9b d0 00 00 00    mov    rbx,QWORD PTR [rbx+0xd0]
         ///48 39 c3                cmp    rbx,rax
-        ///75 06                   jne    16 &lt;do_normal&gt;
+        ///75 06                   jne    20 &lt;normal&gt;
         ///5b                      pop    rbx
         ///48 83 c4 68             add    rsp,0x68
         ///c3                      ret
-        ///000000000016 &lt;do_normal&gt;:
+        ///000000000020 &lt;normal&gt;:
         ///48 b8 00 00 00 00 00    movabs rax,0x8000000000000
         ///00 08 00
         ///5b                      pop    rbx
-        ///e9 00 00 00 00          jmp    26 &lt;do_normal+0x10&gt;.
+        ///e9 00 [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string Killbox {
+        internal static string Killbox64 {
             get {
-                return ResourceManager.GetString("Killbox", resourceCulture);
+                return ResourceManager.GetString("Killbox64", resourceCulture);
             }
         }
         

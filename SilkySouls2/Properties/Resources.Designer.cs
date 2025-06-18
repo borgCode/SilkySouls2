@@ -832,12 +832,22 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to c6 05 00 00 00 00 01    mov    BYTE PTR ds:0x0,0x1
+        ///e9 fc ff ff ff          jmp    8 &lt;_main+0x8&gt;.
+        /// </summary>
+        internal static string NoClip_CtrlCheck32 {
+            get {
+                return ResourceManager.GetString("NoClip_CtrlCheck32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to c6 05 00 00 00 00 01    mov    BYTE PTR [rip+0x0],0x1        # 7 &lt;_main+0x7&gt;
         ///e9 00 00 00 00          jmp    c &lt;_main+0xc&gt;.
         /// </summary>
-        internal static string NoClip_CtrlCheck {
+        internal static string NoClip_CtrlCheck64 {
             get {
-                return ResourceManager.GetString("NoClip_CtrlCheck", resourceCulture);
+                return ResourceManager.GetString("NoClip_CtrlCheck64", resourceCulture);
             }
         }
         
@@ -879,6 +889,26 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 8b 56 08                mov    edx,DWORD PTR [esi+0x8]
+        ///89 86 04 01 00 00       mov    DWORD PTR [esi+0x104],eax
+        ///50                      push   eax
+        ///89 d0                   mov    eax,edx
+        ///25 00 20 00 00          and    eax,0x2000
+        ///74 0d                   je     20 &lt;check_rt&gt;
+        ///81 ea 00 20 00 00       sub    edx,0x2000
+        ///c6 05 00 00 00 00 02    mov    BYTE PTR ds:0x0,0x2
+        ///0020 &lt;check_rt&gt;:
+        ///89 d0                   mov    eax,edx
+        ///25 00 02 00 00          and    eax,0x200
+        ///74 0d                   je     36 &lt;che [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string NoClip_TriggersAndSpace32 {
+            get {
+                return ResourceManager.GetString("NoClip_TriggersAndSpace32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 4c 8b 7c 24 70          mov    r15,QWORD PTR [rsp+0x70]
         ///48 8b 43 08             mov    rax,QWORD PTR [rbx+0x8]
         ///52                      push   rdx
@@ -892,9 +922,9 @@ namespace SilkySouls2.Properties {
         ///48 81 e2 00 02 00 00    and    rdx,0x200
         ///74 0d [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string NoClip_TriggersAndSpace {
+        internal static string NoClip_TriggersAndSpace64 {
             get {
-                return ResourceManager.GetString("NoClip_TriggersAndSpace", resourceCulture);
+                return ResourceManager.GetString("NoClip_TriggersAndSpace64", resourceCulture);
             }
         }
         

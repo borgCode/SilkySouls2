@@ -261,6 +261,10 @@ namespace SilkySouls2.Memory
                     addr => Offsets.Hooks.WarpCoordWrite = addr.ToInt32(), saved);
                 TryPatternWithFallback("SetSharedFlag", Patterns32.SetSharedFlag,
                     addr => Offsets.Hooks.SetSharedFlag = addr.ToInt32(), saved);
+                TryPatternWithFallback("TriggersAndSpace", Patterns32.TriggersAndSpace,
+                    addr => Offsets.Hooks.TriggersAndSpace = addr.ToInt32(), saved);
+                TryPatternWithFallback("Ctrl", Patterns32.Ctrl,
+                    addr => Offsets.Hooks.Ctrl = addr.ToInt32(), saved);
                 
                 
                 var setCurrectActLocs = FindAddressesByPattern(Patterns32.SetCurrentAct, 2);

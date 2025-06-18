@@ -178,14 +178,36 @@ namespace SilkySouls2.Services
 
             if (isNoClipEnabled)
             {
-                var triggersAndSpaceHook = Hooks.TriggersAndSpace;
+                if (GameVersion.Current.Edition == GameEdition.Scholar)
+                {
+                    SetupNoClipHooks64Bit(triggersAndSpaceCode, ctrlCode, coordsCode, raycastCode);
+                }
+                else
+                {
+                    SetupNoClipHooks32Bit(triggersAndSpaceCode, ctrlCode, coordsCode, raycastCode);
+                }
+            }
+            else
+            {
+                // _hookManager.UninstallHook(coordsCode.ToInt64());
+                // _memoryIo.WriteByte(GetGravityPtr(), 0);
+                _hookManager.UninstallHook(triggersAndSpaceCode.ToInt64());
+                _hookManager.UninstallHook(ctrlCode.ToInt64());
+                // _hookManager.UninstallHook(raycastCode.ToInt64());
+            }
+            
+        }
+
+        private void SetupNoClipHooks64Bit(IntPtr triggersAndSpaceCode, IntPtr ctrlCode, IntPtr coordsCode, IntPtr raycastCode)
+        {
+            var triggersAndSpaceHook = Hooks.TriggersAndSpace;
                 var ctrlHook = Hooks.Ctrl;
                 var coordsHook = Hooks.NoClipUpdateCoords;
                 var rayCastHook = Hooks.ProcessPhysics;
 
                 var zDirectionLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.ZDirection;
                 
-                var codeBytes = AsmLoader.GetAsmBytes("NoClip_TriggersAndSpace");
+                var codeBytes = AsmLoader.GetAsmBytes("NoClip_TriggersAndSpace64");
                 AsmHelper.WriteRelativeOffsets(codeBytes, new []
                 {
                     (triggersAndSpaceCode.ToInt64() + 0x1C, zDirectionLoc.ToInt64(), 7, 0x1C + 2),
@@ -195,7 +217,7 @@ namespace SilkySouls2.Services
                 });
                 _memoryIo.WriteBytes(triggersAndSpaceCode, codeBytes);
 
-                codeBytes = AsmLoader.GetAsmBytes("NoClip_CtrlCheck");
+                codeBytes = AsmLoader.GetAsmBytes("NoClip_CtrlCheck64");
                 AsmHelper.WriteRelativeOffsets(codeBytes, new []
                 {
                     (ctrlCode.ToInt64(), zDirectionLoc.ToInt64(), 7, 0x0 + 2),
@@ -281,17 +303,41 @@ namespace SilkySouls2.Services
                 new byte[] { 0x66, 0x0F, 0x7F, 0xB8, 0x90, 0x00, 0x00, 0x00 });
                 _hookManager.InstallHook(raycastCode.ToInt64(), rayCastHook, new byte[]
                     { 0x48, 0x8D, 0x54, 0x24, 0x20 });
+        }
 
-            }
-            else
+        private void SetupNoClipHooks32Bit(IntPtr triggersAndSpaceCode, IntPtr ctrlCode, IntPtr coordsCode, IntPtr raycastCode)
+        {
+            var triggersAndSpaceHook = Hooks.TriggersAndSpace;
+            var ctrlHook = Hooks.Ctrl;
+            var coordsHook = Hooks.NoClipUpdateCoords;
+            var rayCastHook = Hooks.ProcessPhysics;
+
+            var zDirectionLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.ZDirection;
+            var codeBytes = AsmLoader.GetAsmBytes("NoClip_TriggersAndSpace32");
+            var bytes = AsmHelper.GetJmpOriginOffsetBytes(triggersAndSpaceHook, 9, triggersAndSpaceCode + 0x52);
+            Array.Copy(bytes, 0, codeBytes, 0x4D + 1, 4);
+            AsmHelper.WriteAbsoluteAddresses32(codeBytes, new []
             {
-                _hookManager.UninstallHook(coordsCode.ToInt64());
-                _memoryIo.WriteByte(GetGravityPtr(), 0);
-                _hookManager.UninstallHook(triggersAndSpaceCode.ToInt64());
-                _hookManager.UninstallHook(ctrlCode.ToInt64());
-                _hookManager.UninstallHook(raycastCode.ToInt64());
-            }
+                (zDirectionLoc.ToInt64(), 0x19 + 2),
+                (zDirectionLoc.ToInt64(), 0x2F + 2),
+                (zDirectionLoc.ToInt64(), 0x45 + 2),
+            });
+            _memoryIo.WriteBytes(triggersAndSpaceCode, codeBytes);
+
             
+            codeBytes = AsmLoader.GetAsmBytes("NoClip_CtrlCheck32");
+            bytes = BitConverter.GetBytes(zDirectionLoc.ToInt32());
+            Array.Copy(bytes, 0, codeBytes, 2, 4);
+            bytes = AsmHelper.GetJmpOriginOffsetBytes(ctrlHook, 0xA, ctrlCode + 0xC);
+            Array.Copy(bytes, 0, codeBytes, 0x7 + 1, 4);
+            
+            _memoryIo.WriteBytes(ctrlCode, codeBytes);
+            
+            
+            _hookManager.InstallHook(triggersAndSpaceCode.ToInt64(), triggersAndSpaceHook, new byte[]
+                { 0x8B, 0x56, 0x08, 0x89, 0x86, 0x04, 0x01, 0x00, 0x00 });
+            _hookManager.InstallHook(ctrlCode.ToInt64(), ctrlHook, new byte[]
+                { 0x81, 0x8E, 0x28, 0x02, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00 });
         }
 
         public void SetNoClipSpeed(byte[] xBytes, byte[] yBytes)

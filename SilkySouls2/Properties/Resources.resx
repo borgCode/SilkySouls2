@@ -451,7 +451,7 @@ e9 00 00 00 00          jmp    2c &lt;exit+0xc&gt;</value>
 f3 0f 11 4f 10          movss  DWORD PTR [rdi+0x10],xmm1
 e9 00 00 00 00          jmp    1e &lt;exit+0xb&gt;</value>
   </data>
-  <data name="NoClip_TriggersAndSpace" xml:space="preserve">
+  <data name="NoClip_TriggersAndSpace64" xml:space="preserve">
     <value>4c 8b 7c 24 70          mov    r15,QWORD PTR [rsp+0x70]
 48 8b 43 08             mov    rax,QWORD PTR [rbx+0x8]
 52                      push   rdx
@@ -476,7 +476,7 @@ c6 05 00 00 00 00 01    mov    BYTE PTR [rip+0x0],0x1        # 55 &lt;exit&gt;
 5a                      pop    rdx
 e9 00 00 00 00          jmp    5b &lt;exit+0x6&gt;</value>
   </data>
-  <data name="NoClip_CtrlCheck" xml:space="preserve">
+  <data name="NoClip_CtrlCheck64" xml:space="preserve">
     <value>c6 05 00 00 00 00 01    mov    BYTE PTR [rip+0x0],0x1        # 7 &lt;_main+0x7&gt;
 e9 00 00 00 00          jmp    c &lt;_main+0xc&gt;</value>
   </data>
@@ -3111,5 +3111,34 @@ b8 00 00 00 00          mov    eax,0x0
 ff d0                   call   eax
 c6 40 4e 00             mov    BYTE PTR [eax+0x4e],0x0
 c3                      ret</value>
+  </data>
+  <data name="NoClip_TriggersAndSpace32" xml:space="preserve">
+    <value>8b 56 08                mov    edx,DWORD PTR [esi+0x8]
+89 86 04 01 00 00       mov    DWORD PTR [esi+0x104],eax
+50                      push   eax
+89 d0                   mov    eax,edx
+25 00 20 00 00          and    eax,0x2000
+74 0d                   je     20 &lt;check_rt&gt;
+81 ea 00 20 00 00       sub    edx,0x2000
+c6 05 00 00 00 00 02    mov    BYTE PTR ds:0x0,0x2
+0020 &lt;check_rt&gt;:
+89 d0                   mov    eax,edx
+25 00 02 00 00          and    eax,0x200
+74 0d                   je     36 &lt;check_lt&gt;
+81 ea 00 02 00 00       sub    edx,0x200
+c6 05 00 00 00 00 02    mov    BYTE PTR ds:0x0,0x2
+0036 &lt;check_lt&gt;:
+89 d0                   mov    eax,edx
+25 00 01 00 00          and    eax,0x100
+74 0d                   je     4c &lt;exit&gt;
+81 ea 00 01 00 00       sub    edx,0x100
+c6 05 00 00 00 00 01    mov    BYTE PTR ds:0x0,0x1
+004c &lt;exit&gt;:
+58                      pop    eax
+e9 fc ff ff ff          jmp    4e &lt;exit+0x2&gt;</value>
+  </data>
+  <data name="NoClip_CtrlCheck32" xml:space="preserve">
+    <value>c6 05 00 00 00 00 01    mov    BYTE PTR ds:0x0,0x1
+e9 fc ff ff ff          jmp    8 &lt;_main+0x8&gt;</value>
   </data>
 </root>

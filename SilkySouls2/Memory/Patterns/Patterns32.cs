@@ -268,6 +268,22 @@
             AddressingMode.Absolute
         );
 
+        public static readonly Pattern TriggersAndSpace = new Pattern(
+            new byte[] { 0x8B, 0x56, 0x08, 0x89, 0x86 },
+            "xxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern Ctrl = new Pattern(
+            new byte[] { 0x81, 0x8E, 0x28, 0x02, 0x00, 0x00, 0x00, 0x02 },
+            "xxxxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+
+
     }
     
 }

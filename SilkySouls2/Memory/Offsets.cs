@@ -37,8 +37,8 @@ namespace SilkySouls2.Memory
                         PxWorldPtr = 0x280;
                         // ViewMatrixPtr = 0x1154;
                         // DLBackAllocator = 0x22DC;
-                        // Quitout = 0x0;
-                        // LoadingFlag = 0x24B8;
+                        Quitout = 0xDF1;
+                        LoadingFlag = 0xDFC;
                     }
                 }
 
@@ -65,10 +65,28 @@ namespace SilkySouls2.Memory
 
             public static class EventManagerOffsets
             {
-                public const int EventFlagManager = 0x20;
-                public const int EventPointManager = 0x30;
-                public const int EventBonfireManager = 0x58;
-                public const int WarpEventEntity = 0x70;
+                static EventManagerOffsets()
+                {
+                    if (GameVersion.Current.Edition == GameEdition.Scholar)
+                    {
+                        EventFlagManager = 0x20;
+                        EventPointManager = 0x30;
+                        EventBonfireManager = 0x58;
+                        WarpEventEntity = 0x70;
+                    }
+                    else
+                    {
+                        EventFlagManager = 0x10;
+                        EventPointManager = 0x18;
+                        EventBonfireManager = 0x2C;
+                        WarpEventEntity = 0x38;
+                    }
+                }
+
+                public static int EventFlagManager { get; private set; }
+                public static int EventPointManager { get; private set; }
+                public static int EventBonfireManager { get; private set; }
+                public static int WarpEventEntity { get; private set; }
             }
 
             public static class GameDataManagerOffsets

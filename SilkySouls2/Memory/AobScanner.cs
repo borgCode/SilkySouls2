@@ -256,6 +256,8 @@ namespace SilkySouls2.Memory
                     addr => Offsets.Hooks.DamageControl = addr.ToInt32(), saved);
                 TryPatternWithFallback("HpWrite", Patterns32.HpWrite,
                     addr => Offsets.Hooks.HpWrite = addr.ToInt32(), saved);
+                TryPatternWithFallback("WarpCoordWrite", Patterns32.WarpCoordWrite,
+                    addr => Offsets.Hooks.WarpCoordWrite = addr.ToInt32(), saved);
                 
                 
                 var setCurrectActLocs = FindAddressesByPattern(Patterns32.SetCurrentAct, 2);
@@ -282,6 +284,12 @@ namespace SilkySouls2.Memory
                 Offsets.Funcs.LevelLookup = FindAddressByPattern(Patterns32.LevelLookup).ToInt32();
                 Offsets.Funcs.RestoreSpellcasts = FindAddressByPattern(Patterns32.RestoreSpellcasts).ToInt32();
                 Offsets.Funcs.CreateSoundEvent = FindAddressByPattern(Patterns32.CreateSoundEvent).ToInt32();
+                
+                FindMultipleCallsInFunction(Patterns32.BonfireWarp, new Dictionary<Action<long>, int>
+                {
+                    { addr => Offsets.Funcs.WarpPrep = addr, 0x4 },
+                    { addr => Offsets.Funcs.BonfireWarp = addr, 0x1C },
+                });
                 
                 Offsets.Patches.NegativeLevel = (IntPtr)Offsets.Funcs.LevelUp + 0x31;
                 Offsets.Patches.SoulMemWrite1 = FindAddressByPattern(Patterns32.SoulMemWrite);

@@ -168,6 +168,27 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 83 ec 48                sub    esp,0x48
+        ///6a 05                   push   0x5
+        ///ff 35 00 00 00 00       push   DWORD PTR ds:0x0
+        ///8d 05 00 00 00 00       lea    eax,ds:0x0
+        ///50                      push   eax
+        ///b8 00 00 00 00          mov    eax,0x0
+        ///ff d0                   call   eax
+        ///83 c4 0c                add    esp,0xc
+        ///8d 05 00 00 00 00       lea    eax,ds:0x0
+        ///50                      push   eax
+        ///b9 00 00 00 00          mov    ecx,0x0
+        ///b8 00 00 00 00          mov    eax,0x0
+        ///ff d0                   call   e [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string BonfireWarp32 {
+            get {
+                return ResourceManager.GetString("BonfireWarp32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 83 ec 60             sub    rsp,0x60
         ///48 8d 0d 00 00 00 00    lea    rcx,[rip+0x0]        # b &lt;_main+0xb&gt;
         ///0f b7 15 00 00 00 00    movzx  edx,WORD PTR [rip+0x0]        # 12 &lt;_main+0x12&gt;
@@ -180,9 +201,9 @@ namespace SilkySouls2.Properties {
         ///48 83 c4 60             add    rsp,0x60
         ///c3                       [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string BonfireWarp {
+        internal static string BonfireWarp64 {
             get {
-                return ResourceManager.GetString("BonfireWarp", resourceCulture);
+                return ResourceManager.GetString("BonfireWarp64", resourceCulture);
             }
         }
         
@@ -400,6 +421,20 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to b9 00 00 00 00          mov    ecx,0x0
+        ///8d 05 00 00 00 00       lea    eax,ds:0x0
+        ///50                      push   eax
+        ///b8 00 00 00 00          mov    eax,0x0
+        ///ff d0                   call   eax
+        ///c3                      ret.
+        /// </summary>
+        internal static string EventWarp32 {
+            get {
+                return ResourceManager.GetString("EventWarp32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 81 ec 18 01 00 00    sub    rsp,0x118
         ///48 b9 00 00 00 00 00    movabs rcx,0x0
         ///00 00 00
@@ -408,9 +443,9 @@ namespace SilkySouls2.Properties {
         ///48 81 c4 18 01 00 00    add    rsp,0x118
         ///c3                      ret.
         /// </summary>
-        internal static string EventWarp {
+        internal static string EventWarp64 {
             get {
-                return ResourceManager.GetString("EventWarp", resourceCulture);
+                return ResourceManager.GetString("EventWarp64", resourceCulture);
             }
         }
         
@@ -1160,17 +1195,6 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 4d 8b 80 18 1d 00 00    mov    r8,QWORD PTR [r8+0x1d18]
-        ///c6 43 0b 00             mov    BYTE PTR [rbx+0xb],0x0
-        ///e9 00 00 00 00          jmp    10 &lt;_main+0x10&gt;.
-        /// </summary>
-        internal static string TransparentFog {
-            get {
-                return ResourceManager.GetString("TransparentFog", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to 49 bc 00 00 00 00 00    movabs r12,0x0
         ///00 00 00
         ///49 be 00 00 00 00 00    movabs r14,0x0
@@ -1233,6 +1257,25 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 0f 5c c1                subps  xmm0,xmm1
+        ///0f 29 46 40             movaps XMMWORD PTR [esi+0x40],xmm0
+        ///50                      push   eax
+        ///a1 00 00 00 00          mov    eax,ds:0x0
+        ///8b 80 80 02 00 00       mov    eax,DWORD PTR [eax+0x280]
+        ///8b 40 0c                mov    eax,DWORD PTR [eax+0xc]
+        ///8b 80 68 01 00 00       mov    eax,DWORD PTR [eax+0x168]
+        ///8b 40 0c                mov    eax,DWORD PTR [eax+0xc]
+        ///8b 40 04                mov    eax,DWORD PTR [eax+0x4]
+        ///05 e0 00 00 00          add    eax,0xe0
+        ///39 f0  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string WarpCoordWrite32 {
+            get {
+                return ResourceManager.GetString("WarpCoordWrite32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 0f 5c c2                subps  xmm0,xmm2
         ///0f 29 47 50             movaps XMMWORD PTR [rdi+0x50],xmm0
         ///50                      push   rax
@@ -1246,9 +1289,9 @@ namespace SilkySouls2.Properties {
         ///48 05 50 01 00 00       add    rax,0x150
         ///48 [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string WarpCoordWrite {
+        internal static string WarpCoordWrite64 {
             get {
-                return ResourceManager.GetString("WarpCoordWrite", resourceCulture);
+                return ResourceManager.GetString("WarpCoordWrite64", resourceCulture);
             }
         }
         

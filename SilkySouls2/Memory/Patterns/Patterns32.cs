@@ -155,6 +155,14 @@
             5
         );
 
+        public static readonly Pattern BonfireWarp = new Pattern(
+            new byte[] { 0x8D, 0x55, 0xB0, 0x52, 0xE8, 0xD6, 0x52 },
+            "xxxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+
         
         
         // Hooks
@@ -193,6 +201,14 @@
             0,
             AddressingMode.Absolute
         );
+
+        public static readonly Pattern WarpCoordWrite = new Pattern(
+            new byte[] { 0x0F, 0x5C, 0xC1, 0x0F, 0x29, 0x46, 0x40, 0x80 },
+            "xxxxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
     }
     
 }

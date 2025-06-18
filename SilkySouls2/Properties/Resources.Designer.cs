@@ -327,6 +327,24 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to b9 00 00 00 00          mov    ecx,0x0
+        ///68 ef be ad de          push   0xdeadbeef
+        ///68 ef be ad de          push   0xdeadbeef
+        ///b8 00 00 00 00          mov    eax,0x0
+        ///ff d0                   call   eax
+        ///89 c1                   mov    ecx,eax
+        ///68 ef be ad de          push   0xdeadbeef
+        ///b8 00 00 00 00          mov    eax,0x0
+        ///ff d0                   call   eax
+        ///c3                      ret.
+        /// </summary>
+        internal static string DisableNavimesh32 {
+            get {
+                return ResourceManager.GetString("DisableNavimesh32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 b9 00 00 00 00 00    movabs rcx,0x0
         ///00 00 00
         ///48 ba 00 00 00 00 00    movabs rdx,0x0
@@ -346,9 +364,9 @@ namespace SilkySouls2.Properties {
         ///48 81 c4 08 01 00 00    add    rsp,0x108
         ///c3                [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string DisableNavimesh {
+        internal static string DisableNavimesh64 {
             get {
-                return ResourceManager.GetString("DisableNavimesh", resourceCulture);
+                return ResourceManager.GetString("DisableNavimesh64", resourceCulture);
             }
         }
         
@@ -388,6 +406,24 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 68 ef be ad de          push   0xdeadbeef
+        ///68 ef be ad de          push   0xdeadbeef
+        ///b8 00 00 00 00          mov    eax,0x0
+        ///ff d0                   call   eax
+        ///83 c4 08                add    esp,0x8
+        ///89 c1                   mov    ecx,eax
+        ///b8 00 00 00 00          mov    eax,0x0
+        ///ff d0                   call   eax
+        ///c6 40 4e 00             mov    BYTE PTR [eax+0x4e],0x0
+        ///c3                      ret.
+        /// </summary>
+        internal static string DisableWhiteDoorKeyGuide32 {
+            get {
+                return ResourceManager.GetString("DisableWhiteDoorKeyGuide32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 83 ec 28             sub    rsp,0x28
         ///48 b9 00 00 00 00 00    movabs rcx,0x0
         ///00 00 00
@@ -404,9 +440,9 @@ namespace SilkySouls2.Properties {
         ///48 83 c4 28             add    rsp,0x28
         ///c3                      ret.
         /// </summary>
-        internal static string DisableWhiteDoorKeyGuide {
+        internal static string DisableWhiteDoorKeyGuide64 {
             get {
-                return ResourceManager.GetString("DisableWhiteDoorKeyGuide", resourceCulture);
+                return ResourceManager.GetString("DisableWhiteDoorKeyGuide64", resourceCulture);
             }
         }
         
@@ -630,6 +666,24 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 81 79 28 80 7f 0a 00    cmp    DWORD PTR [ecx+0x28],0xa7f80
+        ///75 0b                   jne    14 &lt;original&gt;
+        ///85 c0                   test   eax,eax
+        ///75 07                   jne    14 &lt;original&gt;
+        ///80 fa 0f                cmp    dl,0xf
+        ///75 02                   jne    14 &lt;original&gt;
+        ///31 d2                   xor    edx,edx
+        ///0014 &lt;original&gt;:
+        ///88 94 08 a1 02 00 00    mov    BYTE PTR [eax+ecx*1+0x2a1],dl
+        ///e9 fc ff ff ff          jmp    1c &lt;original+0x8&gt;.
+        /// </summary>
+        internal static string IvoryKnights32 {
+            get {
+                return ResourceManager.GetString("IvoryKnights32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 81 79 4c 80 7f 0a 00    cmp    DWORD PTR [rcx+0x4c],0xa7f80
         ///75 0e                   jne    17 &lt;normal&gt;
         ///48 85 c0                test   rax,rax
@@ -642,9 +696,30 @@ namespace SilkySouls2.Properties {
         ///00
         ///e9 00 00 00 00          jmp    24 &lt;normal+0xd&gt;.
         /// </summary>
-        internal static string IvoryKnights {
+        internal static string IvoryKnights64 {
             get {
-                return ResourceManager.GetString("IvoryKnights", resourceCulture);
+                return ResourceManager.GetString("IvoryKnights64", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 81 7c 24 04 80 46 02    cmp    DWORD PTR [esp+0x4],0x20024680
+        ///20
+        ///0f 85 8d 00 00 00       jne    9b &lt;original_setevent&gt;
+        ///83 7c 24 08 01          cmp    DWORD PTR [esp+0x8],0x1
+        ///0f 85 82 00 00 00       jne    9b &lt;original_setevent&gt;
+        ///55                      push   ebp
+        ///89 e5                   mov    ebp,esp
+        ///83 ec 18                sub    esp,0x18
+        ///57                      push   edi
+        ///51                      push   ecx
+        ///52                      push   edx
+        ///53                      push   ebx
+        ///89 cf              [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string IvorySkip32 {
+            get {
+                return ResourceManager.GetString("IvorySkip32", resourceCulture);
             }
         }
         
@@ -663,9 +738,9 @@ namespace SilkySouls2.Properties {
         ///51                      push   rcx
         ///52                 [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string IvorySkip {
+        internal static string IvorySkip64 {
             get {
-                return ResourceManager.GetString("IvorySkip", resourceCulture);
+                return ResourceManager.GetString("IvorySkip64", resourceCulture);
             }
         }
         
@@ -1079,6 +1154,20 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to b9 00 00 00 00          mov    ecx,0x0
+        ///6a 00                   push   0x0
+        ///68 ef be ad de          push   0xdeadbeef
+        ///b8 00 00 00 00          mov    eax,0x0
+        ///ff d0                   call   eax
+        ///c3                      ret.
+        /// </summary>
+        internal static string SetEventOff32 {
+            get {
+                return ResourceManager.GetString("SetEventOff32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 b9 00 00 00 00 00    movabs rcx,0x0
         ///00 00 00
         ///48 ba 00 00 00 00 00    movabs rdx,0x0
@@ -1092,9 +1181,23 @@ namespace SilkySouls2.Properties {
         ///c3                      ret
         ///.
         /// </summary>
-        internal static string SetEventOff {
+        internal static string SetEventOff64 {
             get {
-                return ResourceManager.GetString("SetEventOff", resourceCulture);
+                return ResourceManager.GetString("SetEventOff64", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to b9 00 00 00 00          mov    ecx,0x0
+        ///6a 01                   push   0x1
+        ///68 ef be ad de          push   0xdeadbeef
+        ///b8 00 00 00 00          mov    eax,0x0
+        ///ff d0                   call   eax
+        ///c3                      ret.
+        /// </summary>
+        internal static string SetEventOn32 {
+            get {
+                return ResourceManager.GetString("SetEventOn32", resourceCulture);
             }
         }
         
@@ -1111,9 +1214,30 @@ namespace SilkySouls2.Properties {
         ///48 83 c4 28             add    rsp,0x28
         ///c3                      ret.
         /// </summary>
-        internal static string SetEventOn {
+        internal static string SetEventOn64 {
             get {
-                return ResourceManager.GetString("SetEventOn", resourceCulture);
+                return ResourceManager.GetString("SetEventOn64", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to bb 00 00 00 00          mov    ebx,0x0
+        ///bf 00 00 00 00          mov    edi,0x0
+        ///68 ef be ad de          push   0xdeadbeef
+        ///68 ef be ad de          push   0xdeadbeef
+        ///ff d3                   call   ebx
+        ///83 c4 08                add    esp,0x8
+        ///89 c1                   mov    ecx,eax
+        ///51                      push   ecx
+        ///81 c1 84 00 00 00       add    ecx,0x84
+        ///ff d7                   call   edi
+        ///89 c1                   mov    ecx,eax
+        ///83 c1 24                add    ecx,0x24
+        ///8b 09                   mov    ecx,D [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string SetObjState32 {
+            get {
+                return ResourceManager.GetString("SetObjState32", resourceCulture);
             }
         }
         
@@ -1135,9 +1259,9 @@ namespace SilkySouls2.Properties {
         ///48 8b 01                mov    rax,QWORD PTR [rcx]
         ///48  [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string SetObjState {
+        internal static string SetObjState64 {
             get {
-                return ResourceManager.GetString("SetObjState", resourceCulture);
+                return ResourceManager.GetString("SetObjState64", resourceCulture);
             }
         }
         

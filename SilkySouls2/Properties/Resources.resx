@@ -314,7 +314,7 @@ c3                      ret</value>
 58                      pop    rax
 e9 00 00 00 00          jmp    7c &lt;exit+0x6&gt;</value>
   </data>
-  <data name="SetEventOn" xml:space="preserve">
+  <data name="SetEventOn64" xml:space="preserve">
     <value>48 b9 00 00 00 00 00    movabs rcx,0x0
 00 00 00
 48 ba 00 00 00 00 00    movabs rdx,0x0
@@ -327,7 +327,7 @@ ff d0                   call   rax
 48 83 c4 28             add    rsp,0x28
 c3                      ret</value>
   </data>
-  <data name="SetEventOff" xml:space="preserve">
+  <data name="SetEventOff64" xml:space="preserve">
     <value>48 b9 00 00 00 00 00    movabs rcx,0x0
 00 00 00
 48 ba 00 00 00 00 00    movabs rdx,0x0
@@ -2372,7 +2372,7 @@ eb 04                   jmp    b7 &lt;exit&gt;
 59                      pop    rcx
 e9 00 00 00 00          jmp    c1 &lt;exit+0xa&gt;</value>
   </data>
-  <data name="IvorySkip" xml:space="preserve">
+  <data name="IvorySkip64" xml:space="preserve">
     <value>81 fa 78 46 02 20       cmp    edx,0x20024678
 75 12                   jne    1a &lt;check_next&gt;
 41 83 f8 01             cmp    r8d,0x1
@@ -2469,7 +2469,7 @@ e9 00 00 00 00          jmp    3e &lt;entity_disabled&gt;
 58                      pop    rax
 e9 00 00 00 00          jmp    45 &lt;entity_disabled+0x7&gt;</value>
   </data>
-  <data name="IvoryKnights" xml:space="preserve">
+  <data name="IvoryKnights64" xml:space="preserve">
     <value>81 79 4c 80 7f 0a 00    cmp    DWORD PTR [rcx+0x4c],0xa7f80
 75 0e                   jne    17 &lt;normal&gt;
 48 85 c0                test   rax,rax
@@ -2524,7 +2524,7 @@ ff d0                   call   rax
 48 81 c4 08 02 00 00    add    rsp,0x208
 c3                      ret</value>
   </data>
-  <data name="SetObjState" xml:space="preserve">
+  <data name="SetObjState64" xml:space="preserve">
     <value>48 83 ec 28             sub    rsp,0x28
 48 b9 00 00 00 00 00    movabs rcx,0x0
 00 00 00
@@ -2546,7 +2546,7 @@ ff 50 30                call   QWORD PTR [rax+0x30]
 48 83 c4 28             add    rsp,0x28
 c3                      ret</value>
   </data>
-  <data name="DisableNavimesh" xml:space="preserve">
+  <data name="DisableNavimesh64" xml:space="preserve">
     <value>48 b9 00 00 00 00 00    movabs rcx,0x0
 00 00 00
 48 ba 00 00 00 00 00    movabs rdx,0x0
@@ -2566,7 +2566,7 @@ ff d0                   call   rax
 48 81 c4 08 01 00 00    add    rsp,0x108
 c3                      ret</value>
   </data>
-  <data name="DisableWhiteDoorKeyGuide" xml:space="preserve">
+  <data name="DisableWhiteDoorKeyGuide64" xml:space="preserve">
     <value>48 83 ec 28             sub    rsp,0x28
 48 b9 00 00 00 00 00    movabs rcx,0x0
 00 00 00
@@ -2973,6 +2973,139 @@ ff 04 24                inc    DWORD PTR [esp]
 39 f8                   cmp    eax,edi
 7c e4                   jl     1a &lt;loop_start&gt;
 83 c4 04                add    esp,0x4
+c3                      ret</value>
+  </data>
+  <data name="SetEventOn32" xml:space="preserve">
+    <value>b9 00 00 00 00          mov    ecx,0x0
+6a 01                   push   0x1
+68 ef be ad de          push   0xdeadbeef
+b8 00 00 00 00          mov    eax,0x0
+ff d0                   call   eax
+c3                      ret</value>
+  </data>
+  <data name="SetEventOff32" xml:space="preserve">
+    <value>b9 00 00 00 00          mov    ecx,0x0
+6a 00                   push   0x0
+68 ef be ad de          push   0xdeadbeef
+b8 00 00 00 00          mov    eax,0x0
+ff d0                   call   eax
+c3                      ret</value>
+  </data>
+  <data name="IvorySkip32" xml:space="preserve">
+    <value>81 7c 24 04 80 46 02    cmp    DWORD PTR [esp+0x4],0x20024680
+20
+0f 85 8d 00 00 00       jne    9b &lt;original_setevent&gt;
+83 7c 24 08 01          cmp    DWORD PTR [esp+0x8],0x1
+0f 85 82 00 00 00       jne    9b &lt;original_setevent&gt;
+55                      push   ebp
+89 e5                   mov    ebp,esp
+83 ec 18                sub    esp,0x18
+57                      push   edi
+51                      push   ecx
+52                      push   edx
+53                      push   ebx
+89 cf                   mov    edi,ecx
+bb 00 00 00 00          mov    ebx,0x0
+c7 45 fc 00 00 25 32    mov    DWORD PTR [ebp-0x4],0x32250000
+c7 45 f8 03 00 00 00    mov    DWORD PTR [ebp-0x8],0x3
+c7 45 f4 de 9b 00 03    mov    DWORD PTR [ebp-0xc],0x3009bde
+c7 45 f0 83 46 02 20    mov    DWORD PTR [ebp-0x10],0x20024683
+c7 45 ec 00 00 00 00    mov    DWORD PTR [ebp-0x14],0x0
+c7 45 e8 00 00 00 00    mov    DWORD PTR [ebp-0x18],0x0
+0054 &lt;loop_start&gt;:
+ff 75 f4                push   DWORD PTR [ebp-0xc]
+ff 75 fc                push   DWORD PTR [ebp-0x4]
+ff 55 ec                call   DWORD PTR [ebp-0x14]
+83 c4 08                add    esp,0x8
+89 c1                   mov    ecx,eax
+51                      push   ecx
+81 c1 84 00 00 00       add    ecx,0x84
+ff 55 e8                call   DWORD PTR [ebp-0x18]
+89 c1                   mov    ecx,eax
+83 c1 24                add    ecx,0x24
+8b 09                   mov    ecx,DWORD PTR [ecx]
+8b 11                   mov    edx,DWORD PTR [ecx]
+89 d0                   mov    eax,edx
+83 c0 18                add    eax,0x18
+8b 00                   mov    eax,DWORD PTR [eax]
+6a 46                   push   0x46
+ff d0                   call   eax
+6a 01                   push   0x1
+ff 75 f0                push   DWORD PTR [ebp-0x10]
+89 f9                   mov    ecx,edi
+ff d3                   call   ebx
+ff 45 f4                inc    DWORD PTR [ebp-0xc]
+ff 45 f0                inc    DWORD PTR [ebp-0x10]
+ff 4d f8                dec    DWORD PTR [ebp-0x8]
+75 c0                   jne    54 &lt;loop_start&gt;
+5b                      pop    ebx
+5a                      pop    edx
+59                      pop    ecx
+5f                      pop    edi
+89 ec                   mov    esp,ebp
+5d                      pop    ebp
+009b &lt;original_setevent&gt;:
+55                      push   ebp
+89 e5                   mov    ebp,esp
+83 ec 08                sub    esp,0x8
+e9 fc ff ff ff          jmp    a2 &lt;original_setevent+0x7&gt;</value>
+  </data>
+  <data name="IvoryKnights32" xml:space="preserve">
+    <value>81 79 28 80 7f 0a 00    cmp    DWORD PTR [ecx+0x28],0xa7f80
+75 0b                   jne    14 &lt;original&gt;
+85 c0                   test   eax,eax
+75 07                   jne    14 &lt;original&gt;
+80 fa 0f                cmp    dl,0xf
+75 02                   jne    14 &lt;original&gt;
+31 d2                   xor    edx,edx
+0014 &lt;original&gt;:
+88 94 08 a1 02 00 00    mov    BYTE PTR [eax+ecx*1+0x2a1],dl
+e9 fc ff ff ff          jmp    1c &lt;original+0x8&gt;</value>
+  </data>
+  <data name="SetObjState32" xml:space="preserve">
+    <value>bb 00 00 00 00          mov    ebx,0x0
+bf 00 00 00 00          mov    edi,0x0
+68 ef be ad de          push   0xdeadbeef
+68 ef be ad de          push   0xdeadbeef
+ff d3                   call   ebx
+83 c4 08                add    esp,0x8
+89 c1                   mov    ecx,eax
+51                      push   ecx
+81 c1 84 00 00 00       add    ecx,0x84
+ff d7                   call   edi
+89 c1                   mov    ecx,eax
+83 c1 24                add    ecx,0x24
+8b 09                   mov    ecx,DWORD PTR [ecx]
+8b 11                   mov    edx,DWORD PTR [ecx]
+89 d0                   mov    eax,edx
+83 c0 18                add    eax,0x18
+8b 00                   mov    eax,DWORD PTR [eax]
+68 ef be ad de          push   0xdeadbeef
+ff d0                   call   eax
+c3                      ret</value>
+  </data>
+  <data name="DisableNavimesh32" xml:space="preserve">
+    <value>b9 00 00 00 00          mov    ecx,0x0
+68 ef be ad de          push   0xdeadbeef
+68 ef be ad de          push   0xdeadbeef
+b8 00 00 00 00          mov    eax,0x0
+ff d0                   call   eax
+89 c1                   mov    ecx,eax
+68 ef be ad de          push   0xdeadbeef
+b8 00 00 00 00          mov    eax,0x0
+ff d0                   call   eax
+c3                      ret</value>
+  </data>
+  <data name="DisableWhiteDoorKeyGuide32" xml:space="preserve">
+    <value>68 ef be ad de          push   0xdeadbeef
+68 ef be ad de          push   0xdeadbeef
+b8 00 00 00 00          mov    eax,0x0
+ff d0                   call   eax
+83 c4 08                add    esp,0x8
+89 c1                   mov    ecx,eax
+b8 00 00 00 00          mov    eax,0x0
+ff d0                   call   eax
+c6 40 4e 00             mov    BYTE PTR [eax+0x4e],0x0
 c3                      ret</value>
   </data>
 </root>

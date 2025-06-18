@@ -9,8 +9,15 @@
             AddressingMode.Direct32,
             1
         );
-        
-        
+
+        public static readonly Pattern MapId = new Pattern(
+            new byte[] { 0x8B, 0x15, 0x00, 0x00, 0x00, 0x00, 0x8B, 0xF2 },
+            "xx????xx",
+            0,
+            AddressingMode.Direct32,
+            2
+        );
+
         
         
         //Patches
@@ -169,8 +176,47 @@
             AddressingMode.Absolute
         );
 
+        public static readonly Pattern SetEvent = new Pattern(
+            new byte[] { 0x39, 0x4A, 0x08, 0x74, 0x12 },
+            "xxxxx",
+            -0x40,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern GetMapEntityWithAreaIdAndObjId = new Pattern(
+            new byte[] { 0x39, 0x42, 0x1C, 0x7E },
+            "xxxx",
+            0x1B,
+            AddressingMode.Relative,
+            1,
+            5
+        );
+
+        public static readonly Pattern GetStateActComp = new Pattern(
+            new byte[] { 0x75, 0x09, 0x8B, 0x01, 0x8B, 0x40, 0x20 },
+            "xxxxxxx",
+            -0xB,
+            AddressingMode.Absolute
+        );
+
+
+        public static readonly Pattern DisableNavimesh = new Pattern(
+            new byte[] { 0x85, 0xC0, 0x0F, 0x84, 0xB5, 0x60 },
+            "xxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern GetWhiteDoorComponent = new Pattern(
+            new byte[] { 0x85, 0xF6, 0x0F, 0x95, 0xC1, 0x88 },
+            "xxxxxx",
+            -0xD,
+            AddressingMode.Relative,
+            1,
+            5
+        );
         
-        
+            
         // Hooks
 
         public static readonly Pattern LockedTarget = new Pattern(
@@ -211,6 +257,13 @@
         public static readonly Pattern WarpCoordWrite = new Pattern(
             new byte[] { 0x0F, 0x5C, 0xC1, 0x0F, 0x29, 0x46, 0x40, 0x80 },
             "xxxxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern SetSharedFlag = new Pattern(
+            new byte[] { 0x88, 0x94, 0x08, 0xA1 },
+            "xxxx",
             0,
             AddressingMode.Absolute
         );

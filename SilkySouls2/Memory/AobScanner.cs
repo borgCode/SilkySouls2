@@ -222,6 +222,7 @@ namespace SilkySouls2.Memory
                 
                 
                 Offsets.GameManagerImp.Base = FindAddressByPattern(Patterns32.GameManagerImp);
+                Offsets.MapId = FindAddressByPattern(Patterns32.MapId);
                 
                 
                 
@@ -258,6 +259,8 @@ namespace SilkySouls2.Memory
                     addr => Offsets.Hooks.HpWrite = addr.ToInt32(), saved);
                 TryPatternWithFallback("WarpCoordWrite", Patterns32.WarpCoordWrite,
                     addr => Offsets.Hooks.WarpCoordWrite = addr.ToInt32(), saved);
+                TryPatternWithFallback("SetSharedFlag", Patterns32.SetSharedFlag,
+                    addr => Offsets.Hooks.SetSharedFlag = addr.ToInt32(), saved);
                 
                 
                 var setCurrectActLocs = FindAddressesByPattern(Patterns32.SetCurrentAct, 2);
@@ -285,11 +288,22 @@ namespace SilkySouls2.Memory
                 Offsets.Funcs.RestoreSpellcasts = FindAddressByPattern(Patterns32.RestoreSpellcasts).ToInt32();
                 Offsets.Funcs.CreateSoundEvent = FindAddressByPattern(Patterns32.CreateSoundEvent).ToInt32();
                 Offsets.Funcs.UnlockBonfire = FindAddressByPattern(Patterns32.UnlockBonfire).ToInt32();
+                Offsets.Funcs.SetEvent = FindAddressByPattern(Patterns32.SetEvent).ToInt32();
+                Offsets.Funcs.GetMapEntityWithAreaIdAndObjId = FindAddressByPattern(Patterns32.GetMapEntityWithAreaIdAndObjId).ToInt32();
+                Offsets.Funcs.GetMapObjStateActComponent = FindAddressByPattern(Patterns32.GetStateActComp).ToInt32();
+                Offsets.Funcs.GetWhiteDoorComponent = FindAddressByPattern(Patterns32.GetWhiteDoorComponent).ToInt32();
+                
                 
                 FindMultipleCallsInFunction(Patterns32.BonfireWarp, new Dictionary<Action<long>, int>
                 {
                     { addr => Offsets.Funcs.WarpPrep = addr, 0x4 },
                     { addr => Offsets.Funcs.BonfireWarp = addr, 0x1C },
+                });
+                
+                FindMultipleCallsInFunction(Patterns32.DisableNavimesh, new Dictionary<Action<long>, int>
+                {
+                    { addr => Offsets.Funcs.GetNavimeshLoc = addr, -0xE },
+                    { addr => Offsets.Funcs.DisableNaviMesh = addr, 0xB },
                 });
                 
                 Offsets.Patches.NegativeLevel = (IntPtr)Offsets.Funcs.LevelUp + 0x31;

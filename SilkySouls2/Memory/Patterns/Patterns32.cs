@@ -162,6 +162,12 @@
             AddressingMode.Absolute
         );
 
+        public static readonly Pattern UnlockBonfire = new Pattern(
+            new byte[] { 0x74, 0x60, 0x3D, 0xFF },
+            "xxxx",
+            -0xF,
+            AddressingMode.Absolute
+        );
 
         
         

@@ -1195,6 +1195,26 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to bb 00 00 00 00          mov    ebx,0x0
+        ///be 00 00 00 00          mov    esi,0x0
+        ///8b 7b 14                mov    edi,DWORD PTR [ebx+0x14]
+        ///85 ff                   test   edi,edi
+        ///0f 84 fc ff ff ff       je     11 &lt;_main+0x11&gt;
+        ///8b 6b 10                mov    ebp,DWORD PTR [ebx+0x10]
+        ///6a 00                   push   0x0
+        ///001a &lt;loop_start&gt;:
+        ///8b 04 24                mov    eax,DWORD PTR [esp]
+        ///c1 e0 04                shl    eax,0x4
+        ///01 e8                   add    eax,ebp
+        ///0f b7 00                movzx  eax,WORD PT [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string UnlockAllBonfires32 {
+            get {
+                return ResourceManager.GetString("UnlockAllBonfires32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 49 bc 00 00 00 00 00    movabs r12,0x0
         ///00 00 00
         ///49 be 00 00 00 00 00    movabs r14,0x0
@@ -1210,9 +1230,9 @@ namespace SilkySouls2.Properties {
         ///48 6b c0 18             imul   rax,rax,0x18
         ///48 01 d8            [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string UnlockAllBonfires {
+        internal static string UnlockAllBonfires64 {
             get {
-                return ResourceManager.GetString("UnlockAllBonfires", resourceCulture);
+                return ResourceManager.GetString("UnlockAllBonfires64", resourceCulture);
             }
         }
         

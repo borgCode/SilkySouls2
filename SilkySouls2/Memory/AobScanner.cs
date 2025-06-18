@@ -284,6 +284,7 @@ namespace SilkySouls2.Memory
                 Offsets.Funcs.LevelLookup = FindAddressByPattern(Patterns32.LevelLookup).ToInt32();
                 Offsets.Funcs.RestoreSpellcasts = FindAddressByPattern(Patterns32.RestoreSpellcasts).ToInt32();
                 Offsets.Funcs.CreateSoundEvent = FindAddressByPattern(Patterns32.CreateSoundEvent).ToInt32();
+                Offsets.Funcs.UnlockBonfire = FindAddressByPattern(Patterns32.UnlockBonfire).ToInt32();
                 
                 FindMultipleCallsInFunction(Patterns32.BonfireWarp, new Dictionary<Action<long>, int>
                 {

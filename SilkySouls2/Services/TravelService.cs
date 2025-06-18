@@ -194,16 +194,28 @@ namespace SilkySouls2.Services
                 GameManagerImp.Offsets.EventManager,
                 GameManagerImp.EventManagerOffsets.EventBonfireManager
             }, true);
-            
-            var bytes = AsmLoader.GetAsmBytes("UnlockAllBonfires");
-            AsmHelper.WriteAbsoluteAddresses64(bytes, new []
+
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
             {
-               
-                (bonfireManager.ToInt64(), 2),
-                (func,   0xA + 2),
-            });
+                var bytes = AsmLoader.GetAsmBytes("UnlockAllBonfires64");
+                AsmHelper.WriteAbsoluteAddresses64(bytes, new []
+                {
+                    (bonfireManager.ToInt64(), 2),
+                    (func,   0xA + 2),
+                });
+                _memoryIo.AllocateAndExecute(bytes);
+            }
+            else
+            {
+                var bytes = AsmLoader.GetAsmBytes("UnlockAllBonfires32");
+                AsmHelper.WriteAbsoluteAddresses32(bytes, new []
+                {
+                    (bonfireManager.ToInt64(), 1),
+                    (func,   0x5 + 1)
+                });
+                _memoryIo.AllocateAndExecute(bytes);
+            }
             
-            _memoryIo.AllocateAndExecute(bytes);
         }
     }
 }

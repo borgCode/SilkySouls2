@@ -929,6 +929,25 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 52                      push   edx
+        ///8b 15 00 00 00 00       mov    edx,DWORD PTR ds:0x0
+        ///8b 52 74                mov    edx,DWORD PTR [edx+0x74]
+        ///39 c2                   cmp    edx,eax
+        ///0f 85 1a 01 00 00       jne    12c &lt;normal&gt;
+        ///83 ec 20                sub    esp,0x20
+        ///0f 11 0c 24             movups XMMWORD PTR [esp],xmm1
+        ///0f 11 54 24 10          movups XMMWORD PTR [esp+0x10],xmm2
+        ///0f 10 40 70             movups xmm0,XMMWORD PTR [eax+0x70]
+        ///53                      push   ebx
+        ///57                      push  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string NoClip_UpdateCoords32 {
+            get {
+                return ResourceManager.GetString("NoClip_UpdateCoords32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 52                      push   rdx
         ///48 ba 00 00 00 00 00    movabs rdx,0x0
         ///00 00 00
@@ -944,9 +963,9 @@ namespace SilkySouls2.Properties {
         ///00 00 00
         ///48 8b 12                mov    rdx,QWORD PTR  [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string NoClip_UpdateCoords {
+        internal static string NoClip_UpdateCoords64 {
             get {
-                return ResourceManager.GetString("NoClip_UpdateCoords", resourceCulture);
+                return ResourceManager.GetString("NoClip_UpdateCoords64", resourceCulture);
             }
         }
         

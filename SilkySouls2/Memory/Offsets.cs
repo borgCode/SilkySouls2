@@ -35,7 +35,7 @@ namespace SilkySouls2.Memory
                         SaveLoadSystemPtr = 0x68;
                         PlayerCtrl = 0x74;
                         PxWorldPtr = 0x280;
-                        // ViewMatrixPtr = 0x1154;
+                        ViewMatrixPtr = 0x650;
                         // DLBackAllocator = 0x22DC;
                         Quitout = 0xDF1;
                         LoadingFlag = 0xDFC;

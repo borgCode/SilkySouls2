@@ -189,11 +189,11 @@ namespace SilkySouls2.Services
             }
             else
             {
-                // _hookManager.UninstallHook(coordsCode.ToInt64());
-                // _memoryIo.WriteByte(GetGravityPtr(), 0);
+                _hookManager.UninstallHook(coordsCode.ToInt64());
+                _memoryIo.WriteByte(GetGravityPtr(), 0);
                 _hookManager.UninstallHook(triggersAndSpaceCode.ToInt64());
                 _hookManager.UninstallHook(ctrlCode.ToInt64());
-                // _hookManager.UninstallHook(raycastCode.ToInt64());
+                _hookManager.UninstallHook(raycastCode.ToInt64());
             }
             
         }
@@ -226,7 +226,7 @@ namespace SilkySouls2.Services
                 
                 _memoryIo.WriteBytes(ctrlCode, codeBytes);
                 
-                codeBytes = AsmLoader.GetAsmBytes("NoClip_UpdateCoords");
+                codeBytes = AsmLoader.GetAsmBytes("NoClip_UpdateCoords64");
                 AsmHelper.WriteAbsoluteAddresses64(codeBytes, new []
                 {
                     (GameManagerImp.Base.ToInt64(), 0x1 + 2),
@@ -334,10 +334,33 @@ namespace SilkySouls2.Services
             _memoryIo.WriteBytes(ctrlCode, codeBytes);
             
             
+            codeBytes = AsmLoader.GetAsmBytes("NoClip_UpdateCoords32");
+            
+            AsmHelper.WriteAbsoluteAddresses32(codeBytes, new []
+            {
+                (GameManagerImp.Base.ToInt64(), 0x1 + 2),
+                (GameManagerImp.Base.ToInt64(), 0x4E + 2),
+                (zDirectionLoc.ToInt64(), 0x89 + 2),
+                (zDirectionLoc.ToInt64(), 0xB0 + 2),
+                (GameManagerImp.Base.ToInt64(), 0xBB + 2),
+            });
+            
+            AsmHelper.WriteJumpOffsets(codeBytes, new []
+            {
+                (coordsHook, 20, coordsCode + 0x127, 0x127 + 1),
+                (coordsHook, 5, coordsCode + 0x132, 0x132 + 1)
+            });
+            
+            _memoryIo.WriteBytes(coordsCode, codeBytes);
+            
+            _memoryIo.WriteByte(GetGravityPtr(), 1);
+            
             _hookManager.InstallHook(triggersAndSpaceCode.ToInt64(), triggersAndSpaceHook, new byte[]
                 { 0x8B, 0x56, 0x08, 0x89, 0x86, 0x04, 0x01, 0x00, 0x00 });
             _hookManager.InstallHook(ctrlCode.ToInt64(), ctrlHook, new byte[]
                 { 0x81, 0x8E, 0x28, 0x02, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00 });
+            _hookManager.InstallHook(coordsCode.ToInt64(), coordsHook, new byte[]
+                { 0xF3, 0x0F, 0x7E, 0x45, 0xD0 });
         }
 
         public void SetNoClipSpeed(byte[] xBytes, byte[] yBytes)

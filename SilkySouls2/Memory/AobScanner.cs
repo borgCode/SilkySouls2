@@ -265,6 +265,8 @@ namespace SilkySouls2.Memory
                     addr => Offsets.Hooks.TriggersAndSpace = addr.ToInt32(), saved);
                 TryPatternWithFallback("Ctrl", Patterns32.Ctrl,
                     addr => Offsets.Hooks.Ctrl = addr.ToInt32(), saved);
+                TryPatternWithFallback("NoClipUpdateCoords", Patterns32.NoClipUpdateCoords,
+                    addr => Offsets.Hooks.NoClipUpdateCoords = addr.ToInt32(), saved);
                 
                 
                 var setCurrectActLocs = FindAddressesByPattern(Patterns32.SetCurrentAct, 2);

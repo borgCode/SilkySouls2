@@ -282,6 +282,12 @@
             AddressingMode.Absolute
         );
 
+        public static readonly Pattern NoClipUpdateCoords = new Pattern(
+            new byte[] { 0xF3, 0x0F, 0x7E, 0x45, 0xD0, 0x66, 0x0F, 0xD6, 0x40, 0x70 },
+            "xxxxxxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
 
 
     }

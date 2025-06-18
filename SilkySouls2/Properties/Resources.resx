@@ -480,7 +480,7 @@ e9 00 00 00 00          jmp    5b &lt;exit+0x6&gt;</value>
     <value>c6 05 00 00 00 00 01    mov    BYTE PTR [rip+0x0],0x1        # 7 &lt;_main+0x7&gt;
 e9 00 00 00 00          jmp    c &lt;_main+0xc&gt;</value>
   </data>
-  <data name="NoClip_UpdateCoords" xml:space="preserve">
+  <data name="NoClip_UpdateCoords64" xml:space="preserve">
     <value>52                      push   rdx
 48 ba 00 00 00 00 00    movabs rdx,0x0
 00 00 00
@@ -3140,5 +3140,91 @@ e9 fc ff ff ff          jmp    4e &lt;exit+0x2&gt;</value>
   <data name="NoClip_CtrlCheck32" xml:space="preserve">
     <value>c6 05 00 00 00 00 01    mov    BYTE PTR ds:0x0,0x1
 e9 fc ff ff ff          jmp    8 &lt;_main+0x8&gt;</value>
+  </data>
+  <data name="NoClip_UpdateCoords32" xml:space="preserve">
+    <value>52                      push   edx
+8b 15 00 00 00 00       mov    edx,DWORD PTR ds:0x0
+8b 52 74                mov    edx,DWORD PTR [edx+0x74]
+39 c2                   cmp    edx,eax
+0f 85 1a 01 00 00       jne    12c &lt;normal&gt;
+83 ec 20                sub    esp,0x20
+0f 11 0c 24             movups XMMWORD PTR [esp],xmm1
+0f 11 54 24 10          movups XMMWORD PTR [esp+0x10],xmm2
+0f 10 40 70             movups xmm0,XMMWORD PTR [eax+0x70]
+53                      push   ebx
+57                      push   edi
+8b 92 ac 00 00 00       mov    edx,DWORD PTR [edx+0xac]
+8b 52 0c                mov    edx,DWORD PTR [edx+0xc]
+8b 52 10                mov    edx,DWORD PTR [edx+0x10]
+89 d3                   mov    ebx,edx
+f3 0f 10 8a 38 01 00    movss  xmm1,DWORD PTR [edx+0x138]
+00
+0f c6 c9 00             shufps xmm1,xmm1,0x0
+ba cd cc 4c 3e          mov    edx,0x3e4ccccd
+66 0f 6e d2             movd   xmm2,edx
+0f c6 d2 00             shufps xmm2,xmm2,0x0
+0f 59 ca                mulps  xmm1,xmm2
+8b 15 00 00 00 00       mov    edx,DWORD PTR ds:0x0
+8b 92 50 06 00 00       mov    edx,DWORD PTR [edx+0x650]
+89 d7                   mov    edi,edx
+0f 59 4a 20             mulps  xmm1,XMMWORD PTR [edx+0x20]
+0f 58 c1                addps  xmm0,xmm1
+89 da                   mov    edx,ebx
+f3 0f 10 8a 34 01 00    movss  xmm1,DWORD PTR [edx+0x134]
+00
+0f c6 c9 00             shufps xmm1,xmm1,0x0
+ba 9a 99 19 3e          mov    edx,0x3e19999a
+66 0f 6e d2             movd   xmm2,edx
+0f c6 d2 00             shufps xmm2,xmm2,0x0
+0f 59 ca                mulps  xmm1,xmm2
+89 fa                   mov    edx,edi
+0f 59 0a                mulps  xmm1,XMMWORD PTR [edx]
+0f 58 c1                addps  xmm0,xmm1
+8a 15 00 00 00 00       mov    dl,BYTE PTR ds:0x0
+80 fa 01                cmp    dl,0x1
+75 07                   jne    9b &lt;check_up&gt;
+ba cd cc 4c be          mov    edx,0xbe4ccccd
+eb 0a                   jmp    a5 &lt;add_z&gt;
+009b &lt;check_up&gt;:
+80 fa 02                cmp    dl,0x2
+75 17                   jne    b7 &lt;coord_update&gt;
+ba cd cc 4c 3e          mov    edx,0x3e4ccccd
+00a5 &lt;add_z&gt;:
+66 0f 6e ca             movd   xmm1,edx
+0f c6 c9 e1             shufps xmm1,xmm1,0xe1
+0f 58 c1                addps  xmm0,xmm1
+c6 05 00 00 00 00 00    mov    BYTE PTR ds:0x0,0x0
+00b7 &lt;coord_update&gt;:
+0f 11 40 70             movups XMMWORD PTR [eax+0x70],xmm0
+8b 15 00 00 00 00       mov    edx,DWORD PTR ds:0x0
+8b 92 80 02 00 00       mov    edx,DWORD PTR [edx+0x280]
+8b 52 0c                mov    edx,DWORD PTR [edx+0xc]
+8b 92 68 01 00 00       mov    edx,DWORD PTR [edx+0x168]
+8b 52 0c                mov    edx,DWORD PTR [edx+0xc]
+8b 52 04                mov    edx,DWORD PTR [edx+0x4]
+81 c2 e0 00 00 00       add    edx,0xe0
+f3 0f 10 50 70          movss  xmm2,DWORD PTR [eax+0x70]
+f3 0f 11 52 40          movss  DWORD PTR [edx+0x40],xmm2
+f3 0f 11 52 50          movss  DWORD PTR [edx+0x50],xmm2
+f3 0f 11 52 60          movss  DWORD PTR [edx+0x60],xmm2
+f3 0f 10 50 74          movss  xmm2,DWORD PTR [eax+0x74]
+f3 0f 11 52 44          movss  DWORD PTR [edx+0x44],xmm2
+f3 0f 11 52 54          movss  DWORD PTR [edx+0x54],xmm2
+f3 0f 11 52 64          movss  DWORD PTR [edx+0x64],xmm2
+f3 0f 10 50 78          movss  xmm2,DWORD PTR [eax+0x78]
+f3 0f 11 52 48          movss  DWORD PTR [edx+0x48],xmm2
+f3 0f 11 52 58          movss  DWORD PTR [edx+0x58],xmm2
+f3 0f 11 52 68          movss  DWORD PTR [edx+0x68],xmm2
+5f                      pop    edi
+5b                      pop    ebx
+0f 10 54 24 10          movups xmm2,XMMWORD PTR [esp+0x10]
+0f 10 0c 24             movups xmm1,XMMWORD PTR [esp]
+83 c4 20                add    esp,0x20
+5a                      pop    edx
+e9 fc ff ff ff          jmp    128 &lt;coord_update+0x71&gt;
+ &lt;normal&gt;:
+5a                      pop    edx
+f3 0f 7e 45 d0          movq   xmm0,QWORD PTR [ebp-0x30]
+e9 fc ff ff ff          jmp    133 &lt;normal+0x7&gt;</value>
   </data>
 </root>

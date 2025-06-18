@@ -36,7 +36,7 @@ namespace SilkySouls2.Services
             if (location.EventObjId == 0)
             {
                 var warpPrep = Funcs.WarpPrep;
-                var emptySpace = CodeCaveOffsets.Base + (int)CodeCaveOffsets.BonfireWarp.EmptySpace;
+                var emptySpace = CodeCaveOffsets.Base + (int)CodeCaveOffsets.BonfireWarp.Output;
                 var bonfireIdLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.BonfireWarp.BonfireId;
                 codeLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.BonfireWarp.WarpCode;
 

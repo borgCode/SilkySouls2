@@ -242,34 +242,30 @@ namespace SilkySouls2.Services
                     (raycastCode.ToInt64() + 0x8B, rayInput.ToInt64(), 7, 0x8B + 3),
                     (raycastCode.ToInt64() + 0xC9, rayOutput.ToInt64(), 7, 0xC9 + 3),
                     (raycastCode.ToInt64() + 0xE0, raycastFunc, 5, 0xE0 + 1),
-                    (raycastCode.ToInt64() + 0xEC, rayOutput.ToInt64() + 0x10, 7, 0xEC + 2),
-                    (raycastCode.ToInt64() + 0xF9, rayInput.ToInt64(), 7, 0xF9 + 3),
-                    (raycastCode.ToInt64() + 0x124, rayOutput.ToInt64(), 7, 0x124 + 3),
-                    (raycastCode.ToInt64() + 0x142, raycastFunc, 5, 0x142 + 1),
-                    (raycastCode.ToInt64() + 0x14E, rayOutput.ToInt64() + 0x10, 7, 0x14E + 2),
-                    (raycastCode.ToInt64() + 0x15B, rayInput.ToInt64(), 7, 0x15B + 3),
-                    (raycastCode.ToInt64() + 0x186, rayOutput.ToInt64(), 7, 0x186 + 3),
-                    (raycastCode.ToInt64() + 0x1A4, raycastFunc, 5, 0x1A4 + 1),
-                    (raycastCode.ToInt64() + 0x1B0, rayOutput.ToInt64() + 0x10, 7, 0x1B0 + 2),
-                    (raycastCode.ToInt64() + 0x1BD, rayInput.ToInt64(), 7, 0x1BD + 3),
-                    (raycastCode.ToInt64() + 0x1E8, rayOutput.ToInt64(), 7, 0x1E8 + 3),
-                    (raycastCode.ToInt64() + 0x206, raycastFunc, 5, 0x206 + 1),
-                    (raycastCode.ToInt64() + 0x212, rayOutput.ToInt64() + 0x10, 7, 0x212 + 2),
-                    (raycastCode.ToInt64() + 0x21B, rayInput.ToInt64(), 7, 0x21B + 3),
-                    (raycastCode.ToInt64() + 0x246, rayOutput.ToInt64(), 7, 0x246 + 3),
-                    (raycastCode.ToInt64() + 0x264, raycastFunc, 5, 0x264 + 1),
-                    (raycastCode.ToInt64() + 0x270, rayOutput.ToInt64() + 0x10, 7, 0x270 + 2),
-                    (raycastCode.ToInt64() + 0x28A, convertToMap, 5, 0x28A + 1),
-                    (raycastCode.ToInt64() + 0x296, mapId.ToInt64(), 7, 0x296 + 3),
-                    (raycastCode.ToInt64() + 0x2A1, convertToMapId, 5, 0x2A1 + 1),
-                    (raycastCode.ToInt64() + 0x2EA, rayCastHook + 0x5, 5, 0x2EA + 1)
+                    (raycastCode.ToInt64() + 0xE5, rayInput.ToInt64(), 7, 0xE5 + 3),
+                    (raycastCode.ToInt64() + 0x110, rayOutput.ToInt64() + (0x30 * 1), 7, 0x110 + 3),
+                    (raycastCode.ToInt64() + 0x127, raycastFunc, 5, 0x127 + 1),
+                    (raycastCode.ToInt64() + 0x12C, rayInput.ToInt64(), 7, 0x12C + 3),
+                    (raycastCode.ToInt64() + 0x157, rayOutput.ToInt64() + (0x30 * 2), 7, 0x157 + 3),
+                    (raycastCode.ToInt64() + 0x16E, raycastFunc, 5, 0x16E + 1),
+                    (raycastCode.ToInt64() + 0x173, rayInput.ToInt64(), 7, 0x173 + 3),
+                    (raycastCode.ToInt64() + 0x19E, rayOutput.ToInt64() + (0x30 * 3), 7, 0x19E + 3),
+                    (raycastCode.ToInt64() + 0x1B5, raycastFunc, 5, 0x1B5 + 1),
+                    (raycastCode.ToInt64() + 0x1BA, rayInput.ToInt64(), 7, 0x1BA + 3),
+                    (raycastCode.ToInt64() + 0x1E5, rayOutput.ToInt64() + (0x30 * 4), 7, 0x1E5 + 3),
+                    (raycastCode.ToInt64() + 0x1FC, raycastFunc, 5, 0x1FC + 1),
+                    (raycastCode.ToInt64() + 0x21E, rayOutput.ToInt64(), 7, 0x21E + 3),
+                    (raycastCode.ToInt64() + 0x24A, rayOutput.ToInt64(), 7, 0x24A + 3),
+                    (raycastCode.ToInt64() + 0x25F, convertToMap, 5, 0x25F + 1),
+                    (raycastCode.ToInt64() + 0x26B, mapId.ToInt64(), 7, 0x26B + 3),
+                    (raycastCode.ToInt64() + 0x276, convertToMapId, 5, 0x276 + 1),
+                    (raycastCode.ToInt64() + 0x2BF, rayCastHook + 0x5, 5, 0x2BF + 1)
                 });
                 
                 AsmHelper.WriteAbsoluteAddresses64(codeBytes, new []
                 {
                     (GameManagerImp.Base.ToInt64(), 0x6 + 2),
-                    (GameManagerImp.Base.ToInt64(), 0x70 + 2),
-                    (rayOutput.ToInt64() + 0x18, 0x279 + 2)
+                    (GameManagerImp.Base.ToInt64(), 0x70 + 2)
                 });
 
                 _memoryIo.WriteBytes(raycastCode, codeBytes);
@@ -504,7 +500,6 @@ namespace SilkySouls2.Services
             }
         }
         
-
         public void SetObjState(long areaId, GameIds.Obj.SetObjState objData)
         {
             var getMapEntity = Funcs.GetMapEntityWithAreaIdAndObjId;

@@ -24,7 +24,7 @@ namespace SilkySouls2.Memory
         
         public enum BonfireWarp
         {
-            EmptySpace = 0x110,
+            Output = 0x110,
             BonfireId = 0x190,
             WarpCode = 0x1A0,
             Coords = 0x200,
@@ -66,7 +66,7 @@ namespace SilkySouls2.Memory
             CtrlCheck = 0x510,
             UpdateCoords = 0x1750,
             RayInput = 0xF00,
-            RayOutput = 0xF50,
+            RayOutput = 0x2200,
             MapId = 0xF80,
             FrameCounter = 0xF84,
             RayCastCode = 0xF90

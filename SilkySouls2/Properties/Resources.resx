@@ -2139,10 +2139,10 @@ c3                      ret</value>
 48 8b 00                mov    rax,QWORD PTR [rax]
 48 8b 80 d0 00 00 00    mov    rax,QWORD PTR [rax+0xd0]
 48 3b 41 08             cmp    rax,QWORD PTR [rcx+0x8]
-0f 85 c5 02 00 00       jne    2e9 &lt;exit&gt;
+0f 85 9a 02 00 00       jne    2be &lt;exit&gt;
 ff 05 00 00 00 00       inc    DWORD PTR [rip+0x0]        # 2a &lt;_main+0x2a&gt;
 83 3d 00 00 00 00 78    cmp    DWORD PTR [rip+0x0],0x78        # 31 &lt;_main+0x31&gt;
-0f 8e b2 02 00 00       jle    2e9 &lt;exit&gt;
+0f 8e 87 02 00 00       jle    2be &lt;exit&gt;
 48 31 c0                xor    rax,rax
 89 05 00 00 00 00       mov    DWORD PTR [rip+0x0],eax        # 40 &lt;_main+0x40&gt;
 48 83 ec 60             sub    rsp,0x60
@@ -2181,10 +2181,7 @@ b8 ff ff ff ff          mov    eax,0xffffffff
 41 89 40 20             mov    DWORD PTR [r8+0x20],eax
 48 81 ec 10 02 00 00    sub    rsp,0x210
 e8 00 00 00 00          call   e5 &lt;_main+0xe5&gt;
-48 81 c4 10 02 00 00    add    rsp,0x210
-80 3d 00 00 00 00 00    cmp    BYTE PTR [rip+0x0],0x0        # f3 &lt;_main+0xf3&gt;
-0f 85 80 01 00 00       jne    279 &lt;process&gt;
-48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 100 &lt;_main+0x100&gt;
+48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # ec &lt;_main+0xec&gt;
 44 0f 10 3a             movups xmm15,XMMWORD PTR [rdx]
 44 0f 11 7a 10          movups XMMWORD PTR [rdx+0x10],xmm15
 f3 44 0f 10 7a 10       movss  xmm15,DWORD PTR [rdx+0x10]
@@ -2192,16 +2189,12 @@ b8 00 00 48 42          mov    eax,0x42480000
 66 44 0f 6e f0          movd   xmm14,eax
 f3 45 0f 58 fe          addss  xmm15,xmm14
 f3 44 0f 11 7a 10       movss  DWORD PTR [rdx+0x10],xmm15
-4c 8d 05 00 00 00 00    lea    r8,[rip+0x0]        # 12b &lt;_main+0x12b&gt;
+4c 8d 05 00 00 00 00    lea    r8,[rip+0x0]        # 117 &lt;_main+0x117&gt;
 b8 ff ff ff ff          mov    eax,0xffffffff
 41 89 40 20             mov    DWORD PTR [r8+0x20],eax
 49 8b 8f 60 06 00 00    mov    rcx,QWORD PTR [r15+0x660]
-48 81 ec 10 02 00 00    sub    rsp,0x210
-e8 00 00 00 00          call   147 &lt;_main+0x147&gt;
-48 81 c4 10 02 00 00    add    rsp,0x210
-80 3d 00 00 00 00 00    cmp    BYTE PTR [rip+0x0],0x0        # 155 &lt;_main+0x155&gt;
-0f 85 1e 01 00 00       jne    279 &lt;process&gt;
-48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 162 &lt;_main+0x162&gt;
+e8 00 00 00 00          call   12c &lt;_main+0x12c&gt;
+48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 133 &lt;_main+0x133&gt;
 44 0f 10 3a             movups xmm15,XMMWORD PTR [rdx]
 44 0f 11 7a 10          movups XMMWORD PTR [rdx+0x10],xmm15
 f3 44 0f 10 7a 10       movss  xmm15,DWORD PTR [rdx+0x10]
@@ -2209,16 +2202,12 @@ b8 00 00 48 42          mov    eax,0x42480000
 66 44 0f 6e f0          movd   xmm14,eax
 f3 45 0f 5c fe          subss  xmm15,xmm14
 f3 44 0f 11 7a 10       movss  DWORD PTR [rdx+0x10],xmm15
-4c 8d 05 00 00 00 00    lea    r8,[rip+0x0]        # 18d &lt;_main+0x18d&gt;
+4c 8d 05 00 00 00 00    lea    r8,[rip+0x0]        # 15e &lt;_main+0x15e&gt;
 b8 ff ff ff ff          mov    eax,0xffffffff
 41 89 40 20             mov    DWORD PTR [r8+0x20],eax
 49 8b 8f 60 06 00 00    mov    rcx,QWORD PTR [r15+0x660]
-48 81 ec 10 02 00 00    sub    rsp,0x210
-e8 00 00 00 00          call   1a9 &lt;_main+0x1a9&gt;
-48 81 c4 10 02 00 00    add    rsp,0x210
-80 3d 00 00 00 00 00    cmp    BYTE PTR [rip+0x0],0x0        # 1b7 &lt;_main+0x1b7&gt;
-0f 85 bc 00 00 00       jne    279 &lt;process&gt;
-48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 1c4 &lt;_main+0x1c4&gt;
+e8 00 00 00 00          call   173 &lt;_main+0x173&gt;
+48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 17a &lt;_main+0x17a&gt;
 44 0f 10 3a             movups xmm15,XMMWORD PTR [rdx]
 44 0f 11 7a 10          movups XMMWORD PTR [rdx+0x10],xmm15
 f3 44 0f 10 7a 18       movss  xmm15,DWORD PTR [rdx+0x18]
@@ -2226,16 +2215,12 @@ b8 00 00 48 42          mov    eax,0x42480000
 66 44 0f 6e f0          movd   xmm14,eax
 f3 45 0f 58 fe          addss  xmm15,xmm14
 f3 44 0f 11 7a 18       movss  DWORD PTR [rdx+0x18],xmm15
-4c 8d 05 00 00 00 00    lea    r8,[rip+0x0]        # 1ef &lt;_main+0x1ef&gt;
+4c 8d 05 00 00 00 00    lea    r8,[rip+0x0]        # 1a5 &lt;_main+0x1a5&gt;
 b8 ff ff ff ff          mov    eax,0xffffffff
 41 89 40 20             mov    DWORD PTR [r8+0x20],eax
 49 8b 8f 60 06 00 00    mov    rcx,QWORD PTR [r15+0x660]
-48 81 ec 10 02 00 00    sub    rsp,0x210
-e8 00 00 00 00          call   20b &lt;_main+0x20b&gt;
-48 81 c4 10 02 00 00    add    rsp,0x210
-80 3d 00 00 00 00 00    cmp    BYTE PTR [rip+0x0],0x0        # 219 &lt;_main+0x219&gt;
-75 5e                   jne    279 &lt;process&gt;
-48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 222 &lt;_main+0x222&gt;
+e8 00 00 00 00          call   1ba &lt;_main+0x1ba&gt;
+48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 1c1 &lt;_main+0x1c1&gt;
 44 0f 10 3a             movups xmm15,XMMWORD PTR [rdx]
 44 0f 11 7a 10          movups XMMWORD PTR [rdx+0x10],xmm15
 f3 44 0f 10 7a 18       movss  xmm15,DWORD PTR [rdx+0x18]
@@ -2243,35 +2228,54 @@ b8 00 00 48 42          mov    eax,0x42480000
 66 44 0f 6e f0          movd   xmm14,eax
 f3 45 0f 5c fe          subss  xmm15,xmm14
 f3 44 0f 11 7a 18       movss  DWORD PTR [rdx+0x18],xmm15
-4c 8d 05 00 00 00 00    lea    r8,[rip+0x0]        # 24d &lt;_main+0x24d&gt;
+4c 8d 05 00 00 00 00    lea    r8,[rip+0x0]        # 1ec &lt;_main+0x1ec&gt;
 b8 ff ff ff ff          mov    eax,0xffffffff
 41 89 40 20             mov    DWORD PTR [r8+0x20],eax
 49 8b 8f 60 06 00 00    mov    rcx,QWORD PTR [r15+0x660]
-48 81 ec 10 02 00 00    sub    rsp,0x210
-e8 00 00 00 00          call   269 &lt;_main+0x269&gt;
+e8 00 00 00 00          call   201 &lt;_main+0x201&gt;
 48 81 c4 10 02 00 00    add    rsp,0x210
-80 3d 00 00 00 00 00    cmp    BYTE PTR [rip+0x0],0x0        # 277 &lt;_main+0x277&gt;
-75 40                   jne    2b9 &lt;no_hit&gt;
-00000279 &lt;process&gt;:
-48 b9 00 00 00 00 00    movabs rcx,0x0
-00 00 00
-48 8b 09                mov    rcx,QWORD PTR [rcx]
+31 d2                   xor    edx,edx
+bf ff ff ff ff          mov    edi,0xffffffff
+0f 57 e4                xorps  xmm4,xmm4
+0f 57 ed                xorps  xmm5,xmm5
+b8 ff ff 7f 7f          mov    eax,0x7f7fffff
+66 0f 6e e8             movd   xmm5,eax
+48 8d 1d 00 00 00 00    lea    rbx,[rip+0x0]        # 225 &lt;loop_start&gt;
+00000225 &lt;loop_start&gt;:
+80 7b 10 00             cmp    BYTE PTR [rbx+0x10],0x0
+74 10                   je     23b &lt;next&gt;
+f3 0f 10 63 14          movss  xmm4,DWORD PTR [rbx+0x14]
+0f 2e e5                ucomiss xmm4,xmm5
+73 06                   jae    23b &lt;next&gt;
+f3 0f 10 ec             movss  xmm5,xmm4
+89 d7                   mov    edi,edx
+0000023b &lt;next&gt;:
+48 83 c3 30             add    rbx,0x30
+ff c2                   inc    edx
+83 fa 05                cmp    edx,0x5
+75 df                   jne    225 &lt;loop_start&gt;
+85 ff                   test   edi,edi
+78 44                   js     28e &lt;no_hit&gt;
+48 8d 1d 00 00 00 00    lea    rbx,[rip+0x0]        # 251 &lt;next+0x16&gt;
+6b c7 30                imul   eax,edi,0x30
+48 01 c3                add    rbx,rax
+48 8b 4b 18             mov    rcx,QWORD PTR [rbx+0x18]
 48 83 ec 28             sub    rsp,0x28
-e8 00 00 00 00          call   28f &lt;process+0x16&gt;
+e8 00 00 00 00          call   264 &lt;next+0x29&gt;
 48 83 c4 28             add    rsp,0x28
 48 89 c2                mov    rdx,rax
-48 8d 0d 00 00 00 00    lea    rcx,[rip+0x0]        # 29d &lt;process+0x24&gt;
+48 8d 0d 00 00 00 00    lea    rcx,[rip+0x0]        # 272 &lt;next+0x37&gt;
 48 83 ec 28             sub    rsp,0x28
-e8 00 00 00 00          call   2a6 &lt;process+0x2d&gt;
+e8 00 00 00 00          call   27b &lt;next+0x40&gt;
 48 83 c4 28             add    rsp,0x28
 59                      pop    rcx
 48 8b 51 10             mov    rdx,QWORD PTR [rcx+0x10]
 8b 00                   mov    eax,DWORD PTR [rax]
 89 82 e0 00 00 00       mov    DWORD PTR [rdx+0xe0],eax
-eb 01                   jmp    2ba &lt;rcx_popped&gt;
-000002b9 &lt;no_hit&gt;:
+eb 01                   jmp    28f &lt;rcx_popped&gt;
+0000028e &lt;no_hit&gt;:
 59                      pop    rcx
-000002ba &lt;rcx_popped&gt;:
+0000028f &lt;rcx_popped&gt;:
 41 5f                   pop    r15
 5a                      pop    rdx
 5f                      pop    rdi
@@ -2285,9 +2289,9 @@ f3 0f 6f 54 24 20       movdqu xmm2,XMMWORD PTR [rsp+0x20]
 f3 0f 6f 4c 24 10       movdqu xmm1,XMMWORD PTR [rsp+0x10]
 f3 0f 6f 04 24          movdqu xmm0,XMMWORD PTR [rsp]
 48 83 c4 60             add    rsp,0x60
-000002e9 &lt;exit&gt;:
+000002be &lt;exit&gt;:
 58                      pop    rax
-e9 00 00 00 00          jmp    2ef &lt;exit+0x6&gt;</value>
+e9 00 00 00 00          jmp    2c4 &lt;exit+0x6&gt;</value>
   </data>
   <data name="UnlockAllBonfires64" xml:space="preserve">
     <value>49 bc 00 00 00 00 00    movabs r12,0x0

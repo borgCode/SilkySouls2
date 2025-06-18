@@ -245,7 +245,7 @@ namespace SilkySouls2.Services
                 
                 _memoryIo.WriteBytes(coordsCode, codeBytes);
 
-                codeBytes = AsmLoader.GetAsmBytes("NoClip_RayCast");
+                codeBytes = AsmLoader.GetAsmBytes("NoClip_RayCast64");
 
                 var frameCounter = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.FrameCounter;
                 var rayInput = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.RayInput;
@@ -353,6 +353,52 @@ namespace SilkySouls2.Services
             
             _memoryIo.WriteBytes(coordsCode, codeBytes);
             
+            var frameCounter = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.FrameCounter;
+            var rayInput = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.RayInput;
+            var rayOutput = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.RayOutput;
+            var mapId = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.MapId;
+                
+            var raycastFunc = Funcs.HavokRayCast;
+            var convertToMap = Funcs.ConvertPxRigidToMapEntity;
+            var convertToMapId = Funcs.ConvertMapEntityToGameId;
+            
+            codeBytes = AsmLoader.GetAsmBytes("NoClip_RayCast32");
+            
+            AsmHelper.WriteAbsoluteAddresses32(codeBytes, new []
+            {
+                (GameManagerImp.Base.ToInt64(), 0x1 + 1),
+                (frameCounter.ToInt64(), 0xF + 2),
+                (frameCounter.ToInt64(), 0x15 + 2),
+                (frameCounter.ToInt64(), 0x22 + 2),
+                (rayOutput.ToInt64(), 0x59 + 2),
+                (rayInput.ToInt64(), 0x6E + 2),
+                (rayOutput.ToInt64() + (0x30 * 1), 0xA9 + 2),
+                (rayInput.ToInt64(), 0xB8 + 2),
+                (rayOutput.ToInt64() + (0x30 * 2), 0xE8 + 2),
+                (rayInput.ToInt64(), 0xF7 + 2),
+                (rayOutput.ToInt64() + (0x30 * 3), 0x127 + 2),
+                (rayInput.ToInt64(), 0x136 + 2),
+                (rayOutput.ToInt64() + (0x30 * 4), 0x166 + 2),
+                (rayInput.ToInt64(), 0x175 + 2),
+                (rayOutput.ToInt64(), 0x1BB + 2),
+                (rayOutput.ToInt64(), 0x1E4 + 2),
+                (mapId.ToInt64(), 0x1FC + 2)
+            });
+            
+            AsmHelper.WriteRelativeOffsets(codeBytes, new []
+            {
+                (raycastCode.ToInt64() + 0xA4, raycastFunc, 5, 0xA4 + 1),
+                (raycastCode.ToInt64() + 0xE3, raycastFunc, 5, 0xE3 + 1),
+                (raycastCode.ToInt64() + 0x122, raycastFunc, 5, 0x122 + 1),
+                (raycastCode.ToInt64() + 0x161, raycastFunc, 5, 0x161 + 1),
+                (raycastCode.ToInt64() + 0x1A0, raycastFunc, 5, 0x1A0 + 1),
+                (raycastCode.ToInt64() + 0x1F3, convertToMap, 5, 0x1F3 + 1),
+                (raycastCode.ToInt64() + 0x202, convertToMapId, 5, 0x202 + 1),
+                (raycastCode.ToInt64() + 0x24D, rayCastHook + 0x6, 5, 0x24D + 1),
+            });
+            
+            _memoryIo.WriteBytes(raycastCode, codeBytes);
+            
             _memoryIo.WriteByte(GetGravityPtr(), 1);
             
             _hookManager.InstallHook(triggersAndSpaceCode.ToInt64(), triggersAndSpaceHook, new byte[]
@@ -361,6 +407,9 @@ namespace SilkySouls2.Services
                 { 0x81, 0x8E, 0x28, 0x02, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00 });
             _hookManager.InstallHook(coordsCode.ToInt64(), coordsHook, new byte[]
                 { 0xF3, 0x0F, 0x7E, 0x45, 0xD0 });
+            _hookManager.InstallHook(raycastCode.ToInt64(), rayCastHook, new byte[]
+                { 0x8B, 0x8E, 0xB8, 0x00, 0x00, 0x00 });
+
         }
 
         public void SetNoClipSpeed(byte[] xBytes, byte[] yBytes)

@@ -289,7 +289,26 @@
             AddressingMode.Absolute
         );
 
+        public static readonly Pattern HavokRayCast = new Pattern(
+            new byte[] { 0x83, 0xCF, 0xFF, 0x33, 0xD2 },
+            "xxxxx",
+            -0x33,
+            AddressingMode.Absolute
+        );
 
+        public static readonly Pattern ConvertPxRigidToMapEntity = new Pattern(
+            new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x83, 0xC4, 0x08, 0x85, 0xC0, 0x0F, 0x84, 0x91 },
+            "x????xxxxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern ProcessPhysics = new Pattern(
+            new byte[] { 0x8B, 0x8E, 0xB8, 0x00, 0x00, 0x00, 0x8D, 0x45 },
+            "xxxxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
     }
     
 }

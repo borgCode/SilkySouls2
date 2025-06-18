@@ -2131,7 +2131,7 @@ e8 00 00 00 00          call   1a &lt;_main+0x1a&gt;
 48 83 c4 48             add    rsp,0x48
 c3                      ret</value>
   </data>
-  <data name="NoClip_RayCast" xml:space="preserve">
+  <data name="NoClip_RayCast64" xml:space="preserve">
     <value>48 8d 54 24 20          lea    rdx,[rsp+0x20]
 50                      push   rax
 48 b8 00 00 00 00 00    movabs rax,0x0
@@ -3226,5 +3226,165 @@ e9 fc ff ff ff          jmp    128 &lt;coord_update+0x71&gt;
 5a                      pop    edx
 f3 0f 7e 45 d0          movq   xmm0,QWORD PTR [ebp-0x30]
 e9 fc ff ff ff          jmp    133 &lt;normal+0x7&gt;</value>
+  </data>
+  <data name="NoClip_RayCast32" xml:space="preserve">
+    <value>50                      push   eax
+a1 00 00 00 00          mov    eax,ds:0x0
+39 70 74                cmp    DWORD PTR [eax+0x74],esi
+0f 85 37 02 00 00       jne    246 &lt;normal&gt;
+ff 05 00 00 00 00       inc    DWORD PTR ds:0x0
+83 3d 00 00 00 00 78    cmp    DWORD PTR ds:0x0,0x78
+0f 8e 24 02 00 00       jle    246 &lt;normal&gt;
+c7 05 00 00 00 00 00    mov    DWORD PTR ds:0x0,0x0
+00 00 00
+83 ec 60                sub    esp,0x60
+f3 0f 7f 04 24          movdqu XMMWORD PTR [esp],xmm0
+f3 0f 7f 4c 24 10       movdqu XMMWORD PTR [esp+0x10],xmm1
+f3 0f 7f 54 24 20       movdqu XMMWORD PTR [esp+0x20],xmm2
+f3 0f 7f 5c 24 30       movdqu XMMWORD PTR [esp+0x30],xmm3
+f3 0f 7f 64 24 40       movdqu XMMWORD PTR [esp+0x40],xmm4
+f3 0f 7f 6c 24 50       movdqu XMMWORD PTR [esp+0x50],xmm5
+53                      push   ebx
+57                      push   edi
+52                      push   edx
+51                      push   ecx
+56                      push   esi
+89 c3                   mov    ebx,eax
+8d 0d 00 00 00 00       lea    ecx,ds:0x0
+b8 ff ff ff ff          mov    eax,0xffffffff
+89 41 20                mov    DWORD PTR [ecx+0x20],eax
+51                      push   ecx
+8b 43 74                mov    eax,DWORD PTR [ebx+0x74]
+8d 40 70                lea    eax,[eax+0x70]
+8d 15 00 00 00 00       lea    edx,ds:0x0
+0f 10 00                movups xmm0,XMMWORD PTR [eax]
+0f 11 02                movups XMMWORD PTR [edx],xmm0
+0f 11 42 10             movups XMMWORD PTR [edx+0x10],xmm0
+f3 0f 10 42 14          movss  xmm0,DWORD PTR [edx+0x14]
+b8 00 00 16 43          mov    eax,0x43160000
+66 0f 6e c8             movd   xmm1,eax
+f3 0f 5c c1             subss  xmm0,xmm1
+f3 0f 11 42 14          movss  DWORD PTR [edx+0x14],xmm0
+c6 42 20 00             mov    BYTE PTR [edx+0x20],0x0
+c6 42 24 1f             mov    BYTE PTR [edx+0x24],0x1f
+52                      push   edx
+8b 8b 80 02 00 00       mov    ecx,DWORD PTR [ebx+0x280]
+e8 fc ff ff ff          call   a5 &lt;_main+0xa5&gt;
+8d 0d 00 00 00 00       lea    ecx,ds:0x0
+b8 ff ff ff ff          mov    eax,0xffffffff
+89 41 20                mov    DWORD PTR [ecx+0x20],eax
+51                      push   ecx
+8d 15 00 00 00 00       lea    edx,ds:0x0
+0f 10 02                movups xmm0,XMMWORD PTR [edx]
+0f 11 42 10             movups XMMWORD PTR [edx+0x10],xmm0
+f3 0f 10 42 10          movss  xmm0,DWORD PTR [edx+0x10]
+b8 00 00 48 42          mov    eax,0x42480000
+66 0f 6e c8             movd   xmm1,eax
+f3 0f 58 c1             addss  xmm0,xmm1
+f3 0f 11 42 10          movss  DWORD PTR [edx+0x10],xmm0
+52                      push   edx
+8b 8b 80 02 00 00       mov    ecx,DWORD PTR [ebx+0x280]
+e8 fc ff ff ff          call   e4 &lt;_main+0xe4&gt;
+8d 0d 00 00 00 00       lea    ecx,ds:0x0
+b8 ff ff ff ff          mov    eax,0xffffffff
+89 41 20                mov    DWORD PTR [ecx+0x20],eax
+51                      push   ecx
+8d 15 00 00 00 00       lea    edx,ds:0x0
+0f 10 02                movups xmm0,XMMWORD PTR [edx]
+0f 11 42 10             movups XMMWORD PTR [edx+0x10],xmm0
+f3 0f 10 42 10          movss  xmm0,DWORD PTR [edx+0x10]
+b8 00 00 48 42          mov    eax,0x42480000
+66 0f 6e c8             movd   xmm1,eax
+f3 0f 5c c1             subss  xmm0,xmm1
+f3 0f 11 42 10          movss  DWORD PTR [edx+0x10],xmm0
+52                      push   edx
+8b 8b 80 02 00 00       mov    ecx,DWORD PTR [ebx+0x280]
+e8 fc ff ff ff          call   123 &lt;_main+0x123&gt;
+8d 0d 00 00 00 00       lea    ecx,ds:0x0
+b8 ff ff ff ff          mov    eax,0xffffffff
+89 41 20                mov    DWORD PTR [ecx+0x20],eax
+51                      push   ecx
+8d 15 00 00 00 00       lea    edx,ds:0x0
+0f 10 02                movups xmm0,XMMWORD PTR [edx]
+0f 11 42 10             movups XMMWORD PTR [edx+0x10],xmm0
+f3 0f 10 42 18          movss  xmm0,DWORD PTR [edx+0x18]
+b8 00 00 48 42          mov    eax,0x42480000
+66 0f 6e c8             movd   xmm1,eax
+f3 0f 58 c1             addss  xmm0,xmm1
+f3 0f 11 42 18          movss  DWORD PTR [edx+0x18],xmm0
+52                      push   edx
+8b 8b 80 02 00 00       mov    ecx,DWORD PTR [ebx+0x280]
+e8 fc ff ff ff          call   162 &lt;_main+0x162&gt;
+8d 0d 00 00 00 00       lea    ecx,ds:0x0
+b8 ff ff ff ff          mov    eax,0xffffffff
+89 41 20                mov    DWORD PTR [ecx+0x20],eax
+51                      push   ecx
+8d 15 00 00 00 00       lea    edx,ds:0x0
+0f 10 02                movups xmm0,XMMWORD PTR [edx]
+0f 11 42 10             movups XMMWORD PTR [edx+0x10],xmm0
+f3 0f 10 42 18          movss  xmm0,DWORD PTR [edx+0x18]
+b8 00 00 48 42          mov    eax,0x42480000
+66 0f 6e c8             movd   xmm1,eax
+f3 0f 5c c1             subss  xmm0,xmm1
+f3 0f 11 42 18          movss  DWORD PTR [edx+0x18],xmm0
+52                      push   edx
+8b 8b 80 02 00 00       mov    ecx,DWORD PTR [ebx+0x280]
+e8 fc ff ff ff          call   1a1 &lt;_main+0x1a1&gt;
+31 d2                   xor    edx,edx
+bf ff ff ff ff          mov    edi,0xffffffff
+0f 57 c0                xorps  xmm0,xmm0
+0f 57 c9                xorps  xmm1,xmm1
+b8 ff ff 7f 7f          mov    eax,0x7f7fffff
+66 0f 6e c0             movd   xmm0,eax
+8d 1d 00 00 00 00       lea    ebx,ds:0x0
+ &lt;loop_start&gt;:
+80 7b 10 00             cmp    BYTE PTR [ebx+0x10],0x0
+74 10                   je     1d7 &lt;next&gt;
+f3 0f 10 4b 14          movss  xmm1,DWORD PTR [ebx+0x14]
+0f 2e c8                ucomiss xmm1,xmm0
+73 06                   jae    1d7 &lt;next&gt;
+f3 0f 10 c1             movss  xmm0,xmm1
+89 d7                   mov    edi,edx
+ &lt;next&gt;:
+83 c3 30                add    ebx,0x30
+42                      inc    edx
+83 fa 05                cmp    edx,0x5
+75 e1                   jne    1c1 &lt;loop_start&gt;
+85 ff                   test   edi,edi
+78 37                   js     21b &lt;no_hit&gt;
+8d 1d 00 00 00 00       lea    ebx,ds:0x0
+6b c7 30                imul   eax,edi,0x30
+01 c3                   add    ebx,eax
+8b 4b 18                mov    ecx,DWORD PTR [ebx+0x18]
+51                      push   ecx
+e8 fc ff ff ff          call   1f4 &lt;next+0x1d&gt;
+83 c4 04                add    esp,0x4
+50                      push   eax
+8d 0d 00 00 00 00       lea    ecx,ds:0x0
+e8 fc ff ff ff          call   203 &lt;next+0x2c&gt;
+5e                      pop    esi
+8b 96 b8 00 00 00       mov    edx,DWORD PTR [esi+0xb8]
+8b 52 08                mov    edx,DWORD PTR [edx+0x8]
+8b 00                   mov    eax,DWORD PTR [eax]
+89 82 e0 00 00 00       mov    DWORD PTR [edx+0xe0],eax
+eb 01                   jmp    21c &lt;esi_popped&gt;
+ &lt;no_hit&gt;:
+5e                      pop    esi
+ &lt;esi_popped&gt;:
+59                      pop    ecx
+5a                      pop    edx
+5f                      pop    edi
+5b                      pop    ebx
+f3 0f 6f 6c 24 50       movdqu xmm5,XMMWORD PTR [esp+0x50]
+f3 0f 6f 64 24 40       movdqu xmm4,XMMWORD PTR [esp+0x40]
+f3 0f 6f 5c 24 30       movdqu xmm3,XMMWORD PTR [esp+0x30]
+f3 0f 6f 54 24 20       movdqu xmm2,XMMWORD PTR [esp+0x20]
+f3 0f 6f 4c 24 10       movdqu xmm1,XMMWORD PTR [esp+0x10]
+f3 0f 6f 04 24          movdqu xmm0,XMMWORD PTR [esp]
+83 c4 60                add    esp,0x60
+ &lt;normal&gt;:
+8b 8e b8 00 00 00       mov    ecx,DWORD PTR [esi+0xb8]
+58                      pop    eax
+e9 fc ff ff ff          jmp    24e &lt;normal+0x8&gt;</value>
   </data>
 </root>

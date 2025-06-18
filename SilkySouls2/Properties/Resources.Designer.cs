@@ -870,6 +870,26 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 50                      push   eax
+        ///a1 00 00 00 00          mov    eax,ds:0x0
+        ///39 70 74                cmp    DWORD PTR [eax+0x74],esi
+        ///0f 85 37 02 00 00       jne    246 &lt;normal&gt;
+        ///ff 05 00 00 00 00       inc    DWORD PTR ds:0x0
+        ///83 3d 00 00 00 00 78    cmp    DWORD PTR ds:0x0,0x78
+        ///0f 8e 24 02 00 00       jle    246 &lt;normal&gt;
+        ///c7 05 00 00 00 00 00    mov    DWORD PTR ds:0x0,0x0
+        ///00 00 00
+        ///83 ec 60                sub    esp,0x60
+        ///f3 0f 7f 04 24          movdqu XMMWORD PTR [esp],xmm0
+        ///f3 0f 7f 4c 24 10        [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string NoClip_RayCast32 {
+            get {
+                return ResourceManager.GetString("NoClip_RayCast32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 8d 54 24 20          lea    rdx,[rsp+0x20]
         ///50                      push   rax
         ///48 b8 00 00 00 00 00    movabs rax,0x0
@@ -882,9 +902,9 @@ namespace SilkySouls2.Properties {
         ///83 3d 00 00 00 00 78    cmp    DWORD PTR [rip+0x0],0x78        # 31 &lt;_main+0x31&gt;
         ///0f 8e 87 02  [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string NoClip_RayCast {
+        internal static string NoClip_RayCast64 {
             get {
-                return ResourceManager.GetString("NoClip_RayCast", resourceCulture);
+                return ResourceManager.GetString("NoClip_RayCast64", resourceCulture);
             }
         }
         

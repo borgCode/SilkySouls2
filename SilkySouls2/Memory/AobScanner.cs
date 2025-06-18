@@ -267,6 +267,8 @@ namespace SilkySouls2.Memory
                     addr => Offsets.Hooks.Ctrl = addr.ToInt32(), saved);
                 TryPatternWithFallback("NoClipUpdateCoords", Patterns32.NoClipUpdateCoords,
                     addr => Offsets.Hooks.NoClipUpdateCoords = addr.ToInt32(), saved);
+                TryPatternWithFallback("ProcessPhysics", Patterns32.ProcessPhysics,
+                    addr => Offsets.Hooks.ProcessPhysics = addr.ToInt32(), saved);
                 
                 
                 var setCurrectActLocs = FindAddressesByPattern(Patterns32.SetCurrentAct, 2);
@@ -298,7 +300,13 @@ namespace SilkySouls2.Memory
                 Offsets.Funcs.GetMapEntityWithAreaIdAndObjId = FindAddressByPattern(Patterns32.GetMapEntityWithAreaIdAndObjId).ToInt32();
                 Offsets.Funcs.GetMapObjStateActComponent = FindAddressByPattern(Patterns32.GetStateActComp).ToInt32();
                 Offsets.Funcs.GetWhiteDoorComponent = FindAddressByPattern(Patterns32.GetWhiteDoorComponent).ToInt32();
-                
+                Offsets.Funcs.HavokRayCast = FindAddressByPattern(Patterns32.HavokRayCast).ToInt32();
+          
+                FindMultipleCallsInFunction(Patterns32.ConvertPxRigidToMapEntity, new Dictionary<Action<long>, int>
+                {
+                    { addr => Offsets.Funcs.ConvertPxRigidToMapEntity = addr, 0 },
+                    { addr => Offsets.Funcs.ConvertMapEntityToGameId = addr, 0x17 },
+                });
                 
                 FindMultipleCallsInFunction(Patterns32.BonfireWarp, new Dictionary<Action<long>, int>
                 {

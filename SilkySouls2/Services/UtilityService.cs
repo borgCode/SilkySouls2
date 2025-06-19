@@ -592,7 +592,7 @@ namespace SilkySouls2.Services
                 else
                 {
                     var bytes = AsmLoader.GetAsmBytes("DisableSnowstorm32");
-                    AsmHelper.WriteRelativeOffsets(bytes, new []
+                    AsmHelper.WriteRelativeOffsets(bytes, new[]
                     {
                         (code.ToInt64() + 0xD, origin + 6, 6, 0xD + 2),
                         (code.ToInt64() + 0x1A, origin + 6, 5, 0x1A + 1),
@@ -636,12 +636,11 @@ namespace SilkySouls2.Services
                     Array.Copy(bytes, 0, codeBytes, 0x2 + 2, 4);
                     bytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 7, code + 0x79);
                     Array.Copy(bytes, 0, codeBytes, 0x74 + 1, 4);
-                    
+
                     _memoryIo.WriteBytes(code, codeBytes);
                     _hookManager.InstallHook(code.ToInt64(), origin, new byte[]
                         { 0x66, 0x0F, 0x6E, 0x00, 0x0F, 0x5B, 0xC0 });
                 }
-                
             }
             else
             {
@@ -844,6 +843,13 @@ namespace SilkySouls2.Services
                                                 .Count);
             if (count == 0) return new List<InventorySpell>();
 
+            return GameVersion.Current.Edition == GameEdition.Scholar
+                ? ReadSpellList64Bit(spellBase, count)
+                : ReadSpellList32Bit(spellBase, count);
+        }
+
+        private List<InventorySpell> ReadSpellList64Bit(IntPtr spellBase, int count)
+        {
             List<InventorySpell> currentSpells = new List<InventorySpell>();
             var current = (IntPtr)_memoryIo.ReadInt64(spellBase +
                                                       GameManagerImp.GameDataManagerOffsets.Inventory
@@ -867,16 +873,42 @@ namespace SilkySouls2.Services
             return currentSpells;
         }
 
+        private List<InventorySpell> ReadSpellList32Bit(IntPtr spellBase, int count)
+        {
+            List<InventorySpell> currentSpells = new List<InventorySpell>();
+            var current = (IntPtr)_memoryIo.ReadInt32(spellBase +
+                                                      GameManagerImp.GameDataManagerOffsets.Inventory
+                                                          .ItemInvetory2SpellList.ListStart);
+
+            for (int i = 0; i < count && current != IntPtr.Zero; i++)
+            {
+                var spellId =
+                    _memoryIo.ReadInt32(current + GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.SpellId);
+                var isEquipped =
+                    _memoryIo.ReadUInt8(current +
+                                        GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.IsEquipped);
+                var slotReq =
+                    _memoryIo.ReadUInt8(current + GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.SlotReq);
+                currentSpells.Add(new InventorySpell(spellId, isEquipped == 2, current, slotReq));
+                current = (IntPtr)_memoryIo.ReadInt32(current +
+                                                      GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry
+                                                          .NextPtr);
+            }
+
+            return currentSpells;
+        }
+
         public List<EquippedSpell> GetEquippedSpells()
         {
             var currentSpell = GetCurrentSpellPtr();
-
             List<EquippedSpell> currentSpells = new List<EquippedSpell>();
+
+            int chunkSize = GameVersion.Current.Edition == GameEdition.Scholar ? 0x10 : 0x8;
 
             for (int i = 0; i < 14; i++)
             {
                 currentSpells.Add(new EquippedSpell(_memoryIo.ReadInt32(currentSpell), i));
-                currentSpell += 0x10;
+                currentSpell += chunkSize;
             }
 
             return currentSpells;
@@ -887,7 +919,7 @@ namespace SilkySouls2.Services
             return _memoryIo.FollowPointers(GameManagerImp.Base, new[]
             {
                 GameManagerImp.Offsets.PlayerCtrl,
-                GameManagerImp.ChrCtrlOffsets.EquippedSpellsPtr,
+                GameManagerImp.ChrCtrlOffsets.ChrAsmCtrl,
                 GameManagerImp.ChrCtrlOffsets.EquippedSpellsStart
             }, false);
         }
@@ -905,16 +937,33 @@ namespace SilkySouls2.Services
             var getNumOfSlots2 = Funcs.GetNumOfSpellslots2;
             var slotsLoc = CodeCaveOffsets.Base + CodeCaveOffsets.NumOfSpellSlots;
 
-            var bytes = AsmLoader.GetAsmBytes("GetNumOfSlots");
 
-            AsmHelper.WriteAbsoluteAddresses64(bytes, new[]
+            byte[] bytes;
+
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
             {
-                (slotsLoc.ToInt64(), 2),
-                (inventory.ToInt64(), 0xA + 2),
-                (getNumOfSlots1, 0x17 + 2),
-                (getNumOfSlots2, 0x2C + 2)
-            });
+                bytes = AsmLoader.GetAsmBytes("GetNumOfSlots64");
 
+                AsmHelper.WriteAbsoluteAddresses64(bytes, new[]
+                {
+                    (slotsLoc.ToInt64(), 2),
+                    (inventory.ToInt64(), 0xA + 2),
+                    (getNumOfSlots1, 0x17 + 2),
+                    (getNumOfSlots2, 0x2C + 2)
+                });
+            }
+            else
+            {
+                bytes = AsmLoader.GetAsmBytes("GetNumOfSlots32");
+                AsmHelper.WriteAbsoluteAddresses32(bytes, new []
+                {
+                    (slotsLoc.ToInt64(), 1),
+                    (inventory.ToInt64(), 0x5 + 1),
+                    (getNumOfSlots1, 0xC + 1),
+                    (getNumOfSlots2, 0x17 + 1)
+                });
+            }
+            
             _memoryIo.AllocateAndExecute(bytes);
 
 
@@ -932,14 +981,27 @@ namespace SilkySouls2.Services
             }, true);
 
             var refreshFunc = Funcs.UpdateSpellSlots;
-            var bytes = AsmLoader.GetAsmBytes("UpdateSpellSlots");
-
-            AsmHelper.WriteAbsoluteAddresses64(bytes, new[]
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
             {
-                (bagList.ToInt64(), 2),
-                (refreshFunc, 0xA + 2)
-            });
-            _memoryIo.AllocateAndExecute(bytes);
+                var bytes = AsmLoader.GetAsmBytes("UpdateSpellSlots64");
+
+                AsmHelper.WriteAbsoluteAddresses64(bytes, new[]
+                {
+                    (bagList.ToInt64(), 2),
+                    (refreshFunc, 0xA + 2)
+                });
+                _memoryIo.AllocateAndExecute(bytes);
+            }
+            else
+            {
+                var bytes = AsmLoader.GetAsmBytes("UpdateSpellSlots32");
+                AsmHelper.WriteAbsoluteAddresses32(bytes, new[]
+                {
+                    (bagList.ToInt64(), 1),
+                    (refreshFunc, 0x5 + 1)
+                });
+                _memoryIo.AllocateAndExecute(bytes);
+            }
         }
 
         public void AttuneSpell(int slotIndex, IntPtr entryAddr)
@@ -952,16 +1014,33 @@ namespace SilkySouls2.Services
             }, true);
 
             var attuneFunc = Funcs.AttuneSpell;
+            
+            
+            byte[] bytes;
 
-            var bytes = AsmLoader.GetAsmBytes("AttuneSpell");
-            AsmHelper.WriteAbsoluteAddresses64(bytes, new[]
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
             {
-                (inventoryLists.ToInt64(), 2),
-                (slotIndex + 0x1C, 0xA + 2),
-                (entryAddr.ToInt64(), 0x14 + 2),
-                (attuneFunc, 0x1E + 2)
-            });
-
+                bytes = AsmLoader.GetAsmBytes("AttuneSpell64");
+                AsmHelper.WriteAbsoluteAddresses64(bytes, new[]
+                {
+                    (inventoryLists.ToInt64(), 2),
+                    (slotIndex + 0x1C, 0xA + 2),
+                    (entryAddr.ToInt64(), 0x14 + 2),
+                    (attuneFunc, 0x1E + 2)
+                });
+            }
+            else
+            {
+                bytes = AsmLoader.GetAsmBytes("AttuneSpell32");
+                AsmHelper.WriteAbsoluteAddresses32(bytes, new []
+                {
+                    (inventoryLists.ToInt64(), 1),
+                    (entryAddr.ToInt64(), 0x5 + 1),
+                    (slotIndex + 0x1C, 0xB + 1),
+                    (attuneFunc, 0x11 + 1)
+                });
+            }
+            
             _memoryIo.AllocateAndExecute(bytes);
         }
     }

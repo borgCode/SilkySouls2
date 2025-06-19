@@ -241,7 +241,7 @@
         public static readonly Pattern ItemGive = new Pattern(
             new byte[] { 0x83, 0xF8, 0x1F, 0x0F, 0x87, 0xA0 },
             "xxxxxx",
-            -0xB,
+            -0x1B,
             AddressingMode.Absolute
         );
 
@@ -249,6 +249,56 @@
             new byte[] { 0x83, 0xFB, 0x08, 0xC7 },
             "xxxx",
             -0x72,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern ShowItemDialog = new Pattern(
+            new byte[] { 0x83, 0x78, 0x08, 0x00, 0x74, 0x36 },
+            "xxxxxx",
+            0x24,
+            AddressingMode.Relative,
+            1,
+            5
+        );
+
+
+        public static readonly Pattern CurrentItemQuantityCheck = new Pattern(
+            new byte[] { 0x80, 0xE1, 0x03, 0x57, 0x8B },
+            "xxxxx",
+            0x17,
+            AddressingMode.Relative,
+            1,
+            5
+        );
+
+        public static readonly Pattern Sleep = new Pattern(
+            new byte[] { 0x8B, 0x1D, 0x00, 0x00, 0x00, 0x00, 0x83, 0xF8 },
+            "xx????xx",
+            0,
+            AddressingMode.Direct32,
+            2,
+            6
+        );
+
+        public static readonly Pattern UpdateSpellSlots = new Pattern(
+            new byte[] { 0x80, 0xF9, 0x0E, 0x77 },
+            "xxxx",
+            -0x38,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern GetNumOfSpellSlots = new Pattern(
+            new byte[] { 0x03, 0xD8, 0x8B, 0xCE },
+            "xxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+
+        public static readonly Pattern AttuneSpell = new Pattern(
+            new byte[] { 0x83, 0xF8, 0x29, 0x77, 0x29 },
+            "xxxxx",
+            -0x7,
             AddressingMode.Absolute
         );
 

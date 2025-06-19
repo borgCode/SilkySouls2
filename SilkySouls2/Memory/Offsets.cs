@@ -36,7 +36,7 @@ namespace SilkySouls2.Memory
                         PlayerCtrl = 0x74;
                         PxWorldPtr = 0x280;
                         ViewMatrixPtr = 0x650;
-                        // DLBackAllocator = 0x22DC;
+                        DLBackAllocator = 0xCC4;
                         Quitout = 0xDF1;
                         LoadingFlag = 0xDFC;
                     }
@@ -58,9 +58,24 @@ namespace SilkySouls2.Memory
 
             public static class CharacterManagerOffsets
             {
-                public const int PlayerStatusParamPtr = 0x730;
-                public const int PlayerStatusParam = 0xD8;
-                public const int StartingWeapon = 0x278;
+                static CharacterManagerOffsets()
+                {
+                    if (GameVersion.Current.Edition == GameEdition.Scholar)
+                    {
+                        PlayerStatusParamPtr = 0x730;
+                        PlayerStatusParam = 0xD8;
+                        StartingWeapon = 0x278;
+                    }
+                    else
+                    {
+                        PlayerStatusParamPtr = 0x398;
+                        PlayerStatusParam = 0x94;
+                        StartingWeapon = 0x1A0;
+                    }
+                }
+                public static int PlayerStatusParamPtr { get; private set; }
+                public static int PlayerStatusParam { get; private set; }
+                public static int StartingWeapon { get; private set; }
             }
 
             public static class EventManagerOffsets
@@ -136,21 +151,67 @@ namespace SilkySouls2.Memory
 
                     public static class ItemInventory2BagList
                     {
-                        public const int ItemInvetory2SpellListPtr = 0x259C8;
+                        static ItemInventory2BagList()
+                        {
+                            if (GameVersion.Current.Edition == GameEdition.Scholar)
+                            {
+                                ItemInvetory2SpellListPtr = 0x259C8;
+                            }
+                            else
+                            {
+                                ItemInvetory2SpellListPtr = 0x1E0E4;
+                            }
+                            
+                        } 
+                        public static int ItemInvetory2SpellListPtr { get; private set; }
                     }
 
                     public static class ItemInvetory2SpellList
                     {
-                        public const int ListStart = 0x10;
-                        public const int Count = 0x32;
+                        static ItemInvetory2SpellList()
+                        {
+                            if (GameVersion.Current.Edition == GameEdition.Scholar)
+                            {
+                                ListStart = 0x10;
+                                Count = 0x32;
+                            }
+                            else
+                            {
+                                ListStart = 0x8;
+                                Count = 0x1A;
+                            }
+                        }
+                        
+                        public static int ListStart { get; private set; }
+                        public static int Count { get; private set; }
                     }
 
                     public static class SpellEntry
                     {
-                        public const int NextPtr = 0x8;
-                        public const int SpellId = 0x14;
-                        public const int IsEquipped = 0x1F;
-                        public const int SlotReq = 0x21;
+                        static SpellEntry()
+                        {
+                            if (GameVersion.Current.Edition == GameEdition.Scholar)
+                            {
+                                NextPtr = 0x8;
+                                SpellId = 0x14;
+                                IsEquipped = 0x1F;
+                                SlotReq = 0x21;
+                                
+                            }
+                            else
+                            {
+                                NextPtr = 0x4;
+                                SpellId = 0xC;
+                                IsEquipped = 0x17;
+                                SlotReq = 0x19;
+                            }
+                            
+                        }
+                        
+                        public static int NextPtr { get; private set; }
+                        public static int SpellId { get; private set; }
+                        public static int IsEquipped { get; private set; }
+                        public static int SlotReq { get; private set; }
                     }
                 }
             }
@@ -202,7 +263,7 @@ namespace SilkySouls2.Memory
                         LightPoiseCurrent = 0x218;
                         LightPoiseMax = 0x220;
                         Speed = 0x2A8;
-                        EquippedSpellsPtr = 0x378;
+                        ChrAsmCtrl = 0x378;
                         EquippedSpellsStart = 0x9B8;
                         ChrSpEffectCtrl = 0x3E0;
                         StatsPtr = 0x490;
@@ -230,8 +291,8 @@ namespace SilkySouls2.Memory
                         LightPoiseCurrent = 0x1AC;
                         LightPoiseMax = 0x1B4;
                         Speed = 0x208;
-                        // EquippedSpellsPtr = 0x374;
-                        // EquippedSpellsStart = 0x9B4;
+                        ChrAsmCtrl = 0x2D4;
+                        EquippedSpellsStart = 0x7D8;
                         ChrSpEffectCtrl = 0x308;
                         StatsPtr = 0x378;
                     }
@@ -258,7 +319,7 @@ namespace SilkySouls2.Memory
                 public static int LightPoiseCurrent { get; private set; }
                 public static int LightPoiseMax { get; private set; }
                 public static int Speed { get; private set; }
-                public static int EquippedSpellsPtr { get; private set; }
+                public static int ChrAsmCtrl { get; private set; }
                 public static int EquippedSpellsStart { get; private set; }
                 public static int ChrSpEffectCtrl { get; private set; }
                 public static int StatsPtr { get; private set; }
@@ -480,6 +541,7 @@ namespace SilkySouls2.Memory
             public static long GetNumOfSpellslots1;
             public static long GetNumOfSpellslots2;
             public static long UpdateSpellSlots;
+            public static long Sleep;
         }
 
         private static int GetVanillaOffset(string playerctrl, string versionPatchVersion)

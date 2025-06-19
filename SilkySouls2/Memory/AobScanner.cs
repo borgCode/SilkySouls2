@@ -311,6 +311,17 @@ namespace SilkySouls2.Memory
                 Offsets.Funcs.HavokRayCast = FindAddressByPattern(Patterns32.HavokRayCast).ToInt32();
                 Offsets.Funcs.ItemGive = FindAddressByPattern(Patterns32.ItemGive).ToInt32();
                 Offsets.Funcs.BuildItemDialog = FindAddressByPattern(Patterns32.BuildItemDialog).ToInt32();
+                Offsets.Funcs.ShowItemDialog = FindAddressByPattern(Patterns32.ShowItemDialog).ToInt32();
+                Offsets.Funcs.CurrentItemQuantityCheck = FindAddressByPattern(Patterns32.CurrentItemQuantityCheck).ToInt32();
+                Offsets.Funcs.Sleep = FindAddressByPattern(Patterns32.Sleep).ToInt32();
+                Offsets.Funcs.UpdateSpellSlots = FindAddressByPattern(Patterns32.UpdateSpellSlots).ToInt32();
+                Offsets.Funcs.AttuneSpell = FindAddressByPattern(Patterns32.AttuneSpell).ToInt32();
+                
+                FindMultipleCallsInFunction(Patterns32.GetNumOfSpellSlots, new Dictionary<Action<long>, int>
+                {
+                    { addr => Offsets.Funcs.GetNumOfSpellslots1 = addr, -0xE },
+                    { addr => Offsets.Funcs.GetNumOfSpellslots2 = addr, -0x5 },
+                });
           
                 FindMultipleCallsInFunction(Patterns32.ConvertPxRigidToMapEntity, new Dictionary<Action<long>, int>
                 {
@@ -419,6 +430,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Funcs.GetNumOfSpellslots1: 0x{Offsets.Funcs.GetNumOfSpellslots1:X}");
             Console.WriteLine($"Funcs.GetNumOfSpellslots2: 0x{Offsets.Funcs.GetNumOfSpellslots2:X}");
             Console.WriteLine($"Funcs.UpdateSpellSlots: 0x{Offsets.Funcs.UpdateSpellSlots:X}");
+            Console.WriteLine($"Funcs.Sleep: 0x{Offsets.Funcs.Sleep:X}");
 #endif
         }
 

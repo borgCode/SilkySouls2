@@ -328,6 +328,8 @@ namespace SilkySouls2.ViewModels
             {
                 if (SetProperty(ref _autoSpawnEnabled, value))
                 {
+                    if (GameVersion.Current.Edition == GameEdition.Vanilla &&
+                        _vanillaExcludedItems.Contains(SelectedAutoSpawnWeapon.Id)) return;
                     _itemService.SetAutoSpawnWeapon(!_autoSpawnEnabled ? 3400000 : SelectedAutoSpawnWeapon.Id);
                 }
             }
@@ -343,6 +345,8 @@ namespace SilkySouls2.ViewModels
                 if (SetProperty(ref _selectedAutoSpawnWeapon, value))
                 {
                     if (!AutoSpawnEnabled) return;
+                    if (GameVersion.Current.Edition == GameEdition.Vanilla &&
+                        _vanillaExcludedItems.Contains(SelectedAutoSpawnWeapon.Id)) return;
                     _itemService.SetAutoSpawnWeapon(SelectedAutoSpawnWeapon.Id);
                 }
             }
@@ -413,7 +417,10 @@ namespace SilkySouls2.ViewModels
 
         public void ApplyLaunchFeatures()
         {
-            if (AutoSpawnEnabled) _itemService.SetAutoSpawnWeapon(SelectedAutoSpawnWeapon.Id);
+            if (!AutoSpawnEnabled) return;
+            if (GameVersion.Current.Edition == GameEdition.Vanilla &&
+                _vanillaExcludedItems.Contains(SelectedAutoSpawnWeapon.Id)) return;
+            _itemService.SetAutoSpawnWeapon(SelectedAutoSpawnWeapon.Id);
         }
 
         public void ShowCreateLoadoutWindow()

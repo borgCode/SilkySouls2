@@ -82,7 +82,7 @@
             AddressingMode.Absolute
         );
 
-        public static readonly Pattern EzStateSetEvent = new Pattern(
+        public static readonly Pattern SetEventWrapper = new Pattern(
             new byte[] { 0x41, 0x0F, 0xB6, 0xF8, 0x48, 0x8B, 0x88 },
             "xxxxxxx",
             0,

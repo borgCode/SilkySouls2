@@ -107,6 +107,14 @@
             AddressingMode.Absolute
         );
 
+        public static readonly Pattern DropRate = new Pattern(
+            new byte[] { 0xF7, 0xF6, 0x89, 0x79 },
+            "xxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+
         
         
         
@@ -317,6 +325,36 @@
             0,
             AddressingMode.Absolute
         );
+
+        public static readonly Pattern CreditSkip = new Pattern(
+            new byte[] { 0x81, 0xEC, 0xFC, 0x01, 0x00, 0x00, 0x53, 0x8B, 0xD9, 0x8B, 0x43, 0x14 },
+            "xxxxxxxxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern NumOfDrops = new Pattern(
+            new byte[] { 0x0F, 0xB6, 0x51, 0x01, 0x40 },
+            "xxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern SetEventWrapper = new Pattern(
+            new byte[] { 0x8B, 0x7D, 0x08, 0x85, 0xC9, 0x74, 0x16 },
+            "xxxxxxx",
+            -0x7,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern EzStateCompareTimer = new Pattern(
+            new byte[] { 0x83, 0xC4, 0x0C, 0x85, 0xC0, 0x0F, 0x84, 0x27, 0xD0 },
+            "xxxxxxxxx",
+            -0x59,
+            AddressingMode.Absolute
+        );
+
+
     }
     
 }

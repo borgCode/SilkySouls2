@@ -395,7 +395,7 @@ e8 00 00 00 00          call   1d &lt;_main+0x1d&gt;
 48 81 c4 18 01 00 00    add    rsp,0x118
 c3                      ret</value>
   </data>
-  <data name="CreditSkip" xml:space="preserve">
+  <data name="CreditSkip64" xml:space="preserve">
     <value>48 81 ec 20 02 00 00    sub    rsp,0x220
 83 3d 00 00 00 00 00    cmp    DWORD PTR [rip+0x0],0x0        # e &lt;_main+0xe&gt;
 75 11                   jne    21 &lt;skip&gt;
@@ -405,7 +405,7 @@ c7 05 00 00 00 00 01    mov    DWORD PTR [rip+0x0],0x1        # 21 &lt;skip&gt;
 000000000021 &lt;skip&gt;:
 e9 00 00 00 00          jmp    26 &lt;skip+0x5&gt;</value>
   </data>
-  <data name="DropCount" xml:space="preserve">
+  <data name="DropCount64" xml:space="preserve">
     <value>b8 0a 00 00 00          mov    eax,0xa
 e9 00 00 00 00          jmp    a &lt;_main+0xa&gt;</value>
   </data>
@@ -2115,7 +2115,7 @@ c6 05 00 00 00 00 00    mov    BYTE PTR [rip+0x0],0x0        # 14 &lt;_main+0x14
 ff d0                   call   rax
 e9 f3 fe ff ff          jmp    0 &lt;_main&gt;</value>
   </data>
-  <data name="DisableSnowstorm" xml:space="preserve">
+  <data name="DisableSnowstorm64" xml:space="preserve">
     <value>48 81 fa 5e 1f 02 20    cmp    rdx,0x20021f5e
 75 03                   jne    c &lt;normal&gt;
 4d 31 c0                xor    r8,r8
@@ -2321,7 +2321,7 @@ ff c6                   inc    esi
 00000000004a &lt;done&gt;:
 c3                      ret</value>
   </data>
-  <data name="DisableMemoryTimer" xml:space="preserve">
+  <data name="DisableMemoryTimer64" xml:space="preserve">
     <value>51                      push   rcx
 53                      push   rbx
 48 b9 00 00 00 00 00    movabs rcx,0x0
@@ -3402,5 +3402,73 @@ c2 04 00                ret    0x4
 89 e3                   mov    ebx,esp
 83 ec 08                sub    esp,0x8
 e9 fc ff ff ff          jmp    19 &lt;normal+0x7&gt;</value>
+  </data>
+  <data name="CreditSkip32" xml:space="preserve">
+    <value>81 ec fc 01 00 00       sub    esp,0x1fc
+83 3d 00 00 00 00 00    cmp    DWORD PTR ds:0x0,0x0
+75 11                   jne    20 &lt;skip&gt;
+c7 41 14 07 00 00 00    mov    DWORD PTR [ecx+0x14],0x7
+c7 05 00 00 00 00 01    mov    DWORD PTR ds:0x0,0x1
+00 00 00
+0020 &lt;skip&gt;:
+e9 fc ff ff ff          jmp    21 &lt;skip+0x1&gt;</value>
+  </data>
+  <data name="DropCount32" xml:space="preserve">
+    <value>ba 0a 00 00 00          mov    edx,0xa
+40                      inc    eax
+e9 fc ff ff ff          jmp    7 &lt;_main+0x7&gt;</value>
+  </data>
+  <data name="DisableSnowstorm32" xml:space="preserve">
+    <value>8b 88 cc 0c 00 00       mov    ecx,DWORD PTR [eax+0xccc]
+81 7d 08 5e 1f 02 20    cmp    DWORD PTR [ebp+0x8],0x20021f5e
+0f 85 fc ff ff ff       jne    f &lt;_main+0xf&gt;
+c7 45 0c 00 00 00 00    mov    DWORD PTR [ebp+0xc],0x0
+e9 fc ff ff ff          jmp    1b &lt;_main+0x1b&gt;</value>
+  </data>
+  <data name="DisableMemoryTimer32" xml:space="preserve">
+    <value>51                      push   ecx
+53                      push   ebx
+8b 0d 00 00 00 00       mov    ecx,DWORD PTR ds:0x0
+8b 49 28                mov    ecx,DWORD PTR [ecx+0x28]
+8b 49 04                mov    ecx,DWORD PTR [ecx+0x4]
+81 b9 cc 00 00 00 00    cmp    DWORD PTR [ecx+0xcc],0x32240000
+00 24 32
+75 1e                   jne    38 &lt;check_giant&gt;
+81 38 1a 04 00 00       cmp    DWORD PTR [eax],0x41a
+75 02                   jne    24 &lt;phase2&gt;
+eb 3c                   jmp    60 &lt;manip&gt;
+0024 &lt;phase2&gt;:
+81 38 2e 04 00 00       cmp    DWORD PTR [eax],0x42e
+75 02                   jne    2e &lt;phase3&gt;
+eb 32                   jmp    60 &lt;manip&gt;
+002e &lt;phase3&gt;:
+81 38 38 04 00 00       cmp    DWORD PTR [eax],0x438
+75 35                   jne    6b &lt;normal&gt;
+eb 28                   jmp    60 &lt;manip&gt;
+0038 &lt;check_giant&gt;:
+81 b9 cc 00 00 00 00    cmp    DWORD PTR [ecx+0xcc],0x140a0000
+00 0a 14
+75 27                   jne    6b &lt;normal&gt;
+81 38 0e 01 00 00       cmp    DWORD PTR [eax],0x10e
+75 02                   jne    4e &lt;g_phase2&gt;
+eb 12                   jmp    60 &lt;manip&gt;
+004e &lt;g_phase2&gt;:
+81 38 22 01 00 00       cmp    DWORD PTR [eax],0x122
+75 02                   jne    58 &lt;g_phase3&gt;
+eb 08                   jmp    60 &lt;manip&gt;
+0058 &lt;g_phase3&gt;:
+81 38 2c 01 00 00       cmp    DWORD PTR [eax],0x12c
+75 0b                   jne    6b &lt;normal&gt;
+0060 &lt;manip&gt;:
+bb 80 96 98 00          mov    ebx,0x989680
+66 0f 6e c3             movd   xmm0,ebx
+eb 04                   jmp    6f &lt;exit&gt;
+006b &lt;normal&gt;:
+66 0f 6e 00             movd   xmm0,DWORD PTR [eax]
+006f &lt;exit&gt;:
+0f 5b c0                cvtdq2ps xmm0,xmm0
+5b                      pop    ebx
+59                      pop    ecx
+e9 fc ff ff ff          jmp    75 &lt;exit+0x6&gt;</value>
   </data>
 </root>

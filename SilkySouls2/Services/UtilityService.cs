@@ -45,16 +45,15 @@ namespace SilkySouls2.Services
             else
             {
                 var bytes = AsmLoader.GetAsmBytes("SetEventOn32");
-                AsmHelper.WriteAbsoluteAddresses32(bytes, new []
+                AsmHelper.WriteAbsoluteAddresses32(bytes, new[]
                 {
                     (eventFlagMan.ToInt64(), 1),
                     (gameId, 0x7 + 1),
                     (setEventFunc, 0xC + 1)
                 });
-                
+
                 _memoryIo.AllocateAndExecute(bytes);
             }
-            
         }
 
         public void SetMultipleEventOn(long[] gameIds)
@@ -90,13 +89,13 @@ namespace SilkySouls2.Services
             else
             {
                 var bytes = AsmLoader.GetAsmBytes("SetEventOff32");
-                AsmHelper.WriteAbsoluteAddresses32(bytes, new []
+                AsmHelper.WriteAbsoluteAddresses32(bytes, new[]
                 {
                     (eventFlagMan.ToInt64(), 1),
                     (gameId, 0x7 + 1),
                     (setEventFunc, 0xC + 1)
                 });
-                
+
                 _memoryIo.AllocateAndExecute(bytes);
             }
         }
@@ -111,8 +110,18 @@ namespace SilkySouls2.Services
 
         public void ForceSave()
         {
-            var saveLoadSystem = _memoryIo.ReadInt64((IntPtr)_memoryIo.ReadInt64(GameManagerImp.Base) +
+            long saveLoadSystem;
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
+            {
+                saveLoadSystem = _memoryIo.ReadInt64((IntPtr)_memoryIo.ReadInt64(GameManagerImp.Base) +
                                                      GameManagerImp.Offsets.SaveLoadSystemPtr);
+            }
+            else
+            {
+                saveLoadSystem = _memoryIo.ReadInt32((IntPtr)_memoryIo.ReadInt32(GameManagerImp.Base) +
+                                                     GameManagerImp.Offsets.SaveLoadSystemPtr);
+            }
+
             _memoryIo.WriteInt32((IntPtr)saveLoadSystem + GameManagerImp.SaveLoadSystem.ForceSaveFlag1, 2);
             _memoryIo.WriteByte((IntPtr)saveLoadSystem + GameManagerImp.SaveLoadSystem.ForceSaveFlag2, 1);
         }
@@ -126,16 +135,35 @@ namespace SilkySouls2.Services
                 var hookLoc = Hooks.CreditSkip;
                 var modifyOnceFlag = CodeCaveOffsets.Base + (int)CodeCaveOffsets.CreditSkip.ModifyOnceFlag;
                 _memoryIo.WriteInt32(modifyOnceFlag, 0);
-                var codeBytes = AsmLoader.GetAsmBytes("CreditSkip");
-                AsmHelper.WriteRelativeOffsets(codeBytes, new[]
+
+                if (GameVersion.Current.Edition == GameEdition.Scholar)
                 {
-                    (code.ToInt64() + 0x7, modifyOnceFlag.ToInt64(), 7, 0x7 + 2),
-                    (code.ToInt64() + 0x17, modifyOnceFlag.ToInt64(), 10, 0x17 + 2),
-                    (code.ToInt64() + 0x21, hookLoc + 7, 5, 0x21 + 1)
-                });
-                _memoryIo.WriteBytes(code, codeBytes);
-                _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[]
-                    { 0x48, 0x81, 0xEC, 0x20, 0x02, 0x00, 0x00 });
+                    var codeBytes = AsmLoader.GetAsmBytes("CreditSkip64");
+                    AsmHelper.WriteRelativeOffsets(codeBytes, new[]
+                    {
+                        (code.ToInt64() + 0x7, modifyOnceFlag.ToInt64(), 7, 0x7 + 2),
+                        (code.ToInt64() + 0x17, modifyOnceFlag.ToInt64(), 10, 0x17 + 2),
+                        (code.ToInt64() + 0x21, hookLoc + 7, 5, 0x21 + 1)
+                    });
+                    _memoryIo.WriteBytes(code, codeBytes);
+                    _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[]
+                        { 0x48, 0x81, 0xEC, 0x20, 0x02, 0x00, 0x00 });
+                }
+                else
+                {
+                    var codeBytes = AsmLoader.GetAsmBytes("CreditSkip32");
+                    var bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 6, code + 0x25);
+                    Array.Copy(bytes, 0, codeBytes, 0x20 + 1, 4);
+                    AsmHelper.WriteAbsoluteAddresses32(codeBytes, new[]
+                    {
+                        (modifyOnceFlag.ToInt64(), 0x6 + 2),
+                        (modifyOnceFlag.ToInt64(), 0x16 + 2)
+                    });
+
+                    _memoryIo.WriteBytes(code, codeBytes);
+                    _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[]
+                        { 0x81, 0xEC, 0xFC, 0x01, 0x00, 0x00 });
+                }
             }
             else
             {
@@ -150,27 +178,49 @@ namespace SilkySouls2.Services
 
             if (is100DropEnabled)
             {
-                _memoryIo.WriteBytes(Patches.DropRate, new byte[] { 0x90, 0x90, 0x90 });
-
-                var codeBytes = AsmLoader.GetAsmBytes("DropCount");
-                var bytes = AsmHelper.GetJmpOriginOffsetBytes(dropCountHook, 5, dropCountCode + 0xA);
-                Array.Copy(bytes, 0, codeBytes, 0x5 + 1, 4);
-                _memoryIo.WriteBytes(dropCountCode, codeBytes);
-
-
-                _hookManager.InstallHook(dropCountCode.ToInt64(), dropCountHook, new byte[]
-                    { 0x41, 0x0F, 0xB6, 0x47, 0x01 });
+                if (GameVersion.Current.Edition == GameEdition.Scholar)
+                    Setup100DropScholar(dropCountCode, dropCountHook);
+                else Setup100DropVanilla(dropCountCode, dropCountHook);
             }
             else
             {
-                _memoryIo.WriteBytes(Patches.DropRate, new byte[] { 0x41, 0xF7, 0xF2 });
+                _memoryIo.WriteBytes(Patches.DropRate,
+                    GameVersion.Current.Edition == GameEdition.Scholar
+                        ? new byte[] { 0x41, 0xF7, 0xF2 }
+                        : new byte[] { 0xF7, 0xF6 });
+
                 _hookManager.UninstallHook(dropCountCode.ToInt64());
             }
         }
 
+        private void Setup100DropScholar(IntPtr dropCountCode, long dropCountHook)
+        {
+            _memoryIo.WriteBytes(Patches.DropRate, new byte[] { 0x90, 0x90, 0x90 });
+
+            var codeBytes = AsmLoader.GetAsmBytes("DropCount64");
+            var bytes = AsmHelper.GetJmpOriginOffsetBytes(dropCountHook, 5, dropCountCode + 0xA);
+            Array.Copy(bytes, 0, codeBytes, 0x5 + 1, 4);
+            _memoryIo.WriteBytes(dropCountCode, codeBytes);
+            _hookManager.InstallHook(dropCountCode.ToInt64(), dropCountHook, new byte[]
+                { 0x41, 0x0F, 0xB6, 0x47, 0x01 });
+        }
+
+        private void Setup100DropVanilla(IntPtr dropCountCode, long dropCountHook)
+        {
+            _memoryIo.WriteBytes(Patches.DropRate, new byte[] { 0x90, 0x90 });
+
+            var codeBytes = AsmLoader.GetAsmBytes("DropCount32");
+            var bytes = AsmHelper.GetJmpOriginOffsetBytes(dropCountHook, 5, dropCountCode + 0xB);
+            Array.Copy(bytes, 0, codeBytes, 0x6 + 1, 4);
+            _memoryIo.WriteBytes(dropCountCode, codeBytes);
+
+            _hookManager.InstallHook(dropCountCode.ToInt64(), dropCountHook, new byte[]
+                { 0x0F, 0xB6, 0x51, 0x01, 0x40 });
+        }
+
+
         public void ToggleNoClip(bool isNoClipEnabled)
         {
-            
             var triggersAndSpaceCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.TriggersAndSpaceCheck;
             var ctrlCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.CtrlCheck;
             var coordsCode = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.UpdateCoords;
@@ -195,117 +245,118 @@ namespace SilkySouls2.Services
                 _hookManager.UninstallHook(ctrlCode.ToInt64());
                 _hookManager.UninstallHook(raycastCode.ToInt64());
             }
-            
         }
 
-        private void SetupNoClipHooks64Bit(IntPtr triggersAndSpaceCode, IntPtr ctrlCode, IntPtr coordsCode, IntPtr raycastCode)
+        private void SetupNoClipHooks64Bit(IntPtr triggersAndSpaceCode, IntPtr ctrlCode, IntPtr coordsCode,
+            IntPtr raycastCode)
         {
             var triggersAndSpaceHook = Hooks.TriggersAndSpace;
-                var ctrlHook = Hooks.Ctrl;
-                var coordsHook = Hooks.NoClipUpdateCoords;
-                var rayCastHook = Hooks.ProcessPhysics;
+            var ctrlHook = Hooks.Ctrl;
+            var coordsHook = Hooks.NoClipUpdateCoords;
+            var rayCastHook = Hooks.ProcessPhysics;
 
-                var zDirectionLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.ZDirection;
-                
-                var codeBytes = AsmLoader.GetAsmBytes("NoClip_TriggersAndSpace64");
-                AsmHelper.WriteRelativeOffsets(codeBytes, new []
-                {
-                    (triggersAndSpaceCode.ToInt64() + 0x1C, zDirectionLoc.ToInt64(), 7, 0x1C + 2),
-                    (triggersAndSpaceCode.ToInt64() + 0x35, zDirectionLoc.ToInt64(), 7, 0x35 + 2),
-                    (triggersAndSpaceCode.ToInt64() + 0x4E, zDirectionLoc.ToInt64(), 7, 0x4E + 2),
-                    (triggersAndSpaceCode.ToInt64() + 0x56, triggersAndSpaceHook + 0x9, 5, 0x56 + 1),
-                });
-                _memoryIo.WriteBytes(triggersAndSpaceCode, codeBytes);
+            var zDirectionLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.ZDirection;
 
-                codeBytes = AsmLoader.GetAsmBytes("NoClip_CtrlCheck64");
-                AsmHelper.WriteRelativeOffsets(codeBytes, new []
-                {
-                    (ctrlCode.ToInt64(), zDirectionLoc.ToInt64(), 7, 0x0 + 2),
-                    (ctrlCode.ToInt64() + 0x7, ctrlHook + 0xA, 5, 0x7 + 1)
-                });
-                
-                _memoryIo.WriteBytes(ctrlCode, codeBytes);
-                
-                codeBytes = AsmLoader.GetAsmBytes("NoClip_UpdateCoords64");
-                AsmHelper.WriteAbsoluteAddresses64(codeBytes, new []
-                {
-                    (GameManagerImp.Base.ToInt64(), 0x1 + 2),
-                    (GameManagerImp.Base.ToInt64(), 0x29 + 2),
-                    (GameManagerImp.Base.ToInt64(), 0x73 + 2),
-                    (HkHardwareInfo.Base.ToInt64(), 0xFB + 2)
-                });
-                
-                AsmHelper.WriteRelativeOffsets(codeBytes, new []
-                {
-                    (coordsCode.ToInt64() + 0xC2, zDirectionLoc.ToInt64(), 6, 0xC2 + 2),
-                    (coordsCode.ToInt64() + 0xEC, zDirectionLoc.ToInt64(), 7, 0xEC + 2),
-                    (coordsCode.ToInt64() + 0x17F, coordsHook + 0x8, 5, 0x17F + 1),
-                    (coordsCode.ToInt64() + 0x18D, coordsHook + 0x8, 5, 0x18D + 1)
-                });
-                
-                _memoryIo.WriteBytes(coordsCode, codeBytes);
+            var codeBytes = AsmLoader.GetAsmBytes("NoClip_TriggersAndSpace64");
+            AsmHelper.WriteRelativeOffsets(codeBytes, new[]
+            {
+                (triggersAndSpaceCode.ToInt64() + 0x1C, zDirectionLoc.ToInt64(), 7, 0x1C + 2),
+                (triggersAndSpaceCode.ToInt64() + 0x35, zDirectionLoc.ToInt64(), 7, 0x35 + 2),
+                (triggersAndSpaceCode.ToInt64() + 0x4E, zDirectionLoc.ToInt64(), 7, 0x4E + 2),
+                (triggersAndSpaceCode.ToInt64() + 0x56, triggersAndSpaceHook + 0x9, 5, 0x56 + 1),
+            });
+            _memoryIo.WriteBytes(triggersAndSpaceCode, codeBytes);
 
-                codeBytes = AsmLoader.GetAsmBytes("NoClip_RayCast64");
+            codeBytes = AsmLoader.GetAsmBytes("NoClip_CtrlCheck64");
+            AsmHelper.WriteRelativeOffsets(codeBytes, new[]
+            {
+                (ctrlCode.ToInt64(), zDirectionLoc.ToInt64(), 7, 0x0 + 2),
+                (ctrlCode.ToInt64() + 0x7, ctrlHook + 0xA, 5, 0x7 + 1)
+            });
 
-                var frameCounter = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.FrameCounter;
-                var rayInput = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.RayInput;
-                var rayOutput = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.RayOutput;
-                var mapId = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.MapId;
-                
-                var raycastFunc = Funcs.HavokRayCast;
-                var convertToMap = Funcs.ConvertPxRigidToMapEntity;
-                var convertToMapId = Funcs.ConvertMapEntityToGameId;
-                
-                AsmHelper.WriteRelativeOffsets(codeBytes, new []
-                {
-                    (raycastCode.ToInt64() + 0x24, frameCounter.ToInt64(), 6, 0x24 + 2),
-                    (raycastCode.ToInt64() + 0x2A, frameCounter.ToInt64(), 7, 0x2A + 2),
-                    (raycastCode.ToInt64() + 0x3A, frameCounter.ToInt64(), 6, 0x3A + 2),
-                    (raycastCode.ToInt64() + 0x8B, rayInput.ToInt64(), 7, 0x8B + 3),
-                    (raycastCode.ToInt64() + 0xC9, rayOutput.ToInt64(), 7, 0xC9 + 3),
-                    (raycastCode.ToInt64() + 0xE0, raycastFunc, 5, 0xE0 + 1),
-                    (raycastCode.ToInt64() + 0xE5, rayInput.ToInt64(), 7, 0xE5 + 3),
-                    (raycastCode.ToInt64() + 0x110, rayOutput.ToInt64() + (0x30 * 1), 7, 0x110 + 3),
-                    (raycastCode.ToInt64() + 0x127, raycastFunc, 5, 0x127 + 1),
-                    (raycastCode.ToInt64() + 0x12C, rayInput.ToInt64(), 7, 0x12C + 3),
-                    (raycastCode.ToInt64() + 0x157, rayOutput.ToInt64() + (0x30 * 2), 7, 0x157 + 3),
-                    (raycastCode.ToInt64() + 0x16E, raycastFunc, 5, 0x16E + 1),
-                    (raycastCode.ToInt64() + 0x173, rayInput.ToInt64(), 7, 0x173 + 3),
-                    (raycastCode.ToInt64() + 0x19E, rayOutput.ToInt64() + (0x30 * 3), 7, 0x19E + 3),
-                    (raycastCode.ToInt64() + 0x1B5, raycastFunc, 5, 0x1B5 + 1),
-                    (raycastCode.ToInt64() + 0x1BA, rayInput.ToInt64(), 7, 0x1BA + 3),
-                    (raycastCode.ToInt64() + 0x1E5, rayOutput.ToInt64() + (0x30 * 4), 7, 0x1E5 + 3),
-                    (raycastCode.ToInt64() + 0x1FC, raycastFunc, 5, 0x1FC + 1),
-                    (raycastCode.ToInt64() + 0x21E, rayOutput.ToInt64(), 7, 0x21E + 3),
-                    (raycastCode.ToInt64() + 0x24A, rayOutput.ToInt64(), 7, 0x24A + 3),
-                    (raycastCode.ToInt64() + 0x25F, convertToMap, 5, 0x25F + 1),
-                    (raycastCode.ToInt64() + 0x26B, mapId.ToInt64(), 7, 0x26B + 3),
-                    (raycastCode.ToInt64() + 0x276, convertToMapId, 5, 0x276 + 1),
-                    (raycastCode.ToInt64() + 0x2BF, rayCastHook + 0x5, 5, 0x2BF + 1)
-                });
-                
-                AsmHelper.WriteAbsoluteAddresses64(codeBytes, new []
-                {
-                    (GameManagerImp.Base.ToInt64(), 0x6 + 2),
-                    (GameManagerImp.Base.ToInt64(), 0x70 + 2)
-                });
+            _memoryIo.WriteBytes(ctrlCode, codeBytes);
 
-                _memoryIo.WriteBytes(raycastCode, codeBytes);
-                
-                
-                _memoryIo.WriteByte(GetGravityPtr(), 1);
-                
-                _hookManager.InstallHook(triggersAndSpaceCode.ToInt64(), triggersAndSpaceHook, new byte[]
-                    { 0x4C, 0x8B, 0x7C, 0x24, 0x70, 0x48, 0x8B, 0x43, 0x08 });
-                _hookManager.InstallHook(ctrlCode.ToInt64(), ctrlHook, new byte[]
-                    { 0x81, 0x8B, 0x28, 0x02, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00 });
-                _hookManager.InstallHook(coordsCode.ToInt64(), coordsHook, 
+            codeBytes = AsmLoader.GetAsmBytes("NoClip_UpdateCoords64");
+            AsmHelper.WriteAbsoluteAddresses64(codeBytes, new[]
+            {
+                (GameManagerImp.Base.ToInt64(), 0x1 + 2),
+                (GameManagerImp.Base.ToInt64(), 0x29 + 2),
+                (GameManagerImp.Base.ToInt64(), 0x73 + 2),
+                (HkHardwareInfo.Base.ToInt64(), 0xFB + 2)
+            });
+
+            AsmHelper.WriteRelativeOffsets(codeBytes, new[]
+            {
+                (coordsCode.ToInt64() + 0xC2, zDirectionLoc.ToInt64(), 6, 0xC2 + 2),
+                (coordsCode.ToInt64() + 0xEC, zDirectionLoc.ToInt64(), 7, 0xEC + 2),
+                (coordsCode.ToInt64() + 0x17F, coordsHook + 0x8, 5, 0x17F + 1),
+                (coordsCode.ToInt64() + 0x18D, coordsHook + 0x8, 5, 0x18D + 1)
+            });
+
+            _memoryIo.WriteBytes(coordsCode, codeBytes);
+
+            codeBytes = AsmLoader.GetAsmBytes("NoClip_RayCast64");
+
+            var frameCounter = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.FrameCounter;
+            var rayInput = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.RayInput;
+            var rayOutput = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.RayOutput;
+            var mapId = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.MapId;
+
+            var raycastFunc = Funcs.HavokRayCast;
+            var convertToMap = Funcs.ConvertPxRigidToMapEntity;
+            var convertToMapId = Funcs.ConvertMapEntityToGameId;
+
+            AsmHelper.WriteRelativeOffsets(codeBytes, new[]
+            {
+                (raycastCode.ToInt64() + 0x24, frameCounter.ToInt64(), 6, 0x24 + 2),
+                (raycastCode.ToInt64() + 0x2A, frameCounter.ToInt64(), 7, 0x2A + 2),
+                (raycastCode.ToInt64() + 0x3A, frameCounter.ToInt64(), 6, 0x3A + 2),
+                (raycastCode.ToInt64() + 0x8B, rayInput.ToInt64(), 7, 0x8B + 3),
+                (raycastCode.ToInt64() + 0xC9, rayOutput.ToInt64(), 7, 0xC9 + 3),
+                (raycastCode.ToInt64() + 0xE0, raycastFunc, 5, 0xE0 + 1),
+                (raycastCode.ToInt64() + 0xE5, rayInput.ToInt64(), 7, 0xE5 + 3),
+                (raycastCode.ToInt64() + 0x110, rayOutput.ToInt64() + (0x30 * 1), 7, 0x110 + 3),
+                (raycastCode.ToInt64() + 0x127, raycastFunc, 5, 0x127 + 1),
+                (raycastCode.ToInt64() + 0x12C, rayInput.ToInt64(), 7, 0x12C + 3),
+                (raycastCode.ToInt64() + 0x157, rayOutput.ToInt64() + (0x30 * 2), 7, 0x157 + 3),
+                (raycastCode.ToInt64() + 0x16E, raycastFunc, 5, 0x16E + 1),
+                (raycastCode.ToInt64() + 0x173, rayInput.ToInt64(), 7, 0x173 + 3),
+                (raycastCode.ToInt64() + 0x19E, rayOutput.ToInt64() + (0x30 * 3), 7, 0x19E + 3),
+                (raycastCode.ToInt64() + 0x1B5, raycastFunc, 5, 0x1B5 + 1),
+                (raycastCode.ToInt64() + 0x1BA, rayInput.ToInt64(), 7, 0x1BA + 3),
+                (raycastCode.ToInt64() + 0x1E5, rayOutput.ToInt64() + (0x30 * 4), 7, 0x1E5 + 3),
+                (raycastCode.ToInt64() + 0x1FC, raycastFunc, 5, 0x1FC + 1),
+                (raycastCode.ToInt64() + 0x21E, rayOutput.ToInt64(), 7, 0x21E + 3),
+                (raycastCode.ToInt64() + 0x24A, rayOutput.ToInt64(), 7, 0x24A + 3),
+                (raycastCode.ToInt64() + 0x25F, convertToMap, 5, 0x25F + 1),
+                (raycastCode.ToInt64() + 0x26B, mapId.ToInt64(), 7, 0x26B + 3),
+                (raycastCode.ToInt64() + 0x276, convertToMapId, 5, 0x276 + 1),
+                (raycastCode.ToInt64() + 0x2BF, rayCastHook + 0x5, 5, 0x2BF + 1)
+            });
+
+            AsmHelper.WriteAbsoluteAddresses64(codeBytes, new[]
+            {
+                (GameManagerImp.Base.ToInt64(), 0x6 + 2),
+                (GameManagerImp.Base.ToInt64(), 0x70 + 2)
+            });
+
+            _memoryIo.WriteBytes(raycastCode, codeBytes);
+
+
+            _memoryIo.WriteByte(GetGravityPtr(), 1);
+
+            _hookManager.InstallHook(triggersAndSpaceCode.ToInt64(), triggersAndSpaceHook, new byte[]
+                { 0x4C, 0x8B, 0x7C, 0x24, 0x70, 0x48, 0x8B, 0x43, 0x08 });
+            _hookManager.InstallHook(ctrlCode.ToInt64(), ctrlHook, new byte[]
+                { 0x81, 0x8B, 0x28, 0x02, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00 });
+            _hookManager.InstallHook(coordsCode.ToInt64(), coordsHook,
                 new byte[] { 0x66, 0x0F, 0x7F, 0xB8, 0x90, 0x00, 0x00, 0x00 });
-                _hookManager.InstallHook(raycastCode.ToInt64(), rayCastHook, new byte[]
-                    { 0x48, 0x8D, 0x54, 0x24, 0x20 });
+            _hookManager.InstallHook(raycastCode.ToInt64(), rayCastHook, new byte[]
+                { 0x48, 0x8D, 0x54, 0x24, 0x20 });
         }
 
-        private void SetupNoClipHooks32Bit(IntPtr triggersAndSpaceCode, IntPtr ctrlCode, IntPtr coordsCode, IntPtr raycastCode)
+        private void SetupNoClipHooks32Bit(IntPtr triggersAndSpaceCode, IntPtr ctrlCode, IntPtr coordsCode,
+            IntPtr raycastCode)
         {
             var triggersAndSpaceHook = Hooks.TriggersAndSpace;
             var ctrlHook = Hooks.Ctrl;
@@ -316,7 +367,7 @@ namespace SilkySouls2.Services
             var codeBytes = AsmLoader.GetAsmBytes("NoClip_TriggersAndSpace32");
             var bytes = AsmHelper.GetJmpOriginOffsetBytes(triggersAndSpaceHook, 9, triggersAndSpaceCode + 0x52);
             Array.Copy(bytes, 0, codeBytes, 0x4D + 1, 4);
-            AsmHelper.WriteAbsoluteAddresses32(codeBytes, new []
+            AsmHelper.WriteAbsoluteAddresses32(codeBytes, new[]
             {
                 (zDirectionLoc.ToInt64(), 0x19 + 2),
                 (zDirectionLoc.ToInt64(), 0x2F + 2),
@@ -324,19 +375,19 @@ namespace SilkySouls2.Services
             });
             _memoryIo.WriteBytes(triggersAndSpaceCode, codeBytes);
 
-            
+
             codeBytes = AsmLoader.GetAsmBytes("NoClip_CtrlCheck32");
             bytes = BitConverter.GetBytes(zDirectionLoc.ToInt32());
             Array.Copy(bytes, 0, codeBytes, 2, 4);
             bytes = AsmHelper.GetJmpOriginOffsetBytes(ctrlHook, 0xA, ctrlCode + 0xC);
             Array.Copy(bytes, 0, codeBytes, 0x7 + 1, 4);
-            
+
             _memoryIo.WriteBytes(ctrlCode, codeBytes);
-            
-            
+
+
             codeBytes = AsmLoader.GetAsmBytes("NoClip_UpdateCoords32");
-            
-            AsmHelper.WriteAbsoluteAddresses32(codeBytes, new []
+
+            AsmHelper.WriteAbsoluteAddresses32(codeBytes, new[]
             {
                 (GameManagerImp.Base.ToInt64(), 0x1 + 2),
                 (GameManagerImp.Base.ToInt64(), 0x4E + 2),
@@ -344,27 +395,27 @@ namespace SilkySouls2.Services
                 (zDirectionLoc.ToInt64(), 0xB0 + 2),
                 (GameManagerImp.Base.ToInt64(), 0xBB + 2),
             });
-            
-            AsmHelper.WriteJumpOffsets(codeBytes, new []
+
+            AsmHelper.WriteJumpOffsets(codeBytes, new[]
             {
                 (coordsHook, 20, coordsCode + 0x127, 0x127 + 1),
                 (coordsHook, 5, coordsCode + 0x132, 0x132 + 1)
             });
-            
+
             _memoryIo.WriteBytes(coordsCode, codeBytes);
-            
+
             var frameCounter = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.FrameCounter;
             var rayInput = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.RayInput;
             var rayOutput = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.RayOutput;
             var mapId = CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.MapId;
-                
+
             var raycastFunc = Funcs.HavokRayCast;
             var convertToMap = Funcs.ConvertPxRigidToMapEntity;
             var convertToMapId = Funcs.ConvertMapEntityToGameId;
-            
+
             codeBytes = AsmLoader.GetAsmBytes("NoClip_RayCast32");
-            
-            AsmHelper.WriteAbsoluteAddresses32(codeBytes, new []
+
+            AsmHelper.WriteAbsoluteAddresses32(codeBytes, new[]
             {
                 (GameManagerImp.Base.ToInt64(), 0x1 + 1),
                 (frameCounter.ToInt64(), 0xF + 2),
@@ -384,8 +435,8 @@ namespace SilkySouls2.Services
                 (rayOutput.ToInt64(), 0x1E4 + 2),
                 (mapId.ToInt64(), 0x1FC + 2)
             });
-            
-            AsmHelper.WriteRelativeOffsets(codeBytes, new []
+
+            AsmHelper.WriteRelativeOffsets(codeBytes, new[]
             {
                 (raycastCode.ToInt64() + 0xA4, raycastFunc, 5, 0xA4 + 1),
                 (raycastCode.ToInt64() + 0xE3, raycastFunc, 5, 0xE3 + 1),
@@ -396,11 +447,11 @@ namespace SilkySouls2.Services
                 (raycastCode.ToInt64() + 0x202, convertToMapId, 5, 0x202 + 1),
                 (raycastCode.ToInt64() + 0x24D, rayCastHook + 0x6, 5, 0x24D + 1),
             });
-            
+
             _memoryIo.WriteBytes(raycastCode, codeBytes);
-            
+
             _memoryIo.WriteByte(GetGravityPtr(), 1);
-            
+
             _hookManager.InstallHook(triggersAndSpaceCode.ToInt64(), triggersAndSpaceHook, new byte[]
                 { 0x8B, 0x56, 0x08, 0x89, 0x86, 0x04, 0x01, 0x00, 0x00 });
             _hookManager.InstallHook(ctrlCode.ToInt64(), ctrlHook, new byte[]
@@ -409,7 +460,6 @@ namespace SilkySouls2.Services
                 { 0xF3, 0x0F, 0x7E, 0x45, 0xD0 });
             _hookManager.InstallHook(raycastCode.ToInt64(), rayCastHook, new byte[]
                 { 0x8B, 0x8E, 0xB8, 0x00, 0x00, 0x00 });
-
         }
 
         public void SetNoClipSpeed(byte[] xBytes, byte[] yBytes)
@@ -428,7 +478,6 @@ namespace SilkySouls2.Services
                 _memoryIo.WriteBytes(CodeCaveOffsets.Base + (int)CodeCaveOffsets.NoClip.UpdateCoords + 0x3E + 1,
                     yBytes);
             }
-            
         }
 
         private IntPtr GetGravityPtr() => _memoryIo.FollowPointers(GameManagerImp.Base, new[]
@@ -437,7 +486,7 @@ namespace SilkySouls2.Services
             GameManagerImp.ChrCtrlOffsets.ChrPhysicsCtrlPtr,
             GameManagerImp.ChrCtrlOffsets.ChrPhysicsCtrl.Gravity
         }, false);
-        
+
         public void ToggleKillboxHook(bool isEnabled)
         {
             var code = CodeCaveOffsets.Base + CodeCaveOffsets.Killbox;
@@ -454,7 +503,7 @@ namespace SilkySouls2.Services
                     {
                         (code.ToInt64() + 0x2b, hookLoc + 0xA, 5, 0x2b + 1)
                     });
-                
+
                     _memoryIo.WriteBytes(code, codeBytes);
                     _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[]
                         { 0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00 });
@@ -468,11 +517,8 @@ namespace SilkySouls2.Services
                     Array.Copy(bytes, 0, codeBytes, 0x18 + 1, 4);
                     _memoryIo.WriteBytes(code, codeBytes);
                     _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[]
-                        { 0x53,0x89, 0xE3, 0x83, 0xEC, 0x08});
-                    
+                        { 0x53, 0x89, 0xE3, 0x83, 0xEC, 0x08 });
                 }
-                
-                
             }
             else
             {
@@ -497,6 +543,7 @@ namespace SilkySouls2.Services
 
         public void ToggleDrawSound(bool isDrawSoundEnabled) =>
             _dllManager.ToggleRender(DrawType.Sound, isDrawSoundEnabled);
+
         public void ToggleTargetingView(bool isTargetingViewEnabled) =>
             _dllManager.ToggleRender(DrawType.TargetingView, isTargetingViewEnabled);
 
@@ -507,13 +554,13 @@ namespace SilkySouls2.Services
             _memoryIo.WriteBytes(Patches.HideChrModels,
                 isHideCharactersEnabled ? new byte[] { 0x75, 0x5 } : new byte[] { 0x74, 0x5 });
 
-        public void ToggleHideMap(bool isHideMapEnabled) => 
+        public void ToggleHideMap(bool isHideMapEnabled) =>
             _memoryIo.WriteBytes(Patches.HideMap + 0x1, //js rel to jns rel
                 isHideMapEnabled ? new byte[] { 0x89 } : new byte[] { 0x88 });
 
         public void SetGameSpeed(float value) => _dllManager.SetSpeed(value);
 
-        public void ToggleRagdollEsp(bool isSeeThroughwallsEnabled) => 
+        public void ToggleRagdollEsp(bool isSeeThroughwallsEnabled) =>
             _dllManager.ToggleRender(DrawType.RagdollEsp, isSeeThroughwallsEnabled);
 
         public void ToggleDrawCol(bool isDrawCollisionEnabled) =>
@@ -531,13 +578,29 @@ namespace SilkySouls2.Services
 
             if (isSnowstormDisabled)
             {
-                var origin = Hooks.EzStateSetEvent;
-                var bytes = AsmLoader.GetAsmBytes("DisableSnowstorm");
-                var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 11, code + 0x1C);
-                Array.Copy(jmpBytes, 0, bytes, 0x17 + 1, 4);
-                _memoryIo.WriteBytes(code, bytes);
-                _hookManager.InstallHook(code.ToInt64(), origin, new byte[]
-                    { 0x41, 0x0F, 0xB6, 0xF8, 0x48, 0x8B, 0x88, 0xF0, 0x22, 0x00, 0x00 });
+                var origin = Hooks.SetEventWrapper;
+
+                if (GameVersion.Current.Edition == GameEdition.Scholar)
+                {
+                    var bytes = AsmLoader.GetAsmBytes("DisableSnowstorm64");
+                    var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 11, code + 0x1C);
+                    Array.Copy(jmpBytes, 0, bytes, 0x17 + 1, 4);
+                    _memoryIo.WriteBytes(code, bytes);
+                    _hookManager.InstallHook(code.ToInt64(), origin, new byte[]
+                        { 0x41, 0x0F, 0xB6, 0xF8, 0x48, 0x8B, 0x88, 0xF0, 0x22, 0x00, 0x00 });
+                }
+                else
+                {
+                    var bytes = AsmLoader.GetAsmBytes("DisableSnowstorm32");
+                    AsmHelper.WriteRelativeOffsets(bytes, new []
+                    {
+                        (code.ToInt64() + 0xD, origin + 6, 6, 0xD + 2),
+                        (code.ToInt64() + 0x1A, origin + 6, 5, 0x1A + 1),
+                    });
+                    _memoryIo.WriteBytes(code, bytes);
+                    _hookManager.InstallHook(code.ToInt64(), origin, new byte[]
+                        { 0x8B, 0x88, 0xCC, 0x0C, 0x00, 0x00 });
+                }
             }
             else
             {
@@ -548,21 +611,37 @@ namespace SilkySouls2.Services
         public void ToggleMemoryTimer(bool isMemoryTimerDisabled)
         {
             var code = CodeCaveOffsets.Base + CodeCaveOffsets.DisableMemoryTimer;
-            
+
             if (isMemoryTimerDisabled)
             {
                 var origin = Hooks.EzStateCompareTimer;
-                var codeBytes = AsmLoader.GetAsmBytes("DisableMemoryTimer");
+                if (GameVersion.Current.Edition == GameEdition.Scholar)
+                {
+                    var codeBytes = AsmLoader.GetAsmBytes("DisableMemoryTimer64");
 
-                var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt64());
-                Array.Copy(bytes, 0, codeBytes, 0x2 + 2, 8);
+                    var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt64());
+                    Array.Copy(bytes, 0, codeBytes, 0x2 + 2, 8);
 
-                bytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 7, code + 0xC1);
-                Array.Copy(bytes, 0, codeBytes, 0xBC + 1, 4);
+                    bytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 7, code + 0xC1);
+                    Array.Copy(bytes, 0, codeBytes, 0xBC + 1, 4);
+
+                    _memoryIo.WriteBytes(code, codeBytes);
+                    _hookManager.InstallHook(code.ToInt64(), origin, new byte[]
+                        { 0x66, 0x0F, 0x6E, 0x30, 0x0F, 0x5B, 0xF6 });
+                }
+                else
+                {
+                    var codeBytes = AsmLoader.GetAsmBytes("DisableMemoryTimer32");
+                    var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt32());
+                    Array.Copy(bytes, 0, codeBytes, 0x2 + 2, 4);
+                    bytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 7, code + 0x79);
+                    Array.Copy(bytes, 0, codeBytes, 0x74 + 1, 4);
+                    
+                    _memoryIo.WriteBytes(code, codeBytes);
+                    _hookManager.InstallHook(code.ToInt64(), origin, new byte[]
+                        { 0x66, 0x0F, 0x6E, 0x00, 0x0F, 0x5B, 0xC0 });
+                }
                 
-                _memoryIo.WriteBytes(code, codeBytes);
-                _hookManager.InstallHook(code.ToInt64(), origin, new byte[]
-                    { 0x66, 0x0F, 0x6E, 0x30, 0x0F, 0x5B, 0xF6 });
             }
             else
             {
@@ -581,12 +660,12 @@ namespace SilkySouls2.Services
                 var getMapEntity = Funcs.GetMapEntityWithAreaIdAndObjId;
                 var getComponent = Funcs.GetMapObjStateActComponent;
                 var setSharedFlag = Hooks.SetSharedFlag;
-                
+
                 if (GameVersion.Current.Edition == GameEdition.Scholar)
                 {
                     var bytes = AsmLoader.GetAsmBytes("IvorySkip64");
-                
-                    AsmHelper.WriteAbsoluteAddresses64(bytes, new []
+
+                    AsmHelper.WriteAbsoluteAddresses64(bytes, new[]
                     {
                         (getMapEntity, 0x5C + 2),
                         (getComponent, 0x66 + 2),
@@ -595,14 +674,14 @@ namespace SilkySouls2.Services
 
                     var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 5, code + 0xDB);
                     Array.Copy(jmpBytes, 0, bytes, 0xD6 + 1, 4);
-                
+
                     _memoryIo.WriteBytes(code, bytes);
-                    
+
                     bytes = AsmLoader.GetAsmBytes("IvoryKnights64");
                     jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(setSharedFlag, 8, knightsCode + 0x24);
                     Array.Copy(jmpBytes, 0, bytes, 0x1F + 1, 4);
                     _memoryIo.WriteBytes(knightsCode, bytes);
-                
+
                     _hookManager.InstallHook(code.ToInt64(), origin, new byte[]
                         { 0x48, 0x89, 0x74, 0x24, 0x10 });
                     _hookManager.InstallHook(knightsCode.ToInt64(), setSharedFlag, new byte[]
@@ -613,7 +692,7 @@ namespace SilkySouls2.Services
                     var bytes = AsmLoader.GetAsmBytes("IvorySkip32");
                     var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 6, code + 0xA7);
                     Array.Copy(jmpBytes, 0, bytes, 0xA1 + 1, 4);
-                    AsmHelper.WriteAbsoluteAddresses32(bytes, new []
+                    AsmHelper.WriteAbsoluteAddresses32(bytes, new[]
                     {
                         (origin, 0x25 + 1),
                         (getMapEntity, 0x46 + 3),
@@ -621,20 +700,18 @@ namespace SilkySouls2.Services
                     });
 
                     _memoryIo.WriteBytes(code, bytes);
-                    
-                    
+
+
                     bytes = AsmLoader.GetAsmBytes("IvoryKnights32");
                     jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(setSharedFlag, 7, knightsCode + 0x21);
                     Array.Copy(jmpBytes, 0, bytes, 0x1B + 1, 4);
                     _memoryIo.WriteBytes(knightsCode, bytes);
-                    
+
                     _hookManager.InstallHook(code.ToInt64(), origin, new byte[]
-                        { 0x55, 0x89, 0xE5, 0x83, 0xEC, 0x08});
+                        { 0x55, 0x89, 0xE5, 0x83, 0xEC, 0x08 });
                     _hookManager.InstallHook(knightsCode.ToInt64(), setSharedFlag, new byte[]
                         { 0x88, 0x94, 0x08, 0xA1, 0x02, 0x00, 0x00 });
-
                 }
-
             }
             else
             {
@@ -642,7 +719,7 @@ namespace SilkySouls2.Services
                 _hookManager.UninstallHook(knightsCode.ToInt64());
             }
         }
-        
+
         public void SetObjState(long areaId, GameIds.Obj.SetObjState objData)
         {
             var getMapEntity = Funcs.GetMapEntityWithAreaIdAndObjId;
@@ -651,7 +728,7 @@ namespace SilkySouls2.Services
             if (GameVersion.Current.Edition == GameEdition.Scholar)
             {
                 var bytes = AsmLoader.GetAsmBytes("SetObjState64");
-                AsmHelper.WriteAbsoluteAddresses64(bytes, new []
+                AsmHelper.WriteAbsoluteAddresses64(bytes, new[]
                 {
                     (areaId, 0x4 + 2),
                     (objData.ObjId, 0xE + 2),
@@ -659,13 +736,13 @@ namespace SilkySouls2.Services
                     (getComponent, 0x2E + 2),
                     (objData.State, 0x41 + 2)
                 });
-            
+
                 _memoryIo.AllocateAndExecute(bytes);
             }
             else
             {
                 var bytes = AsmLoader.GetAsmBytes("SetObjState32");
-                AsmHelper.WriteAbsoluteAddresses32(bytes, new []
+                AsmHelper.WriteAbsoluteAddresses32(bytes, new[]
                 {
                     (getMapEntity, 1),
                     (getComponent, 0x5 + 1),
@@ -675,7 +752,6 @@ namespace SilkySouls2.Services
                 });
                 _memoryIo.AllocateAndExecute(bytes);
             }
-            
         }
 
         public void DisableNavimesh(long areaId, GameIds.Navimesh.DisableNavimesh naviData)
@@ -692,22 +768,22 @@ namespace SilkySouls2.Services
             if (GameVersion.Current.Edition == GameEdition.Scholar)
             {
                 var bytes = AsmLoader.GetAsmBytes("DisableNavimesh64");
-                AsmHelper.WriteAbsoluteAddresses64(bytes, new []
+                AsmHelper.WriteAbsoluteAddresses64(bytes, new[]
                 {
-                    (eventPointMan.ToInt64(),  2),
+                    (eventPointMan.ToInt64(), 2),
                     (areaId, 0xA + 2),
                     (naviData.EventId, 0x14 + 2),
                     (getNaviLoc, 0x25 + 2),
                     (naviData.State, 0x34 + 2),
                     (disableNavi, 0x3E + 2)
                 });
-            
+
                 _memoryIo.AllocateAndExecute(bytes);
             }
             else
             {
                 var bytes = AsmLoader.GetAsmBytes("DisableNavimesh32");
-                AsmHelper.WriteAbsoluteAddresses32(bytes, new []
+                AsmHelper.WriteAbsoluteAddresses32(bytes, new[]
                 {
                     (eventPointMan.ToInt64(), 1),
                     (naviData.EventId, 0x5 + 1),
@@ -718,26 +794,24 @@ namespace SilkySouls2.Services
                 });
                 _memoryIo.AllocateAndExecute(bytes);
             }
-            
         }
 
         public void DisableWhiteDoor(long areaId, GameIds.WhiteDoor.DisableWhiteDoor whiteDoorData)
         {
-            
             var getMapEntity = Funcs.GetMapEntityWithAreaIdAndObjId;
             var getComponent = Funcs.GetWhiteDoorComponent;
 
             if (GameVersion.Current.Edition == GameEdition.Scholar)
             {
                 var bytes = AsmLoader.GetAsmBytes("DisableWhiteDoorKeyGuide64");
-                AsmHelper.WriteAbsoluteAddresses64(bytes, new []
+                AsmHelper.WriteAbsoluteAddresses64(bytes, new[]
                 {
                     (areaId, 0x4 + 2),
                     (whiteDoorData.ObjId, 0xE + 2),
                     (getMapEntity, 0x18 + 2),
                     (getComponent, 0x27 + 2)
                 });
-            
+
                 _memoryIo.AllocateAndExecute(bytes);
             }
             else
@@ -765,19 +839,29 @@ namespace SilkySouls2.Services
                 GameManagerImp.GameDataManagerOffsets.Inventory.ItemInventory2BagList.ItemInvetory2SpellListPtr,
             }, true);
 
-            var count = _memoryIo.ReadUInt8(spellBase + GameManagerImp.GameDataManagerOffsets.Inventory.ItemInvetory2SpellList.Count);
+            var count = _memoryIo.ReadUInt8(spellBase +
+                                            GameManagerImp.GameDataManagerOffsets.Inventory.ItemInvetory2SpellList
+                                                .Count);
             if (count == 0) return new List<InventorySpell>();
 
             List<InventorySpell> currentSpells = new List<InventorySpell>();
-            var current = (IntPtr) _memoryIo.ReadInt64(spellBase + GameManagerImp.GameDataManagerOffsets.Inventory.ItemInvetory2SpellList.ListStart);
+            var current = (IntPtr)_memoryIo.ReadInt64(spellBase +
+                                                      GameManagerImp.GameDataManagerOffsets.Inventory
+                                                          .ItemInvetory2SpellList.ListStart);
 
             for (int i = 0; i < count && current != IntPtr.Zero; i++)
             {
-                var spellId = _memoryIo.ReadInt32(current + GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.SpellId);
-                var isEquipped = _memoryIo.ReadUInt8(current + GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.IsEquipped);
-                var slotReq = _memoryIo.ReadUInt8(current + GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.SlotReq);
+                var spellId =
+                    _memoryIo.ReadInt32(current + GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.SpellId);
+                var isEquipped =
+                    _memoryIo.ReadUInt8(current +
+                                        GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.IsEquipped);
+                var slotReq =
+                    _memoryIo.ReadUInt8(current + GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.SlotReq);
                 currentSpells.Add(new InventorySpell(spellId, isEquipped == 2, current, slotReq));
-                current = (IntPtr) _memoryIo.ReadInt64(current + GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.NextPtr);
+                current = (IntPtr)_memoryIo.ReadInt64(current +
+                                                      GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry
+                                                          .NextPtr);
             }
 
             return currentSpells;
@@ -811,7 +895,7 @@ namespace SilkySouls2.Services
         public int GetTotalAvailableSlots()
         {
             RefreshSpellSlots();
-            
+
             var inventory = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
             {
                 GameManagerImp.Offsets.GameDataManager,
@@ -822,8 +906,8 @@ namespace SilkySouls2.Services
             var slotsLoc = CodeCaveOffsets.Base + CodeCaveOffsets.NumOfSpellSlots;
 
             var bytes = AsmLoader.GetAsmBytes("GetNumOfSlots");
-            
-            AsmHelper.WriteAbsoluteAddresses64(bytes, new []
+
+            AsmHelper.WriteAbsoluteAddresses64(bytes, new[]
             {
                 (slotsLoc.ToInt64(), 2),
                 (inventory.ToInt64(), 0xA + 2),
@@ -849,8 +933,8 @@ namespace SilkySouls2.Services
 
             var refreshFunc = Funcs.UpdateSpellSlots;
             var bytes = AsmLoader.GetAsmBytes("UpdateSpellSlots");
-            
-            AsmHelper.WriteAbsoluteAddresses64(bytes, new []
+
+            AsmHelper.WriteAbsoluteAddresses64(bytes, new[]
             {
                 (bagList.ToInt64(), 2),
                 (refreshFunc, 0xA + 2)
@@ -870,17 +954,15 @@ namespace SilkySouls2.Services
             var attuneFunc = Funcs.AttuneSpell;
 
             var bytes = AsmLoader.GetAsmBytes("AttuneSpell");
-            AsmHelper.WriteAbsoluteAddresses64(bytes, new []
+            AsmHelper.WriteAbsoluteAddresses64(bytes, new[]
             {
                 (inventoryLists.ToInt64(), 2),
                 (slotIndex + 0x1C, 0xA + 2),
                 (entryAddr.ToInt64(), 0x14 + 2),
                 (attuneFunc, 0x1E + 2)
             });
-            
+
             _memoryIo.AllocateAndExecute(bytes);
-            
         }
     }
-    
 }

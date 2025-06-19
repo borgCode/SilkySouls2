@@ -157,8 +157,21 @@ namespace SilkySouls2.Memory
 
             public static class SaveLoadSystem
             {
-                public const int ForceSaveFlag1 = 0x68;
-                public const int ForceSaveFlag2 = 0x1A2;
+                static SaveLoadSystem()
+                {
+                    if (GameVersion.Current.Edition == GameEdition.Scholar)
+                    {
+                        ForceSaveFlag1 = 0x68;
+                        ForceSaveFlag2 = 0x1A2;
+                    }
+                    else
+                    {
+                        ForceSaveFlag1 = 0x3C;
+                        ForceSaveFlag2 = 0x166;
+                    }
+                }
+                public static int ForceSaveFlag1 {get; private set;}
+                public static int ForceSaveFlag2 {get; private set;}
             }
 
 
@@ -377,17 +390,6 @@ namespace SilkySouls2.Memory
                 public static int HkpRigidBodyPtr { get; private set; }
                 public static int PlayerCoords { get; private set; }
             }
-
-            public static class DLAllocator
-            {
-                public const int FeOperatorFrontend = 0x10;
-
-                public static class FeOperatorFrontendOffsets
-                {
-                    public const int FeSceneAdoptionItem = 0x90;
-                    public const int AdoptionCleanupFlag = 0x24;
-                }
-            }
         }
 
 
@@ -438,7 +440,7 @@ namespace SilkySouls2.Memory
             public static long SetCurrectAct2;
             public static long FastQuitout;
             public static long InfinitePoise;
-            public static long EzStateSetEvent;
+            public static long SetEventWrapper;
             public static long ProcessPhysics;
             public static long DisableTargetAi;
             public static long SetSharedFlag;

@@ -74,11 +74,7 @@ namespace SilkySouls2.Memory
                 
                 Offsets.Patches.SoulMemWrite1 = FindAddressByPattern(Patterns64.SoulMemWrite);
                 Offsets.Patches.SoulMemWrite2 = Offsets.Patches.SoulMemWrite1 + 0x56;
-                // TryPatternWithFallback("FreeCam", FreeCamPatch, addr => Offsets.Patches.FreeCam = addr, saved);
-                //
-                // TryPatternWithFallback("OverrideGeneratorStartPositionRandom",
-                //     OverrideGeneratorStartPositionRandom,
-                //     addr => Offsets.Hooks.OverrideGeneratorStartPositionRandom = addr.ToInt64(), saved);
+      
 
                 TryPatternWithFallback("SetAreaVariable",
                     Patterns64.SetAreaVariable,
@@ -87,9 +83,9 @@ namespace SilkySouls2.Memory
                 TryPatternWithFallback("CompareEventRandValue",
                     Patterns64.CompareEventRandValue,
                     addr => Offsets.Hooks.CompareEventRandValue = addr.ToInt64(), saved);
-                TryPatternWithFallback("EzStateSetEvent",
-                    Patterns64.EzStateSetEvent,
-                    addr => Offsets.Hooks.EzStateSetEvent = addr.ToInt64(), saved);
+                TryPatternWithFallback("SetEventWrapper",
+                    Patterns64.SetEventWrapper,
+                    addr => Offsets.Hooks.SetEventWrapper = addr.ToInt64(), saved);
                 TryPatternWithFallback("HpWrite", Patterns64.HpWrite,
                     addr => Offsets.Hooks.HpWrite = addr.ToInt64(), saved);
 
@@ -248,6 +244,8 @@ namespace SilkySouls2.Memory
                     addr => Offsets.Patches.Silent = addr, saved);
                 TryPatternWithFallback("Ng7", Patterns32.Ng7Patch,
                     addr => Offsets.Patches.Ng7 = addr, saved);
+                TryPatternWithFallback("DropRate", Patterns32.DropRate,
+                    addr => Offsets.Patches.DropRate = addr, saved);
                 
                 TryPatternWithFallback("LockedTarget", Patterns32.LockedTarget,
                     addr => Offsets.Hooks.LockedTarget = addr.ToInt32(), saved);
@@ -271,6 +269,14 @@ namespace SilkySouls2.Memory
                     addr => Offsets.Hooks.ProcessPhysics = addr.ToInt32(), saved);
                 TryPatternWithFallback("KillboxFlagSet", Patterns32.KillboxFlagSet,
                     addr => Offsets.Hooks.KillboxFlagSet = addr.ToInt32(), saved);
+                TryPatternWithFallback("CreditSkip", Patterns32.CreditSkip,
+                    addr => Offsets.Hooks.CreditSkip = addr.ToInt32(), saved);
+                TryPatternWithFallback("NumOfDrops", Patterns32.NumOfDrops,
+                    addr => Offsets.Hooks.NumOfDrops = addr.ToInt32(), saved);
+                TryPatternWithFallback("SetEventWrapper", Patterns32.SetEventWrapper,
+                    addr => Offsets.Hooks.SetEventWrapper = addr.ToInt32(), saved);
+                TryPatternWithFallback("EzStateCompareTimer", Patterns32.EzStateCompareTimer,
+                    addr => Offsets.Hooks.EzStateCompareTimer = addr.ToInt32(), saved);
                 
                 
                 var setCurrectActLocs = FindAddressesByPattern(Patterns32.SetCurrentAct, 2);
@@ -361,7 +367,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Hooks.SetAreaVariable: 0x{Offsets.Hooks.SetAreaVariable:X}");
             Console.WriteLine($"Hooks.CompareEventRandValue: 0x{Offsets.Hooks.CompareEventRandValue:X}");
             Console.WriteLine($"Hooks.HpWrite: 0x{Offsets.Hooks.HpWrite:X}");
-            Console.WriteLine($"Hooks.EzStateSetEvent: 0x{Offsets.Hooks.EzStateSetEvent:X}");
+            Console.WriteLine($"Hooks.SetEventWrapper: 0x{Offsets.Hooks.SetEventWrapper:X}");
             Console.WriteLine($"Hooks.WarpCoordWrite: 0x{Offsets.Hooks.WarpCoordWrite:X}");
             Console.WriteLine($"Hooks.LockedTarget: 0x{Offsets.Hooks.LockedTarget:X}");
             Console.WriteLine($"Hooks.CreditSkip: 0x{Offsets.Hooks.CreditSkip:X}");

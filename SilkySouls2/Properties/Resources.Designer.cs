@@ -251,6 +251,22 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 81 ec fc 01 00 00       sub    esp,0x1fc
+        ///83 3d 00 00 00 00 00    cmp    DWORD PTR ds:0x0,0x0
+        ///75 11                   jne    20 &lt;skip&gt;
+        ///c7 41 14 07 00 00 00    mov    DWORD PTR [ecx+0x14],0x7
+        ///c7 05 00 00 00 00 01    mov    DWORD PTR ds:0x0,0x1
+        ///00 00 00
+        ///0020 &lt;skip&gt;:
+        ///e9 fc ff ff ff          jmp    21 &lt;skip+0x1&gt;.
+        /// </summary>
+        internal static string CreditSkip32 {
+            get {
+                return ResourceManager.GetString("CreditSkip32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 81 ec 20 02 00 00    sub    rsp,0x220
         ///83 3d 00 00 00 00 00    cmp    DWORD PTR [rip+0x0],0x0        # e &lt;_main+0xe&gt;
         ///75 11                   jne    21 &lt;skip&gt;
@@ -260,9 +276,9 @@ namespace SilkySouls2.Properties {
         ///000000000021 &lt;skip&gt;:
         ///e9 00 00 00 00          jmp    26 &lt;skip+0x5&gt;.
         /// </summary>
-        internal static string CreditSkip {
+        internal static string CreditSkip64 {
             get {
-                return ResourceManager.GetString("CreditSkip", resourceCulture);
+                return ResourceManager.GetString("CreditSkip64", resourceCulture);
             }
         }
         
@@ -306,6 +322,26 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 51                      push   ecx
+        ///53                      push   ebx
+        ///8b 0d 00 00 00 00       mov    ecx,DWORD PTR ds:0x0
+        ///8b 49 28                mov    ecx,DWORD PTR [ecx+0x28]
+        ///8b 49 04                mov    ecx,DWORD PTR [ecx+0x4]
+        ///81 b9 cc 00 00 00 00    cmp    DWORD PTR [ecx+0xcc],0x32240000
+        ///00 24 32
+        ///75 1e                   jne    38 &lt;check_giant&gt;
+        ///81 38 1a 04 00 00       cmp    DWORD PTR [eax],0x41a
+        ///75 02                   jne    24 &lt;phase2&gt;
+        ///eb 3c                   jmp    60 &lt;manip&gt;
+        ///0024 &lt;phas [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string DisableMemoryTimer32 {
+            get {
+                return ResourceManager.GetString("DisableMemoryTimer32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 51                      push   rcx
         ///53                      push   rbx
         ///48 b9 00 00 00 00 00    movabs rcx,0x0
@@ -320,9 +356,9 @@ namespace SilkySouls2.Properties {
         ///75 0e                   jne    39 &lt;phase2&gt;
         ///48  [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string DisableMemoryTimer {
+        internal static string DisableMemoryTimer64 {
             get {
-                return ResourceManager.GetString("DisableMemoryTimer", resourceCulture);
+                return ResourceManager.GetString("DisableMemoryTimer64", resourceCulture);
             }
         }
         
@@ -371,6 +407,19 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 8b 88 cc 0c 00 00       mov    ecx,DWORD PTR [eax+0xccc]
+        ///81 7d 08 5e 1f 02 20    cmp    DWORD PTR [ebp+0x8],0x20021f5e
+        ///0f 85 fc ff ff ff       jne    f &lt;_main+0xf&gt;
+        ///c7 45 0c 00 00 00 00    mov    DWORD PTR [ebp+0xc],0x0
+        ///e9 fc ff ff ff          jmp    1b &lt;_main+0x1b&gt;.
+        /// </summary>
+        internal static string DisableSnowstorm32 {
+            get {
+                return ResourceManager.GetString("DisableSnowstorm32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 81 fa 5e 1f 02 20    cmp    rdx,0x20021f5e
         ///75 03                   jne    c &lt;normal&gt;
         ///4d 31 c0                xor    r8,r8
@@ -379,9 +428,9 @@ namespace SilkySouls2.Properties {
         ///48 8b 88 f0 22 00 00    mov    rcx,QWORD PTR [rax+0x22f0]
         ///e9 00 00 00 00          jmp    1c &lt;normal+0x10&gt;.
         /// </summary>
-        internal static string DisableSnowstorm {
+        internal static string DisableSnowstorm64 {
             get {
-                return ResourceManager.GetString("DisableSnowstorm", resourceCulture);
+                return ResourceManager.GetString("DisableSnowstorm64", resourceCulture);
             }
         }
         
@@ -447,12 +496,23 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ba 0a 00 00 00          mov    edx,0xa
+        ///40                      inc    eax
+        ///e9 fc ff ff ff          jmp    7 &lt;_main+0x7&gt;.
+        /// </summary>
+        internal static string DropCount32 {
+            get {
+                return ResourceManager.GetString("DropCount32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to b8 0a 00 00 00          mov    eax,0xa
         ///e9 00 00 00 00          jmp    a &lt;_main+0xa&gt;.
         /// </summary>
-        internal static string DropCount {
+        internal static string DropCount64 {
             get {
-                return ResourceManager.GetString("DropCount", resourceCulture);
+                return ResourceManager.GetString("DropCount64", resourceCulture);
             }
         }
         

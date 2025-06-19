@@ -487,5 +487,6 @@ namespace SilkySouls2.ViewModels
                 }
             }
         }
+        
     }
 }

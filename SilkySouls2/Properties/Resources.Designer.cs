@@ -710,14 +710,15 @@ namespace SilkySouls2.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to 80 3d 00 00 00 00 01    cmp    BYTE PTR [rip+0x0],0x1        # 7 &lt;_main+0x7&gt;
-        ///0f 85 e8 00 00 00       jne    f5 &lt;nothing_to_process&gt;
-        ///c6 05 00 00 00 00 00    mov    BYTE PTR [rip+0x0],0x0        # 14 &lt;_main+0x14&gt;
-        ///80 3d 00 00 00 00 01    cmp    BYTE PTR [rip+0x0],0x1        # 1b &lt;_main+0x1b&gt;
-        ///75 5c                   jne    79 &lt;skip_adjust&gt;
-        ///48 b9 00 00 00 00 00    movabs rcx,0x0
+        ///0f 85 f7 00 00 00       jne    104 &lt;nothing_to_process&gt;
+        ///49 be 00 00 00 00 00    movabs r14,0x0
         ///00 00 00
-        ///48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 2e &lt;_main+0x2e&gt;
-        ///4c 8d 05 00 00 00 00    lea    r8,[rip+0x0]      [rest of string was truncated]&quot;;.
+        ///4d 8b 36                mov    r14,QWORD PTR [r14]
+        ///4d 89 f5                mov    r13,r14
+        ///4d 8b b6 a8 00 00 00    mov    r14,QWORD PTR [r14+0xa8]
+        ///4d 8b 76 10             mov    r14,QWORD PTR [r14+0x10]
+        ///4d 8b 76 10             mov    r14,QWORD PTR [r14+0x10]
+        ///c6 05 00 00 00 00 00    mov    BYTE PTR [rip+0x0],0x0        # 3 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ItemSpawn {
             get {

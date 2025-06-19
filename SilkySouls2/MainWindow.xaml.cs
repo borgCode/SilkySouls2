@@ -37,6 +37,7 @@ namespace SilkySouls2
         private readonly SettingsViewModel _settingsViewModel;
         private readonly DamageControlService _damageControlService;
         private readonly DllManager _dllManager;
+        private readonly ItemService _itemService;
 
         public MainWindow()
         {
@@ -65,7 +66,7 @@ namespace SilkySouls2
             var utilityService = new UtilityService(_memoryIo, _hookManager, _dllManager);
             var travelService = new TravelService(_memoryIo, _hookManager, playerService);
             var enemyService = new EnemyService(_memoryIo, _hookManager, _damageControlService);
-            var itemService = new ItemService(_memoryIo);
+            _itemService = new ItemService(_memoryIo);
             var settingsService = new SettingsService(_memoryIo, _hookManager);
 
             _playerViewModel = new PlayerViewModel(playerService, hotkeyManager, _damageControlService);
@@ -73,7 +74,7 @@ namespace SilkySouls2
             _eventViewModel = new EventViewModel(utilityService);
             _utilityViewModel = new UtilityViewModel(utilityService, hotkeyManager, _playerViewModel);
             _enemyViewModel = new EnemyViewModel(enemyService, hotkeyManager, _damageControlService);
-            _itemViewModel = new ItemViewModel(itemService);
+            _itemViewModel = new ItemViewModel(_itemService);
             _settingsViewModel = new SettingsViewModel(settingsService, hotkeyManager);
 
             var playerTab = new PlayerTab(_playerViewModel);
@@ -191,6 +192,7 @@ namespace SilkySouls2
                 _nopManager.ClearRegistry();
                 _dllManager.ResetState();
                 _settingsViewModel.ResetAttached();
+                _itemService.Reset();
                 _hasScanned = false;
                 _loaded = false;
                 _hasAllocatedMemory = false;
@@ -258,6 +260,7 @@ namespace SilkySouls2
             SettingsManager.Default.WindowLeft = Left;
             SettingsManager.Default.WindowTop = Top;
             SettingsManager.Default.Save();
+            _itemService.SignalClose();
             _hookManager.UninstallAllHooks();
             _nopManager.RestoreAll();
         }

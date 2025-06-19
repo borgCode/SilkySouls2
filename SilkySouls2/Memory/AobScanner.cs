@@ -309,6 +309,8 @@ namespace SilkySouls2.Memory
                 Offsets.Funcs.GetMapObjStateActComponent = FindAddressByPattern(Patterns32.GetStateActComp).ToInt32();
                 Offsets.Funcs.GetWhiteDoorComponent = FindAddressByPattern(Patterns32.GetWhiteDoorComponent).ToInt32();
                 Offsets.Funcs.HavokRayCast = FindAddressByPattern(Patterns32.HavokRayCast).ToInt32();
+                Offsets.Funcs.ItemGive = FindAddressByPattern(Patterns32.ItemGive).ToInt32();
+                Offsets.Funcs.BuildItemDialog = FindAddressByPattern(Patterns32.BuildItemDialog).ToInt32();
           
                 FindMultipleCallsInFunction(Patterns32.ConvertPxRigidToMapEntity, new Dictionary<Action<long>, int>
                 {

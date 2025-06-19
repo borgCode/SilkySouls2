@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using SilkySouls2.Memory;
 using SilkySouls2.Models;
 using SilkySouls2.Services;
 using SilkySouls2.Utilities;
@@ -30,7 +31,10 @@ namespace SilkySouls2.ViewModels
         private ObservableCollection<string> _loadouts;
         private Dictionary<string, LoadoutTemplate> _loadoutTemplatesByName = new Dictionary<string, LoadoutTemplate>();
 
-
+        private readonly HashSet<int> _vanillaExcludedItems = new HashSet<int> { 26940101,26940102,26940100,26940103,1997000,3080000,42000000 };
+        
+        
+        
         public ItemViewModel(ItemService itemService)
         {
             _itemService = itemService;
@@ -363,6 +367,8 @@ namespace SilkySouls2.ViewModels
         public void SpawnItem()
         {
             if (_selectedItem == null) return;
+            if (GameVersion.Current.Edition == GameEdition.Vanilla &&
+                _vanillaExcludedItems.Contains(_selectedItem.Id)) return;
 
             _itemService.SpawnItem(_selectedItem, SelectedUpgrade, SelectedQuantity,
                 Array.IndexOf(_infusionNames, SelectedInfusionType), _selectedItem.Durability);
@@ -386,6 +392,8 @@ namespace SilkySouls2.ViewModels
                 {
                     foreach (var weapon in _itemsByCategory[SelectedMassSpawnCategory])
                     {
+                        if (GameVersion.Current.Edition == GameEdition.Vanilla &&
+                            _vanillaExcludedItems.Contains(weapon.Id)) continue;
                         _itemService.SpawnItem(weapon, 0, 1, 0, weapon.Durability);
                         Thread.Sleep(10);
                     }
@@ -394,6 +402,8 @@ namespace SilkySouls2.ViewModels
                 {
                     foreach (var item in _itemsByCategory[SelectedMassSpawnCategory])
                     {
+                        if (GameVersion.Current.Edition == GameEdition.Vanilla &&
+                            _vanillaExcludedItems.Contains(item.Id)) continue;
                         _itemService.SpawnItem(item, 0, item.StackSize, 0, item.Durability);
                         Thread.Sleep(10);
                     }
@@ -468,6 +478,9 @@ namespace SilkySouls2.ViewModels
                 {
                     int infusionIndex = Array.IndexOf(_infusionNames, template.Infusion);
                     int quantity = template.Quantity > 0 ? template.Quantity : item.StackSize;
+
+                    if (GameVersion.Current.Edition == GameEdition.Vanilla &&
+                        _vanillaExcludedItems.Contains(item.Id)) continue;
 
                     _itemService.SpawnItem(item, template.Upgrade, quantity, infusionIndex, item.Durability);
                     Thread.Sleep(10);

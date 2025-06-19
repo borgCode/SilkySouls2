@@ -237,6 +237,22 @@
             0,
             AddressingMode.Absolute
         );
+
+        public static readonly Pattern ItemGive = new Pattern(
+            new byte[] { 0x83, 0xF8, 0x1F, 0x0F, 0x87, 0xA0 },
+            "xxxxxx",
+            -0xB,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern BuildItemDialog = new Pattern(
+            new byte[] { 0x83, 0xFB, 0x08, 0xC7 },
+            "xxxx",
+            -0x72,
+            AddressingMode.Absolute
+        );
+
+
         
             
         // Hooks

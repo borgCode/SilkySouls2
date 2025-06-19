@@ -606,5 +606,6 @@ namespace SilkySouls2.ViewModels
         }
 
         public void ResetAttached() => _isLoaded = false;
+        
     }
 }

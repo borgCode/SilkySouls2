@@ -302,6 +302,7 @@
             AddressingMode.Absolute
         );
 
+        
 
         
             
@@ -417,6 +418,27 @@
             new byte[] { 0x83, 0xC4, 0x0C, 0x85, 0xC0, 0x0F, 0x84, 0x27, 0xD0 },
             "xxxxxxxxx",
             -0x59,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern FasterMenu = new Pattern(
+            new byte[] { 0x33, 0xC5, 0x89, 0x45, 0xFC, 0x56, 0x8B, 0xF1, 0x83, 0x7E, 0x0C, 0x00, 0x7E },
+            "xxxxxxxxxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern BabyJump = new Pattern(
+            new byte[] { 0x0F, 0x51, 0xC0, 0x0F, 0x29, 0x45, 0xB0, 0xFF },
+            "xxxxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern DisableTargetAi = new Pattern(
+            new byte[] { 0x74, 0x11, 0x8B, 0x06, 0x8B, 0x50, 0x1C },
+            "xxxxxxx",
+            2,
             AddressingMode.Absolute
         );
 

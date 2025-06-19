@@ -513,8 +513,8 @@ namespace SilkySouls2.Services
                     var codeBytes = AsmLoader.GetAsmBytes("Killbox32");
                     var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt32());
                     Array.Copy(bytes, 0, codeBytes, 0x1 + 1, 4);
-                    bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 6, code + 0x1C);
-                    Array.Copy(bytes, 0, codeBytes, 0x18 + 1, 4);
+                    bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 6, code + 0x1E);
+                    Array.Copy(bytes, 0, codeBytes, 0x19 + 1, 4);
                     _memoryIo.WriteBytes(code, codeBytes);
                     _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[]
                         { 0x53, 0x89, 0xE3, 0x83, 0xEC, 0x08 });

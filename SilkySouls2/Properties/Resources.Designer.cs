@@ -165,6 +165,24 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 0f 51 c0                sqrtps xmm0,xmm0
+        ///50                      push   eax
+        ///a1 00 00 00 00          mov    eax,ds:0x0
+        ///8b 40 74                mov    eax,DWORD PTR [eax+0x74]
+        ///8b 80 94 04 00 00       mov    eax,DWORD PTR [eax+0x494]
+        ///f3 0f 10 80 e8 00 00    movss  xmm0,DWORD PTR [eax+0xe8]
+        ///00
+        ///58                      pop    eax
+        ///0f 29 45 b0             movaps XMMWORD PTR [ebp-0x50],xmm0
+        ///e9 fc ff ff ff          jmp    20 &lt;_main+0x20&gt;.
+        /// </summary>
+        internal static string BabyJump32 {
+            get {
+                return ResourceManager.GetString("BabyJump32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 50                      push   rax
         ///48 a1 00 00 00 00 00    movabs rax,ds:0x0
         ///00 00 00
@@ -177,9 +195,9 @@ namespace SilkySouls2.Properties {
         ///0f 29 44 24 20          movaps XMMWORD PTR [rsp+0x20],xmm0
         ///e9 00 00 00 00          jmp    33 &lt;_main+0x33&gt;.
         /// </summary>
-        internal static string BabyJump {
+        internal static string BabyJump64 {
             get {
-                return ResourceManager.GetString("BabyJump", resourceCulture);
+                return ResourceManager.GetString("BabyJump64", resourceCulture);
             }
         }
         
@@ -451,6 +469,26 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 8b 06                   mov    eax,DWORD PTR [esi]
+        ///8b 50 1c                mov    edx,DWORD PTR [eax+0x1c]
+        ///83 3d 00 00 00 00 00    cmp    DWORD PTR ds:0x0,0x0
+        ///0f 84 fc ff ff ff       je     e &lt;_main+0xe&gt;
+        ///50                      push   eax
+        ///57                      push   edi
+        ///8b 3d 00 00 00 00       mov    edi,DWORD PTR ds:0x0
+        ///b8 00 00 00 00          mov    eax,0x0
+        ///001f &lt;loop_start&gt;:
+        ///83 ff 00                cmp    edi,0x0
+        ///7e 0a                   jle    2e &lt;loop_end&gt;
+        ///39 30                   cmp    DW [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string DisableTargetAi32 {
+            get {
+                return ResourceManager.GetString("DisableTargetAi32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 89 fa                mov    rdx,rdi
         ///48 89 d9                mov    rcx,rbx
         ///83 3d 00 00 00 00 00    cmp    DWORD PTR [rip+0x0],0x0        # d &lt;_main+0xd&gt;
@@ -464,9 +502,9 @@ namespace SilkySouls2.Properties {
         ///83 ff 00                cmp    edi,0x0
         ///7e 0d                   jle    37  [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string DisableTargetAi {
+        internal static string DisableTargetAi64 {
             get {
-                return ResourceManager.GetString("DisableTargetAi", resourceCulture);
+                return ResourceManager.GetString("DisableTargetAi64", resourceCulture);
             }
         }
         
@@ -562,6 +600,21 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 31 e8                   xor    eax,ebp
+        ///89 45 fc                mov    DWORD PTR [ebp-0x4],eax
+        ///80 79 04 18             cmp    BYTE PTR [ecx+0x4],0x18
+        ///75 04                   jne    f &lt;exit&gt;
+        ///c6 41 04 38             mov    BYTE PTR [ecx+0x4],0x38
+        ///000f &lt;exit&gt;:
+        ///e9 fc ff ff ff          jmp    10 &lt;exit+0x1&gt;.
+        /// </summary>
+        internal static string FasterMenu32 {
+            get {
+                return ResourceManager.GetString("FasterMenu32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 89 84 24 50 01 00    mov    QWORD PTR [rsp+0x150],rax
         ///00
         ///83 7f 08 17             cmp    DWORD PTR [rdi+0x8],0x17
@@ -570,9 +623,9 @@ namespace SilkySouls2.Properties {
         ///000000000015 &lt;exit&gt;:
         ///e9 00 00 00 00          jmp    1a &lt;exit+0x5&gt;.
         /// </summary>
-        internal static string FastQuitout {
+        internal static string FasterMenu64 {
             get {
-                return ResourceManager.GetString("FastQuitout", resourceCulture);
+                return ResourceManager.GetString("FasterMenu64", resourceCulture);
             }
         }
         
@@ -892,10 +945,11 @@ namespace SilkySouls2.Properties {
         ///58                      pop    eax
         ///c2 04 00                ret    0x4
         ///0012 &lt;normal&gt;:
+        ///58                      pop    eax
         ///53                      push   ebx
         ///89 e3                   mov    ebx,esp
         ///83 ec 08                sub    esp,0x8
-        ///e9 fc ff ff ff          jmp    19 &lt;normal+0x7&gt;.
+        ///e9 fc ff ff ff          jmp    1a &lt; [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Killbox32 {
             get {

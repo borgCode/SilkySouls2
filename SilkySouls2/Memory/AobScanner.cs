@@ -108,8 +108,8 @@ namespace SilkySouls2.Memory
                     addr => Offsets.Hooks.Ctrl = addr.ToInt64(), saved);
                 TryPatternWithFallback("NoClipUpdateCoords", Patterns64.NoClipUpdateCoords,
                     addr => Offsets.Hooks.NoClipUpdateCoords = addr.ToInt64(), saved);
-                TryPatternWithFallback("FastQuitout", Patterns64.FastQuitout,
-                    addr => Offsets.Hooks.FastQuitout = addr.ToInt64(), saved);
+                TryPatternWithFallback("FasterMenu", Patterns64.FasterMenu,
+                    addr => Offsets.Hooks.FasterMenu = addr.ToInt64(), saved);
                 TryPatternWithFallback("InfinitePoise", Patterns64.InfinitePoise,
                     addr => Offsets.Hooks.InfinitePoise = addr.ToInt64(), saved);
                 TryPatternWithFallback("MapIdWrite", Patterns64.ProcessPhysics,
@@ -277,7 +277,12 @@ namespace SilkySouls2.Memory
                     addr => Offsets.Hooks.SetEventWrapper = addr.ToInt32(), saved);
                 TryPatternWithFallback("EzStateCompareTimer", Patterns32.EzStateCompareTimer,
                     addr => Offsets.Hooks.EzStateCompareTimer = addr.ToInt32(), saved);
-                
+                TryPatternWithFallback("FasterMenu", Patterns32.FasterMenu,
+                    addr => Offsets.Hooks.FasterMenu = addr.ToInt32(), saved);
+                TryPatternWithFallback("BabyJump", Patterns32.BabyJump,
+                    addr => Offsets.Hooks.BabyJump = addr.ToInt32(), saved);
+                TryPatternWithFallback("DisableTargetAi", Patterns32.DisableTargetAi,
+                    addr => Offsets.Hooks.DisableTargetAi = addr.ToInt32(), saved);
                 
                 var setCurrectActLocs = FindAddressesByPattern(Patterns32.SetCurrentAct, 2);
                 if (setCurrectActLocs.Count < 2 || setCurrectActLocs[0] == IntPtr.Zero)
@@ -392,7 +397,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Hooks.KillboxFlagSet: 0x{Offsets.Hooks.KillboxFlagSet:X}");
             Console.WriteLine($"Hooks.SetCurrectAct: 0x{Offsets.Hooks.SetCurrectAct:X}");
             Console.WriteLine($"Hooks.SetCurrectAct2: 0x{Offsets.Hooks.SetCurrectAct2:X}");
-            Console.WriteLine($"Hooks.FastQuitout: 0x{Offsets.Hooks.FastQuitout:X}");
+            Console.WriteLine($"Hooks.FasterMenu: 0x{Offsets.Hooks.FasterMenu:X}");
             Console.WriteLine($"Hooks.ProcessPhysics: 0x{Offsets.Hooks.ProcessPhysics:X}");
             Console.WriteLine($"Hooks.DisableTargetAi: 0x{Offsets.Hooks.DisableTargetAi:X}");
             Console.WriteLine($"Hooks.InfinitePoise: 0x{Offsets.Hooks.InfinitePoise:X}");

@@ -338,17 +338,40 @@ namespace SilkySouls2.Memory
 
                 public static class Operator
                 {
-                    public const int ChrPadMan = 0x18;
-                    public const int ChrAiManPtr = 0x18;
-                    public const int MovementEntity = 0x98;
+                    static Operator()
+                    {
+                        if (GameVersion.Current.Edition == GameEdition.Scholar)
+                        {
+                            ChrAiManPtr = 0x18;
+                        }
+                        else
+                        {
+                            ChrAiManPtr = 0xC;
+                        }
+                    }
+                    
+                    public static int ChrAiManPtr  { get; private set; }
+             
                 }
-
+                
                 public static class ChrAiMan
                 {
-                    public const int ChrAi = 0x20;
+                    static ChrAiMan()
+                    {
+                        if (GameVersion.Current.Edition == GameEdition.Scholar)
+                        {
+                            ChrAi = 0x20;
+                        }
+                        else
+                        {
+                            ChrAi = 0x10;
+                        }
+                    }
+                    
+                    public static int ChrAi  { get; private set; }
+             
                 }
-
-
+                
                 public static class ChrPhysicsCtrl
                 {
                     static ChrPhysicsCtrl()
@@ -499,7 +522,7 @@ namespace SilkySouls2.Memory
             public static long KillboxFlagSet;
             public static long SetCurrectAct;
             public static long SetCurrectAct2;
-            public static long FastQuitout;
+            public static long FasterMenu;
             public static long InfinitePoise;
             public static long SetEventWrapper;
             public static long ProcessPhysics;

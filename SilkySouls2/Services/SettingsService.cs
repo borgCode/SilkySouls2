@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Threading;
 using H.Hooks;
 using SilkySouls2.Memory;
 using SilkySouls2.Utilities;
@@ -26,14 +30,27 @@ namespace SilkySouls2.Services
 
             if (isEnabled)
             {
-                var origin = Hooks.FastQuitout;
-                var codeBytes = AsmLoader.GetAsmBytes("FastQuitout");
-                var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 8, code + 0x1A);
-                Array.Copy(jmpBytes, 0, codeBytes, 0x15 + 1, 4);
+                var origin = Hooks.FasterMenu;
+
+                if (GameVersion.Current.Edition == GameEdition.Scholar)
+                {
+                    var codeBytes = AsmLoader.GetAsmBytes("FasterMenu64");
+                    var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 8, code + 0x1A);
+                    Array.Copy(jmpBytes, 0, codeBytes, 0x15 + 1, 4);
                 
-                _memoryIo.WriteBytes(code, codeBytes);
-                _hookManager.InstallHook(code.ToInt64(), origin, new byte[]
-                    { 0x48, 0x8B, 0x9C, 0x24, 0x78, 0x01, 0x00, 0x00 });
+                    _memoryIo.WriteBytes(code, codeBytes);
+                    _hookManager.InstallHook(code.ToInt64(), origin, new byte[]
+                        { 0x48, 0x8B, 0x9C, 0x24, 0x78, 0x01, 0x00, 0x00 });
+                }
+                else
+                {
+                    var codeBytes = AsmLoader.GetAsmBytes("FasterMenu32");
+                    var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 5, code + 0x14);
+                    Array.Copy(jmpBytes, 0, codeBytes, 0xF + 1, 4);
+                    _memoryIo.WriteBytes(code, codeBytes);
+                    _hookManager.InstallHook(code.ToInt64(), origin, new byte[]
+                        { 0x33, 0xC5, 0x89, 0x45, 0xFC });
+                }
             }
             else
             {
@@ -44,19 +61,35 @@ namespace SilkySouls2.Services
         public void ToggleBabyJumpFix(bool isEnabled)
         {
             var code = CodeCaveOffsets.Base + CodeCaveOffsets.BabyJump;
-
+            
             if (isEnabled)
             {
                 var origin = Hooks.BabyJump;
-                var codeBytes = AsmLoader.GetAsmBytes("BabyJump");
-                var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt64());
-                Array.Copy(bytes, 0, codeBytes, 0x1 + 2, 8);
-                bytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 5, code + 0x33);
-                Array.Copy(bytes, 0, codeBytes, 0x2E + 1, 4);
+
+                if (GameVersion.Current.Edition == GameEdition.Scholar)
+                {
+                    var codeBytes = AsmLoader.GetAsmBytes("BabyJump64");
+                    var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt64());
+                    Array.Copy(bytes, 0, codeBytes, 0x1 + 2, 8);
+                    bytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 5, code + 0x33);
+                    Array.Copy(bytes, 0, codeBytes, 0x2E + 1, 4);
                 
-                _memoryIo.WriteBytes(code, codeBytes);
-                _hookManager.InstallHook(code.ToInt64(), origin, new byte[]
-                    { 0x0F, 0x29, 0x44, 0x24, 0x20 });
+                    _memoryIo.WriteBytes(code, codeBytes);
+                    _hookManager.InstallHook(code.ToInt64(), origin, new byte[]
+                        { 0x0F, 0x29, 0x44, 0x24, 0x20 });
+                }
+                else
+                {
+                    var codeBytes = AsmLoader.GetAsmBytes("BabyJump32");
+                    var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt32());
+                    Array.Copy(bytes, 0, codeBytes, 0x4 + 1, 4);
+                    bytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 7, code + 0x24);
+                    Array.Copy(bytes, 0, codeBytes, 0x1F + 1, 4);
+                    _memoryIo.WriteBytes(code, codeBytes);
+                    _hookManager.InstallHook(code.ToInt64(), origin, new byte[]
+                        { 0x0F, 0x51, 0xC0, 0x0F, 0x29, 0x45, 0xB0 });
+                }
+                
             }
             else
             {

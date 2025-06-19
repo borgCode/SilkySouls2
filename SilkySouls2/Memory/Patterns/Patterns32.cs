@@ -171,8 +171,8 @@
         );
 
         public static readonly Pattern BonfireWarp = new Pattern(
-            new byte[] { 0x8D, 0x55, 0xB0, 0x52, 0xE8, 0xD6, 0x52 },
-            "xxxxxxx",
+            new byte[] { 0x6A, 0x02, 0x51, 0x8D, 0x55, 0xB0 },
+            "xxxxxx",
             0,
             AddressingMode.Absolute
         );

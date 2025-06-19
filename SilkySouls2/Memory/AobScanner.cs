@@ -336,8 +336,8 @@ namespace SilkySouls2.Memory
                 
                 FindMultipleCallsInFunction(Patterns32.BonfireWarp, new Dictionary<Action<long>, int>
                 {
-                    { addr => Offsets.Funcs.WarpPrep = addr, 0x4 },
-                    { addr => Offsets.Funcs.BonfireWarp = addr, 0x1C },
+                    { addr => Offsets.Funcs.WarpPrep = addr, 0x7 },
+                    { addr => Offsets.Funcs.BonfireWarp = addr, 0x1F },
                 });
                 
                 FindMultipleCallsInFunction(Patterns32.DisableNavimesh, new Dictionary<Action<long>, int>

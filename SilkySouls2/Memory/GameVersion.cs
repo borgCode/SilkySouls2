@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SilkySouls2.Memory
 {
@@ -18,15 +19,17 @@ namespace SilkySouls2.Memory
     public static class GameVersion
     {
         public static GameVersionInfo Current { get; private set; }
-       
+
         private static readonly Dictionary<long, GameVersionInfo> VersionMap = new Dictionary<long, GameVersionInfo>
         {
             { 32340760, new GameVersionInfo { Edition = GameEdition.Vanilla, PatchVersion = "1.11" } },
-            { 28200992, new GameVersionInfo { Edition = GameEdition.Scholar, PatchVersion = "1.03"} }
+            { 29588960, new GameVersionInfo { Edition = GameEdition.Vanilla, PatchVersion = "1.12" } },
+            { 28200992, new GameVersionInfo { Edition = GameEdition.Scholar, PatchVersion = "1.03" } }
         };
-       
+
         public static void DetectVersion(long fileSize)
         {
+            Console.WriteLine($"Detected file size: {fileSize}");
             if (VersionMap.TryGetValue(fileSize, out var version))
             {
                 Current = version;

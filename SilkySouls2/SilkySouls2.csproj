@@ -227,6 +227,9 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <Content Include="FodyWeavers.xml" />
+      <Content Include="Resources\DLL\DrawVanilla.dll">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
       <Content Include="Resources\DLL\SilkyDll.dll">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>

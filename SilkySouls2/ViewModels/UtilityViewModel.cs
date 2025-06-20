@@ -465,7 +465,7 @@ namespace SilkySouls2.ViewModels
 
         public void Test()
         {
-                
+            _utilityService.Test();
         }
         
         

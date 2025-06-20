@@ -1043,5 +1043,10 @@ namespace SilkySouls2.Services
             
             _memoryIo.AllocateAndExecute(bytes);
         }
+
+        public void Test()
+        {
+            _dllManager.TestInject32();
+        }
     }
 }

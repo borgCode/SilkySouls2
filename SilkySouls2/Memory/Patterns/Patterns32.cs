@@ -18,7 +18,15 @@
             2
         );
 
-        
+        public static readonly Pattern LoadLibraryW = new Pattern(
+            new byte[] { 0xFF, 0x15, 0x00, 0x00, 0x00, 0x00, 0x8B, 0xF8, 0x85, 0xFF, 0x0F },
+            "xx????xxxxx",
+            0,
+            AddressingMode.Direct32,
+            2,
+            6
+        );
+
         
         //Patches
 

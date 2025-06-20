@@ -483,6 +483,7 @@ namespace SilkySouls2.Memory
         }
 
         public static IntPtr MapId;
+        public static IntPtr LoadLibraryW;
 
         public static class Patches
         {

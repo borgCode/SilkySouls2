@@ -456,7 +456,7 @@ namespace SilkySouls2.Memory
                 return false;
             }
 
-            if (!System.IO.File.Exists(dllPath))
+            if (!File.Exists(dllPath))
             {
                 Console.WriteLine($"DLL not found: {dllPath}");
                 return false;
@@ -464,7 +464,7 @@ namespace SilkySouls2.Memory
 
             try
             {
-                string fullDllPath = System.IO.Path.GetFullPath(dllPath);
+                string fullDllPath = Path.GetFullPath(dllPath);
 
                 byte[] dllPathBytes = Encoding.Unicode.GetBytes(fullDllPath + "\0");
                 IntPtr dllPathAddress = Kernel32.VirtualAllocEx(
@@ -479,8 +479,11 @@ namespace SilkySouls2.Memory
                 }
 
                 WriteBytes(dllPathAddress, dllPathBytes);
-
-                IntPtr loadLibraryAddr = GetProcAddress("kernel32.dll", "LoadLibraryW");
+                
+                IntPtr loadLibraryAddr;
+                if (GameVersion.Current.Edition == GameEdition.Scholar) loadLibraryAddr = GetProcAddress("kernel32.dll", "LoadLibraryW");
+                else loadLibraryAddr = (IntPtr)ReadInt32(Offsets.LoadLibraryW);
+                
                 if (loadLibraryAddr == IntPtr.Zero)
                 {
                     Console.WriteLine("Failed to get LoadLibraryW address");

@@ -7,8 +7,10 @@ namespace SilkySouls2.Memory.DLLShared
     public class DllManager
     {
         private readonly MemoryIo _memoryIo;
-        private readonly string _drawDllPath;
-        private readonly string _speedDllPath;
+        private readonly string _drawScholarDllPath;
+        private readonly string _speedScholarDllPath;
+        private readonly string _drawVanillaDllPath;
+        private readonly string _speedVanillaDllPath;
         
         private static readonly int NumDrawFlags = Enum.GetValues(typeof(DrawType)).Length;
         private static readonly int NumAddresses = Enum.GetValues(typeof(SharedMemAddr)).Length;
@@ -30,8 +32,10 @@ namespace SilkySouls2.Memory.DLLShared
         public DllManager(MemoryIo memoryIo)
         {
             _memoryIo = memoryIo;
-            _drawDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "SilkyDll.dll");
-            _speedDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "SilkySpeed.dll");
+            _drawScholarDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "SilkyDll.dll");
+            _speedScholarDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "SilkySpeed.dll");
+            _drawVanillaDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "DrawVanilla.dll");
+            // _speedVanillaDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "SilkySpeed.dll");
         }
         
         public void InjectDrawDll()
@@ -43,7 +47,7 @@ namespace SilkySouls2.Memory.DLLShared
             SetAddress(SharedMemAddr.SetRenderTargets, Offsets.Funcs.SetRenderTargets);
             SetAddress(SharedMemAddr.CreateSoundEvent, Offsets.Funcs.CreateSoundEvent);
             SetAddress(SharedMemAddr.GetEyePosition, Offsets.Funcs.GetEyePosition);
-            _drawIsInjected = _memoryIo.InjectDll(_drawDllPath);
+            _drawIsInjected = _memoryIo.InjectDll(_drawScholarDllPath);
         }
         
         public void CreateDrawSharedMem()
@@ -64,7 +68,7 @@ namespace SilkySouls2.Memory.DLLShared
         public void InjectSpeedDll()
         {
             if (_speedIsInjected) return;
-            _speedIsInjected = _memoryIo.InjectDll(_speedDllPath);
+            _speedIsInjected = _memoryIo.InjectDll(_speedScholarDllPath);
 
         }
         
@@ -122,6 +126,11 @@ namespace SilkySouls2.Memory.DLLShared
         {
             _drawIsInjected = false;
             _speedIsInjected = false;
-        } 
+        }
+
+        public void TestInject32()
+        {
+            _memoryIo.InjectDll(_drawVanillaDllPath);
+        }
     }
 }

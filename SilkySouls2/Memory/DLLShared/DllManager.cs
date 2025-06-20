@@ -16,9 +16,8 @@ namespace SilkySouls2.Memory.DLLShared
         private static readonly int NumAddresses = Enum.GetValues(typeof(SharedMemAddr)).Length;
         
         private static readonly int DrawFlagsSize = NumDrawFlags * sizeof(bool);
-        private static readonly int AddressesSize = NumAddresses * sizeof(long);
-        
-        private static readonly int TotalSize = DrawFlagsSize + AddressesSize;
+        private static int AddressesSize => NumAddresses * (GameVersion.Current.Edition == GameEdition.Scholar ? 8 : 4);
+        private static int TotalSize => DrawFlagsSize + AddressesSize;
 
         private MemoryMappedFile _drawSharedMemory;
         private MemoryMappedViewAccessor _drawViewAccessor;
@@ -43,11 +42,15 @@ namespace SilkySouls2.Memory.DLLShared
             if (_drawIsInjected) return;
             
             SetAddress(SharedMemAddr.GameManagerImp, Offsets.GameManagerImp.Base.ToInt64());
-            SetAddress(SharedMemAddr.ParamLookUp, Offsets.Funcs.ParamLookUp);
-            SetAddress(SharedMemAddr.SetRenderTargets, Offsets.Funcs.SetRenderTargets);
+            SetAddress(SharedMemAddr.ParamLookup, Offsets.Funcs.ParamLookup);
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
+                SetAddress(SharedMemAddr.SetRenderTargets, Offsets.Funcs.SetRenderTargets);
+            else
+                SetAddress(SharedMemAddr.SetRenderTargets, Offsets.Funcs.SetDepthStencilSurface);
             SetAddress(SharedMemAddr.CreateSoundEvent, Offsets.Funcs.CreateSoundEvent);
             SetAddress(SharedMemAddr.GetEyePosition, Offsets.Funcs.GetEyePosition);
-            _drawIsInjected = _memoryIo.InjectDll(_drawScholarDllPath);
+            string dllPath = GameVersion.Current.Edition == GameEdition.Scholar ? _drawScholarDllPath : _drawVanillaDllPath;
+            _drawIsInjected = _memoryIo.InjectDll(dllPath);
         }
         
         public void CreateDrawSharedMem()
@@ -64,14 +67,31 @@ namespace SilkySouls2.Memory.DLLShared
                 _drawViewAccessor.Write(i * sizeof(bool), false);
             }
         }
-        
+
+        public void SetAddress(SharedMemAddr addrType, long address)
+        {
+            if (_drawViewAccessor == null)
+            {
+                Console.WriteLine("Shared memory not initialized");
+                return;
+            }
+
+            int pointerSize = GameVersion.Current.Edition == GameEdition.Scholar ? 8 : 4;
+            int offset = DrawFlagsSize + ((int)addrType * pointerSize);
+
+            if (pointerSize == 8) _drawViewAccessor.Write(offset, address);
+            else _drawViewAccessor.Write(offset, (int)address);
+            
+            Console.WriteLine($"{addrType} address set to: 0x{address:X16}");
+        }
+
         public void InjectSpeedDll()
         {
             if (_speedIsInjected) return;
             _speedIsInjected = _memoryIo.InjectDll(_speedScholarDllPath);
 
         }
-        
+
         public void CreateSpeedSharedMem()
         {
             _speedSharedMemory = MemoryMappedFile.CreateOrOpen(
@@ -83,7 +103,7 @@ namespace SilkySouls2.Memory.DLLShared
             
             _speedViewAccessor.Write(0, 1.0);
         }
-        
+
         public void SetSpeed(double speed)
         {
             if (!_speedIsInjected)
@@ -107,19 +127,6 @@ namespace SilkySouls2.Memory.DLLShared
             
             int offset = (int)drawType * sizeof(bool);
             _drawViewAccessor.Write(offset, value);
-        }
-        
-        public void SetAddress(SharedMemAddr addrType, long address)
-        {
-            if (_drawViewAccessor == null)
-            {
-                Console.WriteLine("Shared memory not initialized");
-                return;
-            }
-            
-            int offset = DrawFlagsSize + ((int)addrType * sizeof(long));
-            _drawViewAccessor.Write(offset, address);
-            Console.WriteLine($"{addrType} address set to: 0x{address:X16}");
         }
 
         public void ResetState()

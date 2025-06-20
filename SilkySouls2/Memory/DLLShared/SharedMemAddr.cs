@@ -3,7 +3,7 @@
     public enum SharedMemAddr
     {
         GameManagerImp = 0,
-        ParamLookUp = 1,
+        ParamLookup = 1,
         SetRenderTargets = 2,
         CreateSoundEvent = 3,
         GetEyePosition = 4,

@@ -541,7 +541,7 @@ namespace SilkySouls2.Memory
             public static long SetEvent;
             public static long GiveSouls;
             public static long RestoreSpellcasts;
-            public static long ParamLookUp;
+            public static long ParamLookup;
             public static long SetRenderTargets;
             public static long CreateSoundEvent;
             public static long LevelLookup;
@@ -566,6 +566,7 @@ namespace SilkySouls2.Memory
             public static long GetNumOfSpellslots2;
             public static long UpdateSpellSlots;
             public static long Sleep;
+            public static long SetDepthStencilSurface;
         }
 
         private static int GetVanillaOffset(string playerctrl, string versionPatchVersion)

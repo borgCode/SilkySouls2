@@ -27,6 +27,30 @@
             6
         );
 
+        public static readonly Pattern ParamLookup = new Pattern(
+            new byte[] { 0x74, 0x30, 0x0F, 0xB7, 0x70 },
+            "xxxxx",
+            -0xF,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern GetEyePosition = new Pattern(
+            new byte[] { 0xFF, 0xD0, 0x83, 0x7D, 0xC0 },
+            "xxxxx",
+            -0x4F,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern SetDepthStencilSurface = new Pattern(
+            new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x8B, 0x56, 0x44, 0x8B, 0x4C },
+            "x????xxxxx",
+            0,
+            AddressingMode.Relative,
+            1,
+            5
+        );
+
+
         
         //Patches
 

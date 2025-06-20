@@ -151,7 +151,7 @@ namespace SilkySouls2.Memory
                 Offsets.Funcs.WarpPrep = FindAddressByPattern(Patterns64.WarpPrep).ToInt64();
                 Offsets.Funcs.BonfireWarp = FindAddressByPattern(Patterns64.BonfireWarp).ToInt64();
                 Offsets.Funcs.RestoreSpellcasts = FindAddressByPattern(Patterns64.RestoreSpellcasts).ToInt64();
-                Offsets.Funcs.ParamLookUp = FindAddressByPattern(Patterns64.ParamLookUp).ToInt64();
+                Offsets.Funcs.ParamLookup = FindAddressByPattern(Patterns64.ParamLookUp).ToInt64();
                 Offsets.Funcs.SetEvent = FindAddressByPattern(Patterns64.SetEvent).ToInt64();
                 Offsets.Funcs.GiveSouls = FindAddressByPattern(Patterns64.GiveSouls).ToInt64();
                 Offsets.Funcs.LevelLookup = FindAddressByPattern(Patterns64.LevelLookUp).ToInt64();
@@ -322,6 +322,8 @@ namespace SilkySouls2.Memory
                 Offsets.Funcs.Sleep = FindAddressByPattern(Patterns32.Sleep).ToInt32();
                 Offsets.Funcs.UpdateSpellSlots = FindAddressByPattern(Patterns32.UpdateSpellSlots).ToInt32();
                 Offsets.Funcs.AttuneSpell = FindAddressByPattern(Patterns32.AttuneSpell).ToInt32();
+                Offsets.Funcs.ParamLookup = FindAddressByPattern(Patterns32.ParamLookup).ToInt32();
+                Offsets.Funcs.GetEyePosition = FindAddressByPattern(Patterns32.GetEyePosition).ToInt32();
                 
                 FindMultipleCallsInFunction(Patterns32.GetNumOfSpellSlots, new Dictionary<Action<long>, int>
                 {
@@ -350,6 +352,11 @@ namespace SilkySouls2.Memory
                 Offsets.Patches.NegativeLevel = (IntPtr)Offsets.Funcs.LevelUp + 0x31;
                 Offsets.Patches.SoulMemWrite1 = FindAddressByPattern(Patterns32.SoulMemWrite);
                 Offsets.Patches.SoulMemWrite2 = Offsets.Patches.SoulMemWrite1 + 0x4A;
+                
+                
+                TryPatternWithFallback("SetDepthStencilSurface",
+                    Patterns32.SetDepthStencilSurface,
+                    addr => Offsets.Funcs.SetDepthStencilSurface = addr.ToInt64(), saved);
                 
                 using (var writer = new StreamWriter(savePath))
                 {
@@ -413,7 +420,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Funcs.GiveSouls: 0x{Offsets.Funcs.GiveSouls:X}");
             Console.WriteLine($"Funcs.SetEvent: 0x{Offsets.Funcs.SetEvent:X}");
             Console.WriteLine($"Funcs.RestoreSpellcasts: 0x{Offsets.Funcs.RestoreSpellcasts:X}");
-            Console.WriteLine($"Funcs.ParamLookUp: 0x{Offsets.Funcs.ParamLookUp:X}");
+            Console.WriteLine($"Funcs.ParamLookUp: 0x{Offsets.Funcs.ParamLookup:X}");
             Console.WriteLine($"Funcs.SetRenderTargets: 0x{Offsets.Funcs.SetRenderTargets:X}");
             Console.WriteLine($"Funcs.CreateSoundEvent: 0x{Offsets.Funcs.CreateSoundEvent:X}");
             Console.WriteLine($"Funcs.LevelLookUp: 0x{Offsets.Funcs.LevelLookup:X}");
@@ -438,6 +445,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Funcs.GetNumOfSpellslots2: 0x{Offsets.Funcs.GetNumOfSpellslots2:X}");
             Console.WriteLine($"Funcs.UpdateSpellSlots: 0x{Offsets.Funcs.UpdateSpellSlots:X}");
             Console.WriteLine($"Funcs.Sleep: 0x{Offsets.Funcs.Sleep:X}");
+            Console.WriteLine($"Funcs.SetDepthStencilSurface: 0x{Offsets.Funcs.SetDepthStencilSurface:X}");
 #endif
         }
 

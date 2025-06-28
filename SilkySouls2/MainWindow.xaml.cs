@@ -190,9 +190,7 @@ namespace SilkySouls2
                 _hookManager.ClearHooks();
                 DisableFeatures();
                 _nopManager.ClearRegistry();
-                _dllManager.ResetState();
-                _settingsViewModel.ResetAttached();
-                _itemService.Reset();
+                ResetState();
                 _hasScanned = false;
                 _loaded = false;
                 _hasAllocatedMemory = false;
@@ -201,6 +199,14 @@ namespace SilkySouls2
                 IsAttachedText.Foreground = (SolidColorBrush)Application.Current.Resources["NotAttachedBrush"];
                 LaunchGameButton.IsEnabled = true;
             }
+        }
+
+        private void ResetState()
+        {
+            _dllManager.ResetState();
+            _settingsViewModel.ResetAttached();
+            _itemService.Reset();
+            _utilityViewModel.Reset();
         }
 
         private void ApplyLaunchFeatures()

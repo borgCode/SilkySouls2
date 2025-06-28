@@ -139,5 +139,7 @@ namespace SilkySouls2.Memory.DLLShared
         {
             _memoryIo.InjectDll(_drawVanillaDllPath);
         }
+
+        public bool IsSpeedInjected() => _speedIsInjected;
     }
 }

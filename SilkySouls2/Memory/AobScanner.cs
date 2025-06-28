@@ -99,6 +99,8 @@ namespace SilkySouls2.Memory
                     addr => Offsets.Hooks.NumOfDrops = addr.ToInt64(), saved);
                 TryPatternWithFallback("KillboxFlagSet", Patterns64.KillboxFlagSet,
                     addr => Offsets.Hooks.KillboxFlagSet = addr.ToInt64(), saved);
+                TryPatternWithFallback("ReduceGameSpeed", Patterns64.ReduceGameSpeed,
+                    addr => Offsets.Hooks.ReduceGameSpeed = addr.ToInt64(), saved);
 
                 TryPatternWithFallback("DamageControl", Patterns64.DamageControl,
                     addr => Offsets.Hooks.DamageControl = addr.ToInt64(), saved);
@@ -247,6 +249,10 @@ namespace SilkySouls2.Memory
                     addr => Offsets.Patches.Ng7 = addr, saved);
                 TryPatternWithFallback("DropRate", Patterns32.DropRate,
                     addr => Offsets.Patches.DropRate = addr, saved);
+                TryPatternWithFallback("HideMap", Patterns32.HideMap,
+                    addr => Offsets.Patches.HideMap = addr, saved);
+                TryPatternWithFallback("HideChrModels", Patterns32.HideChrModels,
+                    addr => Offsets.Patches.HideChrModels = addr, saved);
                 
                 TryPatternWithFallback("LockedTarget", Patterns32.LockedTarget,
                     addr => Offsets.Hooks.LockedTarget = addr.ToInt32(), saved);
@@ -414,6 +420,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Hooks.BabyJump: 0x{Offsets.Hooks.BabyJump:X}");
             Console.WriteLine($"Hooks.EzStateCompareTimer: 0x{Offsets.Hooks.EzStateCompareTimer:X}");
             Console.WriteLine($"Hooks.FogRender: 0x{Offsets.Hooks.FogRender:X}");
+            Console.WriteLine($"Hooks.ReduceGameSpeed: 0x{Offsets.Hooks.ReduceGameSpeed:X}");
             
             Console.WriteLine($"Funcs.WarpPrep: 0x{Offsets.Funcs.WarpPrep:X}");
             Console.WriteLine($"Funcs.BonfireWarp: 0x{Offsets.Funcs.BonfireWarp:X}");

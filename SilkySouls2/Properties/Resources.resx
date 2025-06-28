@@ -3596,4 +3596,13 @@ e9 fc ff ff ff          jmp    31 &lt;loop_end+0x3&gt;
 58                      pop    eax
 e9 fc ff ff ff          jmp    38 &lt;entity_disabled+0x3&gt;</value>
   </data>
+  <data name="ReduceSpeed64" xml:space="preserve">
+    <value>f3 0f 10 02             movss  xmm0,DWORD PTR [rdx]
+f3 0f 59 05 00 00 00    mulss  xmm0,DWORD PTR [rip+0x0]        # c &lt;_main+0xc&gt;
+00
+f3 0f 11 02             movss  DWORD PTR [rdx],xmm0
+f3 0f 10 32             movss  xmm6,DWORD PTR [rdx]
+31 db                   xor    ebx,ebx
+e9 00 00 00 00          jmp    1b &lt;_main+0x1b&gt;</value>
+  </data>
 </root>

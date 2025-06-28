@@ -528,5 +528,12 @@ namespace SilkySouls2.ViewModels
             await Task.Delay(50);
             RefreshSpells();
         }
+
+        public void Reset()
+        {
+            _gameSpeed = 1.0f;
+            OnPropertyChanged(nameof(GameSpeed));
+            _utilityService.Reset();
+        }
     }
 }

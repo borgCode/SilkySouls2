@@ -530,12 +530,7 @@ namespace SilkySouls2.Services
         {
             _dllManager.ToggleRender(DrawType.Hitbox, isDrawHitboxEnabled);
         }
-
-        public void Inject()
-        {
-            _dllManager.InjectDrawDll();
-        }
-
+        
         public void ToggleDrawEvent(DrawType eventType, bool isDrawEventEnabled)
         {
             _dllManager.ToggleRender(eventType, isDrawEventEnabled);
@@ -558,7 +553,56 @@ namespace SilkySouls2.Services
             _memoryIo.WriteBytes(Patches.HideMap + 0x1, //js rel to jns rel
                 isHideMapEnabled ? new byte[] { 0x89 } : new byte[] { 0x88 });
 
-        public void SetGameSpeed(float value) => _dllManager.SetSpeed(value);
+        private bool _isSlowdownHookInstalled;
+        public void SetGameSpeed(float value)
+        {
+            if (value < 1)
+            {
+                if (_dllManager.IsSpeedInjected()) _dllManager.SetSpeed(1);
+                InstallSlowdownHook(value);
+            }
+            else
+            {
+                if (_isSlowdownHookInstalled) RemoveSlowdownHook();
+                if (value > 1) _dllManager.SetSpeed(value);
+            }
+        }
+
+        private void InstallSlowdownHook(float value)
+        {
+            var slowdownFactor = CodeCaveOffsets.Base + CodeCaveOffsets.SlowdownFactor;
+            _memoryIo.WriteFloat(slowdownFactor, value);
+
+            if (_isSlowdownHookInstalled) return;
+            var hookLoc = Hooks.ReduceGameSpeed;
+            var code = CodeCaveOffsets.Base + CodeCaveOffsets.SlowdownCode;
+      
+            if (GameVersion.Current.Edition == GameEdition.Scholar)
+            {
+                var bytes = AsmLoader.GetAsmBytes("ReduceSpeed64");
+                AsmHelper.WriteRelativeOffsets(bytes, new []
+                {
+                    (code.ToInt64() + 0x4, slowdownFactor.ToInt64(), 8, 0x4 + 4),
+                    (code.ToInt64() + 0x16, hookLoc + 0x6, 5, 0x16 + 1)
+                });
+             
+                _memoryIo.WriteBytes(code, bytes);
+                _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[]
+                    { 0xF3, 0x0F, 0x10, 0x32, 0x31, 0xDB });
+                _isSlowdownHookInstalled = true;
+            }
+            else
+            {
+                // TODO 32 bit
+            }
+            
+        }
+
+        private void RemoveSlowdownHook()
+        {
+            _hookManager.UninstallHook((CodeCaveOffsets.Base + CodeCaveOffsets.SlowdownCode).ToInt64());
+            _isSlowdownHookInstalled = false;
+        }
 
         public void ToggleRagdollEsp(bool isSeeThroughwallsEnabled) =>
             _dllManager.ToggleRender(DrawType.RagdollEsp, isSeeThroughwallsEnabled);
@@ -1047,6 +1091,11 @@ namespace SilkySouls2.Services
         public void Test()
         {
             _dllManager.TestInject32();
+        }
+
+        public void Reset()
+        {
+            _isSlowdownHookInstalled = false;
         }
     }
 }

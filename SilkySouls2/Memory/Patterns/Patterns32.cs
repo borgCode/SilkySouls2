@@ -28,10 +28,12 @@
         );
 
         public static readonly Pattern ParamLookup = new Pattern(
-            new byte[] { 0x74, 0x30, 0x0F, 0xB7, 0x70 },
-            "xxxxx",
-            -0xF,
-            AddressingMode.Absolute
+            new byte[] { 0x80, 0x7B, 0x36, 0x00 },
+            "xxxx",
+            0xC,
+            AddressingMode.Relative,
+            1,
+            5
         );
 
         public static readonly Pattern GetEyePosition = new Pattern(
@@ -51,9 +53,23 @@
         );
 
 
-        
         //Patches
 
+
+        public static readonly Pattern HideMap = new Pattern(
+            new byte[] { 0x0F, 0x88, 0x94, 0x00 },
+            "xxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern HideChrModels = new Pattern(
+            new byte[] { 0x74, 0x05, 0x0A, 0x4D },
+            "xxxx",
+            0,
+            AddressingMode.Absolute
+        );
+        
         public static readonly Pattern InfiniteStam = new Pattern(
             new byte[] { 0x0F, 0x83, 0x79, 0x01 },
             "xxxx",
@@ -123,7 +139,7 @@
             4,
             AddressingMode.Absolute
         );
-        
+
         public static readonly Pattern Silent = new Pattern(
             new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x84, 0xC0, 0x74, 0x3F, 0x8B, 0x86 },
             "x????xxxxxx",
@@ -147,9 +163,6 @@
         );
 
 
-        
-        
-        
         // Funcs
 
         public static readonly Pattern SetSpEffect = new Pattern(
@@ -255,7 +268,7 @@
             1,
             5
         );
-        
+
         public static readonly Pattern HavokRayCast = new Pattern(
             new byte[] { 0x83, 0xCF, 0xFF, 0x33, 0xD2 },
             "xxxxx",
@@ -334,10 +347,7 @@
             AddressingMode.Absolute
         );
 
-        
 
-        
-            
         // Hooks
 
         public static readonly Pattern LockedTarget = new Pattern(
@@ -346,9 +356,9 @@
             0,
             AddressingMode.Absolute
         );
-        
+
         public static readonly Pattern SetCurrentAct = new Pattern(
-            new byte[]{ 0x83, 0x89, 0x50, 0x02, 0x00, 0x00, 0x01 },
+            new byte[] { 0x83, 0x89, 0x50, 0x02, 0x00, 0x00, 0x01 },
             "xxxxxxx",
             7,
             AddressingMode.Absolute
@@ -416,7 +426,7 @@
             -0x25,
             AddressingMode.Absolute
         );
-            
+
 
         public static readonly Pattern ProcessPhysics = new Pattern(
             new byte[] { 0x8B, 0x8E, 0xB8, 0x00, 0x00, 0x00, 0x8D, 0x45 },
@@ -473,8 +483,5 @@
             2,
             AddressingMode.Absolute
         );
-
-
     }
-    
 }

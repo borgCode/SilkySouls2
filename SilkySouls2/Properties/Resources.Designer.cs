@@ -1201,6 +1201,100 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 81 3d 00 00 00 00 00    cmp    DWORD PTR ds:0x0,0xa200000
+        ///00 20 0a
+        ///74 03                   je     f &lt;skip&gt;
+        ///89 4d e4                mov    DWORD PTR [ebp-0x1c],ecx
+        ///000f &lt;skip&gt;:
+        ///31 c9                   xor    ecx,ecx
+        ///e9 fc ff ff ff          jmp    12 &lt;skip+0x3&gt;.
+        /// </summary>
+        internal static string NoShadedFogCam32 {
+            get {
+                return ResourceManager.GetString("NoShadedFogCam32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 81 3d 00 00 00 00 00    cmp    DWORD PTR [rip+0x0],0xa200000        # a &lt;_main+0xa&gt;
+        ///00 20 0a
+        ///74 04                   je     10 &lt;skip&gt;
+        ///89 44 24 58             mov    DWORD PTR [rsp+0x58],eax
+        ///000000000010 &lt;skip&gt;:
+        ///8b 41 38                mov    eax,DWORD PTR [rcx+0x38]
+        ///e9 00 00 00 00          jmp    18 &lt;skip+0x8&gt;.
+        /// </summary>
+        internal static string NoShadedFogCam64 {
+            get {
+                return ResourceManager.GetString("NoShadedFogCam64", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 0f b6 46 07             movzx  eax,BYTE PTR [esi+0x7]
+        ///81 3d 00 00 00 00 00    cmp    DWORD PTR ds:0x0,0xa200000
+        ///00 20 0a
+        ///75 05                   jne    15 &lt;normal&gt;
+        ///b8 00 00 00 00          mov    eax,0x0
+        ///0015 &lt;normal&gt;:
+        ///89 45 ac                mov    DWORD PTR [ebp-0x54],eax
+        ///e9 fc ff ff ff          jmp    19 &lt;normal+0x4&gt;.
+        /// </summary>
+        internal static string NoShadedFogClose32 {
+            get {
+                return ResourceManager.GetString("NoShadedFogClose32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 0f 57 c0                xorps  xmm0,xmm0
+        ///66 0f 6e e0             movd   xmm4,eax
+        ///81 3d 00 00 00 00 00    cmp    DWORD PTR [rip+0x0],0xa200000        # 11 &lt;_main+0x11&gt;
+        ///00 20 0a
+        ///75 0b                   jne    1e &lt;normal&gt;
+        ///50                      push   rax
+        ///b8 00 00 00 00          mov    eax,0x0
+        ///66 0f 6e e0             movd   xmm4,eax
+        ///58                      pop    rax
+        ///00000000001e &lt;normal&gt;:
+        ///e9 00 00 00 00          jmp    23 &lt;normal+0x5&gt;.
+        /// </summary>
+        internal static string NoShadedFogClose64 {
+            get {
+                return ResourceManager.GetString("NoShadedFogClose64", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to f3 0f 11 46 10          movss  DWORD PTR [esi+0x10],xmm0
+        ///81 3d 00 00 00 00 00    cmp    DWORD PTR ds:0x0,0xa200000
+        ///00 20 0a
+        ///0f 85 fc ff ff ff       jne    11 &lt;_main+0x11&gt;
+        ///5a                      pop    edx
+        ///59                      pop    ecx
+        ///e9 fc ff ff ff          jmp    18 &lt;_main+0x18&gt;.
+        /// </summary>
+        internal static string NoShadedFogFar32 {
+            get {
+                return ResourceManager.GetString("NoShadedFogFar32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 4c 89 50 10             mov    QWORD PTR [rax+0x10],r10
+        ///48 89 c3                mov    rbx,rax
+        ///81 3d 00 00 00 00 00    cmp    DWORD PTR [rip+0x0],0xa200000        # 11 &lt;_main+0x11&gt;
+        ///00 20 0a
+        ///0f 85 00 00 00 00       jne    17 &lt;_main+0x17&gt;
+        ///e9 00 00 00 00          jmp    1c &lt;_main+0x1c&gt;.
+        /// </summary>
+        internal static string NoShadedFogFar64 {
+            get {
+                return ResourceManager.GetString("NoShadedFogFar64", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Emerald Herald,104020,103520,0
         ///Gilligan,104050,103550,102165
         ///Saulden,104140,103640,0

@@ -69,7 +69,7 @@
             0,
             AddressingMode.Absolute
         );
-        
+
         public static readonly Pattern InfiniteStam = new Pattern(
             new byte[] { 0x0F, 0x83, 0x79, 0x01 },
             "xxxx",
@@ -353,6 +353,27 @@
         public static readonly Pattern LightGutter = new Pattern(
             new byte[] { 0xF3, 0x0F, 0x7E, 0x86, 0x58, 0xFF, 0xFF, 0xFF, 0x66, 0x0F, 0xD6, 0x87, 0xE8 },
             "xxxxxxxxxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern NoShadedFogClose = new Pattern(
+            new byte[] { 0x0F, 0xB6, 0x46, 0x07, 0x89 },
+            "xxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern NoShadedFogFar = new Pattern(
+            new byte[] { 0x52, 0x8B, 0xCF, 0x89, 0x46, 0x0C, 0xF3 },
+            "xxxxxxx",
+            0x6,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern NoShadedFogCam = new Pattern(
+            new byte[] { 0x89, 0x4D, 0xE4, 0x33, 0xC9, 0x81 },
+            "xxxxxx",
             0,
             AddressingMode.Absolute
         );

@@ -531,9 +531,11 @@ namespace SilkySouls2.Memory
             public static long SetSharedFlag;
             public static long BabyJump;
             public static long EzStateCompareTimer;
-            public static long FogRender;
+            public static long NoShadedFogClose;
             public static long ReduceGameSpeed;
             public static long LightGutter;
+            public static long NoShadedFogFar;
+            public static long NoShadedFogCam;
         }
 
         public static class Funcs

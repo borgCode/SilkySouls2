@@ -218,7 +218,7 @@
                 <Grid Margin="10,5,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="180" />
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="150" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
@@ -332,10 +332,10 @@
                     <!--           Grid.Column="1" Grid.Row="2" -->
                     <!--           Margin="0,2" /> -->
                     
-                    <!-- <CheckBox Content="Transparent Fog" -->
-                    <!--           IsChecked="{Binding IsTransparentFogEnabled}" -->
-                    <!--           Grid.Column="1" Grid.Row="3" -->
-                    <!--           Margin="0,2" /> -->
+                    <CheckBox Content="No Shaded Woods fog"
+                              IsChecked="{Binding IsNoFogEnabled}"
+                              Grid.Column="1" Grid.Row="3"
+                              Margin="0,2" />
                     
                     <CheckBox Content="Draw Collision"
                               IsChecked="{Binding IsDrawCollisionEnabled}"

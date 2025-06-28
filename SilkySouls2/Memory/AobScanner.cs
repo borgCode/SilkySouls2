@@ -124,8 +124,12 @@ namespace SilkySouls2.Memory
                     addr => Offsets.Hooks.BabyJump = addr.ToInt64(), saved);
                 TryPatternWithFallback("LightGutter", Patterns64.LightGutter,
                     addr => Offsets.Hooks.LightGutter = addr.ToInt64(), saved);
-                TryPatternWithFallback("FogRender", Patterns64.FogRender,
-                    addr => Offsets.Hooks.FogRender = addr.ToInt64(), saved);
+                TryPatternWithFallback("NoShadedFogClose", Patterns64.NoShadedFogClose,
+                    addr => Offsets.Hooks.NoShadedFogClose = addr.ToInt64(), saved);
+                TryPatternWithFallback("NoShadedFogFar", Patterns64.NoShadedFogFar,
+                    addr => Offsets.Hooks.NoShadedFogFar = addr.ToInt64(), saved);
+                TryPatternWithFallback("NoShadedFogCam", Patterns64.NoShadedFogCam,
+                    addr => Offsets.Hooks.NoShadedFogCam = addr.ToInt64(), saved);
 
                 Offsets.Hooks.DisableTargetAi = Offsets.Patches.DisableAi.ToInt64() + 0x2C;
 
@@ -296,6 +300,12 @@ namespace SilkySouls2.Memory
                     addr => Offsets.Hooks.ReduceGameSpeed = addr.ToInt32(), saved);
                 TryPatternWithFallback("LightGutter", Patterns32.LightGutter,
                     addr => Offsets.Hooks.LightGutter = addr.ToInt32(), saved);
+                TryPatternWithFallback("NoShadedFogClose", Patterns32.NoShadedFogClose,
+                    addr => Offsets.Hooks.NoShadedFogClose = addr.ToInt32(), saved);
+                TryPatternWithFallback("NoShadedFogFar", Patterns32.NoShadedFogFar,
+                    addr => Offsets.Hooks.NoShadedFogFar = addr.ToInt32(), saved);
+                TryPatternWithFallback("NoShadedFogCam", Patterns32.NoShadedFogCam,
+                    addr => Offsets.Hooks.NoShadedFogCam = addr.ToInt32(), saved);
                 
                 var setCurrectActLocs = FindAddressesByPattern(Patterns32.SetCurrentAct, 2);
                 if (setCurrectActLocs.Count < 2 || setCurrectActLocs[0] == IntPtr.Zero)
@@ -425,9 +435,11 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Hooks.SetSharedFlag: 0x{Offsets.Hooks.SetSharedFlag:X}");
             Console.WriteLine($"Hooks.BabyJump: 0x{Offsets.Hooks.BabyJump:X}");
             Console.WriteLine($"Hooks.EzStateCompareTimer: 0x{Offsets.Hooks.EzStateCompareTimer:X}");
-            Console.WriteLine($"Hooks.FogRender: 0x{Offsets.Hooks.FogRender:X}");
+            Console.WriteLine($"Hooks.NoShadedFogClose: 0x{Offsets.Hooks.NoShadedFogClose:X}");
             Console.WriteLine($"Hooks.ReduceGameSpeed: 0x{Offsets.Hooks.ReduceGameSpeed:X}");
             Console.WriteLine($"Hooks.LightGutter: 0x{Offsets.Hooks.LightGutter:X}");
+            Console.WriteLine($"Hooks.NoShadedFogFar: 0x{Offsets.Hooks.NoShadedFogFar:X}");
+            Console.WriteLine($"Hooks.NoShadedFogCam: 0x{Offsets.Hooks.NoShadedFogCam:X}");
             
             Console.WriteLine($"Funcs.WarpPrep: 0x{Offsets.Funcs.WarpPrep:X}");
             Console.WriteLine($"Funcs.BonfireWarp: 0x{Offsets.Funcs.BonfireWarp:X}");

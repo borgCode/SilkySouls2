@@ -530,7 +530,7 @@ namespace SilkySouls2.Services
         {
             _dllManager.ToggleRender(DrawType.Hitbox, isDrawHitboxEnabled);
         }
-        
+
         public void ToggleDrawEvent(DrawType eventType, bool isDrawEventEnabled)
         {
             _dllManager.ToggleRender(eventType, isDrawEventEnabled);
@@ -554,11 +554,12 @@ namespace SilkySouls2.Services
                 isHideMapEnabled ? new byte[] { 0x89 } : new byte[] { 0x88 });
 
         private bool _isSlowdownHookInstalled;
+
         public void SetGameSpeed(float value)
         {
             if (_isSlowdownHookInstalled) RemoveSlowdownHook();
             if (_dllManager.IsSpeedInjected()) _dllManager.SetSpeed(1);
-            
+
             if (value < 1)
             {
                 InstallSlowdownHook(value);
@@ -577,16 +578,16 @@ namespace SilkySouls2.Services
             if (_isSlowdownHookInstalled) return;
             var hookLoc = Hooks.ReduceGameSpeed;
             var code = CodeCaveOffsets.Base + CodeCaveOffsets.SlowdownCode;
-      
+
             if (GameVersion.Current.Edition == GameEdition.Scholar)
             {
                 var bytes = AsmLoader.GetAsmBytes("ReduceSpeed64");
-                AsmHelper.WriteRelativeOffsets(bytes, new []
+                AsmHelper.WriteRelativeOffsets(bytes, new[]
                 {
                     (code.ToInt64() + 0x4, slowdownFactor.ToInt64(), 8, 0x4 + 4),
                     (code.ToInt64() + 0x16, hookLoc + 0x6, 5, 0x16 + 1)
                 });
-             
+
                 _memoryIo.WriteBytes(code, bytes);
                 _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[]
                     { 0xF3, 0x0F, 0x10, 0x32, 0x31, 0xDB });
@@ -599,13 +600,12 @@ namespace SilkySouls2.Services
                 Array.Copy(bytes, 0, codeBytes, 0x7 + 4, 4);
                 bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 7, code + 0x18);
                 Array.Copy(bytes, 0, codeBytes, 0x13 + 1, 4);
-                
+
                 _memoryIo.WriteBytes(code, codeBytes);
                 _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[]
-                    {0x8B, 0x7B, 0x08, 0xF3, 0x0F, 0x10, 0x07 });
+                    { 0x8B, 0x7B, 0x08, 0xF3, 0x0F, 0x10, 0x07 });
                 _isSlowdownHookInstalled = true;
             }
-            
         }
 
         private void RemoveSlowdownHook()
@@ -1009,7 +1009,7 @@ namespace SilkySouls2.Services
             else
             {
                 bytes = AsmLoader.GetAsmBytes("GetNumOfSlots32");
-                AsmHelper.WriteAbsoluteAddresses32(bytes, new []
+                AsmHelper.WriteAbsoluteAddresses32(bytes, new[]
                 {
                     (slotsLoc.ToInt64(), 1),
                     (inventory.ToInt64(), 0x5 + 1),
@@ -1017,7 +1017,7 @@ namespace SilkySouls2.Services
                     (getNumOfSlots2, 0x17 + 1)
                 });
             }
-            
+
             _memoryIo.AllocateAndExecute(bytes);
 
 
@@ -1068,8 +1068,8 @@ namespace SilkySouls2.Services
             }, true);
 
             var attuneFunc = Funcs.AttuneSpell;
-            
-            
+
+
             byte[] bytes;
 
             if (GameVersion.Current.Edition == GameEdition.Scholar)
@@ -1086,7 +1086,7 @@ namespace SilkySouls2.Services
             else
             {
                 bytes = AsmLoader.GetAsmBytes("AttuneSpell32");
-                AsmHelper.WriteAbsoluteAddresses32(bytes, new []
+                AsmHelper.WriteAbsoluteAddresses32(bytes, new[]
                 {
                     (inventoryLists.ToInt64(), 1),
                     (entryAddr.ToInt64(), 0x5 + 1),
@@ -1094,7 +1094,7 @@ namespace SilkySouls2.Services
                     (attuneFunc, 0x11 + 1)
                 });
             }
-            
+
             _memoryIo.AllocateAndExecute(bytes);
         }
 
@@ -1127,7 +1127,7 @@ namespace SilkySouls2.Services
         {
             var hookLoc = Hooks.LightGutter;
             var bytes = AsmLoader.GetAsmBytes("LightGutter64");
-            AsmHelper.WriteRelativeOffsets(bytes, new []
+            AsmHelper.WriteRelativeOffsets(bytes, new[]
             {
                 (code.ToInt64(), MapId.ToInt64(), 10, 0x0 + 2),
                 (code.ToInt64() + 0x21, hookLoc + 0x8, 5, 0x21 + 1)
@@ -1135,7 +1135,6 @@ namespace SilkySouls2.Services
             _memoryIo.WriteBytes(code, bytes);
             _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[]
                 { 0x66, 0x0F, 0x7F, 0x87, 0xE0, 0x00, 0x00, 0x00 });
-
         }
 
         private void InstallLightGutter32(IntPtr code)
@@ -1149,6 +1148,106 @@ namespace SilkySouls2.Services
             _memoryIo.WriteBytes(code, codeBytes);
             _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[]
                 { 0xF3, 0x0F, 0x7E, 0x86, 0x58, 0xFF, 0xFF, 0xFF });
+        }
+
+        public void ToggleShadedFog(bool isNoFogEnabled)
+        {
+            var closeFogCode = CodeCaveOffsets.Base + CodeCaveOffsets.NoFogClose;
+            var farFogCode = CodeCaveOffsets.Base + CodeCaveOffsets.NoFogFar;
+            var fogCamCode = CodeCaveOffsets.Base + CodeCaveOffsets.NoFogCam;
+            if (isNoFogEnabled)
+            {
+                if (GameVersion.Current.Edition == GameEdition.Scholar) InstallNoFog64(closeFogCode, farFogCode, fogCamCode);
+                else InstallNoFog32(closeFogCode, farFogCode, fogCamCode);
+            }
+            else
+            {
+                _hookManager.UninstallHook(closeFogCode.ToInt64());
+                _hookManager.UninstallHook(farFogCode.ToInt64());
+                _hookManager.UninstallHook(fogCamCode.ToInt64());
+            }
+        }
+
+        private void InstallNoFog64(IntPtr closeFogCode, IntPtr farFogCode, IntPtr fogCamCode)
+        {
+            var hookLoc = Hooks.NoShadedFogClose;
+            var bytes = AsmLoader.GetAsmBytes("NoShadedFogClose64");
+            AsmHelper.WriteRelativeOffsets(bytes, new[]
+            {
+                (closeFogCode.ToInt64() + 0x7, MapId.ToInt64(), 10, 0x7 + 2),
+                (closeFogCode.ToInt64() + 0x1E, hookLoc + 0x7, 5, 0x1E + 1)
+            });
+            _memoryIo.WriteBytes(closeFogCode, bytes);
+            _hookManager.InstallHook(closeFogCode.ToInt64(), hookLoc, new byte[]
+                { 0x0F, 0x57, 0xC0, 0x66, 0x0F, 0x6E, 0xE0 });
+
+            hookLoc = Hooks.NoShadedFogFar;
+            bytes = AsmLoader.GetAsmBytes("NoShadedFogFar64");
+            AsmHelper.WriteRelativeOffsets(bytes, new[]
+            {
+                (farFogCode.ToInt64() + 0x7, MapId.ToInt64(), 10, 0x7 + 2),
+                (farFogCode.ToInt64() + 0x11, hookLoc + 0x7, 6, 0x11 + 2),
+                (farFogCode.ToInt64() + 0x17, hookLoc + 0xC, 5, 0x17 + 1),
+            });
+            
+            _memoryIo.WriteBytes(farFogCode, bytes);
+            _hookManager.InstallHook(farFogCode.ToInt64(), hookLoc, new byte[]
+                { 0x4C, 0x89, 0x50, 0x10, 0x48, 0x89, 0xC3 });
+            
+            
+            hookLoc = Hooks.NoShadedFogCam;
+            bytes = AsmLoader.GetAsmBytes("NoShadedFogCam64");
+            AsmHelper.WriteRelativeOffsets(bytes, new[]
+            {
+                (fogCamCode.ToInt64(), MapId.ToInt64(), 10, 0x0 + 2),
+                (fogCamCode.ToInt64() + 0x13, hookLoc + 0x7, 5, 0x13 + 1),
+            });
+            
+            _memoryIo.WriteBytes(fogCamCode, bytes);
+            _hookManager.InstallHook(fogCamCode.ToInt64(), hookLoc, new byte[]
+                { 0x89, 0x44, 0x24, 0x58, 0x8B, 0x41, 0x38 });
+            
+        }
+
+        private void InstallNoFog32(IntPtr closeFogCode, IntPtr farFogCode, IntPtr fogCamCode)
+        {
+            var hookLoc = Hooks.NoShadedFogClose;
+            var codeBytes = AsmLoader.GetAsmBytes("NoShadedFogClose32");
+            var bytes = BitConverter.GetBytes(MapId.ToInt32());
+            Array.Copy(bytes, 0, codeBytes, 0x4 + 2, 4);
+            bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 7, closeFogCode + 0x1D);
+            Array.Copy(bytes, 0, codeBytes, 0x18 + 1, 4);
+            
+            _memoryIo.WriteBytes(closeFogCode, codeBytes);
+            _hookManager.InstallHook(closeFogCode.ToInt64(), hookLoc, new byte[]
+                { 0x0F, 0xB6, 0x46, 0x07, 0x89, 0x45, 0xAC });
+            
+            
+            hookLoc = Hooks.NoShadedFogFar;
+            codeBytes = AsmLoader.GetAsmBytes("NoShadedFogFar32");
+            bytes = BitConverter.GetBytes(MapId.ToInt32());
+            Array.Copy(bytes, 0, codeBytes, 0x5 + 2, 4);
+            AsmHelper.WriteRelativeOffsets(codeBytes, new []
+            {
+                (farFogCode.ToInt64() + 0xF, hookLoc + 0x5, 6, 0xF + 2),
+                (farFogCode.ToInt64() + 0x17, hookLoc + 0xA, 5, 0x17 + 1)
+            });
+            
+            _memoryIo.WriteBytes(farFogCode, codeBytes);
+            _hookManager.InstallHook(farFogCode.ToInt64(), hookLoc, new byte[]
+                { 0xF3, 0x0F, 0x11, 0x46, 0x10 });
+            
+            
+            hookLoc = Hooks.NoShadedFogCam;
+            codeBytes = AsmLoader.GetAsmBytes("NoShadedFogCam32");
+            bytes = BitConverter.GetBytes(MapId.ToInt32());
+            Array.Copy(bytes, 0, codeBytes, 0x0 + 2, 4);
+            bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 5, fogCamCode + 0x16);
+            Array.Copy(bytes, 0, codeBytes, 0x11 + 1, 4);
+            
+            _memoryIo.WriteBytes(fogCamCode, codeBytes);
+            _hookManager.InstallHook(fogCamCode.ToInt64(), hookLoc, new byte[]
+                { 0x89, 0x4D, 0xE4, 0x31, 0xC9 });
         }
     }
 }

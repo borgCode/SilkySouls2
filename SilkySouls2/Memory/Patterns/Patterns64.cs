@@ -97,14 +97,26 @@
         );
 
 
-        public static readonly Pattern FogRender = new Pattern(
-            new byte[] { 0x4D, 0x8B, 0x80, 0x18 },
-            "xxxx",
+        public static readonly Pattern NoShadedFogClose = new Pattern(
+            new byte[] { 0x0F, 0x57, 0xC0, 0x66, 0x0F, 0x6E, 0xE0 },
+            "xxxxxxx",
             0,
             AddressingMode.Absolute
         );
 
+        public static readonly Pattern NoShadedFogFar = new Pattern(
+            new byte[] { 0x4C, 0x8B, 0x54, 0x24, 0x70, 0x49, 0x8B },
+            "xxxxxxx",
+            0x8,
+            AddressingMode.Absolute
+        );
 
+        public static readonly Pattern NoShadedFogCam = new Pattern(
+            new byte[] { 0x89, 0x44, 0x24, 0x58, 0x8B, 0x41, 0x38, 0x8B },
+            "xxxxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
         public static readonly Pattern FasterMenu = new Pattern(
             new byte[] { 0x48, 0x89, 0x84, 0x24, 0x50, 0x01, 0x00, 0x00, 0x83, 0x79, 0x10 },
             "xxxxxxxxxxx",

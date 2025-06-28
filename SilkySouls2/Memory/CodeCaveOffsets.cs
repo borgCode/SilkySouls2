@@ -131,6 +131,9 @@ namespace SilkySouls2.Memory
 
 
         public const int LightGutter = 0x1A00;
+        public const int NoFogClose = 0x1A40;
+        public const int NoFogFar = 0x1A80;
+        public const int NoFogCam = 0x1AB0;
 
     }
 }

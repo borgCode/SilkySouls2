@@ -47,6 +47,10 @@ namespace SilkySouls2.ViewModels
         private readonly PlayerViewModel _playerViewModel;
 
         private float _gameSpeed = 1.0f;
+        
+        private float _desiredSpeed = -1f;
+        private const float DefaultSpeed = 1f;
+        private const float Epsilon = 0.0001f;
 
         private const float DefaultNoclipMultiplier = 1f;
         private const uint BaseXSpeedHex = 0x3e4ccccd;
@@ -54,9 +58,11 @@ namespace SilkySouls2.ViewModels
         private float _noClipSpeedMultiplier = DefaultNoclipMultiplier;
         private bool _isNoClipEnabled;
         private bool _wasNoDeathEnabled;
+        private bool _isAttached;
 
 
         private Dictionary<int, AttunementSpell> _spellLookup = new Dictionary<int, AttunementSpell>();
+
 
         public UtilityViewModel(UtilityService utilityService, HotkeyManager hotkeyManager,
             PlayerViewModel playerViewModel)
@@ -72,6 +78,7 @@ namespace SilkySouls2.ViewModels
 
             RegisterHotkeys();
         }
+
         private void RegisterHotkeys()
         {
             _hotkeyManager.RegisterAction("ForceSave", () =>
@@ -91,6 +98,7 @@ namespace SilkySouls2.ViewModels
                 if (IsNoClipEnabled)
                     NoClipSpeed = Math.Max(0.05f, NoClipSpeed - 0.50f);
             });
+            _hotkeyManager.RegisterAction("ToggleGameSpeed", ToggleSpeed);
             _hotkeyManager.RegisterAction("IncreaseGameSpeed", () => SetSpeed(Math.Min(10, GameSpeed + 0.50f)));
             _hotkeyManager.RegisterAction("DecreaseGameSpeed", () => SetSpeed(Math.Max(0, GameSpeed - 0.50f)));
         }
@@ -259,7 +267,7 @@ namespace SilkySouls2.ViewModels
                 _utilityService.ToggleHideMap(_isHideMapEnabled);
             }
         }
-        
+
         public bool IsCreditSkipEnabled
         {
             get => _isCreditSkipEnabled;
@@ -351,6 +359,27 @@ namespace SilkySouls2.ViewModels
 
         public void SetSpeed(float value) => GameSpeed = value;
 
+
+        private void ToggleSpeed()
+        {
+            if (!_isAttached) return;
+        
+            if (!IsApproximately(GameSpeed, DefaultSpeed))
+            {
+                _desiredSpeed = GameSpeed;
+                SetSpeed(DefaultSpeed);
+            }
+            else if (_desiredSpeed >= 0)
+            {
+                SetSpeed(_desiredSpeed);
+            }
+        }
+
+        private bool IsApproximately(float a, float b)
+        {
+            return Math.Abs(a - b) < Epsilon;
+        }
+
         public void TryEnableFeatures()
         {
             if (IsCreditSkipEnabled) _utilityService.ToggleCreditSkip(true);
@@ -365,6 +394,7 @@ namespace SilkySouls2.ViewModels
         }
 
         public void ForceSave() => _utilityService.ForceSave();
+
 
         public void TryApplyOneTimeFeatures()
         {
@@ -387,16 +417,17 @@ namespace SilkySouls2.ViewModels
             if (IsDrawRagdollsEnabled) _utilityService.ToggleRagdoll(true);
             if (IsSeeThroughWallsEnabled) _utilityService.ToggleRagdollEsp(true);
         }
-        
-        
+
         private ObservableCollection<InventorySpell> _availableSpells;
+
         public ObservableCollection<InventorySpell> AvailableSpells 
         {
             get => _availableSpells;
             private set => SetProperty(ref _availableSpells, value);
         }
-        
+
         private ObservableCollection<EquippedSpell> _equippedSpells;
+
         public ObservableCollection<EquippedSpell> EquippedSpells
         {
             get => _equippedSpells; 
@@ -404,6 +435,7 @@ namespace SilkySouls2.ViewModels
         }
 
         private int _numOfSlots;
+
         public int NumOfSlots
         {
             get => _numOfSlots; 
@@ -534,6 +566,12 @@ namespace SilkySouls2.ViewModels
             _gameSpeed = 1.0f;
             OnPropertyChanged(nameof(GameSpeed));
             _utilityService.Reset();
+            _isAttached = false;
+        }
+
+        public void ApplyLaunchFeatures()
+        {
+            _isAttached = true;
         }
     }
 }

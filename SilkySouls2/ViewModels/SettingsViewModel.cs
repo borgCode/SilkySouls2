@@ -40,6 +40,7 @@ namespace SilkySouls2.ViewModels
         private string _moveCamToPlayerHotkeyText;
         private string _enableDeathCamHotkeyText;
         
+        private string _toggleGameSpeedHotkeyText;
         private string _increaseGameSpeedHotkeyText;
         private string _decreaseGameSpeedHotkeyText;
         private string _increaseNoClipSpeedHotkeyText;
@@ -212,6 +213,13 @@ namespace SilkySouls2.ViewModels
             get => _restHotkeyText;
             set => SetProperty(ref _restHotkeyText, value);
         }
+        
+        public string ToggleGameSpeedHotkeyText
+        {
+            get => _toggleGameSpeedHotkeyText;
+            set => SetProperty(ref _toggleGameSpeedHotkeyText, value);
+        } 
+        
         
         public string IncreaseGameSpeedHotkeyText
         {
@@ -394,6 +402,7 @@ namespace SilkySouls2.ViewModels
                 { "RestoreSpellcasts", text => RestoreSpellcastsHotkeyText = text },
                 { "RestoreHumanity", text => RestoreHumanityHotkeyText = text },
                 { "Rest", text => RestHotkeyText = text },
+                { "ToggleGameSpeed", text => ToggleGameSpeedHotkeyText = text },
                 { "IncreaseGameSpeed", text => IncreaseGameSpeedHotkeyText = text },
                 { "DecreaseGameSpeed", text => DecreaseGameSpeedHotkeyText = text },
                 { "NoClip", text => NoClipHotkeyText = text },

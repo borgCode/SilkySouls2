@@ -213,6 +213,8 @@ namespace SilkySouls2
         {
             _playerViewModel.ApplyLaunchFeatures();
             _itemViewModel.ApplyLaunchFeatures();
+            _utilityViewModel.ApplyLaunchFeatures();
+
         }
 
         private void ApplyOneTimeFeatures()

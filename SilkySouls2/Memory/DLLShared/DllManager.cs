@@ -34,7 +34,7 @@ namespace SilkySouls2.Memory.DLLShared
             _drawScholarDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "SilkyDll.dll");
             _speedScholarDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "SilkySpeed.dll");
             _drawVanillaDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "DrawVanilla.dll");
-            // _speedVanillaDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "SilkySpeed.dll");
+            _speedVanillaDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "SilkySpeed32.dll");
         }
         
         public void InjectDrawDll()
@@ -88,8 +88,8 @@ namespace SilkySouls2.Memory.DLLShared
         public void InjectSpeedDll()
         {
             if (_speedIsInjected) return;
-            _speedIsInjected = _memoryIo.InjectDll(_speedScholarDllPath);
-
+            string dllPath = GameVersion.Current.Edition == GameEdition.Scholar ? _speedScholarDllPath : _speedVanillaDllPath;
+            _speedIsInjected = _memoryIo.InjectDll(dllPath);
         }
 
         public void CreateSpeedSharedMem()

@@ -556,15 +556,16 @@ namespace SilkySouls2.Services
         private bool _isSlowdownHookInstalled;
         public void SetGameSpeed(float value)
         {
+            if (_isSlowdownHookInstalled) RemoveSlowdownHook();
+            if (_dllManager.IsSpeedInjected()) _dllManager.SetSpeed(1);
+            
             if (value < 1)
             {
-                if (_dllManager.IsSpeedInjected()) _dllManager.SetSpeed(1);
                 InstallSlowdownHook(value);
             }
-            else
+            else if (value > 1)
             {
-                if (_isSlowdownHookInstalled) RemoveSlowdownHook();
-                if (value > 1) _dllManager.SetSpeed(value);
+                _dllManager.SetSpeed(value);
             }
         }
 

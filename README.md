@@ -1,4 +1,4 @@
-An offline practice tool for challenge running in Dark Souls 2 Scholar (only on latest patch for now)
+An offline practice tool for challenge running in Dark Souls 2 Scholar (Patch 1.03) and Dark Souls 2 Vanilla (Patches 1.11 and 1.12)
 
 This tool is strictly for offline practice only, it directly manipulates game memory which violates Terms of Service and will most likely lead to a ban if you use this online.
 

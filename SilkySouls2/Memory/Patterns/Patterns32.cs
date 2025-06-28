@@ -479,9 +479,9 @@
         );
 
         public static readonly Pattern BabyJump = new Pattern(
-            new byte[] { 0x0F, 0x51, 0xC0, 0x0F, 0x29, 0x45, 0xB0, 0xFF },
-            "xxxxxxxx",
-            0,
+            new byte[] { 0x74, 0x30, 0xF3, 0x0F, 0x10, 0x80, 0x84 },
+            "xxxxxxx",
+            -0x1C,
             AddressingMode.Absolute
         );
 

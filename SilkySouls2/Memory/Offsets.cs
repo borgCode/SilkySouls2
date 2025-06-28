@@ -533,6 +533,7 @@ namespace SilkySouls2.Memory
             public static long EzStateCompareTimer;
             public static long FogRender;
             public static long ReduceGameSpeed;
+            public static long LightGutter;
         }
 
         public static class Funcs

@@ -75,6 +75,13 @@
             AddressingMode.Absolute
         );
 
+        public static readonly Pattern LightGutter = new Pattern(
+            new byte[] { 0x0F, 0x14, 0xF1, 0x41, 0xBF },
+            "xxxxx",
+            0x68,
+            AddressingMode.Absolute
+        );
+        
         public static readonly Pattern EzStateCompareTimer = new Pattern(
             new byte[] { 0xF3, 0x0F, 0x11, 0x70, 0x18, 0x41 },
             "xxxxxx",

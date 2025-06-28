@@ -1023,6 +1023,44 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to f3 0f 7e 86 58 ff ff    movq   xmm0,QWORD PTR [esi-0xa8]
+        ///ff
+        ///81 3d 00 00 00 00 00    cmp    DWORD PTR ds:0x0,0xa190000
+        ///00 19 0a
+        ///75 0d                   jne    21 &lt;normal&gt;
+        ///50                      push   eax
+        ///b8 00 00 80 3f          mov    eax,0x3f800000
+        ///66 0f 3a 22 c0 01       pinsrd xmm0,eax,0x1
+        ///58                      pop    eax
+        ///0021 &lt;normal&gt;:
+        ///e9 fc ff ff ff          jmp    22 &lt;normal+0x1&gt;.
+        /// </summary>
+        internal static string LightGutter32 {
+            get {
+                return ResourceManager.GetString("LightGutter32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 81 3d 00 00 00 00 00    cmp    DWORD PTR [rip+0x0],0xa190000        # a &lt;_main+0xa&gt;
+        ///00 19 0a
+        ///75 0d                   jne    19 &lt;normal&gt;
+        ///50                      push   rax
+        ///b8 00 00 80 3f          mov    eax,0x3f800000
+        ///66 0f 3a 22 c0 03       pinsrd xmm0,eax,0x3
+        ///58                      pop    rax
+        ///000000000019 &lt;normal&gt;:
+        ///66 0f 7f 87 e0 00 00    movdqa XMMWORD PTR [rdi+0xe0],xmm0
+        ///00
+        ///e9 00 00 00 00          jmp    26 &lt;normal+0xd&gt;.
+        /// </summary>
+        internal static string LightGutter64 {
+            get {
+                return ResourceManager.GetString("LightGutter64", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to c6 05 00 00 00 00 01    mov    BYTE PTR ds:0x0,0x1
         ///e9 fc ff ff ff          jmp    8 &lt;_main+0x8&gt;.
         /// </summary>

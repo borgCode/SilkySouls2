@@ -37,6 +37,7 @@ namespace SilkySouls2.ViewModels
 
         private bool _isHideCharactersEnabled;
         private bool _isHideMapEnabled;
+        private bool _isLightGutterEnabled;
         private bool _isTransparentFogEnabled;
 
         private AttunementWindow _attunementWindow;
@@ -267,6 +268,16 @@ namespace SilkySouls2.ViewModels
                 _utilityService.ToggleHideMap(_isHideMapEnabled);
             }
         }
+        
+        public bool IsLightGutterEnabled
+        {
+            get => _isLightGutterEnabled;
+            set
+            {
+                if (!SetProperty(ref _isLightGutterEnabled, value)) return;
+                _utilityService.ToggleLightGutter(_isLightGutterEnabled);
+            }
+        }
 
         public bool IsCreditSkipEnabled
         {
@@ -411,6 +422,7 @@ namespace SilkySouls2.ViewModels
             if (IsTargetingViewEnabled) _utilityService.ToggleTargetingView(true);
             if (IsHideMapEnabled) _utilityService.ToggleHideMap(true);
             if (IsHideCharactersEnabled) _utilityService.ToggleHideChr(true);
+            if (IsLightGutterEnabled) _utilityService.ToggleLightGutter(true);
             if (IsDrawCollisionEnabled) _utilityService.ToggleDrawCol(true);
             if (IsColWireframeEnabled) _utilityService.ToggleColWireframe(true);
             if (IsDrawKillboxEnabled) _utilityService.ToggleDrawKillbox(true);

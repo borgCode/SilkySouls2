@@ -130,5 +130,7 @@ namespace SilkySouls2.Memory
         public const int SlowdownCode = 0x21B0;
 
 
+        public const int LightGutter = 0x1A00;
+
     }
 }

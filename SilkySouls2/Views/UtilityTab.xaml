@@ -322,6 +322,10 @@
                               IsChecked="{Binding IsHideCharactersEnabled}"
                               Grid.Column="1" Grid.Row="1"
                               Margin="0,2" />
+                    <CheckBox Content="Light Gutter"
+                              IsChecked="{Binding IsLightGutterEnabled}"
+                              Grid.Column="1" Grid.Row="2"
+                              Margin="0,2" />
 
                     <!-- <CheckBox Content="Hide Sfx" -->
                     <!--           IsChecked="{Binding IsHideSfxEnabled}" -->

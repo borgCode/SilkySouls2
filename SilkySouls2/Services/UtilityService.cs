@@ -1107,5 +1107,48 @@ namespace SilkySouls2.Services
         {
             _isSlowdownHookInstalled = false;
         }
+
+        public void ToggleLightGutter(bool isEnabled)
+        {
+            var code = CodeCaveOffsets.Base + CodeCaveOffsets.LightGutter;
+
+            if (isEnabled)
+            {
+                if (GameVersion.Current.Edition == GameEdition.Scholar) InstallLightGutter64(code);
+                else InstallLightGutter32(code);
+            }
+            else
+            {
+                _hookManager.UninstallHook(code.ToInt64());
+            }
+        }
+
+        private void InstallLightGutter64(IntPtr code)
+        {
+            var hookLoc = Hooks.LightGutter;
+            var bytes = AsmLoader.GetAsmBytes("LightGutter64");
+            AsmHelper.WriteRelativeOffsets(bytes, new []
+            {
+                (code.ToInt64(), MapId.ToInt64(), 10, 0x0 + 2),
+                (code.ToInt64() + 0x21, hookLoc + 0x8, 5, 0x21 + 1)
+            });
+            _memoryIo.WriteBytes(code, bytes);
+            _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[]
+                { 0x66, 0x0F, 0x7F, 0x87, 0xE0, 0x00, 0x00, 0x00 });
+
+        }
+
+        private void InstallLightGutter32(IntPtr code)
+        {
+            var hookLoc = Hooks.LightGutter;
+            var codeBytes = AsmLoader.GetAsmBytes("LightGutter32");
+            var bytes = BitConverter.GetBytes(MapId.ToInt32());
+            Array.Copy(bytes, 0, codeBytes, 0x8 + 2, 4);
+            bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 7, code + 0x25);
+            Array.Copy(bytes, 0, codeBytes, 0x21 + 1, 4);
+            _memoryIo.WriteBytes(code, codeBytes);
+            _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[]
+                { 0xF3, 0x0F, 0x7E, 0x86, 0x58, 0xFF, 0xFF, 0xFF });
+        }
     }
 }

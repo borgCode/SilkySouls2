@@ -350,6 +350,14 @@
 
         // Hooks
 
+        public static readonly Pattern LightGutter = new Pattern(
+            new byte[] { 0xF3, 0x0F, 0x7E, 0x86, 0x58, 0xFF, 0xFF, 0xFF, 0x66, 0x0F, 0xD6, 0x87, 0xE8 },
+            "xxxxxxxxxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+
         public static readonly Pattern LockedTarget = new Pattern(
             new byte[] { 0x89, 0xB7, 0xB8, 0x00, 0x00, 0x00, 0xEB },
             "xxxxxxx",

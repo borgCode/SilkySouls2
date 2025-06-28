@@ -3613,4 +3613,30 @@ f3 0f 59 05 00 00 00    mulss  xmm0,DWORD PTR ds:0x0
 f3 0f 11 07             movss  DWORD PTR [edi],xmm0
 e9 fc ff ff ff          jmp    14 &lt;_main+0x14&gt;</value>
   </data>
+  <data name="LightGutter64" xml:space="preserve">
+    <value>81 3d 00 00 00 00 00    cmp    DWORD PTR [rip+0x0],0xa190000        # a &lt;_main+0xa&gt;
+00 19 0a
+75 0d                   jne    19 &lt;normal&gt;
+50                      push   rax
+b8 00 00 80 3f          mov    eax,0x3f800000
+66 0f 3a 22 c0 03       pinsrd xmm0,eax,0x3
+58                      pop    rax
+000000000019 &lt;normal&gt;:
+66 0f 7f 87 e0 00 00    movdqa XMMWORD PTR [rdi+0xe0],xmm0
+00
+e9 00 00 00 00          jmp    26 &lt;normal+0xd&gt;</value>
+  </data>
+  <data name="LightGutter32" xml:space="preserve">
+    <value>f3 0f 7e 86 58 ff ff    movq   xmm0,QWORD PTR [esi-0xa8]
+ff
+81 3d 00 00 00 00 00    cmp    DWORD PTR ds:0x0,0xa190000
+00 19 0a
+75 0d                   jne    21 &lt;normal&gt;
+50                      push   eax
+b8 00 00 80 3f          mov    eax,0x3f800000
+66 0f 3a 22 c0 01       pinsrd xmm0,eax,0x1
+58                      pop    eax
+0021 &lt;normal&gt;:
+e9 fc ff ff ff          jmp    22 &lt;normal+0x1&gt;</value>
+  </data>
 </root>

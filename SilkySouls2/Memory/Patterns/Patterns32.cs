@@ -385,6 +385,14 @@
             AddressingMode.Absolute
         );
 
+        public static readonly Pattern ReduceGameSpeed = new Pattern(
+            new byte[] { 0x8B, 0x7B, 0x08, 0xF3, 0x0F, 0x10, 0x07, 0x8B, 0xF1, 0xF6 },
+            "xxxxxxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+
         public static readonly Pattern WarpCoordWrite = new Pattern(
             new byte[] { 0x0F, 0x5C, 0xC1, 0x0F, 0x29, 0x46, 0x40, 0x80 },
             "xxxxxxxx",

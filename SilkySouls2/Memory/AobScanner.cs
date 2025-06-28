@@ -290,6 +290,8 @@ namespace SilkySouls2.Memory
                     addr => Offsets.Hooks.BabyJump = addr.ToInt32(), saved);
                 TryPatternWithFallback("DisableTargetAi", Patterns32.DisableTargetAi,
                     addr => Offsets.Hooks.DisableTargetAi = addr.ToInt32(), saved);
+                TryPatternWithFallback("ReduceGameSpeed", Patterns32.ReduceGameSpeed,
+                    addr => Offsets.Hooks.ReduceGameSpeed = addr.ToInt32(), saved);
                 
                 var setCurrectActLocs = FindAddressesByPattern(Patterns32.SetCurrentAct, 2);
                 if (setCurrectActLocs.Count < 2 || setCurrectActLocs[0] == IntPtr.Zero)

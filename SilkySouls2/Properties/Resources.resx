@@ -3605,4 +3605,12 @@ f3 0f 10 32             movss  xmm6,DWORD PTR [rdx]
 31 db                   xor    ebx,ebx
 e9 00 00 00 00          jmp    1b &lt;_main+0x1b&gt;</value>
   </data>
+  <data name="ReduceSpeed32" xml:space="preserve">
+    <value>8b 7b 08                mov    edi,DWORD PTR [ebx+0x8]
+f3 0f 10 07             movss  xmm0,DWORD PTR [edi]
+f3 0f 59 05 00 00 00    mulss  xmm0,DWORD PTR ds:0x0
+00
+f3 0f 11 07             movss  DWORD PTR [edi],xmm0
+e9 fc ff ff ff          jmp    14 &lt;_main+0x14&gt;</value>
+  </data>
 </root>

@@ -1257,6 +1257,20 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 8b 7b 08                mov    edi,DWORD PTR [ebx+0x8]
+        ///f3 0f 10 07             movss  xmm0,DWORD PTR [edi]
+        ///f3 0f 59 05 00 00 00    mulss  xmm0,DWORD PTR ds:0x0
+        ///00
+        ///f3 0f 11 07             movss  DWORD PTR [edi],xmm0
+        ///e9 fc ff ff ff          jmp    14 &lt;_main+0x14&gt;.
+        /// </summary>
+        internal static string ReduceSpeed32 {
+            get {
+                return ResourceManager.GetString("ReduceSpeed32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to f3 0f 10 02             movss  xmm0,DWORD PTR [rdx]
         ///f3 0f 59 05 00 00 00    mulss  xmm0,DWORD PTR [rip+0x0]        # c &lt;_main+0xc&gt;
         ///00

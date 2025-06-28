@@ -593,7 +593,16 @@ namespace SilkySouls2.Services
             }
             else
             {
-                // TODO 32 bit
+                var codeBytes = AsmLoader.GetAsmBytes("ReduceSpeed32");
+                var bytes = BitConverter.GetBytes(slowdownFactor.ToInt32());
+                Array.Copy(bytes, 0, codeBytes, 0x7 + 4, 4);
+                bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 7, code + 0x18);
+                Array.Copy(bytes, 0, codeBytes, 0x13 + 1, 4);
+                
+                _memoryIo.WriteBytes(code, codeBytes);
+                _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[]
+                    {0x8B, 0x7B, 0x08, 0xF3, 0x0F, 0x10, 0x07 });
+                _isSlowdownHookInstalled = true;
             }
             
         }

@@ -537,5 +537,17 @@ namespace SilkySouls2.Memory
             return fileInfo.Length;
 
         }
+
+        public void Detach()
+        {
+            if (ProcessHandle != IntPtr.Zero)
+            {
+                Kernel32.CloseHandle(ProcessHandle);
+                ProcessHandle = IntPtr.Zero;
+            }
+    
+            TargetProcess = null;
+            IsAttached = false;
+        }
     }
 }

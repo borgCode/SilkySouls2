@@ -84,7 +84,7 @@ namespace SilkySouls2
             var enemyTab = new EnemyTab(_enemyViewModel);
             var itemTab = new ItemTab(_itemViewModel);
             var settingsTab = new SettingsTab(_settingsViewModel);
-            
+
 
             MainTabControl.Items.Add(new TabItem { Header = "Player", Content = playerTab });
             MainTabControl.Items.Add(new TabItem { Header = "Travel", Content = travelTab });
@@ -103,9 +103,9 @@ namespace SilkySouls2
             };
             _gameLoadedTimer.Tick += Timer_Tick;
             _gameLoadedTimer.Start();
-            
+
             VersionChecker.UpdateVersionText(AppVersion);
-            
+
             if (SettingsManager.Default.EnableUpdateChecks)
             {
                 VersionChecker.CheckForUpdates(this);
@@ -124,34 +124,52 @@ namespace SilkySouls2
         private bool _hasAppliedLaunchFeatures;
         private int _storedArea;
         private int _currentArea;
-
+        private bool _hasShownVersionError;
 
         private void Timer_Tick(object sender, EventArgs e)
         {
             if (_memoryIo.IsAttached)
             {
-                
                 IsAttachedText.Text = "Attached to game";
                 IsAttachedText.Foreground = (SolidColorBrush)Application.Current.Resources["AttachedBrush"];
 
                 LaunchGameButton.IsEnabled = false;
-                
+
                 if (!_hasScanned)
                 {
-                    GameVersion.DetectVersion(_memoryIo.GetFileSize());
+                    if (!GameVersion.TryDetectVersion(_memoryIo.GetFileSize()))
+                    {
+                        _memoryIo.Detach();
+
+                        Dispatcher.Invoke(() =>
+                        {
+                            if (!_hasShownVersionError)
+                            {
+                                _hasShownVersionError = true;
+                                MessageBox.Show(
+                                    "Unknown game version detected. Please ensure you're running a supported version of Dark Souls 2.");
+                            }
+                            
+                            IsAttachedText.Foreground =
+                                (SolidColorBrush)Application.Current.Resources["NotAttachedBrush"];
+                            LaunchGameButton.IsEnabled = true;
+                        });
+                        return;
+                    }
+
+                    _hasShownVersionError = false;
                     _aobScanner.Scan(GameVersion.Current.Edition == GameEdition.Scholar);
                     _hasScanned = true;
                     Console.WriteLine($"Base: 0x{_memoryIo.BaseAddress.ToInt64():X}");
                 }
 
-                
 
                 if (!_hasAppliedLaunchFeatures)
                 {
                     ApplyLaunchFeatures();
                 }
 
-                
+
                 _currentArea = _memoryIo.ReadInt32(Offsets.MapId);
                 if (_currentArea != _storedArea)
                 {
@@ -214,7 +232,6 @@ namespace SilkySouls2
             _playerViewModel.ApplyLaunchFeatures();
             _itemViewModel.ApplyLaunchFeatures();
             _utilityViewModel.ApplyLaunchFeatures();
-
         }
 
         private void ApplyOneTimeFeatures()
@@ -272,8 +289,8 @@ namespace SilkySouls2
             _hookManager.UninstallAllHooks();
             _nopManager.RestoreAll();
         }
-        
-       private void LaunchGame_Click(object sender, RoutedEventArgs e) => Task.Run(GameLauncher.LaunchDarkSouls2);
-       private void CheckUpdate_Click(object sender, RoutedEventArgs e) => VersionChecker.CheckForUpdates(this, true);
+
+        private void LaunchGame_Click(object sender, RoutedEventArgs e) => Task.Run(GameLauncher.LaunchDarkSouls2);
+        private void CheckUpdate_Click(object sender, RoutedEventArgs e) => VersionChecker.CheckForUpdates(this, true);
     }
 }

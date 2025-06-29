@@ -21,7 +21,7 @@ namespace SilkySouls2.Memory
             FreezeTargetHpFlag = 0x73,
             DamageControlCode = 0x80
         }
-        
+
         public enum BonfireWarp
         {
             Output = 0x110,
@@ -30,7 +30,7 @@ namespace SilkySouls2.Memory
             Coords = 0x200,
             CoordWrite = 0x240,
         }
-        
+
         public const int LockedTargetPtr = 0x300;
         public const int SaveLockedTarget = 0x310;
 
@@ -51,7 +51,7 @@ namespace SilkySouls2.Memory
             Pos1 = 0x3D0,
             Pos2 = 0x410
         }
-        
+
         public enum Drop100
         {
             DropCount = 0x460,
@@ -109,7 +109,7 @@ namespace SilkySouls2.Memory
         public const int Snowstorm = 0xD00;
         public const int SpEffectParams = 0xD20;
         public const int SpEffectCode = 0xD30;
-        
+
         public const int IvorySkip = 0x1400;
 
         public enum DisableTargetAi
@@ -134,6 +134,7 @@ namespace SilkySouls2.Memory
         public const int NoFogClose = 0x1A40;
         public const int NoFogFar = 0x1A80;
         public const int NoFogCam = 0x1AB0;
-
+        
+        public const int GetEventResult = 0x1B00;
     }
 }

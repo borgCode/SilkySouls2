@@ -113,6 +113,7 @@ namespace SilkySouls2
         }
 
         private bool _loaded;
+        private bool _hasAppliedDelayedFeatures;
 
         private bool _hasScanned;
 
@@ -189,6 +190,14 @@ namespace SilkySouls2
 
                 if (_memoryIo.IsGameLoaded())
                 {
+                    if (!_hasAppliedDelayedFeatures)
+                    {
+                        if (!_memoryIo.IsLoadingScreen())
+                        {
+                            ApplyDelayedFeatures();
+                            _hasAppliedDelayedFeatures = true;
+                        }
+                    }
                     if (_loaded) return;
                     _loaded = true;
                     TryEnableFeatures();
@@ -201,6 +210,7 @@ namespace SilkySouls2
                 {
                     DisableFeatures();
                     _loaded = false;
+                    _hasAppliedDelayedFeatures = false;
                 }
             }
             else
@@ -217,6 +227,11 @@ namespace SilkySouls2
                 IsAttachedText.Foreground = (SolidColorBrush)Application.Current.Resources["NotAttachedBrush"];
                 LaunchGameButton.IsEnabled = true;
             }
+        }
+
+        private void ApplyDelayedFeatures()
+        {
+            _utilityViewModel.ApplyDelayedFeatures();
         }
 
         private void ResetState()

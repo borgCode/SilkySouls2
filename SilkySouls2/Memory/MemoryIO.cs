@@ -549,5 +549,9 @@ namespace SilkySouls2.Memory
             TargetProcess = null;
             IsAttached = false;
         }
+
+        public bool IsLoadingScreen() =>
+            ReadUInt8((IntPtr)ReadInt64(Offsets.GameManagerImp.Base) +
+                                Offsets.GameManagerImp.Offsets.LoadingFlag) == 1;
     }
 }

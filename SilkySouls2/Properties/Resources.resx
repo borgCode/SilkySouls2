@@ -3697,4 +3697,28 @@ e9 fc ff ff ff          jmp    18 &lt;_main+0x18&gt;</value>
 31 c9                   xor    ecx,ecx
 e9 fc ff ff ff          jmp    12 &lt;skip+0x3&gt;</value>
   </data>
+  <data name="GetEvent64" xml:space="preserve">
+    <value>48 b9 00 00 00 00 00    movabs rcx,0x0
+00 00 00
+48 ba 00 00 00 00 00    movabs rdx,0x0
+00 00 00
+48 b8 00 00 00 00 00    movabs rax,0x0
+00 00 00
+48 83 ec 20             sub    rsp,0x20
+ff d0                   call   rax
+48 83 c4 20             add    rsp,0x20
+48 b9 00 00 00 00 00    movabs rcx,0x0
+00 00 00
+88 01                   mov    BYTE PTR [rcx],al
+c3                      ret</value>
+  </data>
+  <data name="GetEvent32" xml:space="preserve">
+    <value>b9 00 00 00 00          mov    ecx,0x0
+68 ef be ad de          push   0xdeadbeef
+b8 00 00 00 00          mov    eax,0x0
+ff d0                   call   eax
+b9 00 00 00 00          mov    ecx,0x0
+88 01                   mov    BYTE PTR [ecx],al
+c3                      ret</value>
+  </data>
 </root>

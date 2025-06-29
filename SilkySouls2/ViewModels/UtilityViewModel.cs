@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 using SilkySouls2.Memory;
 using SilkySouls2.Memory.DLLShared;
 using SilkySouls2.Models;
@@ -17,8 +18,11 @@ namespace SilkySouls2.ViewModels
     {
         private bool _isCreditSkipEnabled;
         private bool _is100DropEnabled;
+        private bool _isMadWarriorSpawnEnabled;
+        private string _madWarriorStatusText;
+        private Brush _madWarriorStatusColor;
+        
         private bool _isDrawHitboxEnabled;
-
         private bool _isDrawEventEnabled;
         private bool _isDrawEventGeneralEnabled;
         private bool _isDrawEventSpawnEnabled;
@@ -109,6 +113,37 @@ namespace SilkySouls2.ViewModels
         {
             get => _areButtonsEnabled;
             set => SetProperty(ref _areButtonsEnabled, value);
+        }
+        
+        
+        public bool IsMadWarriorSpawnEnabled
+        {
+            get => _isMadWarriorSpawnEnabled;
+            set
+            {
+                if (!SetProperty(ref _isMadWarriorSpawnEnabled, value)) return;
+                if (_isMadWarriorSpawnEnabled)
+                {
+                    UpdateMadWarriorStatus();
+                }
+                else
+                {
+                    MadWarriorStatusText = "";
+                }
+                
+            }
+        }
+
+        public string MadWarriorStatusText
+        {
+            get => _madWarriorStatusText;
+            set => SetProperty(ref _madWarriorStatusText, value);
+        }
+
+        public Brush MadWarriorStatusColor
+        {
+            get => _madWarriorStatusColor;
+            set => SetProperty(ref _madWarriorStatusColor, value);
         }
 
         public bool IsDrawHitboxEnabled
@@ -427,7 +462,7 @@ namespace SilkySouls2.ViewModels
             if (IsDrawEventSpawnEnabled) _utilityService.ToggleDrawEvent(DrawType.EventSpawn, true);
             if (IsDrawEventInvasionEnabled) _utilityService.ToggleDrawEvent(DrawType.EventInvasion, true);
             if (IsDrawEventLeashEnabled) _utilityService.ToggleDrawEvent(DrawType.EventLeash, true);
-
+            
             if (IsDrawSoundEnabled) _utilityService.ToggleDrawSound(true);
             if (IsTargetingViewEnabled) _utilityService.ToggleTargetingView(true);
             if (IsHideMapEnabled) _utilityService.ToggleHideMap(true);
@@ -595,6 +630,25 @@ namespace SilkySouls2.ViewModels
         public void ApplyLaunchFeatures()
         {
             _isAttached = true;
+        }
+
+        public void ApplyDelayedFeatures()
+        {
+            if (IsMadWarriorSpawnEnabled) UpdateMadWarriorStatus();
+        }
+
+        private void UpdateMadWarriorStatus()
+        {
+            if (_utilityService.GetEvent(GameIds.EventFlags.MadWarriorSpawn))
+            {
+                MadWarriorStatusText = "Spawned";
+                MadWarriorStatusColor = Brushes.Chartreuse;
+            }
+            else
+            {
+                MadWarriorStatusText = "Not Spawned";
+                MadWarriorStatusColor = Brushes.Red;
+            }
         }
     }
 }

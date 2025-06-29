@@ -108,6 +108,54 @@ namespace SilkySouls2.Services
             }
         }
 
+        public bool GetEvent(long gameId) =>
+            GameVersion.Current.Edition == GameEdition.Scholar ? GetScholarEvent(gameId) : GetVanillaEvent(gameId);
+
+
+        private bool GetScholarEvent(long gameId)
+        {
+            var result = CodeCaveOffsets.Base + CodeCaveOffsets.GetEventResult;
+            var getEvent = Funcs.GetEvent;
+            var eventFlagMan = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+            {
+                GameManagerImp.Offsets.EventManager,
+                GameManagerImp.EventManagerOffsets.EventFlagManager
+            }, true);
+            
+            var codeBytes = AsmLoader.GetAsmBytes("GetEvent64");
+            AsmHelper.WriteAbsoluteAddresses64(codeBytes, new []
+            {
+                (eventFlagMan.ToInt64(), 0x0 + 2),
+                (gameId, 0xA + 2),
+                (getEvent, 0x14 + 2),
+                (result.ToInt64(), 0x28 + 2)
+            });
+            _memoryIo.AllocateAndExecute(codeBytes);
+            return _memoryIo.ReadUInt8(result) == 1;
+        }
+
+        private bool GetVanillaEvent(long gameId)
+        {
+            var result = CodeCaveOffsets.Base + CodeCaveOffsets.GetEventResult;
+            var getEvent = Funcs.GetEvent;
+            var eventFlagMan = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+            {
+                GameManagerImp.Offsets.EventManager,
+                GameManagerImp.EventManagerOffsets.EventFlagManager
+            }, true);
+            
+            var codeBytes = AsmLoader.GetAsmBytes("GetEvent32");
+            AsmHelper.WriteAbsoluteAddresses32(codeBytes, new []
+            {
+                (eventFlagMan.ToInt64(), 0x0 + 1),
+                (gameId, 0x5 + 1),
+                (getEvent, 0xA + 1),
+                (result.ToInt64(), 0x11 + 1)
+            });
+            _memoryIo.AllocateAndExecute(codeBytes);
+            return _memoryIo.ReadUInt8(result) == 1;
+        }
+
         public void ForceSave()
         {
             long saveLoadSystem;

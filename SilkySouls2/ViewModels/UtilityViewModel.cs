@@ -639,6 +639,7 @@ namespace SilkySouls2.ViewModels
 
         private void UpdateMadWarriorStatus()
         {
+            if (!AreButtonsEnabled) return;
             if (_utilityService.GetEvent(GameIds.EventFlags.MadWarriorSpawn))
             {
                 MadWarriorStatusText = "Spawned";

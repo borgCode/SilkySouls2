@@ -234,7 +234,9 @@
         <Content Include="Resources\DLL\SilkySpeed.dll">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Include="Resources\DLL\SilkySpeed32.dll"/>
+        <Content Include="Resources\DLL\SilkySpeed32.dll">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
     <Import Project="..\packages\Fody.6.8.2\build\Fody.targets" Condition="Exists('..\packages\Fody.6.8.2\build\Fody.targets')"/>

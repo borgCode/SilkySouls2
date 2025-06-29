@@ -31,7 +31,7 @@ namespace SilkySouls2.Memory.DLLShared
         public DllManager(MemoryIo memoryIo)
         {
             _memoryIo = memoryIo;
-            _drawScholarDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "SilkyDll.dll");
+            _drawScholarDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "DrawScholar.dll");
             _speedScholarDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "SilkySpeed.dll");
             _drawVanillaDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "DrawVanilla.dll");
             _speedVanillaDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "SilkySpeed32.dll");

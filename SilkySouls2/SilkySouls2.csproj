@@ -225,10 +225,10 @@
     <ItemGroup>
         <Resource Include="Assets\Silky.ico"/>
         <Content Include="FodyWeavers.xml"/>
-        <Content Include="Resources\DLL\DrawVanilla.dll">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Content Include="Resources\DLL\DrawScholar.dll">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Include="Resources\DLL\SilkyDll.dll">
+        <Content Include="Resources\DLL\DrawVanilla.dll">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Include="Resources\DLL\SilkySpeed.dll">

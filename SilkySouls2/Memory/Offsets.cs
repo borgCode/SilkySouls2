@@ -572,15 +572,5 @@ namespace SilkySouls2.Memory
             public static long Sleep;
             public static long SetDepthStencilSurface;
         }
-
-        private static int GetVanillaOffset(string playerctrl, string versionPatchVersion)
-        {
-            return 0x0;
-        }
-
-        private static int GetScholarOffset(string playerctrl, string versionPatchVersion)
-        {
-            return 0xD0;
-        }
     }
 }

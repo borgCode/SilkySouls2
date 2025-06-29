@@ -653,6 +653,42 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to b9 00 00 00 00          mov    ecx,0x0
+        ///68 ef be ad de          push   0xdeadbeef
+        ///b8 00 00 00 00          mov    eax,0x0
+        ///ff d0                   call   eax
+        ///b9 00 00 00 00          mov    ecx,0x0
+        ///88 01                   mov    BYTE PTR [ecx],al
+        ///c3                      ret.
+        /// </summary>
+        internal static string GetEvent32 {
+            get {
+                return ResourceManager.GetString("GetEvent32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 48 b9 00 00 00 00 00    movabs rcx,0x0
+        ///00 00 00
+        ///48 ba 00 00 00 00 00    movabs rdx,0x0
+        ///00 00 00
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
+        ///48 83 ec 20             sub    rsp,0x20
+        ///ff d0                   call   rax
+        ///48 83 c4 20             add    rsp,0x20
+        ///48 b9 00 00 00 00 00    movabs rcx,0x0
+        ///00 00 00
+        ///88 01                   mov    BYTE PTR [rcx],al
+        ///c3                      ret.
+        /// </summary>
+        internal static string GetEvent64 {
+            get {
+                return ResourceManager.GetString("GetEvent64", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to bb 00 00 00 00          mov    ebx,0x0
         ///bf 00 00 00 00          mov    edi,0x0
         ///89 f9                   mov    ecx,edi

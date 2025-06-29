@@ -571,6 +571,7 @@ namespace SilkySouls2.Memory
             public static long UpdateSpellSlots;
             public static long Sleep;
             public static long SetDepthStencilSurface;
+            public static long GetEvent;
         }
     }
 }

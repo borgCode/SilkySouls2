@@ -16,6 +16,7 @@
             public static readonly long[] Dlc3Knights = { 537000020, 537000021 };
             public static readonly long[] DarklurkerDungeonsLit = { 403000001, 403000002, 403000003 };
             public static readonly long[] Scepter = { 536000024, 536000010 };
+            public const long MadWarriorSpawn = 119020014;
         }
 
         public static class Area

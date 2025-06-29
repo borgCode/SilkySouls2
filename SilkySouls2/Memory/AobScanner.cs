@@ -187,6 +187,7 @@ namespace SilkySouls2.Memory
                     FindAddressByPattern(Patterns64.GetWhiteDoorComponent).ToInt64();
                 Offsets.Funcs.AttuneSpell = FindAddressByPattern(Patterns64.AttuneSpell).ToInt64();
                 Offsets.Funcs.UpdateSpellSlots = FindAddressByPattern(Patterns64.UpdateSpellSlots).ToInt64();
+                Offsets.Funcs.GetEvent = FindAddressByPattern(Patterns64.GetEvent).ToInt64();
 
                 FindMultipleCallsInFunction(Patterns64.DisableNaviMesh, new Dictionary<Action<long>, int>
                 {
@@ -346,6 +347,7 @@ namespace SilkySouls2.Memory
                 Offsets.Funcs.AttuneSpell = FindAddressByPattern(Patterns32.AttuneSpell).ToInt32();
                 Offsets.Funcs.ParamLookup = FindAddressByPattern(Patterns32.ParamLookup).ToInt32();
                 Offsets.Funcs.GetEyePosition = FindAddressByPattern(Patterns32.GetEyePosition).ToInt32();
+                Offsets.Funcs.GetEvent = FindAddressByPattern(Patterns32.GetEvent).ToInt32();
                 
                 FindMultipleCallsInFunction(Patterns32.GetNumOfSpellSlots, new Dictionary<Action<long>, int>
                 {
@@ -472,6 +474,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Funcs.UpdateSpellSlots: 0x{Offsets.Funcs.UpdateSpellSlots:X}");
             Console.WriteLine($"Funcs.Sleep: 0x{Offsets.Funcs.Sleep:X}");
             Console.WriteLine($"Funcs.SetDepthStencilSurface: 0x{Offsets.Funcs.SetDepthStencilSurface:X}");
+            Console.WriteLine($"Funcs.GetEvent: 0x{Offsets.Funcs.GetEvent:X}");
 #endif
         }
 

@@ -165,6 +165,14 @@
 
         // Funcs
 
+        public static readonly Pattern GetEvent = new Pattern(
+            new byte[] { 0x74, 0x10, 0x8B, 0x52 },
+            "xxxx",
+            -0x3B,
+            AddressingMode.Absolute
+        );
+
+
         public static readonly Pattern SetSpEffect = new Pattern(
             new byte[] { 0x50, 0x8D, 0x45, 0xE8, 0x50, 0xE8 },
             "xxxxxx",

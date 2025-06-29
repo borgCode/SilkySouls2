@@ -228,7 +228,13 @@
             AddressingMode.Absolute
         );
 
-
+        public static readonly Pattern GetEvent = new Pattern(
+            new byte[] { 0x74, 0x0C, 0x48, 0x8B, 0x52, 0x10 },
+            "xxxxxx",
+            -0x54,
+            AddressingMode.Absolute
+        );
+        
         public static readonly Pattern BonfireWarp = new Pattern(
             new byte[] { 0x40, 0x53, 0x48, 0x83, 0xEC, 0x60, 0x8B },
             "xxxxxxx",

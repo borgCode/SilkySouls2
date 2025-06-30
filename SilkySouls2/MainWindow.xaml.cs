@@ -161,6 +161,7 @@ namespace SilkySouls2
                     _hasShownVersionError = false;
                     _aobScanner.Scan(GameVersion.Current.Edition == GameEdition.Scholar);
                     _hasScanned = true;
+                    Offsets.Initialize(GameVersion.Current.Edition);
                     Console.WriteLine($"Base: 0x{_memoryIo.BaseAddress.ToInt64():X}");
                 }
 

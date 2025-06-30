@@ -4,15 +4,34 @@ namespace SilkySouls2.Memory
 {
     public static class Offsets
     {
+        public static void Initialize(GameEdition edition)
+        {
+            GameManagerImp.Offsets.Initialize(edition);
+            GameManagerImp.CharacterManagerOffsets.Initialize(edition);
+            GameManagerImp.EventManagerOffsets.Initialize(edition);
+            GameManagerImp.GameDataManagerOffsets.Initialize(edition);
+            GameManagerImp.GameDataManagerOffsets.Inventory.Initialize(edition);
+            GameManagerImp.GameDataManagerOffsets.Inventory.ItemInventory2BagList.Initialize(edition);
+            GameManagerImp.GameDataManagerOffsets.Inventory.ItemInvetory2SpellList.Initialize(edition);
+            GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.Initialize(edition);
+            GameManagerImp.SaveLoadSystem.Initialize(edition);
+            GameManagerImp.ChrCtrlOffsets.Initialize(edition);
+            GameManagerImp.ChrCtrlOffsets.Operator.Initialize(edition);
+            GameManagerImp.ChrCtrlOffsets.ChrAiMan.Initialize(edition);
+            GameManagerImp.ChrCtrlOffsets.ChrPhysicsCtrl.Initialize(edition);
+            GameManagerImp.ChrCtrlOffsets.Stats.Initialize(edition);
+            GameManagerImp.PxWorld.Initialize(edition);
+        }
+        
         public static class GameManagerImp
         {
             public static IntPtr Base;
 
             public static class Offsets
             {
-                static Offsets()
+                public static void Initialize(GameEdition edition)
                 {
-                    if (GameVersion.Current.Edition == GameEdition.Scholar)
+                    if (edition == GameEdition.Scholar)
                     {
                         CharacterManager = 0x18;
                         CameraManager = 0x20;
@@ -58,9 +77,9 @@ namespace SilkySouls2.Memory
 
             public static class CharacterManagerOffsets
             {
-                static CharacterManagerOffsets()
+                public static void Initialize(GameEdition edition)
                 {
-                    if (GameVersion.Current.Edition == GameEdition.Scholar)
+                    if (edition == GameEdition.Scholar)
                     {
                         PlayerStatusParamPtr = 0x730;
                         PlayerStatusParam = 0xD8;
@@ -80,9 +99,9 @@ namespace SilkySouls2.Memory
 
             public static class EventManagerOffsets
             {
-                static EventManagerOffsets()
+                public static void Initialize(GameEdition edition)
                 {
-                    if (GameVersion.Current.Edition == GameEdition.Scholar)
+                    if (edition == GameEdition.Scholar)
                     {
                         EventFlagManager = 0x20;
                         EventPointManager = 0x30;
@@ -106,9 +125,9 @@ namespace SilkySouls2.Memory
 
             public static class GameDataManagerOffsets
             {
-                static GameDataManagerOffsets()
+                public static void Initialize(GameEdition edition)
                 {
-                    if (GameVersion.Current.Edition == GameEdition.Scholar)
+                    if (edition == GameEdition.Scholar)
                     {
                         InventoryPtr = 0x10;
                         NewGamePtr = 0xC0;
@@ -129,9 +148,9 @@ namespace SilkySouls2.Memory
 
                 public static class Inventory
                 {
-                    static Inventory()
+                    public static void Initialize(GameEdition edition)
                     {
-                        if (GameVersion.Current.Edition == GameEdition.Scholar)
+                        if (edition == GameEdition.Scholar)
                         {
                             InventoryLists = 0x10;
                             ItemInventory2BagListPtr = 0x10;
@@ -151,9 +170,9 @@ namespace SilkySouls2.Memory
 
                     public static class ItemInventory2BagList
                     {
-                        static ItemInventory2BagList()
+                        public static void Initialize(GameEdition edition)
                         {
-                            if (GameVersion.Current.Edition == GameEdition.Scholar)
+                            if (edition == GameEdition.Scholar)
                             {
                                 ItemInvetory2SpellListPtr = 0x259C8;
                             }
@@ -168,9 +187,9 @@ namespace SilkySouls2.Memory
 
                     public static class ItemInvetory2SpellList
                     {
-                        static ItemInvetory2SpellList()
+                        public static void Initialize(GameEdition edition)
                         {
-                            if (GameVersion.Current.Edition == GameEdition.Scholar)
+                            if (edition == GameEdition.Scholar)
                             {
                                 ListStart = 0x10;
                                 Count = 0x32;
@@ -188,9 +207,9 @@ namespace SilkySouls2.Memory
 
                     public static class SpellEntry
                     {
-                        static SpellEntry()
+                        public static void Initialize(GameEdition edition)
                         {
-                            if (GameVersion.Current.Edition == GameEdition.Scholar)
+                            if (edition == GameEdition.Scholar)
                             {
                                 NextPtr = 0x8;
                                 SpellId = 0x14;
@@ -218,9 +237,9 @@ namespace SilkySouls2.Memory
 
             public static class SaveLoadSystem
             {
-                static SaveLoadSystem()
+                public static void Initialize(GameEdition edition)
                 {
-                    if (GameVersion.Current.Edition == GameEdition.Scholar)
+                    if (edition == GameEdition.Scholar)
                     {
                         ForceSaveFlag1 = 0x68;
                         ForceSaveFlag2 = 0x1A2;
@@ -238,9 +257,9 @@ namespace SilkySouls2.Memory
 
             public static class ChrCtrlOffsets
             {
-                static ChrCtrlOffsets()
+                public static void Initialize(GameEdition edition)
                 {
-                    if (GameVersion.Current.Edition == GameEdition.Scholar)
+                    if (edition == GameEdition.Scholar)
                     {
                         ChrParamPtr = 0x38;
                         Coords = 0x90;
@@ -338,9 +357,9 @@ namespace SilkySouls2.Memory
 
                 public static class Operator
                 {
-                    static Operator()
+                    public static void Initialize(GameEdition edition)
                     {
-                        if (GameVersion.Current.Edition == GameEdition.Scholar)
+                        if (edition == GameEdition.Scholar)
                         {
                             ChrAiManPtr = 0x18;
                         }
@@ -356,9 +375,9 @@ namespace SilkySouls2.Memory
                 
                 public static class ChrAiMan
                 {
-                    static ChrAiMan()
+                    public static void Initialize(GameEdition edition)
                     {
-                        if (GameVersion.Current.Edition == GameEdition.Scholar)
+                        if (edition == GameEdition.Scholar)
                         {
                             ChrAi = 0x20;
                         }
@@ -374,9 +393,9 @@ namespace SilkySouls2.Memory
                 
                 public static class ChrPhysicsCtrl
                 {
-                    static ChrPhysicsCtrl()
+                    public static void Initialize(GameEdition edition)
                     {
-                        if (GameVersion.Current.Edition == GameEdition.Scholar)
+                        if (edition == GameEdition.Scholar)
                         {
                             Gravity = 0x134;
                             Xyz = 0x1C0;
@@ -395,7 +414,7 @@ namespace SilkySouls2.Memory
 
                 public static class Stats
                 {
-                    static Stats()
+                    public static void Initialize(GameEdition edition)
                     {
                         var version = GameVersion.Current;
 
@@ -448,9 +467,9 @@ namespace SilkySouls2.Memory
 
             public static class PxWorld
             {
-                static PxWorld()
+                public static void Initialize(GameEdition edition)
                 {
-                    if (GameVersion.Current.Edition == GameEdition.Scholar)
+                    if (edition == GameEdition.Scholar)
                     {
                         HkpWorld = 0x18;
                         HkpChrRigidBodyArray = 0x1F8;

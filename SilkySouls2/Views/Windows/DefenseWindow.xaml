@@ -7,14 +7,14 @@
         WindowStyle="None"
         AllowsTransparency="True"
         mc:Ignorable="d"
-        Title="DefenseWindow" Height="250" Width="200">
-    
+        Title="DefenseWindow" Height="300" Width="200">
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
+
         <Border Grid.Row="0"
                 Background="{StaticResource TitleBarBrush}"
                 BorderBrush="{StaticResource BorderBrush}"
@@ -81,66 +81,83 @@
                 </StackPanel>
             </Grid>
         </Border>
-        
+
         <Grid Grid.Row="1" Margin="20">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-    
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="10"/> 
- 
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="10"/>
-    
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="Slash:"/>
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SlashDefense, StringFormat=F2}"/>
 
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="Thrust:"/>
-            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ThrustDefense, StringFormat=F2}"/>
 
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="Strike:"/>
-            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding StrikeDefense, StringFormat=F2}"/>
+            <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,0,0,5">
+                <TextBlock Text="Damage Multipliers" FontWeight="Bold" />
+            </StackPanel>
 
-            <TextBlock Grid.Row="4" Grid.Column="0" Text="Magic Resist:"/>
-            <TextBlock Grid.Row="4" Grid.Column="1">
-                <Run Text="{Binding MagicResist}"/>/100
-            </TextBlock>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Slash:" />
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SlashDefense, StringFormat=F2}" />
 
-            <TextBlock Grid.Row="5" Grid.Column="0" Text="Lightning Resist:"/>
-            <TextBlock Grid.Row="5" Grid.Column="1">
-                <Run Text="{Binding LightningResist}"/>/100
-            </TextBlock>
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Thrust:" />
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ThrustDefense, StringFormat=F2}" />
 
-            <TextBlock Grid.Row="6" Grid.Column="0" Text="Fire Resist:"/>
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Strike:" />
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding StrikeDefense, StringFormat=F2}" />
+
+
+            <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,0,0,5">
+                <TextBlock Text="Resistances" FontWeight="Bold" />
+                <Border Background="#3498db" CornerRadius="10" Width="12" Height="12" Margin="5,0,0,0"
+                        VerticalAlignment="Center" ToolTip="Higher values = better protection"
+                        ToolTipService.InitialShowDelay="100">
+                    <TextBlock Text="i" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"
+                               FontWeight="Bold" FontSize="10" />
+                </Border>
+            </StackPanel>
+
+            <TextBlock Grid.Row="6" Grid.Column="0" Text="Magic Resist:" />
             <TextBlock Grid.Row="6" Grid.Column="1">
-                <Run Text="{Binding FireResist}"/>/100
+                <Run Text="{Binding MagicResist}" />/100
             </TextBlock>
 
-            <TextBlock Grid.Row="7" Grid.Column="0" Text="Dark Resist:"/>
+            <TextBlock Grid.Row="7" Grid.Column="0" Text="Lightning Resist:" />
             <TextBlock Grid.Row="7" Grid.Column="1">
-                <Run Text="{Binding DarkResist}"/>/100
+                <Run Text="{Binding LightningResist}" />/100
             </TextBlock>
 
-            <TextBlock Grid.Row="9" Grid.Column="0" Text="Poison/Toxic Resist:"/>
+            <TextBlock Grid.Row="8" Grid.Column="0" Text="Fire Resist:" />
+            <TextBlock Grid.Row="8" Grid.Column="1">
+                <Run Text="{Binding FireResist}" />/100
+            </TextBlock>
+
+            <TextBlock Grid.Row="9" Grid.Column="0" Text="Dark Resist:" />
             <TextBlock Grid.Row="9" Grid.Column="1">
-                <Run Text="{Binding PoisonToxicResist}"/>/100
+                <Run Text="{Binding DarkResist}" />/100
             </TextBlock>
 
-            <TextBlock Grid.Row="10" Grid.Column="0" Text="Bleed Resist:"/>
-            <TextBlock Grid.Row="10" Grid.Column="1">
-                <Run Text="{Binding BleedResist}"/>/100
+            <TextBlock Grid.Row="11" Grid.Column="0" Text="Poison/Toxic Resist:" />
+            <TextBlock Grid.Row="11" Grid.Column="1">
+                <Run Text="{Binding PoisonToxicResist}" />/100
+            </TextBlock>
+
+            <TextBlock Grid.Row="12" Grid.Column="0" Text="Bleed Resist:" />
+            <TextBlock Grid.Row="12" Grid.Column="1">
+                <Run Text="{Binding BleedResist}" />/100
             </TextBlock>
         </Grid>
     </Grid>

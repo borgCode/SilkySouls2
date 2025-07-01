@@ -36,7 +36,10 @@
             new[] { "Black Gulch" });
 
         public static readonly Forlorn Drangleic = new Forlorn( "Drangleic Castle", 4012000,
-            new[] { "Drangleic Gate", "Pre-Dragonriders", "Left-side Entrance Hall" }); 
+            new[] { "Drangleic Gate", "Pre-Dragonriders", "Left-side Entrance Hall" });
+
+        public static readonly Forlorn ShrineOfAmana = new Forlorn("Shrine of Amana", 4001000,
+            new[] { "Tower of Prayer", "Building by Hippo", "Crumbled Ruins" });
 
         public static readonly Forlorn UndeadCrypt = new Forlorn( "Undead Crypt", 4020000,
             new[] { "Forlorn #1", "Forlorn #2" });
@@ -57,7 +60,7 @@
         public static readonly Forlorn[] All =
         {
             LostBastille, EarthenPeak, IronKeep, ShadedWoods, Tseldora,
-            BlackGulch, Drangleic, UndeadCrypt, ForestOftheGiants, Shulva,
+            BlackGulch, Drangleic, ShrineOfAmana, UndeadCrypt, ForestOftheGiants, Shulva,
             Brume, EleumLoyce
         };
     }

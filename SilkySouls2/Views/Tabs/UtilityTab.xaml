@@ -170,6 +170,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <CheckBox Content="Draw hitbox"
@@ -241,15 +242,20 @@
                               IsEnabled="{Binding IsDrawEventEnabled}"
                               Grid.Column="0" Grid.Row="5"
                               Margin="10,2,0,2" />
+                    <CheckBox Content="Other"
+                              IsChecked="{Binding IsDrawEventOtherEnabled}"
+                              IsEnabled="{Binding IsDrawEventEnabled}"
+                              Grid.Column="0" Grid.Row="6"
+                              Margin="10,2,0,2" />
 
                     <CheckBox Content="Player Sound"
                               IsChecked="{Binding IsDrawSoundEnabled}"
-                              Grid.Column="0" Grid.Row="6"
+                              Grid.Column="0" Grid.Row="7"
                               Margin="0,2" />
 
                     <CheckBox Content="Enemy Targeting View"
                               IsChecked="{Binding IsTargetingViewEnabled}"
-                              Grid.Column="0" Grid.Row="7"
+                              Grid.Column="0" Grid.Row="8"
                               Margin="0,2" />
 
                     <CheckBox Content="Hide Map"

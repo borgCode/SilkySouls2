@@ -14,5 +14,6 @@
         EventSpawn = 9,
         EventInvasion = 10,
         EventLeash = 11,
+        EventOther = 12,
     }
 }

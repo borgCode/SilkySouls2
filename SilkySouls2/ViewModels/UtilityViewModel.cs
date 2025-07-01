@@ -28,6 +28,7 @@ namespace SilkySouls2.ViewModels
         private bool _isDrawEventSpawnEnabled;
         private bool _isDrawEventInvasionEnabled;
         private bool _isDrawEventLeashEnabled;
+        private bool _isDrawEventOtherEnabled;
 
 
         private bool _isDrawSoundEnabled;
@@ -166,6 +167,7 @@ namespace SilkySouls2.ViewModels
                 IsDrawEventSpawnEnabled = _isDrawEventEnabled;
                 IsDrawEventInvasionEnabled = _isDrawEventEnabled;
                 IsDrawEventLeashEnabled = _isDrawEventEnabled;
+                if (!_isDrawEventEnabled) IsDrawEventOtherEnabled = false;
             }
         }
 
@@ -206,6 +208,16 @@ namespace SilkySouls2.ViewModels
             {
                 if (!SetProperty(ref _isDrawEventLeashEnabled, value)) return;
                 _utilityService.ToggleDrawEvent(DrawType.EventLeash, _isDrawEventLeashEnabled);
+            }
+        }
+        
+        public bool IsDrawEventOtherEnabled
+        {
+            get => _isDrawEventOtherEnabled;
+            set
+            {
+                if (!SetProperty(ref _isDrawEventOtherEnabled, value)) return;
+                _utilityService.ToggleDrawEvent(DrawType.EventOther, _isDrawEventOtherEnabled);
             }
         }
 
@@ -462,6 +474,7 @@ namespace SilkySouls2.ViewModels
             if (IsDrawEventSpawnEnabled) _utilityService.ToggleDrawEvent(DrawType.EventSpawn, true);
             if (IsDrawEventInvasionEnabled) _utilityService.ToggleDrawEvent(DrawType.EventInvasion, true);
             if (IsDrawEventLeashEnabled) _utilityService.ToggleDrawEvent(DrawType.EventLeash, true);
+            if (IsDrawEventOtherEnabled) _utilityService.ToggleDrawEvent(DrawType.EventOther, true);
             
             if (IsDrawSoundEnabled) _utilityService.ToggleDrawSound(true);
             if (IsTargetingViewEnabled) _utilityService.ToggleTargetingView(true);

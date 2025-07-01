@@ -27,9 +27,26 @@
                 CornerRadius="3"
                 Margin="0,0,0,10">
             <StackPanel Margin="10">
-                <TextBlock Text="Event Flags"
-                           FontWeight="Bold"
-                           Margin="0,0,0,10" />
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <TextBlock Text="Event Flags"
+                               FontWeight="Bold" />
+
+                    <Border Background="#3498db"
+                            CornerRadius="10"
+                            Width="12"
+                            Height="12"
+                            Margin="10,0,0,0"
+                            VerticalAlignment="Center"
+                            ToolTip="Get or set event by Event ID"
+                            ToolTipService.InitialShowDelay='100'>
+                        <TextBlock Text="i"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontWeight="Bold"
+                                   FontSize="10" />
+                    </Border>
+                </StackPanel>
 
                 <Grid Margin="10,0,0,0">
                     <Grid.ColumnDefinitions>
@@ -45,39 +62,37 @@
                     </Grid.RowDefinitions>
 
                 </Grid>
-
+                
                 <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
                     <TextBlock Text="Event ID:" VerticalAlignment="Center" Margin="0,0,10,0" />
-                    <TextBox Width="100" Text="{Binding FlagId}" Margin="0,0,10,0" />
+                    <TextBox Width="100" Text="{Binding GetFlagId}" Margin="0,0,10,0" />
 
-                    <TextBlock Text="State:" VerticalAlignment="Center" Margin="0,0,10,0" />
+                    <Button Content="Get Event"
+                            IsEnabled="{Binding AreButtonsEnabled}"
+                            Padding="10,3"
+                            Margin="10,0,0,0"
+                            Click="GetEvent_Click" />
+
+                    <TextBlock Text="State:" VerticalAlignment="Center" Margin="10,0,5,0" />
+                    <TextBlock Text="{Binding EventStatusText}"
+                               Foreground="{Binding EventStatusColor}"
+                               VerticalAlignment="Center" Margin="5,0,10,0" />
+                </StackPanel>
+                
+                <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
+                    <TextBlock Text="Event ID:" VerticalAlignment="Center" Margin="0,0,10,0" />
+                    <TextBox Width="100" Text="{Binding SetFlagId}" Margin="0,0,10,0" />
+                    
                     <ComboBox Width="70" SelectedIndex="{Binding FlagStateIndex}" Margin="0,0,10,0">
                         <ComboBoxItem Content="ON" />
                         <ComboBoxItem Content="OFF" />
                     </ComboBox>
 
-                    <Button Content="Set Flag"
+                    <Button Content="Set Event"
                             IsEnabled="{Binding AreButtonsEnabled}"
                             Padding="10,3"
                             Margin="10,0,0,0"
-                            Click="SetFlag_Click"
-                            />
-                    
-                    <Border Background="#3498db"
-                            CornerRadius="10"
-                            Width="12"
-                            Height="12"
-                            Margin="5,0,0,0"
-                            VerticalAlignment="Center"
-                            ToolTip="Set any event on or off if you know its Event ID"
-                            ToolTipService.InitialShowDelay='100'>
-                        <TextBlock Text="i"
-                                   Foreground="White"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   FontWeight="Bold"
-                                   FontSize="10" />
-                    </Border>
+                            Click="SetFlag_Click" />
                 </StackPanel>
             </StackPanel>
         </Border>
@@ -88,10 +103,6 @@
                 CornerRadius="3"
                 Margin="0,0,0,10">
             <StackPanel Margin="10">
-                <TextBlock Text="NPC"
-                           FontWeight="Bold"
-                           Margin="0,0,0,10" />
-
                 <Grid Margin="10,0,0,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -111,7 +122,7 @@
                               SelectedItem="{Binding SelectedNpc}" />
 
                     <WrapPanel Grid.Row="1" Grid.Column="1" Margin="0,3,0,0">
-                        
+
                         <Border Background="#3498db"
                                 CornerRadius="10"
                                 Width="12"
@@ -254,7 +265,7 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    
+
                     <StackPanel Grid.Column="0">
                         <CheckBox Content="Skip Ivory Gank"
                                   IsChecked="{Binding IsIvorySkipEnabled}"
@@ -266,8 +277,8 @@
                                   IsChecked="{Binding IsMemoryTimerDisabled}"
                                   Margin="0,2" />
                     </StackPanel>
-                    
-                    <UniformGrid Grid.Column="1" 
+
+                    <UniformGrid Grid.Column="1"
                                  Columns="2"
                                  Margin="10,0,0,0">
                         <Button Content="Open Gargs door"
@@ -275,9 +286,9 @@
                                 Margin="2">
                             <Button.IsEnabled>
                                 <MultiBinding Converter="{StaticResource BooleanAndConverter}">
-                                    <Binding Path="AreButtonsEnabled"/>
-                                    <Binding Path="IsAreaBastille"/>
-                       
+                                    <Binding Path="AreButtonsEnabled" />
+                                    <Binding Path="IsAreaBastille" />
+
                                 </MultiBinding>
                             </Button.IsEnabled>
                         </Button>
@@ -286,8 +297,8 @@
                                 Margin="2">
                             <Button.IsEnabled>
                                 <MultiBinding Converter="{StaticResource BooleanAndConverter}">
-                                    <Binding Path="AreButtonsEnabled"/>
-                                    <Binding Path="IsAreaBastille"/>
+                                    <Binding Path="AreButtonsEnabled" />
+                                    <Binding Path="IsAreaBastille" />
                                 </MultiBinding>
                             </Button.IsEnabled>
                         </Button>

@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Windows.Media;
 using SilkySouls2.Memory;
 using SilkySouls2.Models;
 using SilkySouls2.Services;
@@ -13,8 +14,12 @@ namespace SilkySouls2.ViewModels
         private NpcInfo _selectedNpc;
         private ObservableCollection<NpcInfo> _npcList;
         private bool _canMoveToMajula;
-        private string _flagId;
+        private string _setFlagId;
         private int _flagStateIndex;
+        private string _getFlagId;
+        
+        private string _eventStatusText;
+        private Brush _eventStatusColor;
 
         private bool _areButtonsEnabled;
         
@@ -102,10 +107,10 @@ namespace SilkySouls2.ViewModels
         public void ActivateBrume() => _utilityService.SetMultipleEventOn(GameIds.EventFlags.Scepter);
 
 
-        public string FlagId
+        public string SetFlagId
         {
-            get => _flagId;
-            set => SetProperty(ref _flagId, value);
+            get => _setFlagId;
+            set => SetProperty(ref _setFlagId, value);
         }
 
         public int FlagStateIndex
@@ -116,10 +121,10 @@ namespace SilkySouls2.ViewModels
 
         public void SetFlag()
         {
-            if (string.IsNullOrWhiteSpace(FlagId))
+            if (string.IsNullOrWhiteSpace(SetFlagId))
                 return;
             
-            string trimmedFlagId = FlagId.Trim();
+            string trimmedFlagId = SetFlagId.Trim();
         
             if (!long.TryParse(trimmedFlagId, out long flagIdValue) || flagIdValue <= 0)
                 return;
@@ -128,7 +133,47 @@ namespace SilkySouls2.ViewModels
             else _utilityService.SetEventOff(flagIdValue);
         }
         
+        public string GetFlagId
+        {
+            get => _getFlagId;
+            set => SetProperty(ref _getFlagId, value);
+        }
         
+        public string EventStatusText
+        {
+            get => _eventStatusText;
+            set => SetProperty(ref _eventStatusText, value);
+        }
+
+        public Brush EventStatusColor
+        {
+            get => _eventStatusColor;
+            set => SetProperty(ref _eventStatusColor, value);
+        }
+
+        public void GetEvent()
+        {
+            if (string.IsNullOrWhiteSpace(GetFlagId))
+                return;
+            
+            string trimmedFlagId = GetFlagId.Trim();
+            
+            if (!long.TryParse(trimmedFlagId, out long flagIdValue) || flagIdValue <= 0)
+                return;
+
+            if (_utilityService.GetEvent(flagIdValue))
+            {
+                EventStatusText = "True";
+                EventStatusColor = Brushes.Chartreuse;
+            }
+            else
+            {
+                EventStatusText = "False";
+                EventStatusColor = Brushes.Red;
+            }
+        }
+
+
         public bool AreButtonsEnabled
         {
             get => _areButtonsEnabled;
@@ -136,13 +181,15 @@ namespace SilkySouls2.ViewModels
         }
 
         private bool _isAreaBastille;
+
         public bool IsAreaBastille
         {
             get => _isAreaBastille;
             set => SetProperty(ref _isAreaBastille, value);
         }
-        
+
         private bool _isSnowstormDisabled;
+
         public bool IsSnowstormDisabled
         {
             get => _isSnowstormDisabled;
@@ -155,8 +202,9 @@ namespace SilkySouls2.ViewModels
                 }
             }
         }
-        
+
         private bool _isMemoryTimerDisabled;
+
         public bool IsMemoryTimerDisabled
         {
             get => _isMemoryTimerDisabled;
@@ -190,8 +238,9 @@ namespace SilkySouls2.ViewModels
             if (IsMemoryTimerDisabled) _utilityService.ToggleMemoryTimer(true);
             if (IsIvorySkipEnabled) _utilityService.ToggleIvorySkip(true);
         }
-        
+
         private bool _isIvorySkipEnabled;
+
         public bool IsIvorySkipEnabled
         {
             get => _isIvorySkipEnabled;

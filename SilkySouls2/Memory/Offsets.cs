@@ -291,6 +291,7 @@ namespace SilkySouls2.Memory
                     else
                     {
                         ChrParamPtr = 0x20;
+                        ChrCommonPtr = 0x24;
                         Coords = 0x80;
                         PoiseImmunityPtr = 0x94;
                         OperatorPtr = 0xAC;

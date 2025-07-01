@@ -491,19 +491,27 @@ namespace SilkySouls2.Services
 
         public int GetChrParam(int chrParamOffset)
         {
-            var chrParamBase =
-                _memoryIo.ReadInt64(
-                    (IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
-                    ChrCtrlOffsets.ChrParamPtr);
+            var targetPtr = GameVersion.Current.Edition == GameEdition.Scholar
+                ? _memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr)
+                : _memoryIo.ReadInt32(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr);
+
+            var chrParamBase = GameVersion.Current.Edition == GameEdition.Scholar
+                ? _memoryIo.ReadInt64((IntPtr)targetPtr + ChrCtrlOffsets.ChrParamPtr)
+                : _memoryIo.ReadInt32((IntPtr)targetPtr + ChrCtrlOffsets.ChrParamPtr);
+
             return _memoryIo.ReadInt32((IntPtr)chrParamBase + chrParamOffset);
         }
 
         public float GetChrCommonParam(int chrCommonOffset)
         {
-            var chrParamBase =
-                _memoryIo.ReadInt64(
-                    (IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
-                    ChrCtrlOffsets.ChrCommonPtr);
+            var targetPtr = GameVersion.Current.Edition == GameEdition.Scholar
+                ? _memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr)
+                : _memoryIo.ReadInt32(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr);
+
+            var chrParamBase = GameVersion.Current.Edition == GameEdition.Scholar
+                ? _memoryIo.ReadInt64((IntPtr)targetPtr + ChrCtrlOffsets.ChrCommonPtr)
+                : _memoryIo.ReadInt32((IntPtr)targetPtr + ChrCtrlOffsets.ChrCommonPtr);
+
             return _memoryIo.ReadFloat((IntPtr)chrParamBase + chrCommonOffset);
         }
     }

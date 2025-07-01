@@ -46,6 +46,7 @@ namespace SilkySouls2.Views
                 // _enemyViewModel.SetSpeed((float)upDown.Value);
             }
         }
-        
+
+        private void OpenDefenseWindow(object sender, RoutedEventArgs e) => _enemyViewModel.OpenDefenseWindow();
     }
 }

@@ -488,5 +488,23 @@ namespace SilkySouls2.Services
 
             return _memoryIo.ReadUInt8((IntPtr)poiseStruct + ChrCtrlOffsets.PoiseStuff.LightStaggerImmuneFlag) == 1;
         }
+
+        public int GetChrParam(int chrParamOffset)
+        {
+            var chrParamBase =
+                _memoryIo.ReadInt64(
+                    (IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
+                    ChrCtrlOffsets.ChrParamPtr);
+            return _memoryIo.ReadInt32((IntPtr)chrParamBase + chrParamOffset);
+        }
+
+        public float GetChrCommonParam(int chrCommonOffset)
+        {
+            var chrParamBase =
+                _memoryIo.ReadInt64(
+                    (IntPtr)_memoryIo.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
+                    ChrCtrlOffsets.ChrCommonPtr);
+            return _memoryIo.ReadFloat((IntPtr)chrParamBase + chrCommonOffset);
+        }
     }
 }

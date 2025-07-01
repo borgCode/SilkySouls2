@@ -140,38 +140,41 @@
         <Compile Include="ViewModels\SettingsViewModel.cs"/>
         <Compile Include="ViewModels\TravelViewModel.cs"/>
         <Compile Include="ViewModels\UtilityViewModel.cs"/>
-        <Compile Include="Views\AttunementWindow.xaml.cs">
-            <DependentUpon>AttunementWindow.xaml</DependentUpon>
+        <Compile Include="Views\Tabs\EnemyTab.xaml.cs">
+          <DependentUpon>EnemyTab.xaml</DependentUpon>
         </Compile>
-        <Compile Include="Views\CreateLoadoutWindow.xaml.cs">
-            <DependentUpon>CreateLoadoutWindow.xaml</DependentUpon>
+        <Compile Include="Views\Tabs\EventTab.xaml.cs">
+          <DependentUpon>EventTab.xaml</DependentUpon>
         </Compile>
-        <Compile Include="Views\EnemyTab.xaml.cs">
-            <DependentUpon>EnemyTab.xaml</DependentUpon>
+        <Compile Include="Views\Tabs\ItemTab.xaml.cs">
+          <DependentUpon>ItemTab.xaml</DependentUpon>
         </Compile>
-        <Compile Include="Views\EventTab.xaml.cs">
-            <DependentUpon>EventTab.xaml</DependentUpon>
+        <Compile Include="Views\Tabs\PlayerTab.xaml.cs">
+          <DependentUpon>PlayerTab.xaml</DependentUpon>
         </Compile>
-        <Compile Include="Views\HealthWindow.xaml.cs">
-            <DependentUpon>HealthWindow.xaml</DependentUpon>
+        <Compile Include="Views\Tabs\SettingsTab.xaml.cs">
+          <DependentUpon>SettingsTab.xaml</DependentUpon>
         </Compile>
-        <Compile Include="Views\ItemTab.xaml.cs">
-            <DependentUpon>ItemTab.xaml</DependentUpon>
+        <Compile Include="Views\Tabs\TravelTab.xaml.cs">
+          <DependentUpon>TravelTab.xaml</DependentUpon>
         </Compile>
-        <Compile Include="Views\PlayerTab.xaml.cs">
-            <DependentUpon>PlayerTab.xaml</DependentUpon>
+        <Compile Include="Views\Tabs\UtilityTab.xaml.cs">
+          <DependentUpon>UtilityTab.xaml</DependentUpon>
         </Compile>
-        <Compile Include="Views\ResistancesWindow.xaml.cs">
-            <DependentUpon>ResistancesWindow.xaml</DependentUpon>
+        <Compile Include="Views\Windows\AttunementWindow.xaml.cs">
+          <DependentUpon>AttunementWindow.xaml</DependentUpon>
         </Compile>
-        <Compile Include="Views\SettingsTab.xaml.cs">
-            <DependentUpon>SettingsTab.xaml</DependentUpon>
+        <Compile Include="Views\Windows\CreateLoadoutWindow.xaml.cs">
+          <DependentUpon>CreateLoadoutWindow.xaml</DependentUpon>
         </Compile>
-        <Compile Include="Views\TravelTab.xaml.cs">
-            <DependentUpon>TravelTab.xaml</DependentUpon>
+        <Compile Include="Views\Windows\DefenseWindow.xaml.cs">
+          <DependentUpon>DefenseWindow.xaml</DependentUpon>
         </Compile>
-        <Compile Include="Views\UtilityTab.xaml.cs">
-            <DependentUpon>UtilityTab.xaml</DependentUpon>
+        <Compile Include="Views\Windows\HealthWindow.xaml.cs">
+          <DependentUpon>HealthWindow.xaml</DependentUpon>
+        </Compile>
+        <Compile Include="Views\Windows\ResistancesWindow.xaml.cs">
+          <DependentUpon>ResistancesWindow.xaml</DependentUpon>
         </Compile>
         <Page Include="MainWindow.xaml">
             <Generator>MSBuild:Compile</Generator>
@@ -185,17 +188,18 @@
             <DependentUpon>MainWindow.xaml</DependentUpon>
             <SubType>Code</SubType>
         </Compile>
-        <Page Include="Views\AttunementWindow.xaml"/>
-        <Page Include="Views\CreateLoadoutWindow.xaml"/>
-        <Page Include="Views\EnemyTab.xaml"/>
-        <Page Include="Views\EventTab.xaml"/>
-        <Page Include="Views\HealthWindow.xaml"/>
-        <Page Include="Views\ItemTab.xaml"/>
-        <Page Include="Views\PlayerTab.xaml"/>
-        <Page Include="Views\ResistancesWindow.xaml"/>
-        <Page Include="Views\SettingsTab.xaml"/>
-        <Page Include="Views\TravelTab.xaml"/>
-        <Page Include="Views\UtilityTab.xaml"/>
+        <Page Include="Views\Tabs\EnemyTab.xaml" />
+        <Page Include="Views\Tabs\EventTab.xaml" />
+        <Page Include="Views\Tabs\ItemTab.xaml" />
+        <Page Include="Views\Tabs\PlayerTab.xaml" />
+        <Page Include="Views\Tabs\SettingsTab.xaml" />
+        <Page Include="Views\Tabs\TravelTab.xaml" />
+        <Page Include="Views\Tabs\UtilityTab.xaml" />
+        <Page Include="Views\Windows\AttunementWindow.xaml" />
+        <Page Include="Views\Windows\CreateLoadoutWindow.xaml" />
+        <Page Include="Views\Windows\DefenseWindow.xaml" />
+        <Page Include="Views\Windows\HealthWindow.xaml" />
+        <Page Include="Views\Windows\ResistancesWindow.xaml" />
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Memory\AobScanner.cs"/>

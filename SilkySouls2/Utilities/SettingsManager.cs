@@ -22,6 +22,8 @@ namespace SilkySouls2.Utilities
         public double ResistancesWindowTop { get; set; }
         public double AttunementWindowLeft { get; set; }
         public double AttunementWindowTop { get; set; }
+        public double DefenseWindowLeft { get; set; }
+        public double DefenseWindowTop { get; set; }
         public double HealthWindowLeft { get; set; }
         public double HealthWindowTop { get; set; }
         public bool EnableUpdateChecks { get; set; } = true;
@@ -53,6 +55,8 @@ namespace SilkySouls2.Utilities
                     $"ResistancesWindowTop={ResistancesWindowTop}",
                     $"AttunementWindowLeft={AttunementWindowLeft}",
                     $"AttunementWindowTop={AttunementWindowTop}",
+                    $"DefenseWindowLeft={DefenseWindowLeft}",
+                    $"DefenseWindowTop={DefenseWindowTop}",
                     $"HealthWindowLeft={HealthWindowLeft}",
                     $"HealthWindowTop={HealthWindowTop}",
                     $"EnableUpdateChecks={EnableUpdateChecks}",
@@ -144,6 +148,14 @@ namespace SilkySouls2.Utilities
                                 case "AttunementWindowTop":
                                     double.TryParse(value, out double awt);
                                     settings.AttunementWindowTop = awt;
+                                    break;
+                                case "DefenseWindowLeft":
+                                    double.TryParse(value, out double dwl);
+                                    settings.DefenseWindowLeft = dwl;
+                                    break;
+                                case "DefenseWindowTop":
+                                    double.TryParse(value, out double dwt);
+                                    settings.DefenseWindowTop = dwt;
                                     break;
                                 case "EnableUpdateChecks":
                                     bool.TryParse(value, out bool euc);

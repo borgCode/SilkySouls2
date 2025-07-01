@@ -9,6 +9,7 @@ using SilkySouls2.Models;
 using SilkySouls2.Services;
 using SilkySouls2.Utilities;
 using SilkySouls2.Views;
+using SilkySouls2.Views.Windows;
 using static SilkySouls2.Memory.Offsets;
 
 namespace SilkySouls2.ViewModels
@@ -34,6 +35,8 @@ namespace SilkySouls2.ViewModels
 
         private ResistancesWindow _resistancesWindowWindow;
         private bool _isResistancesWindowOpen;
+        
+        private DefenseWindow _defenseWindow;
 
         private float _targetCurrentHeavyPoise;
         private float _targetMaxHeavyPoise;
@@ -175,10 +178,12 @@ namespace SilkySouls2.ViewModels
                     : _enemyService.GetTargetResistance(GameManagerImp.ChrCtrlOffsets.BleedMax);
 
                 IsLightPoiseImmune = _enemyService.IsLightPoiseImmune();
+                UpdateDefenses();
                 
                 if (!IsResistancesWindowOpen || _resistancesWindowWindow == null) return;
                 _resistancesWindowWindow.DataContext = null;
                 _resistancesWindowWindow.DataContext = this;
+              
             }
             TargetCurrentHealth = _enemyService.GetTargetHp();
             TargetMaxHealth = _enemyService.GetTargetMaxHp();
@@ -197,6 +202,19 @@ namespace SilkySouls2.ViewModels
                 ? 0
                 : _enemyService.GetTargetResistance(GameManagerImp.ChrCtrlOffsets.BleedCurrent);
             
+        }
+
+        private void UpdateDefenses()
+        {
+            MagicResist = _enemyService.GetChrParam(GameManagerImp.ChrCtrlOffsets.ChrParam.MagicResist);
+            LightningResist = _enemyService.GetChrParam(GameManagerImp.ChrCtrlOffsets.ChrParam.LightningResist);
+            FireResist = _enemyService.GetChrParam(GameManagerImp.ChrCtrlOffsets.ChrParam.FireResist);
+            DarkResist = _enemyService.GetChrParam(GameManagerImp.ChrCtrlOffsets.ChrParam.DarkResist);
+            PoisonToxicResist = _enemyService.GetChrParam(GameManagerImp.ChrCtrlOffsets.ChrParam.PoisonToxicResist);
+            BleedResist = _enemyService.GetChrParam(GameManagerImp.ChrCtrlOffsets.ChrParam.BleedResist);
+            SlashDefense = _enemyService.GetChrCommonParam(GameManagerImp.ChrCtrlOffsets.ChrCommon.Slash);
+            ThrustDefense = _enemyService.GetChrCommonParam(GameManagerImp.ChrCtrlOffsets.ChrCommon.Thrust);
+            StrikeDefense = _enemyService.GetChrCommonParam(GameManagerImp.ChrCtrlOffsets.ChrCommon.Strike);
         }
 
         public bool AreOptionsEnabled
@@ -674,6 +692,88 @@ namespace SilkySouls2.ViewModels
         {
             if (IsAllDisableAiEnabled) _enemyService.ToggleDisableAi(true);
             IsScholar = GameVersion.Current.Edition == GameEdition.Scholar;
+        }
+        
+        
+        private float _slashDefense;
+        public float SlashDefense
+        {
+            get => _slashDefense;
+            set => SetProperty(ref _slashDefense, value);
+        }
+
+        private float _thrustDefense;
+        public float ThrustDefense
+        {
+            get => _thrustDefense;
+            set => SetProperty(ref _thrustDefense, value);
+        }
+
+        private float _strikeDefense;
+        public float StrikeDefense
+        {
+            get => _strikeDefense;
+            set => SetProperty(ref _strikeDefense, value);
+        }
+        
+        private int _magicResist;
+        public int MagicResist
+        {
+            get => _magicResist;
+            set => SetProperty(ref _magicResist, value);
+        }
+
+        private int _lightningResist;
+        public int LightningResist
+        {
+            get => _lightningResist;
+            set => SetProperty(ref _lightningResist, value);
+        }
+
+        private int _fireResist;
+        public int FireResist
+        {
+            get => _fireResist;
+            set => SetProperty(ref _fireResist, value);
+        }
+
+        private int _darkResist;
+        public int DarkResist
+        {
+            get => _darkResist;
+            set => SetProperty(ref _darkResist, value);
+        }
+        
+        private int _poisonToxicResist;
+        public int PoisonToxicResist
+        {
+            get => _poisonToxicResist;
+            set => SetProperty(ref _poisonToxicResist, value);
+        }
+
+        private int _bleedResist;
+        public int BleedResist
+        {
+            get => _bleedResist;
+            set => SetProperty(ref _bleedResist, value);
+        }
+
+        public void OpenDefenseWindow()
+        {
+            if (_defenseWindow != null && _defenseWindow.IsVisible) 
+            {
+                _defenseWindow.Activate(); 
+                return;
+            }
+
+            _defenseWindow = new DefenseWindow
+            {
+                DataContext = this
+            };
+            
+            _defenseWindow.Closed += (s, e) => _defenseWindow = null;
+    
+            _defenseWindow.Show();
         }
     }
 }

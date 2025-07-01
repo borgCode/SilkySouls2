@@ -1,8 +1,8 @@
 ﻿using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using SilkySouls2.Memory;
 using SilkySouls2.Models;
 using SilkySouls2.Services;
+using SilkySouls2.Utilities;
 
 namespace SilkySouls2.ViewModels
 {
@@ -27,7 +27,7 @@ namespace SilkySouls2.ViewModels
         private void LoadNpcs()
         {
             NpcList = new ObservableCollection<NpcInfo>(
-                Utilities.DataLoader.GetNpcs()
+                DataLoader.GetNpcs()
             );
             
             if (NpcList.Count > 0)

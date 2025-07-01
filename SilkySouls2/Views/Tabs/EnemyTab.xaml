@@ -427,7 +427,12 @@
                         </CheckBox>
                         <TextBlock Text="Last Act: " Margin="20,0,0,0" VerticalAlignment="Center" />
                         <TextBlock Text="{Binding LastAct}" VerticalAlignment="Center" Width="20" TextAlignment="Right" />
-                        
+                        <Button Content="Defenses"
+                                IsEnabled="{Binding AreButtonsEnabled}"
+                                HorizontalAlignment="Right"
+                                Margin="130,0,0,0"
+                              Click="OpenDefenseWindow"
+                        />
                     </StackPanel>
                 </StackPanel>
             </StackPanel>

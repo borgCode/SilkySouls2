@@ -262,6 +262,7 @@ namespace SilkySouls2.Memory
                     if (edition == GameEdition.Scholar)
                     {
                         ChrParamPtr = 0x38;
+                        ChrCommonPtr = 0x40;
                         Coords = 0x90;
                         PoiseImmunityPtr = 0xB8;
                         OperatorPtr = 0xE8;
@@ -318,6 +319,7 @@ namespace SilkySouls2.Memory
                 }
 
                 public static int ChrParamPtr { get; private set; }
+                public static int ChrCommonPtr { get; private set; }
                 public static int Coords { get; private set; }
                 public static int PoiseImmunityPtr { get; private set; }
                 public static int OperatorPtr { get; private set; }
@@ -346,8 +348,19 @@ namespace SilkySouls2.Memory
 
                 public static class ChrParam
                 {
+                    public const int MagicResist = 0xA0;
+                    public const int LightningResist = 0xA4;
+                    public const int FireResist = 0xA8;
+                    public const int DarkResist = 0xAC;
                     public const int PoisonToxicResist = 0xB0;
                     public const int BleedResist = 0xB4;
+                }
+
+                public static class ChrCommon
+                {
+                    public const int Slash = 0x270;
+                    public const int Thrust = 0x274;
+                    public const int Strike = 0x278;
                 }
 
                 public static class PoiseStuff

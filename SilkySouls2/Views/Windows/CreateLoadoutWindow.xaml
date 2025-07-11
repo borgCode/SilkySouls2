@@ -370,7 +370,6 @@
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
-
                         </Border>
                     </Grid>
 

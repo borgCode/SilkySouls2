@@ -96,5 +96,12 @@ namespace SilkySouls2.Services
                 _hookManager.UninstallHook(code.ToInt64());
             }
         }
+
+
+        public void ToggleDoubleClick(bool isDisableDoubleClickEnabled)
+        {
+            var ptr = _memoryIo.FollowPointers(KatanaMainApp.Base, KatanaMainApp.DoubleClickPtrChain, false);
+            _memoryIo.WriteByte(ptr, isDisableDoubleClickEnabled ? 1 : 0);
+        }
     }
 }

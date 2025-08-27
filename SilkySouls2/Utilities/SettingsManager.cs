@@ -27,6 +27,7 @@ namespace SilkySouls2.Utilities
         public double HealthWindowLeft { get; set; }
         public double HealthWindowTop { get; set; }
         public bool EnableUpdateChecks { get; set; } = true;
+        public bool DoubleClick { get; set; } = true;
 
         private static string SettingsPath => Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -60,6 +61,7 @@ namespace SilkySouls2.Utilities
                     $"HealthWindowLeft={HealthWindowLeft}",
                     $"HealthWindowTop={HealthWindowTop}",
                     $"EnableUpdateChecks={EnableUpdateChecks}",
+                    $"DoubleClick={DoubleClick}",
                 };
 
                 File.WriteAllLines(SettingsPath, lines);
@@ -160,6 +162,10 @@ namespace SilkySouls2.Utilities
                                 case "EnableUpdateChecks":
                                     bool.TryParse(value, out bool euc);
                                     settings.EnableUpdateChecks = euc;
+                                    break;
+                                case "DoubleClick":
+                                    bool.TryParse(value, out bool dc);
+                                    settings.DoubleClick = dc;
                                     break;
                             }
                         }

@@ -14,6 +14,7 @@ namespace SilkySouls2.ViewModels
         private bool _isEnableHotkeysEnabled;
         private bool _isFastQuitoutEnabled;
         private bool _isBabyJumpFixedEnabled;
+        private bool _isDisableDoubleClickEnabled;
         private bool _isAlwaysOnTopEnabled;
         private bool _isLoaded;
         
@@ -106,6 +107,21 @@ namespace SilkySouls2.ViewModels
                 if (_isLoaded)
                 {
                     _settingsService.ToggleBabyJumpFix(_isBabyJumpFixedEnabled);
+                }
+            }
+        }
+        
+        public bool IsDisableDoubleClickEnabled
+        {
+            get => _isDisableDoubleClickEnabled;
+            set
+            {
+                if (!SetProperty(ref _isDisableDoubleClickEnabled, value)) return;
+                SettingsManager.Default.DoubleClick = value;
+                SettingsManager.Default.Save();
+                if (_isLoaded)
+                {
+                    _settingsService.ToggleDoubleClick(_isDisableDoubleClickEnabled);
                 }
             }
         }
@@ -598,6 +614,7 @@ namespace SilkySouls2.ViewModels
             _isLoaded = true;
             if (IsFastQuitoutEnabled) _settingsService.ToggleFastQuitout(true);
             if (IsBabyJumpFixEnabled) _settingsService.ToggleBabyJumpFix(true);
+            if (IsDisableDoubleClickEnabled) _settingsService.ToggleDoubleClick(true);
         }
         
         
@@ -612,6 +629,8 @@ namespace SilkySouls2.ViewModels
             OnPropertyChanged(nameof(IsFastQuitoutEnabled));
             _isBabyJumpFixedEnabled = SettingsManager.Default.BabyJump;
             OnPropertyChanged(nameof(IsBabyJumpFixEnabled));
+            _isDisableDoubleClickEnabled = SettingsManager.Default.DoubleClick;
+            OnPropertyChanged(nameof(IsDisableDoubleClickEnabled));
         }
 
         public void ResetAttached() => _isLoaded = false;

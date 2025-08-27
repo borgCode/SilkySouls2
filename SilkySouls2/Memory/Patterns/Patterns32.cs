@@ -10,6 +10,15 @@
             1
         );
 
+        public static readonly Pattern KatanaMainApp = new Pattern(
+            new byte[] { 0x8B, 0x0D, 0x00, 0x00, 0x00, 0x00, 0x8B, 0x49, 0x4C, 0x89, 0x55 },
+            "xx????xxxxx",
+            0,
+            AddressingMode.Direct32,
+            2
+        );
+
+
         public static readonly Pattern MapId = new Pattern(
             new byte[] { 0x8B, 0x15, 0x00, 0x00, 0x00, 0x00, 0x8B, 0xF2 },
             "xx????xx",

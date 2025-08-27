@@ -4,11 +4,11 @@
     {
         public static readonly Pattern GameManagerImp = new Pattern(
             new byte[] { 0x89, 0x59, 0x0C, 0x88 },
-            "xxxx", 
+            "xxxx",
             0x5,
             AddressingMode.Relative,
             3,
-            7  
+            7
         );
 
         public static readonly Pattern HkpPtrEntity = new Pattern(
@@ -17,7 +17,7 @@
             0,
             AddressingMode.Relative,
             3,
-            7  
+            7
         );
 
         public static readonly Pattern MapId = new Pattern(
@@ -26,10 +26,19 @@
             0x4,
             AddressingMode.Relative,
             2,
-            6  
+            6
         );
 
-        
+        public static readonly Pattern KatanaMainApp = new Pattern(
+            new byte[] { 0x48, 0x8B, 0x0D, 0x00, 0x00, 0x00, 0x00, 0x48, 0x85, 0xC9, 0x74, 0x09, 0x48, 0x8B, 0x49, 0x60 },
+            "xxx????xxxxxxxxx",
+            0,
+            AddressingMode.Relative,
+            3,
+            7
+        );
+
+
         // Hooks
 
         public static readonly Pattern HpWrite = new Pattern(
@@ -38,7 +47,7 @@
             0x6,
             AddressingMode.Absolute
         );
-        
+
         public static readonly Pattern GetNumOfSpellSlots = new Pattern(
             new byte[] { 0x03, 0xF8, 0x89, 0xBE },
             "xxxx",
@@ -81,7 +90,7 @@
             0x68,
             AddressingMode.Absolute
         );
-        
+
         public static readonly Pattern EzStateCompareTimer = new Pattern(
             new byte[] { 0xF3, 0x0F, 0x11, 0x70, 0x18, 0x41 },
             "xxxxxx",
@@ -117,6 +126,7 @@
             0,
             AddressingMode.Absolute
         );
+
         public static readonly Pattern FasterMenu = new Pattern(
             new byte[] { 0x48, 0x89, 0x84, 0x24, 0x50, 0x01, 0x00, 0x00, 0x83, 0x79, 0x10 },
             "xxxxxxxxxxx",
@@ -137,7 +147,7 @@
             0,
             AddressingMode.Absolute
         );
-        
+
 
         public static readonly Pattern TriggersAndSpace = new Pattern(
             new byte[] { 0x4C, 0x8B, 0x7C, 0x24, 0x70, 0x48, 0x8B, 0x43 },
@@ -196,7 +206,6 @@
         );
 
 
-
         public static readonly Pattern CreditSkip = new Pattern(
             new byte[] { 0x48, 0x81, 0xEC, 0x20, 0x02, 0x00, 0x00, 0x8B, 0x41 },
             "xxxxxxxxx",
@@ -234,7 +243,7 @@
             -0x54,
             AddressingMode.Absolute
         );
-        
+
         public static readonly Pattern BonfireWarp = new Pattern(
             new byte[] { 0x40, 0x53, 0x48, 0x83, 0xEC, 0x60, 0x8B },
             "xxxxxxx",
@@ -327,7 +336,7 @@
             0,
             AddressingMode.Absolute
         );
-        
+
         public static readonly Pattern CurrentItemQuantityCheck = new Pattern(
             new byte[] { 0x48, 0x98, 0x8B, 0x8C, 0x82, 0xCC, 0x52 },
             "xxxxxxx",
@@ -380,7 +389,7 @@
             AddressingMode.Relative,
             1,
             5
-            );
+        );
 
 
         public static readonly Pattern SetRenderTargetsWrapper = new Pattern(

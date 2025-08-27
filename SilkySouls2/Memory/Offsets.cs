@@ -21,6 +21,7 @@ namespace SilkySouls2.Memory
             GameManagerImp.ChrCtrlOffsets.ChrPhysicsCtrl.Initialize(edition);
             GameManagerImp.ChrCtrlOffsets.Stats.Initialize(edition);
             GameManagerImp.PxWorld.Initialize(edition);
+            KatanaMainApp.Initialize(edition);
         }
         
         public static class GameManagerImp
@@ -517,6 +518,19 @@ namespace SilkySouls2.Memory
 
         public static IntPtr MapId;
         public static IntPtr LoadLibraryW;
+        
+        public static class KatanaMainApp
+        {
+            public static IntPtr Base;
+            
+            public static void Initialize(GameEdition edition)
+            {
+                if (edition == GameEdition.Scholar) DoubleClickPtrChain = new[] { 0x60, 0x0, 0x8, 0x6D };
+                else DoubleClickPtrChain = new[] { 0x3C, 0x0, 0x4, 0x39 };
+            }
+            
+            public static int[] DoubleClickPtrChain { get; private set; }
+        }
 
         public static class Patches
         {

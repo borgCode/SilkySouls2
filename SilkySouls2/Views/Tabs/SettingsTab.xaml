@@ -29,9 +29,16 @@
                 <CheckBox Grid.Row="1" Grid.Column="0" Content="Always On Top"
                           IsChecked="{Binding IsAlwaysOnTopEnabled}"
                           Margin="0,5,0,0" />
-                <CheckBox Grid.Row="1" Grid.Column="1" Content="Baby jump fix"
+                
+                <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal"
+                          Margin="0,5,0,0">
+                <CheckBox Content="Baby jump fix"
                           IsChecked="{Binding IsBabyJumpFixEnabled}"
                           Margin="0,5,0,0" />
+                <CheckBox Content="Disable Double Click"
+                          IsChecked="{Binding IsDisableDoubleClickEnabled}"
+                          Margin="10,5,0,0" />
+                </StackPanel>
             </Grid>
 
             <Separator Margin="0,0,0,10" />

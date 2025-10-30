@@ -38,7 +38,7 @@ namespace SilkySouls2.Services
         public void SetRtsr()
         {
             var full = _memoryIo.ReadInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.FullHpWithHollowing));
-            _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Hp), (full * 30) / 100);
+            _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Hp), (full * 30) / 100 - 1);
         }
 
         public int GetSp() =>

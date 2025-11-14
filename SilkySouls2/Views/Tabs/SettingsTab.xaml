@@ -443,7 +443,7 @@
                     </ScrollViewer>
                 </TabItem>
                 
-                <TabItem Header="Enemies">
+                <TabItem Header="Target">
                     <ScrollViewer MaxHeight="370" VerticalScrollBarVisibility="Auto">
                         <StackPanel Margin="5,0,0,0">
                             <Grid Margin="0,5">
@@ -567,6 +567,33 @@
                                          KeyDown="HotkeyTextBox_KeyDown" />
                             </Grid>
                             
+                             <Grid Margin="0,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="125" />
+                                    <ColumnDefinition Width="85" />
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="125" />
+                                    <ColumnDefinition Width="85" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="Disable All Ai" VerticalAlignment="Center"
+                                           HorizontalAlignment="Left" />
+                                <TextBox Grid.Column="1"
+                                         Text="{Binding DisableAiHotkeyText}"
+                                         Style="{StaticResource HotkeyTextBoxStyle}"
+                                         GotFocus="HotkeyTextBox_GotFocus"
+                                         LostFocus="HotkeyTextBox_LostFocus"
+                                         Tag="DisableAi"
+                                         KeyDown="HotkeyTextBox_KeyDown" />
+                                
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+                
+                <TabItem Header="Target">
+                    <ScrollViewer MaxHeight="370" VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="5,0,0,0">
                              <Grid Margin="0,5">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="125" />

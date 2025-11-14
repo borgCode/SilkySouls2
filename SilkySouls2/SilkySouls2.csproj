@@ -117,8 +117,10 @@
         <Compile Include="Models\WarpLocation.cs"/>
         <Compile Include="Models\CharacterState.cs"/>
         <Compile Include="Models\Forlorn.cs"/>
+        <Compile Include="Services\CmpEventRandValService.cs" />
         <Compile Include="Services\DamageControlService.cs"/>
-        <Compile Include="Services\EnemyService.cs"/>
+        <Compile Include="Services\EnemyService.cs" />
+        <Compile Include="Services\TargetService.cs" />
         <Compile Include="Services\ItemService.cs"/>
         <Compile Include="Services\PlayerService.cs"/>
         <Compile Include="Services\SettingsService.cs"/>
@@ -133,7 +135,8 @@
         <Compile Include="Utilities\User32.cs"/>
         <Compile Include="Utilities\VersionChecker.cs"/>
         <Compile Include="ViewModels\BaseViewModel.cs"/>
-        <Compile Include="ViewModels\EnemyViewModel.cs"/>
+        <Compile Include="ViewModels\EnemyViewModel.cs" />
+        <Compile Include="ViewModels\TargetViewModel.cs" />
         <Compile Include="ViewModels\EventViewModel.cs"/>
         <Compile Include="ViewModels\ItemViewModel.cs"/>
         <Compile Include="ViewModels\PlayerViewModel.cs"/>
@@ -142,6 +145,9 @@
         <Compile Include="ViewModels\UtilityViewModel.cs"/>
         <Compile Include="Views\Tabs\EnemyTab.xaml.cs">
           <DependentUpon>EnemyTab.xaml</DependentUpon>
+        </Compile>
+        <Compile Include="Views\Tabs\TargetTab.xaml.cs">
+          <DependentUpon>TargetTab.xaml</DependentUpon>
         </Compile>
         <Compile Include="Views\Tabs\EventTab.xaml.cs">
           <DependentUpon>EventTab.xaml</DependentUpon>
@@ -189,6 +195,7 @@
             <SubType>Code</SubType>
         </Compile>
         <Page Include="Views\Tabs\EnemyTab.xaml" />
+        <Page Include="Views\Tabs\TargetTab.xaml" />
         <Page Include="Views\Tabs\EventTab.xaml" />
         <Page Include="Views\Tabs\ItemTab.xaml" />
         <Page Include="Views\Tabs\PlayerTab.xaml" />

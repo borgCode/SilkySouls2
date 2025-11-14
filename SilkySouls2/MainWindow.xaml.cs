@@ -13,6 +13,7 @@ using SilkySouls2.Services;
 using SilkySouls2.Utilities;
 using SilkySouls2.ViewModels;
 using SilkySouls2.Views;
+using SilkySouls2.Views.Tabs;
 
 namespace SilkySouls2
 {
@@ -31,6 +32,7 @@ namespace SilkySouls2
         private readonly TravelViewModel _travelViewModel;
 
         private readonly UtilityViewModel _utilityViewModel;
+        private readonly TargetViewModel _targetViewModel;
         private readonly EnemyViewModel _enemyViewModel;
         private readonly EventViewModel _eventViewModel;
         private readonly ItemViewModel _itemViewModel;
@@ -65,7 +67,8 @@ namespace SilkySouls2
             var playerService = new PlayerService(_memoryIo, _hookManager, _nopManager);
             var utilityService = new UtilityService(_memoryIo, _hookManager, _dllManager);
             var travelService = new TravelService(_memoryIo, _hookManager, playerService);
-            var enemyService = new EnemyService(_memoryIo, _hookManager, _damageControlService);
+            var targetService = new TargetService(_memoryIo, _hookManager);
+            var enemyService = new EnemyService(_memoryIo, _hookManager);
             _itemService = new ItemService(_memoryIo);
             var settingsService = new SettingsService(_memoryIo, _hookManager);
 
@@ -73,7 +76,8 @@ namespace SilkySouls2
             _travelViewModel = new TravelViewModel(travelService, hotkeyManager);
             _eventViewModel = new EventViewModel(utilityService);
             _utilityViewModel = new UtilityViewModel(utilityService, hotkeyManager, _playerViewModel);
-            _enemyViewModel = new EnemyViewModel(enemyService, hotkeyManager, _damageControlService);
+            _targetViewModel = new TargetViewModel(targetService, hotkeyManager, _damageControlService);
+            _enemyViewModel = new EnemyViewModel(enemyService, hotkeyManager);
             _itemViewModel = new ItemViewModel(_itemService);
             _settingsViewModel = new SettingsViewModel(settingsService, hotkeyManager);
 
@@ -81,6 +85,7 @@ namespace SilkySouls2
             var travelTab = new TravelTab(_travelViewModel);
             var eventTab = new EventTab(_eventViewModel);
             var utilityTab = new UtilityTab(_utilityViewModel);
+            var targetTab = new TargetTab(_targetViewModel);
             var enemyTab = new EnemyTab(_enemyViewModel);
             var itemTab = new ItemTab(_itemViewModel);
             var settingsTab = new SettingsTab(_settingsViewModel);
@@ -90,6 +95,7 @@ namespace SilkySouls2
             MainTabControl.Items.Add(new TabItem { Header = "Travel", Content = travelTab });
             MainTabControl.Items.Add(new TabItem { Header = "Event", Content = eventTab });
             MainTabControl.Items.Add(new TabItem { Header = "Utility", Content = utilityTab });
+            MainTabControl.Items.Add(new TabItem { Header = "Target", Content = targetTab });
             MainTabControl.Items.Add(new TabItem { Header = "Enemies", Content = enemyTab });
             MainTabControl.Items.Add(new TabItem { Header = "Items", Content = itemTab });
             MainTabControl.Items.Add(new TabItem { Header = "Settings", Content = settingsTab });
@@ -262,7 +268,7 @@ namespace SilkySouls2
         {
             _playerViewModel.TryEnableFeatures();
             _utilityViewModel.TryEnableFeatures();
-            _enemyViewModel.TryEnableFeatures();
+            _targetViewModel.TryEnableFeatures();
             _itemViewModel.TryEnableFeatures();
             _travelViewModel.TryEnableFeatures();
             _eventViewModel.TryEnableFeatures();
@@ -272,7 +278,7 @@ namespace SilkySouls2
         {
             _utilityViewModel.DisableFeatures();
             _playerViewModel.DisableFeatures();
-            _enemyViewModel.DisableFeatures();
+            _targetViewModel.DisableFeatures();
             _itemViewModel.DisableFeatures();
             _travelViewModel.DisableFeatures();
             _eventViewModel.DisableFeatures();

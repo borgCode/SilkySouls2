@@ -308,6 +308,11 @@
                               IsEnabled="{Binding IsDrawRagdollsEnabled}"
                               Grid.Column="2" Grid.Row="4"
                               Margin="15,2,0,2" />
+                    
+                    <CheckBox Content="Draw Object Collision"
+                              IsChecked="{Binding IsDrawObjEnabled}"
+                              Grid.Column="2" Grid.Row="5"
+                              Margin="0,2,0,2" />
                 </Grid>
             </StackPanel>
         </Border>

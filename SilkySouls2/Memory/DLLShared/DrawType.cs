@@ -15,5 +15,6 @@
         EventInvasion = 10,
         EventLeash = 11,
         EventOther = 12,
+        Objects = 13,
     }
 }

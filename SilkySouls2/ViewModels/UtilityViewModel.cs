@@ -295,6 +295,18 @@ namespace SilkySouls2.ViewModels
             }
         }
 
+        private bool _isDrawObjEnabled;
+        public bool IsDrawObjEnabled
+        {
+            get => _isDrawObjEnabled;
+            set
+            {
+                if (!SetProperty(ref _isDrawObjEnabled, value)) return;
+                _utilityService.ToggleDrawObj(_isDrawObjEnabled);
+         
+            }
+        }
+
 
         public bool IsHideCharactersEnabled
         {

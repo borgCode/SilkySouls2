@@ -673,6 +673,9 @@ namespace SilkySouls2.Services
 
         public void ToggleColWireframe(bool isColWireframeEnabled) =>
             _dllManager.ToggleRender(DrawType.CollisionWireframe, isColWireframeEnabled);
+        
+        public void ToggleDrawObj(bool isDrawObjEnabled) =>
+            _dllManager.ToggleRender(DrawType.Objects, isDrawObjEnabled);
 
         public void ToggleSnowstormHook(bool isSnowstormDisabled)
         {
@@ -1297,5 +1300,6 @@ namespace SilkySouls2.Services
             _hookManager.InstallHook(fogCamCode.ToInt64(), hookLoc, new byte[]
                 { 0x89, 0x4D, 0xE4, 0x31, 0xC9 });
         }
+        
     }
 }

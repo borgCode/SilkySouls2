@@ -17,7 +17,7 @@ namespace SilkySouls2.ViewModels
         private readonly EnemyService _enemyService;
         private readonly HotkeyManager _hotkeyManager;
         private readonly EzStateService _ezStateService;
-        
+
         public EnemyViewModel(EnemyService enemyService, HotkeyManager hotkeyManager, EzStateService ezStateService,
             GameStateService gameStateService)
         {
@@ -25,8 +25,9 @@ namespace SilkySouls2.ViewModels
             _hotkeyManager = hotkeyManager;
             _ezStateService = ezStateService;
 
-            
+
             gameStateService.Subscribe(GameState.Loaded, OnGameStateLoaded);
+            gameStateService.Subscribe(GameState.NotLoaded, OnGameStateNotLoaded);
 
             RegisterHotkeys();
 
@@ -38,20 +39,19 @@ namespace SilkySouls2.ViewModels
             }
         }
 
-       
-
         private void RegisterHotkeys()
         {
             _hotkeyManager.RegisterAction("DisableAi", () => { IsAllDisableAiEnabled = !IsAllDisableAiEnabled; });
         }
 
         private bool _areOptionsEnabled;
+
         public bool AreOptionsEnabled
         {
             get => _areOptionsEnabled;
             set => SetProperty(ref _areOptionsEnabled, value);
         }
-        
+
         private bool _isAllDisableAiEnabled;
 
         public bool IsAllDisableAiEnabled
@@ -244,7 +244,6 @@ namespace SilkySouls2.ViewModels
                 _ezStateService.ExecuteEzStateEventCommand(overrideCommand, areaId, areaIndex);
                 _ezStateService.ExecuteEzStateEventCommand(generateCommand, areaId, areaIndex);
             });
-            
         }
 
 
@@ -253,10 +252,19 @@ namespace SilkySouls2.ViewModels
             if (IsAllDisableAiEnabled) _enemyService.ToggleDisableAi(true);
             IsScholar = GameVersion.Current.Edition == GameEdition.Scholar;
         }
-        
+
         private void OnGameStateLoaded()
         {
             AreOptionsEnabled = true;
+            if (IsPigSummonsEnabled) _enemyService.ToggleElanaSummons(IsPigSummonsEnabled, 0);
+            if (IsSkellySummonsEnabled) _enemyService.ToggleElanaSummons(_isSkellySummonsEnabled, 0x5);
+            if (IsVelstadtSummonEnabled) _enemyService.ToggleElanaSummons(_isVelstadtSummonEnabled, 0x62);
+        }
+
+
+        private void OnGameStateNotLoaded()
+        {
+            AreOptionsEnabled = false;
         }
     }
 }

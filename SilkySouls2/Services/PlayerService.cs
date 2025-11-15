@@ -10,8 +10,7 @@ namespace SilkySouls2.Services
         private readonly MemoryIo _memoryIo;
         private readonly HookManager _hookManager;
         private readonly NopManager _nopManager;
-
-
+        
         public PlayerService(MemoryIo memoryIo, HookManager hookManager, NopManager nopManager)
         {
             _memoryIo = memoryIo;
@@ -284,20 +283,21 @@ namespace SilkySouls2.Services
             }
         }
 
+        private byte[] savedPos1Bytes;
+        private byte[] savedPos2Bytes;
+        
         public void SavePos(int index)
         {
             byte[] positionBytes = _memoryIo.ReadBytes(GetPositionPtr(), 0x40);
-            if (index == 0)
-                _memoryIo.WriteBytes(CodeCaveOffsets.Base + (int)CodeCaveOffsets.SavedPos.Pos1, positionBytes);
-            else _memoryIo.WriteBytes(CodeCaveOffsets.Base + (int)CodeCaveOffsets.SavedPos.Pos2, positionBytes);
+            if (index == 0) savedPos1Bytes = positionBytes;
+            else savedPos2Bytes = positionBytes;
         }
 
         public void RestorePos(int index)
         {
             byte[] positionBytes;
-            if (index == 0)
-                positionBytes = _memoryIo.ReadBytes(CodeCaveOffsets.Base + (int)CodeCaveOffsets.SavedPos.Pos1, 0x40);
-            else positionBytes = _memoryIo.ReadBytes(CodeCaveOffsets.Base + (int)CodeCaveOffsets.SavedPos.Pos2, 0x40);
+            if (index == 0) positionBytes = savedPos1Bytes;
+            else positionBytes = savedPos2Bytes;
             _memoryIo.WriteBytes(GetPositionPtr(), positionBytes);
         }
 

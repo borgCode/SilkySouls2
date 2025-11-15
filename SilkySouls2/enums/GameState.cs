@@ -6,6 +6,7 @@
         Detached,
         Loaded,
         NotLoaded,
+        FirstLoaded,
         GameStart
     }
 }

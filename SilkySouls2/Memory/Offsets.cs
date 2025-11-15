@@ -36,6 +36,7 @@ namespace SilkySouls2.Memory
                     {
                         CharacterManager = 0x18;
                         CameraManager = 0x20;
+                        AiManager = 0x28;
                         EventManager = 0x70;
                         GameDataManager = 0xA8;
                         SaveLoadSystemPtr = 0xB8;
@@ -64,6 +65,7 @@ namespace SilkySouls2.Memory
 
                 public static int CharacterManager { get; private set; }
                 public static int CameraManager { get; private set; }
+                public static int AiManager { get; private set; }
                 public static int EventManager { get; private set; }
                 public static int GameDataManager { get; private set; }
                 public static int SaveLoadSystemPtr { get; private set; }

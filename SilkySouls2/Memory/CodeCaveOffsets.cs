@@ -45,13 +45,7 @@ namespace SilkySouls2.Memory
             ModifyOnceFlag = 0x390,
             Code = 0x3A0
         }
-
-        public enum SavedPos
-        {
-            Pos1 = 0x3D0,
-            Pos2 = 0x410
-        }
-
+        
         public enum Drop100
         {
             DropCount = 0x460,

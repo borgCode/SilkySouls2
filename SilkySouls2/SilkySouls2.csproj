@@ -238,6 +238,7 @@
     <ItemGroup>
         <Resource Include="Assets\Silky.ico" />
         <Content Include="FodyWeavers.xml" />
+        <Content Include="Models\added.txt" />
         <Content Include="Resources\DLL\DrawScholar.dll">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>

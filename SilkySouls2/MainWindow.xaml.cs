@@ -76,7 +76,7 @@ namespace SilkySouls2
             _itemService = new ItemService(_memoryIo);
             var settingsService = new SettingsService(_memoryIo, _hookManager);
 
-            _playerViewModel = new PlayerViewModel(playerService, hotkeyManager, _damageControlService);
+            _playerViewModel = new PlayerViewModel(playerService, hotkeyManager, _damageControlService, _gameStateService);
             _travelViewModel = new TravelViewModel(travelService, hotkeyManager);
             _eventViewModel = new EventViewModel(utilityService);
             _utilityViewModel = new UtilityViewModel(utilityService, hotkeyManager, _playerViewModel);
@@ -216,11 +216,13 @@ namespace SilkySouls2
                     
                     _settingsViewModel.ApplyLoadedOptions();
                     if (_appliedOneTimeFeatures) return;
+                    _gameStateService.Publish(GameState.FirstLoaded);
                     ApplyOneTimeFeatures();
                     _appliedOneTimeFeatures = true;
                 }
                 else if (_loaded)
                 {
+                    _gameStateService.Publish(GameState.NotLoaded);
                     DisableFeatures();
                     _loaded = false;
                     _hasAppliedDelayedFeatures = false;
@@ -264,7 +266,6 @@ namespace SilkySouls2
 
         private void ApplyOneTimeFeatures()
         {
-            _playerViewModel.TryApplyOneTimeFeatures();
             _utilityViewModel.TryApplyOneTimeFeatures();
             _enemyViewModel.TryApplyOneTimeFeatures();
             _eventViewModel.TryApplyOneTimeFeatures();
@@ -272,7 +273,6 @@ namespace SilkySouls2
 
         private void TryEnableFeatures()
         {
-            _playerViewModel.TryEnableFeatures();
             _utilityViewModel.TryEnableFeatures();
             _targetViewModel.TryEnableFeatures();
             _itemViewModel.TryEnableFeatures();
@@ -283,7 +283,6 @@ namespace SilkySouls2
         private void DisableFeatures()
         {
             _utilityViewModel.DisableFeatures();
-            _playerViewModel.DisableFeatures();
             _targetViewModel.DisableFeatures();
             _itemViewModel.DisableFeatures();
             _travelViewModel.DisableFeatures();

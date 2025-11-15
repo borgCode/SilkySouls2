@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Windows.Threading;
+using SilkySouls2.enums;
 using SilkySouls2.Memory;
 using SilkySouls2.Models;
 using SilkySouls2.Services;
@@ -75,13 +76,16 @@ namespace SilkySouls2.ViewModels
         private readonly HotkeyManager _hotkeyManager;
 
         public PlayerViewModel(PlayerService playerService, HotkeyManager hotkeyManager,
-            DamageControlService damageControlService)
+            DamageControlService damageControlService, GameStateService gameStateService)
         {
             _playerService = playerService;
             _damageControlService = damageControlService;
             _hotkeyManager = hotkeyManager;
 
-
+            gameStateService.Subscribe(GameState.Loaded, OnGameLoaded);
+            gameStateService.Subscribe(GameState.NotLoaded, OnGameNotLoaded);
+            gameStateService.Subscribe(GameState.FirstLoaded, OnGameFirstLoaded);
+            
             RegisterHotkeys();
 
             _timer = new DispatcherTimer
@@ -108,6 +112,9 @@ namespace SilkySouls2.ViewModels
             };
             _timer.Start();
         }
+
+       
+
 
         private void RegisterHotkeys()
         {
@@ -248,6 +255,8 @@ namespace SilkySouls2.ViewModels
         
         public void RestorePos(int index)
         {
+            if (index == 0 && !IsPos1Saved) return;
+            if (index == 1 && !IsPos2Saved) return;
             _playerService.RestorePos(index);
             if (!IsStateIncluded) return;
         
@@ -626,9 +635,8 @@ namespace SilkySouls2.ViewModels
         }
         
         
-        public void TryEnableFeatures()
+        private void OnGameLoaded()
         {
-    
             if (IsNoDeathEnabled) _playerService.ToggleNoDeath(true);
             
             AreOptionsEnabled = true;
@@ -636,7 +644,7 @@ namespace SilkySouls2.ViewModels
             _timer.Start();
         }
         
-        public void TryApplyOneTimeFeatures()
+        private void OnGameFirstLoaded()
         {
             if (IsOneShotEnabled) _damageControlService.ToggleOneShot(true);
             if (IsDealNoDamageEnabled) _damageControlService.ToggleDealNoDamage(true);
@@ -653,11 +661,12 @@ namespace SilkySouls2.ViewModels
             if (IsNoHollowingEnabled) _playerService.ToggleNoHollowing(true);
             _pauseUpdates = false;
         }
-
-        public void DisableFeatures()
+        
+        
+        private void OnGameNotLoaded()
         {
-            AreOptionsEnabled = false;
-            _timer.Stop();
+           AreOptionsEnabled = false;
+                       _timer.Stop();
         }
         
         public void GiveSouls() => _playerService.GiveSouls(Souls);

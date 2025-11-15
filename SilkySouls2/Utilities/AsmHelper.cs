@@ -59,5 +59,14 @@ namespace SilkySouls2.Utilities
                 Array.Copy(addressBytes, 0, bytes, destinationIndex, 4);
             }
         }
+        
+        public static void WriteImmediateDwords(byte[] bytes, (int value, int destinationIndex)[] immediates)
+        {
+            foreach (var (value, destinationIndex) in immediates)
+            {
+                var valueBytes = BitConverter.GetBytes(value);
+                Array.Copy(valueBytes, 0, bytes, destinationIndex, 4);
+            }
+        }
     }
 }

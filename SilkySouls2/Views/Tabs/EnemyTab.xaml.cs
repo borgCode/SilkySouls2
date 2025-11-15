@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 using SilkySouls2.ViewModels;
 
 namespace SilkySouls2.Views.Tabs
@@ -12,6 +13,11 @@ namespace SilkySouls2.Views.Tabs
             InitializeComponent();
             _enemyViewModel = enemyViewModel;
             DataContext = _enemyViewModel;
+        }
+        
+        private void SpawnForlorn(object sender, RoutedEventArgs e)
+        {
+            _enemyViewModel.SpawnForlorn();
         }
     }
 }

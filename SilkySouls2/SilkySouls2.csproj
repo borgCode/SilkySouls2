@@ -100,49 +100,51 @@
         <Compile Include="Converters\SpellIdToVisibilityConverter.cs"/>
         <Compile Include="Converters\SpellTypeToBrushConverter.cs"/>
         <Compile Include="Converters\StringToVisibilityConverter.cs"/>
-        <Compile Include="Memory\DLLShared\DllManager.cs"/>
-        <Compile Include="Memory\DLLShared\DrawType.cs"/>
-        <Compile Include="Memory\DLLShared\SharedMemAddr.cs"/>
-        <Compile Include="Memory\GameVersion.cs"/>
-        <Compile Include="Memory\NopManager.cs"/>
-        <Compile Include="Memory\Patterns\Pattern.cs"/>
-        <Compile Include="Memory\Patterns\Patterns32.cs"/>
-        <Compile Include="Memory\Patterns\Patterns64.cs"/>
-        <Compile Include="Models\AttunementSpell.cs"/>
-        <Compile Include="Models\EquippedSpell.cs"/>
-        <Compile Include="Models\Item.cs"/>
-        <Compile Include="Models\Loadout.cs"/>
-        <Compile Include="Models\NpcInfo.cs"/>
-        <Compile Include="Models\InventorySpell.cs"/>
-        <Compile Include="Models\WarpLocation.cs"/>
-        <Compile Include="Models\CharacterState.cs"/>
-        <Compile Include="Models\Forlorn.cs"/>
-        <Compile Include="Services\CmpEventRandValService.cs" />
-        <Compile Include="Services\DamageControlService.cs"/>
+        <Compile Include="enums\GameState.cs" />
+        <Compile Include="Memory\DLLShared\DllManager.cs" />
+        <Compile Include="Memory\DLLShared\DrawType.cs" />
+        <Compile Include="Memory\DLLShared\SharedMemAddr.cs" />
+        <Compile Include="Memory\GameVersion.cs" />
+        <Compile Include="Memory\NopManager.cs" />
+        <Compile Include="Memory\Patterns\Pattern.cs" />
+        <Compile Include="Memory\Patterns\Patterns32.cs" />
+        <Compile Include="Memory\Patterns\Patterns64.cs" />
+        <Compile Include="Models\AttunementSpell.cs" />
+        <Compile Include="Models\EquippedSpell.cs" />
+        <Compile Include="Models\Item.cs" />
+        <Compile Include="Models\Loadout.cs" />
+        <Compile Include="Models\NpcInfo.cs" />
+        <Compile Include="Models\InventorySpell.cs" />
+        <Compile Include="Models\WarpLocation.cs" />
+        <Compile Include="Models\CharacterState.cs" />
+        <Compile Include="Models\Forlorn.cs" />
+        <Compile Include="Services\DamageControlService.cs" />
         <Compile Include="Services\EnemyService.cs" />
+        <Compile Include="Services\EzStateService.cs" />
+        <Compile Include="Services\GameStateService.cs" />
         <Compile Include="Services\TargetService.cs" />
-        <Compile Include="Services\ItemService.cs"/>
-        <Compile Include="Services\PlayerService.cs"/>
-        <Compile Include="Services\SettingsService.cs"/>
-        <Compile Include="Services\TravelService.cs"/>
-        <Compile Include="Services\UtilityService.cs"/>
-        <Compile Include="Utilities\AsmHelper.cs"/>
-        <Compile Include="Utilities\AsmLoader.cs"/>
-        <Compile Include="Utilities\DataLoader.cs"/>
-        <Compile Include="Utilities\GameLauncher.cs"/>
-        <Compile Include="Utilities\HotkeyManager.cs"/>
-        <Compile Include="Utilities\SettingsManager.cs"/>
-        <Compile Include="Utilities\User32.cs"/>
-        <Compile Include="Utilities\VersionChecker.cs"/>
-        <Compile Include="ViewModels\BaseViewModel.cs"/>
+        <Compile Include="Services\ItemService.cs" />
+        <Compile Include="Services\PlayerService.cs" />
+        <Compile Include="Services\SettingsService.cs" />
+        <Compile Include="Services\TravelService.cs" />
+        <Compile Include="Services\UtilityService.cs" />
+        <Compile Include="Utilities\AsmHelper.cs" />
+        <Compile Include="Utilities\AsmLoader.cs" />
+        <Compile Include="Utilities\DataLoader.cs" />
+        <Compile Include="Utilities\GameLauncher.cs" />
+        <Compile Include="Utilities\HotkeyManager.cs" />
+        <Compile Include="Utilities\SettingsManager.cs" />
+        <Compile Include="Utilities\User32.cs" />
+        <Compile Include="Utilities\VersionChecker.cs" />
+        <Compile Include="ViewModels\BaseViewModel.cs" />
         <Compile Include="ViewModels\EnemyViewModel.cs" />
         <Compile Include="ViewModels\TargetViewModel.cs" />
-        <Compile Include="ViewModels\EventViewModel.cs"/>
-        <Compile Include="ViewModels\ItemViewModel.cs"/>
-        <Compile Include="ViewModels\PlayerViewModel.cs"/>
-        <Compile Include="ViewModels\SettingsViewModel.cs"/>
-        <Compile Include="ViewModels\TravelViewModel.cs"/>
-        <Compile Include="ViewModels\UtilityViewModel.cs"/>
+        <Compile Include="ViewModels\EventViewModel.cs" />
+        <Compile Include="ViewModels\ItemViewModel.cs" />
+        <Compile Include="ViewModels\PlayerViewModel.cs" />
+        <Compile Include="ViewModels\SettingsViewModel.cs" />
+        <Compile Include="ViewModels\TravelViewModel.cs" />
+        <Compile Include="ViewModels\UtilityViewModel.cs" />
         <Compile Include="Views\Tabs\EnemyTab.xaml.cs">
           <DependentUpon>EnemyTab.xaml</DependentUpon>
         </Compile>
@@ -209,13 +211,13 @@
         <Page Include="Views\Windows\ResistancesWindow.xaml" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="Memory\AobScanner.cs"/>
-        <Compile Include="Memory\CodeCaveOffsets.cs"/>
-        <Compile Include="Memory\GameIds.cs"/>
-        <Compile Include="Memory\HookManager.cs"/>
-        <Compile Include="Memory\Kernel32.cs"/>
-        <Compile Include="Memory\MemoryIO.cs"/>
-        <Compile Include="Memory\Offsets.cs"/>
+        <Compile Include="Memory\AobScanner.cs" />
+        <Compile Include="Memory\CodeCaveOffsets.cs" />
+        <Compile Include="Memory\GameIds.cs" />
+        <Compile Include="Memory\HookManager.cs" />
+        <Compile Include="Memory\Kernel32.cs" />
+        <Compile Include="Memory\MemoryIO.cs" />
+        <Compile Include="Memory\Offsets.cs" />
         <Compile Include="Properties\AssemblyInfo.cs">
             <SubType>Code</SubType>
         </Compile>
@@ -230,12 +232,12 @@
         </EmbeddedResource>
     </ItemGroup>
     <ItemGroup>
-        <None Include="App.config"/>
-        <None Include="packages.config"/>
+        <None Include="App.config" />
+        <None Include="packages.config" />
     </ItemGroup>
     <ItemGroup>
-        <Resource Include="Assets\Silky.ico"/>
-        <Content Include="FodyWeavers.xml"/>
+        <Resource Include="Assets\Silky.ico" />
+        <Content Include="FodyWeavers.xml" />
         <Content Include="Resources\DLL\DrawScholar.dll">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>

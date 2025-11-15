@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows;
 using System.Windows.Threading;
-using SilkySouls2.Memory;
-using SilkySouls2.Models;
 using SilkySouls2.Services;
 using SilkySouls2.Utilities;
 using SilkySouls2.Views;

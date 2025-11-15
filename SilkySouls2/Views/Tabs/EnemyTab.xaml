@@ -40,6 +40,54 @@
                 BorderBrush="#333"
                 CornerRadius="3"
                 Margin="0,5,0,5">
+            <Grid Margin="15,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Elana Section -->
+                <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                    <TextBlock Text="Elana"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Foreground="#F0F0F0"
+                               Margin="0,0,0,5" />
+
+                    <TextBlock Text="Summon RNG"
+                               FontSize="12"
+                               Foreground="#B0B0B0"
+                               Margin="0,0,0,8" />
+
+                    <CheckBox Content="Pigs"
+                              IsChecked="{Binding IsPigSummonsEnabled}"
+                              Margin="0,2" />
+                    <CheckBox Content="Skellies"
+                              IsChecked="{Binding IsSkellySummonsEnabled}"
+                              Margin="0,2" />
+                    <CheckBox Content="Velstadt"
+                              IsChecked="{Binding IsVelstadtSummonEnabled}"
+                              Margin="0,2" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                    <Button Content="Placeholder Button 1"
+                 
+                            Margin="0,0,0,5"
+                            Padding="10,5" />
+                    <Button Content="Placeholder Button 2"
+                            Padding="10,5" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="2">
+                    <Button Content="Placeholder Button 3"
+                            Margin="0,0,0,5"
+                            Padding="10,5" />
+                    <Button Content="Placeholder Button 4"
+                            Padding="10,5" />
+                </StackPanel>
+            </Grid>
         </Border>
 
         <Border Grid.Row="2"
@@ -56,20 +104,20 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    
+
                     <TextBlock Grid.Column="0"
                                Text="Forlorn"
                                FontSize="18"
                                FontWeight="Bold"
                                Foreground="#F0F0F0" />
-                    
+
                     <CheckBox Grid.Column="2"
                               Content="Guaranteed Spawn"
                               IsEnabled="{Binding IsForlornAvailable}"
                               IsChecked="{Binding IsGuaranteedSpawnEnabled}"
                               VerticalAlignment="Center"
                               Margin="0,0,6,0" />
-                    
+
                     <Border Grid.Column="3"
                             Background="#3498db"
                             CornerRadius="10"
@@ -84,31 +132,37 @@
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
                                    FontWeight="Bold"
-                                   FontSize="10" 
-                                  />
+                                   FontSize="10" />
                     </Border>
                 </Grid>
-                
+
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                     <TextBlock Text="Select Location:"
                                VerticalAlignment="Center"
                                Width="100"
                                Margin="0,0,5,0" />
                     <ComboBox Width="150"
-                              ItemsSource="{Binding AvailableForlorns}"
-                              SelectedItem="{Binding SelectedForlorn}"
+                              ItemsSource="{Binding AvailableForlornAreas}"
+                              SelectedItem="{Binding SelectedForlornArea}"
                               DisplayMemberPath="AreaName" />
+                    <Button
+                        IsEnabled="{Binding AreOptionsEnabled}"
+                        Click="SpawnForlorn"
+                        Content="Force Spawn"
+                        Margin="30,0,0,0">
+                        
+                    </Button>
                 </StackPanel>
-                
+
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
                     <TextBlock Text="Select Spawn:"
                                VerticalAlignment="Center"
                                Width="100"
                                Margin="0,0,5,0" />
-               <ComboBox Width="150"
-                         IsEnabled="{Binding IsForlornAvailable}"
-                         ItemsSource="{Binding ForlornIndexes, IsAsync=False}"
-                         SelectedIndex="{Binding SelectedForlornIndex}" />
+                    <ComboBox Width="150"
+                              IsEnabled="{Binding IsForlornAvailable}"
+                              ItemsSource="{Binding ForlornIndexes, IsAsync=False}"
+                              SelectedIndex="{Binding SelectedForlornIndex}" />
                 </StackPanel>
             </StackPanel>
         </Border>

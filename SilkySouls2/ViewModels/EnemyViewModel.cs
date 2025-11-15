@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
+using SilkySouls2.enums;
 using SilkySouls2.Memory;
 using SilkySouls2.Models;
 using SilkySouls2.Services;
@@ -14,27 +16,42 @@ namespace SilkySouls2.ViewModels
     {
         private readonly EnemyService _enemyService;
         private readonly HotkeyManager _hotkeyManager;
-
-        public EnemyViewModel(EnemyService enemyService, HotkeyManager hotkeyManager)
+        private readonly EzStateService _ezStateService;
+        
+        public EnemyViewModel(EnemyService enemyService, HotkeyManager hotkeyManager, EzStateService ezStateService,
+            GameStateService gameStateService)
         {
             _enemyService = enemyService;
             _hotkeyManager = hotkeyManager;
+            _ezStateService = ezStateService;
+
+            
+            gameStateService.Subscribe(GameState.Loaded, OnGameStateLoaded);
 
             RegisterHotkeys();
 
-            _availableForlorns = new ObservableCollection<Forlorn>(Forlorn.All);
+            _availableForlornAreas = new ObservableCollection<ForlornArea>(ForlornArea.All);
 
-            if (_availableForlorns.Count > 0)
+            if (_availableForlornAreas.Count > 0)
             {
-                SelectedForlorn = _availableForlorns[0];
+                SelectedForlornArea = _availableForlornAreas[0];
             }
         }
+
+       
 
         private void RegisterHotkeys()
         {
             _hotkeyManager.RegisterAction("DisableAi", () => { IsAllDisableAiEnabled = !IsAllDisableAiEnabled; });
         }
 
+        private bool _areOptionsEnabled;
+        public bool AreOptionsEnabled
+        {
+            get => _areOptionsEnabled;
+            set => SetProperty(ref _areOptionsEnabled, value);
+        }
+        
         private bool _isAllDisableAiEnabled;
 
         public bool IsAllDisableAiEnabled
@@ -49,22 +66,92 @@ namespace SilkySouls2.ViewModels
             }
         }
 
-        private ObservableCollection<Forlorn> _availableForlorns;
+        private bool _isPigSummonsEnabled;
 
-        public ObservableCollection<Forlorn> AvailableForlorns
+        public bool IsPigSummonsEnabled
         {
-            get => _availableForlorns;
-            private set => SetProperty(ref _availableForlorns, value);
-        }
-
-        private Forlorn _selectedForlorn;
-
-        public Forlorn SelectedForlorn
-        {
-            get => _selectedForlorn;
+            get => _isPigSummonsEnabled;
             set
             {
-                if (!SetProperty(ref _selectedForlorn, value)) return;
+                if (SetProperty(ref _isPigSummonsEnabled, value))
+                {
+                    if (_isPigSummonsEnabled)
+                    {
+                        IsSkellySummonsEnabled = false;
+                        IsVelstadtSummonEnabled = false;
+                        _enemyService.ToggleElanaSummons(_isPigSummonsEnabled, 0);
+                    }
+                    else
+                    {
+                        _enemyService.ToggleElanaSummons(_isPigSummonsEnabled);
+                    }
+                }
+            }
+        }
+
+        private bool _isSkellySummonsEnabled;
+
+        public bool IsSkellySummonsEnabled
+        {
+            get => _isSkellySummonsEnabled;
+            set
+            {
+                if (SetProperty(ref _isSkellySummonsEnabled, value))
+                {
+                    if (_isSkellySummonsEnabled)
+                    {
+                        IsPigSummonsEnabled = false;
+                        IsVelstadtSummonEnabled = false;
+                        _enemyService.ToggleElanaSummons(_isSkellySummonsEnabled, 0x5);
+                    }
+                    else
+                    {
+                        _enemyService.ToggleElanaSummons(_isSkellySummonsEnabled);
+                    }
+                }
+            }
+        }
+
+        private bool _isVelstadtSummonEnabled;
+
+        public bool IsVelstadtSummonEnabled
+        {
+            get => _isVelstadtSummonEnabled;
+            set
+            {
+                if (SetProperty(ref _isVelstadtSummonEnabled, value))
+                {
+                    if (_isVelstadtSummonEnabled)
+                    {
+                        IsPigSummonsEnabled = false;
+                        IsSkellySummonsEnabled = false;
+                        _enemyService.ToggleElanaSummons(_isVelstadtSummonEnabled, 0x62);
+                    }
+                    else
+                    {
+                        _enemyService.ToggleElanaSummons(_isVelstadtSummonEnabled);
+                    }
+                }
+            }
+        }
+
+
+        private ObservableCollection<ForlornArea> _availableForlornAreas;
+
+        public ObservableCollection<ForlornArea> AvailableForlornAreas
+        {
+            get => _availableForlornAreas;
+            private set => SetProperty(ref _availableForlornAreas, value);
+        }
+
+        private ForlornArea _selectedForlornArea;
+
+        public ForlornArea SelectedForlornArea
+        {
+            get => _selectedForlornArea;
+            set
+            {
+                if (!SetProperty(ref _selectedForlornArea, value)) return;
                 CurrentAreaName = value?.AreaName ?? "No Forlorn selected";
                 IsForlornAvailable = value != null;
                 OnPropertyChanged(nameof(ForlornIndexes));
@@ -107,10 +194,10 @@ namespace SilkySouls2.ViewModels
             set
             {
                 if (!SetProperty(ref _selectedForlornIndex, value)) return;
-                if (SelectedForlorn == null || !IsGuaranteedSpawnEnabled) return;
+                if (SelectedForlornArea == null || !IsGuaranteedSpawnEnabled) return;
                 _enemyService.UpdateForlornIndex(_selectedForlornIndex + 1);
                 _enemyService.ToggleForlornSpawn(true,
-                    SelectedForlorn.EsdFuncId,
+                    SelectedForlornArea.FunctionId,
                     _selectedForlornIndex + 1);
             }
         }
@@ -123,10 +210,10 @@ namespace SilkySouls2.ViewModels
             set
             {
                 if (!SetProperty(ref _isGuaranteedSpawnEnabled, value)) return;
-                if (SelectedForlorn != null)
+                if (SelectedForlornArea != null)
                 {
                     _enemyService.ToggleForlornSpawn(_isGuaranteedSpawnEnabled,
-                        SelectedForlorn.EsdFuncId,
+                        SelectedForlornArea.FunctionId,
                         SelectedForlornIndex + 1);
                 }
             }
@@ -136,19 +223,40 @@ namespace SilkySouls2.ViewModels
         {
             get
             {
-                if (SelectedForlorn?.SpawnNames == null)
+                if (SelectedForlornArea?.Spawns == null)
                     return Enumerable.Empty<string>();
-                return SelectedForlorn.SpawnNames
-                    .Select((name, i) => $"{i + 1}: {name}")
+                return SelectedForlornArea.Spawns
+                    .Select((spawn, i) => $"{i + 1}: {spawn.LocationName}")
                     .ToArray();
             }
         }
-        
+
+        public void SpawnForlorn()
+        {
+            var overrideCommand = SelectedForlornArea.Spawns[SelectedForlornIndex].OverridePositionCommand;
+            var areaId = SelectedForlornArea.AreaId;
+            var areaIndex = SelectedForlornArea.AreaIndex;
+
+            var generateCommand = SelectedForlornArea.Spawns[SelectedForlornIndex].GenerateNpcCommand;
+
+            Task.Run(() =>
+            {
+                _ezStateService.ExecuteEzStateEventCommand(overrideCommand, areaId, areaIndex);
+                _ezStateService.ExecuteEzStateEventCommand(generateCommand, areaId, areaIndex);
+            });
+            
+        }
+
+
         public void TryApplyOneTimeFeatures()
         {
             if (IsAllDisableAiEnabled) _enemyService.ToggleDisableAi(true);
             IsScholar = GameVersion.Current.Edition == GameEdition.Scholar;
         }
-
+        
+        private void OnGameStateLoaded()
+        {
+            AreOptionsEnabled = true;
+        }
     }
 }

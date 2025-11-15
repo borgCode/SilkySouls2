@@ -3721,4 +3721,96 @@ b9 00 00 00 00          mov    ecx,0x0
 88 01                   mov    BYTE PTR [ecx],al
 c3                      ret</value>
   </data>
+  <data name="ElanaSummon64" xml:space="preserve">
+    <value>48 8b 51 10             mov    rdx,QWORD PTR [rcx+0x10]
+48 85 d2                test   rdx,rdx
+74 10                   je     19 &lt;exit&gt;
+81 7a 68 3a 75 00 00    cmp    DWORD PTR [rdx+0x68],0x753a
+75 07                   jne    19 &lt;exit&gt;
+c7 42 40 00 00 00 00    mov    DWORD PTR [rdx+0x40],0x0
+000000000019 &lt;exit&gt;:
+48 85 d2                test   rdx,rdx
+e9 00 00 00 00          jmp    21 &lt;exit+0x8&gt;</value>
+  </data>
+  <data name="EzStateEventExecuteCommand64" xml:space="preserve">
+    <value>80 3d 00 00 00 00 01    cmp    BYTE PTR [rip+0x0],0x1        # 7 &lt;_main+0x7&gt;
+0f 85 1e 01 00 00       jne    12b &lt;normal&gt;
+c6 05 00 00 00 00 00    mov    BYTE PTR [rip+0x0],0x0        # 14 &lt;_main+0x14&gt;
+55                      push   rbp
+51                      push   rcx
+52                      push   rdx
+41 50                   push   r8
+41 51                   push   r9
+53                      push   rbx
+56                      push   rsi
+57                      push   rdi
+48 81 ec 80 00 00 00    sub    rsp,0x80
+0f 11 04 24             movups XMMWORD PTR [rsp],xmm0
+0f 11 4c 24 10          movups XMMWORD PTR [rsp+0x10],xmm1
+0f 11 54 24 20          movups XMMWORD PTR [rsp+0x20],xmm2
+0f 11 5c 24 30          movups XMMWORD PTR [rsp+0x30],xmm3
+0f 11 64 24 40          movups XMMWORD PTR [rsp+0x40],xmm4
+0f 11 6c 24 50          movups XMMWORD PTR [rsp+0x50],xmm5
+0f 11 74 24 60          movups XMMWORD PTR [rsp+0x60],xmm6
+0f 11 7c 24 70          movups XMMWORD PTR [rsp+0x70],xmm7
+48 89 e5                mov    rbp,rsp
+48 81 ec 58 04 00 00    sub    rsp,0x458
+48 8d 8d 08 fc ff ff    lea    rcx,[rbp-0x3f8]
+ba 00 00 00 00          mov    edx,0x0
+e8 00 00 00 00          call   67 &lt;_main+0x67&gt;
+48 8d 8d 18 fe ff ff    lea    rcx,[rbp-0x1e8]
+48 8d 95 d8 fe ff ff    lea    rdx,[rbp-0x128]
+4c 8d 85 e8 fe ff ff    lea    r8,[rbp-0x118]
+41 c7 40 18 00 00 00    mov    DWORD PTR [r8+0x18],0x0
+00
+41 c7 40 1c 00 00 00    mov    DWORD PTR [r8+0x1c],0x0
+00
+4c 89 42 08             mov    QWORD PTR [rdx+0x8],r8
+48 89 91 b0 00 00 00    mov    QWORD PTR [rcx+0xb0],rdx
+bb 00 00 00 00          mov    ebx,0x0
+89 9d 08 fe ff ff       mov    DWORD PTR [rbp-0x1f8],ebx
+31 ff                   xor    edi,edi
+48 8d 35 00 00 00 00    lea    rsi,[rip+0x0]        # ab &lt;param_loop&gt;
+0000000000ab &lt;param_loop&gt;:
+8b 04 be                mov    eax,DWORD PTR [rsi+rdi*4]
+4c 8d 85 08 ff ff ff    lea    r8,[rbp-0xf8]
+41 89 00                mov    DWORD PTR [r8],eax
+41 c7 40 08 02 00 00    mov    DWORD PTR [r8+0x8],0x2
+00
+8d 57 01                lea    edx,[rdi+0x1]
+48 8d 8d 08 fc ff ff    lea    rcx,[rbp-0x3f8]
+48 8b 01                mov    rax,QWORD PTR [rcx]
+ff 50 08                call   QWORD PTR [rax+0x8]
+ff c7                   inc    edi
+39 df                   cmp    edi,ebx
+7c d5                   jl     ab &lt;param_loop&gt;
+48 8d 8d 18 fe ff ff    lea    rcx,[rbp-0x1e8]
+48 8d 95 08 fc ff ff    lea    rdx,[rbp-0x3f8]
+45 31 c0                xor    r8d,r8d
+e8 00 00 00 00          call   ec &lt;param_loop+0x41&gt;
+48 81 c4 58 04 00 00    add    rsp,0x458
+0f 10 04 24             movups xmm0,XMMWORD PTR [rsp]
+0f 10 4c 24 10          movups xmm1,XMMWORD PTR [rsp+0x10]
+0f 10 54 24 20          movups xmm2,XMMWORD PTR [rsp+0x20]
+0f 10 5c 24 30          movups xmm3,XMMWORD PTR [rsp+0x30]
+0f 10 64 24 40          movups xmm4,XMMWORD PTR [rsp+0x40]
+0f 10 6c 24 50          movups xmm5,XMMWORD PTR [rsp+0x50]
+0f 10 74 24 60          movups xmm6,XMMWORD PTR [rsp+0x60]
+0f 10 7c 24 70          movups xmm7,XMMWORD PTR [rsp+0x70]
+48 81 c4 80 00 00 00    add    rsp,0x80
+5f                      pop    rdi
+5e                      pop    rsi
+5b                      pop    rbx
+41 59                   pop    r9
+41 58                   pop    r8
+5a                      pop    rdx
+59                      pop    rcx
+5d                      pop    rbp
+0000012b &lt;normal&gt;:
+53                      push   rbx
+55                      push   rbp
+56                      push   rsi
+48 81 ec 00 04 00 00    sub    rsp,0x400
+e9 00 00 00 00          jmp    13a &lt;normal+0xf&gt;</value>
+  </data>
 </root>

@@ -556,8 +556,9 @@ namespace SilkySouls2.Memory
 
         public static class Hooks
         {
-            public static long SetAreaVariable; // Sets which of the forlorns should spawn
-            public static long CompareEventRandValue; // Checks if forlorn should spawn
+            public static long SetAreaVariable;
+            public static long CompareEventRandValueForlorn; 
+            public static long CompareEventRandValueElana; 
             public static long HpWrite;
             public static long WarpCoordWrite;
             public static long LockedTarget;
@@ -583,6 +584,7 @@ namespace SilkySouls2.Memory
             public static long LightGutter;
             public static long NoShadedFogFar;
             public static long NoShadedFogCam;
+            public static long GameManUpdate;
         }
 
         public static class Funcs
@@ -619,6 +621,8 @@ namespace SilkySouls2.Memory
             public static long Sleep;
             public static long SetDepthStencilSurface;
             public static long GetEvent;
+            public static long EzStateExternalEventCtor;
+            public static long EzStateEventExecuteCommand;
         }
     }
 }

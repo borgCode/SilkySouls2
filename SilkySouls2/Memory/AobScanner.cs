@@ -83,7 +83,9 @@ namespace SilkySouls2.Memory
 
                 TryPatternWithFallback("CompareEventRandValue",
                     Patterns64.CompareEventRandValue,
-                    addr => Offsets.Hooks.CompareEventRandValue = addr.ToInt64(), saved);
+                    addr => Offsets.Hooks.CompareEventRandValueForlorn = addr.ToInt64(), saved);
+                Offsets.Hooks.CompareEventRandValueElana = Offsets.Hooks.CompareEventRandValueForlorn - 0x12;
+                
                 TryPatternWithFallback("SetEventWrapper",
                     Patterns64.SetEventWrapper,
                     addr => Offsets.Hooks.SetEventWrapper = addr.ToInt64(), saved);
@@ -131,6 +133,8 @@ namespace SilkySouls2.Memory
                     addr => Offsets.Hooks.NoShadedFogFar = addr.ToInt64(), saved);
                 TryPatternWithFallback("NoShadedFogCam", Patterns64.NoShadedFogCam,
                     addr => Offsets.Hooks.NoShadedFogCam = addr.ToInt64(), saved);
+                TryPatternWithFallback("GameManUpdate", Patterns64.GameManUpdate,
+                    addr => Offsets.Hooks.GameManUpdate = addr.ToInt64(), saved);
 
                 Offsets.Hooks.DisableTargetAi = Offsets.Patches.DisableAi.ToInt64() + 0x2C;
 
@@ -189,6 +193,8 @@ namespace SilkySouls2.Memory
                 Offsets.Funcs.AttuneSpell = FindAddressByPattern(Patterns64.AttuneSpell).ToInt64();
                 Offsets.Funcs.UpdateSpellSlots = FindAddressByPattern(Patterns64.UpdateSpellSlots).ToInt64();
                 Offsets.Funcs.GetEvent = FindAddressByPattern(Patterns64.GetEvent).ToInt64();
+                Offsets.Funcs.EzStateExternalEventCtor = FindAddressByPattern(Patterns64.EzStateExternalEventCtor).ToInt64();
+                Offsets.Funcs.EzStateEventExecuteCommand = FindAddressByPattern(Patterns64.EzStateEventExecuteCommand).ToInt64();
 
                 FindMultipleCallsInFunction(Patterns64.DisableNaviMesh, new Dictionary<Action<long>, int>
                 {
@@ -419,7 +425,7 @@ namespace SilkySouls2.Memory
             
            
             Console.WriteLine($"Hooks.SetAreaVariable: 0x{Offsets.Hooks.SetAreaVariable:X}");
-            Console.WriteLine($"Hooks.CompareEventRandValue: 0x{Offsets.Hooks.CompareEventRandValue:X}");
+            Console.WriteLine($"Hooks.CompareEventRandValue: 0x{Offsets.Hooks.CompareEventRandValueForlorn:X}");
             Console.WriteLine($"Hooks.HpWrite: 0x{Offsets.Hooks.HpWrite:X}");
             Console.WriteLine($"Hooks.SetEventWrapper: 0x{Offsets.Hooks.SetEventWrapper:X}");
             Console.WriteLine($"Hooks.WarpCoordWrite: 0x{Offsets.Hooks.WarpCoordWrite:X}");
@@ -445,6 +451,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Hooks.LightGutter: 0x{Offsets.Hooks.LightGutter:X}");
             Console.WriteLine($"Hooks.NoShadedFogFar: 0x{Offsets.Hooks.NoShadedFogFar:X}");
             Console.WriteLine($"Hooks.NoShadedFogCam: 0x{Offsets.Hooks.NoShadedFogCam:X}");
+            Console.WriteLine($"Hooks.GameManUpdate: 0x{Offsets.Hooks.GameManUpdate:X}");
             
             Console.WriteLine($"Funcs.WarpPrep: 0x{Offsets.Funcs.WarpPrep:X}");
             Console.WriteLine($"Funcs.BonfireWarp: 0x{Offsets.Funcs.BonfireWarp:X}");
@@ -478,6 +485,8 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Funcs.Sleep: 0x{Offsets.Funcs.Sleep:X}");
             Console.WriteLine($"Funcs.SetDepthStencilSurface: 0x{Offsets.Funcs.SetDepthStencilSurface:X}");
             Console.WriteLine($"Funcs.GetEvent: 0x{Offsets.Funcs.GetEvent:X}");
+            Console.WriteLine($"Funcs.EzStateExternalEventCtor: 0x{Offsets.Funcs.EzStateExternalEventCtor:X}");
+            Console.WriteLine($"Funcs.EzStateEventExecuteCommand: 0x{Offsets.Funcs.EzStateEventExecuteCommand:X}");
 #endif
         }
 

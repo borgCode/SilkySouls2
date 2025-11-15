@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+using Microsoft.SqlServer.Server;
 using SilkySouls2.Memory;
 using SilkySouls2.Utilities;
 using static SilkySouls2.Memory.Offsets;
@@ -26,7 +28,7 @@ namespace SilkySouls2.Services
             _memoryIo.WriteInt32(selectedIndexLoc, currentSelected);
             if (isGuaranteedSpawnEnabled)
             {
-                var cmpRandHook = Hooks.CompareEventRandValue;
+                var cmpRandHook = Hooks.CompareEventRandValueForlorn;
                 var setAreaVarHook = Hooks.SetAreaVariable;
 
                 var cmpBytes = AsmLoader.GetAsmBytes("CompareEventRandValue");
@@ -68,5 +70,26 @@ namespace SilkySouls2.Services
         
         public void ToggleDisableAi(bool isAllDisableAiEnabled) =>
             _memoryIo.WriteByte(Patches.DisableAi, isAllDisableAiEnabled ? 0xEB : 0x7F);
+
+        public void ToggleElanaSummons(bool isElanaSummonsEnabled, int rngVal = 0)
+        {
+            var code = CodeCaveOffsets.Base + CodeCaveOffsets.ElanaSummons;
+            if (isElanaSummonsEnabled)
+            {
+                var hookLoc = Hooks.CompareEventRandValueElana;
+                var bytes = AsmLoader.GetAsmBytes("ElanaSummon64");
+                var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 7, code + 0x21);
+                Array.Copy(jmpBytes, 0, bytes, 0x1C + 1,  4);
+                _memoryIo.WriteBytes(code, bytes);
+                _memoryIo.WriteByte(code + 0x15, rngVal);
+                _hookManager.InstallHook(code.ToInt64(), hookLoc,
+                new byte[] {0x48, 0x8B, 0x51, 0x10, 0x48, 0x85, 0xD2});
+            }
+            else
+            {
+                _hookManager.UninstallHook(code.ToInt64());
+            }
+        }
+      
     }
 }

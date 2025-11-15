@@ -30,7 +30,10 @@
         );
 
         public static readonly Pattern KatanaMainApp = new Pattern(
-            new byte[] { 0x48, 0x8B, 0x0D, 0x00, 0x00, 0x00, 0x00, 0x48, 0x85, 0xC9, 0x74, 0x09, 0x48, 0x8B, 0x49, 0x60 },
+            new byte[]
+            {
+                0x48, 0x8B, 0x0D, 0x00, 0x00, 0x00, 0x00, 0x48, 0x85, 0xC9, 0x74, 0x09, 0x48, 0x8B, 0x49, 0x60
+            },
             "xxx????xxxxxxxxx",
             0,
             AddressingMode.Relative,
@@ -419,6 +422,28 @@
             new byte[] { 0x40, 0x55, 0x53, 0x41, 0x54, 0x41, 0x55, 0x48, 0x8D, 0x6C },
             "xxxxxxxxxx",
             0,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern EzStateExternalEventCtor = new Pattern(
+            new byte[] { 0x89, 0x51, 0x08, 0x48, 0xC7, 0x81 },
+            "xxxxxx",
+            -0x11,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern EzStateEventExecuteCommand = new Pattern(
+            new byte[] { 0x48, 0x8D, 0xAC, 0x24, 0xD0, 0xF0 },
+            "xxxxxx",
+            -0x10,
+            AddressingMode.Absolute
+        );
+
+
+        public static readonly Pattern GameManUpdate = new Pattern(
+            new byte[] { 0x33, 0xDB, 0xF6, 0x81, 0xB2 },
+            "xxxxx",
+            -0x29,
             AddressingMode.Absolute
         );
 

@@ -571,6 +571,23 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 48 8b 51 10             mov    rdx,QWORD PTR [rcx+0x10]
+        ///48 85 d2                test   rdx,rdx
+        ///74 10                   je     19 &lt;exit&gt;
+        ///81 7a 68 3a 75 00 00    cmp    DWORD PTR [rdx+0x68],0x753a
+        ///75 07                   jne    19 &lt;exit&gt;
+        ///c7 42 40 00 00 00 00    mov    DWORD PTR [rdx+0x40],0x0
+        ///000000000019 &lt;exit&gt;:
+        ///48 85 d2                test   rdx,rdx
+        ///e9 00 00 00 00          jmp    21 &lt;exit+0x8&gt;.
+        /// </summary>
+        internal static string ElanaSummon64 {
+            get {
+                return ResourceManager.GetString("ElanaSummon64", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to b9 00 00 00 00          mov    ecx,0x0
         ///8d 05 00 00 00 00       lea    eax,ds:0x0
         ///50                      push   eax
@@ -596,6 +613,26 @@ namespace SilkySouls2.Properties {
         internal static string EventWarp64 {
             get {
                 return ResourceManager.GetString("EventWarp64", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 80 3d 00 00 00 00 01    cmp    BYTE PTR [rip+0x0],0x1        # 7 &lt;_main+0x7&gt;
+        ///0f 85 1e 01 00 00       jne    12b &lt;normal&gt;
+        ///c6 05 00 00 00 00 00    mov    BYTE PTR [rip+0x0],0x0        # 14 &lt;_main+0x14&gt;
+        ///55                      push   rbp
+        ///51                      push   rcx
+        ///52                      push   rdx
+        ///41 50                   push   r8
+        ///41 51                   push   r9
+        ///53                      push   rbx
+        ///56                      push   rsi
+        ///57                      push   rdi
+        ///48 81 ec 80 00 00 00    [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string EzStateEventExecuteCommand64 {
+            get {
+                return ResourceManager.GetString("EzStateEventExecuteCommand64", resourceCulture);
             }
         }
         

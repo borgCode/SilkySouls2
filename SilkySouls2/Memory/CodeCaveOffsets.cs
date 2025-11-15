@@ -136,5 +136,11 @@ namespace SilkySouls2.Memory
         public const int NoFogCam = 0x1AB0;
         
         public const int GetEventResult = 0x1B00;
+
+        public const int ElanaSummons = 0x2400;
+
+        public const int EzStateEventParams = 0x2500;
+        public const int ShouldExecuteFlag = 0x2530;
+        public const int EzStateEventCode = 0x2540;
     }
 }

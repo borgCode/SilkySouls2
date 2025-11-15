@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using SilkySouls2.enums;
 using SilkySouls2.Memory;
 using SilkySouls2.Memory.DLLShared;
 using SilkySouls2.Services;
@@ -27,6 +28,7 @@ namespace SilkySouls2
         private readonly DispatcherTimer _gameLoadedTimer;
         private readonly HookManager _hookManager;
         private readonly NopManager _nopManager;
+        private readonly GameStateService _gameStateService;
 
         private readonly PlayerViewModel _playerViewModel;
         private readonly TravelViewModel _travelViewModel;
@@ -69,6 +71,8 @@ namespace SilkySouls2
             var travelService = new TravelService(_memoryIo, _hookManager, playerService);
             var targetService = new TargetService(_memoryIo, _hookManager);
             var enemyService = new EnemyService(_memoryIo, _hookManager);
+            _gameStateService = new GameStateService();
+            var ezStateService = new EzStateService(_memoryIo, _hookManager);
             _itemService = new ItemService(_memoryIo);
             var settingsService = new SettingsService(_memoryIo, _hookManager);
 
@@ -77,7 +81,7 @@ namespace SilkySouls2
             _eventViewModel = new EventViewModel(utilityService);
             _utilityViewModel = new UtilityViewModel(utilityService, hotkeyManager, _playerViewModel);
             _targetViewModel = new TargetViewModel(targetService, hotkeyManager, _damageControlService);
-            _enemyViewModel = new EnemyViewModel(enemyService, hotkeyManager);
+            _enemyViewModel = new EnemyViewModel(enemyService, hotkeyManager, ezStateService, _gameStateService);
             _itemViewModel = new ItemViewModel(_itemService);
             _settingsViewModel = new SettingsViewModel(settingsService, hotkeyManager);
 
@@ -207,7 +211,9 @@ namespace SilkySouls2
                     }
                     if (_loaded) return;
                     _loaded = true;
+                    _gameStateService.Publish(GameState.Loaded);
                     TryEnableFeatures();
+                    
                     _settingsViewModel.ApplyLoadedOptions();
                     if (_appliedOneTimeFeatures) return;
                     ApplyOneTimeFeatures();

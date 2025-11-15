@@ -2,9 +2,6 @@
 {
     public static class GameIds
     {
-        
-   
-
         public static class EventFlags
         {
             public const long KingsRingAcquired = 100804;
@@ -36,7 +33,7 @@
             public static readonly SetObjState SinnerLighting2 = new SetObjState { ObjId = 10161000, State = 70 };
             public static readonly SetObjState SinnerLighting3 = new SetObjState { ObjId = 10161003, State = 71 };
             public static readonly SetObjState SinnerLighting4 = new SetObjState { ObjId = 10161001, State = 70 };
-            
+
             public static readonly SetObjState GargoylesDoor = new SetObjState { ObjId = 10161051, State = 20 };
         }
 
@@ -47,8 +44,9 @@
                 public int EventId;
                 public int State;
             }
-            
-            public static readonly DisableNavimesh GargoylesDoor = new DisableNavimesh { EventId = 400000, State = 0x100 };
+
+            public static readonly DisableNavimesh GargoylesDoor = new DisableNavimesh
+                { EventId = 400000, State = 0x100 };
         }
 
         public static class WhiteDoor
@@ -58,11 +56,11 @@
                 public int ObjId;
                 public int State;
             }
-            
-            public static readonly DisableWhiteDoor GargoylesDoor = new DisableWhiteDoor { ObjId = 10160620, State = 0 };
-            
+
+            public static readonly DisableWhiteDoor GargoylesDoor = new DisableWhiteDoor
+                { ObjId = 10160620, State = 0 };
         }
-        
+
         public static class SpEffects
         {
             public struct SpEffectData
@@ -85,7 +83,7 @@
                     Param2 = 0x00,
                     Param3 = 0x00
                 };
-                
+
                 public static readonly SpEffectData BonfireRest = new SpEffectData
                 {
                     EffectId = 110000010,
@@ -96,6 +94,21 @@
                     Param2 = 0x00,
                     Param3 = 0x00
                 };
+            }
+        }
+
+        public static class EzStateEventCalls
+        {
+            public struct EzStateEventCommand
+            {
+                public int CommandId { get; }
+                public int[] Params { get; }
+        
+                public EzStateEventCommand(int commandId, params int[] parameters)
+                {
+                    CommandId = commandId;
+                    Params = parameters;
+                }
             }
         }
     }

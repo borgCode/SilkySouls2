@@ -65,15 +65,10 @@
                                            FormatString="F2"
                                            BorderBrush="#3F3F46" />
                         <TextBlock Text="Game Speed" VerticalAlignment="Center" Margin="10,0,30,0" />
-                        <CheckBox Content="Show Mad Warrior Spawn"
-                                  IsChecked="{Binding IsMadWarriorSpawnEnabled}"
-                                  VerticalAlignment="Center"
-                                  Margin="0,0,10,0" />
-                        <TextBlock Text="{Binding MadWarriorStatusText}"
-                                   Foreground="{Binding MadWarriorStatusColor}"
-                                   VerticalAlignment="Center"
-                                   FontWeight="Bold"
-                                   Visibility="{Binding IsMadWarriorSpawnEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        <CheckBox
+                            Content="Remember Toggled Game Speed"
+                            IsChecked="{Binding IsRememberGameSpeedEnabled}">
+                        </CheckBox>
                     </StackPanel>
                 </StackPanel>
             </StackPanel>

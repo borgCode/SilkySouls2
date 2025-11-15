@@ -120,6 +120,7 @@
         <Compile Include="Models\Forlorn.cs" />
         <Compile Include="Services\DamageControlService.cs" />
         <Compile Include="Services\EnemyService.cs" />
+        <Compile Include="Services\EventService.cs" />
         <Compile Include="Services\EzStateService.cs" />
         <Compile Include="Services\GameStateService.cs" />
         <Compile Include="Services\TargetService.cs" />

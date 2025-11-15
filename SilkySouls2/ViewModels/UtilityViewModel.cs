@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using SilkySouls2.enums;
 using SilkySouls2.Memory;
 using SilkySouls2.Memory.DLLShared;
 using SilkySouls2.Models;
@@ -18,9 +19,7 @@ namespace SilkySouls2.ViewModels
     {
         private bool _isCreditSkipEnabled;
         private bool _is100DropEnabled;
-        private bool _isMadWarriorSpawnEnabled;
-        private string _madWarriorStatusText;
-        private Brush _madWarriorStatusColor;
+        
         
         private bool _isDrawHitboxEnabled;
         private bool _isDrawEventEnabled;
@@ -71,7 +70,7 @@ namespace SilkySouls2.ViewModels
 
 
         public UtilityViewModel(UtilityService utilityService, HotkeyManager hotkeyManager,
-            PlayerViewModel playerViewModel)
+            PlayerViewModel playerViewModel, GameStateService gameStateService)
         {
             _playerViewModel = playerViewModel;
             _utilityService = utilityService;
@@ -81,9 +80,17 @@ namespace SilkySouls2.ViewModels
             
             AvailableSpells = new ObservableCollection<InventorySpell>();
             EquippedSpells = new ObservableCollection<EquippedSpell>();
+            
+            gameStateService.Subscribe(GameState.FirstLoaded, OnGameFirstLoaded);
+            gameStateService.Subscribe(GameState.Loaded, OnGameLoaded);
+            gameStateService.Subscribe(GameState.NotLoaded, OnGameNotLoaded);
+            gameStateService.Subscribe(GameState.Detached, OnGameDetached);
+            gameStateService.Subscribe(GameState.Launched, OnGameLaunched);
 
             RegisterHotkeys();
         }
+
+
 
         private void RegisterHotkeys()
         {
@@ -117,36 +124,6 @@ namespace SilkySouls2.ViewModels
         }
         
         
-        public bool IsMadWarriorSpawnEnabled
-        {
-            get => _isMadWarriorSpawnEnabled;
-            set
-            {
-                if (!SetProperty(ref _isMadWarriorSpawnEnabled, value)) return;
-                if (_isMadWarriorSpawnEnabled)
-                {
-                    UpdateMadWarriorStatus();
-                }
-                else
-                {
-                    MadWarriorStatusText = "";
-                }
-                
-            }
-        }
-
-        public string MadWarriorStatusText
-        {
-            get => _madWarriorStatusText;
-            set => SetProperty(ref _madWarriorStatusText, value);
-        }
-
-        public Brush MadWarriorStatusColor
-        {
-            get => _madWarriorStatusColor;
-            set => SetProperty(ref _madWarriorStatusColor, value);
-        }
-
         public bool IsDrawHitboxEnabled
         {
             get => _isDrawHitboxEnabled;
@@ -433,6 +410,10 @@ namespace SilkySouls2.ViewModels
                 if (SetProperty(ref _gameSpeed, value))
                 {
                     _utilityService.SetGameSpeed(value);
+                    if (IsRememberGameSpeedEnabled && Math.Abs(value - DefaultSpeed) > Epsilon)
+                    {
+                        SettingsManager.Default.GameSpeed = value;
+                    }
                 }
             }
         }
@@ -459,47 +440,9 @@ namespace SilkySouls2.ViewModels
         {
             return Math.Abs(a - b) < Epsilon;
         }
-
-        public void TryEnableFeatures()
-        {
-            if (IsCreditSkipEnabled) _utilityService.ToggleCreditSkip(true);
-            if (_attunementWindow != null && _attunementWindow.IsVisible) RefreshSpells();
-            AreButtonsEnabled = true;
-        }
-
-        public void DisableFeatures()
-        {
-            IsNoClipEnabled = false;
-            AreButtonsEnabled = false;
-        }
-
+        
         public void ForceSave() => _utilityService.ForceSave();
-
-
-        public void TryApplyOneTimeFeatures()
-        {
-            if (Is100DropEnabled) _utilityService.Toggle100Drop(true);
-            if (IsCreditSkipEnabled) _utilityService.ToggleCreditSkip(true);
-            if (IsDrawHitboxEnabled) _utilityService.ToggleDrawHitbox(true);
-
-            if (IsDrawEventGeneralEnabled) _utilityService.ToggleDrawEvent(DrawType.EventGeneral, true);
-            if (IsDrawEventSpawnEnabled) _utilityService.ToggleDrawEvent(DrawType.EventSpawn, true);
-            if (IsDrawEventInvasionEnabled) _utilityService.ToggleDrawEvent(DrawType.EventInvasion, true);
-            if (IsDrawEventLeashEnabled) _utilityService.ToggleDrawEvent(DrawType.EventLeash, true);
-            if (IsDrawEventOtherEnabled) _utilityService.ToggleDrawEvent(DrawType.EventOther, true);
-            
-            if (IsDrawSoundEnabled) _utilityService.ToggleDrawSound(true);
-            if (IsTargetingViewEnabled) _utilityService.ToggleTargetingView(true);
-            if (IsHideMapEnabled) _utilityService.ToggleHideMap(true);
-            if (IsHideCharactersEnabled) _utilityService.ToggleHideChr(true);
-            if (IsLightGutterEnabled) _utilityService.ToggleLightGutter(true);
-            if (IsDrawCollisionEnabled) _utilityService.ToggleDrawCol(true);
-            if (IsNoFogEnabled) _utilityService.ToggleShadedFog(true);
-            if (IsColWireframeEnabled) _utilityService.ToggleColWireframe(true);
-            if (IsDrawKillboxEnabled) _utilityService.ToggleDrawKillbox(true);
-            if (IsDrawRagdollsEnabled) _utilityService.ToggleRagdoll(true);
-            if (IsSeeThroughWallsEnabled) _utilityService.ToggleRagdollEsp(true);
-        }
+        
 
         private ObservableCollection<InventorySpell> _availableSpells;
 
@@ -644,37 +587,89 @@ namespace SilkySouls2.ViewModels
             RefreshSpells();
         }
 
-        public void Reset()
+        private bool _isRememberGameSpeedEnabled;
+        public bool IsRememberGameSpeedEnabled
+        {
+            get => _isRememberGameSpeedEnabled;
+            set
+            {
+                if (!SetProperty(ref _isRememberGameSpeedEnabled, value)) return;
+                if (_isRememberGameSpeedEnabled)
+                {
+                    SettingsManager.Default.RememberGameSpeed = _isRememberGameSpeedEnabled;
+
+                    if (Math.Abs(GameSpeed - DefaultSpeed) > Epsilon)
+                    {
+                        SettingsManager.Default.GameSpeed = GameSpeed;
+                    }
+                }
+                else
+                {
+                    SettingsManager.Default.GameSpeed = DefaultSpeed;
+                    SettingsManager.Default.RememberGameSpeed = _isRememberGameSpeedEnabled;
+                }
+            }
+        }
+        
+        private void OnGameLoaded()
+        {
+            if (IsCreditSkipEnabled) _utilityService.ToggleCreditSkip(true);
+            if (_attunementWindow != null && _attunementWindow.IsVisible) RefreshSpells();
+            AreButtonsEnabled = true;
+        }
+
+        private void OnGameNotLoaded()
+        {
+            IsNoClipEnabled = false;
+            AreButtonsEnabled = false;
+        }
+
+        
+        private void OnGameFirstLoaded()
+        {
+            if (Is100DropEnabled) _utilityService.Toggle100Drop(true);
+            if (IsCreditSkipEnabled) _utilityService.ToggleCreditSkip(true);
+            if (IsDrawHitboxEnabled) _utilityService.ToggleDrawHitbox(true);
+
+            if (IsDrawEventGeneralEnabled) _utilityService.ToggleDrawEvent(DrawType.EventGeneral, true);
+            if (IsDrawEventSpawnEnabled) _utilityService.ToggleDrawEvent(DrawType.EventSpawn, true);
+            if (IsDrawEventInvasionEnabled) _utilityService.ToggleDrawEvent(DrawType.EventInvasion, true);
+            if (IsDrawEventLeashEnabled) _utilityService.ToggleDrawEvent(DrawType.EventLeash, true);
+            if (IsDrawEventOtherEnabled) _utilityService.ToggleDrawEvent(DrawType.EventOther, true);
+            
+            if (IsDrawSoundEnabled) _utilityService.ToggleDrawSound(true);
+            if (IsTargetingViewEnabled) _utilityService.ToggleTargetingView(true);
+            if (IsHideMapEnabled) _utilityService.ToggleHideMap(true);
+            if (IsHideCharactersEnabled) _utilityService.ToggleHideChr(true);
+            if (IsLightGutterEnabled) _utilityService.ToggleLightGutter(true);
+            if (IsDrawCollisionEnabled) _utilityService.ToggleDrawCol(true);
+            if (IsNoFogEnabled) _utilityService.ToggleShadedFog(true);
+            if (IsColWireframeEnabled) _utilityService.ToggleColWireframe(true);
+            if (IsDrawKillboxEnabled) _utilityService.ToggleDrawKillbox(true);
+            if (IsDrawRagdollsEnabled) _utilityService.ToggleRagdoll(true);
+            if (IsSeeThroughWallsEnabled) _utilityService.ToggleRagdollEsp(true);
+        }
+        
+        private void OnGameDetached()
         {
             _gameSpeed = 1.0f;
             OnPropertyChanged(nameof(GameSpeed));
             _utilityService.Reset();
             _isAttached = false;
         }
-
-        public void ApplyLaunchFeatures()
+        
+        
+        private void OnGameLaunched()
         {
             _isAttached = true;
+            
         }
 
-        public void ApplyDelayedFeatures()
+        public void ApplyStartUpOptions()
         {
-            if (IsMadWarriorSpawnEnabled) UpdateMadWarriorStatus();
-        }
-
-        private void UpdateMadWarriorStatus()
-        {
-            if (!AreButtonsEnabled) return;
-            if (_utilityService.GetEvent(GameIds.EventFlags.MadWarriorSpawn))
-            {
-                MadWarriorStatusText = "Spawned";
-                MadWarriorStatusColor = Brushes.Chartreuse;
-            }
-            else
-            {
-                MadWarriorStatusText = "Not Spawned";
-                MadWarriorStatusColor = Brushes.Red;
-            }
+            _isRememberGameSpeedEnabled = SettingsManager.Default.RememberGameSpeed;
+            OnPropertyChanged(nameof(IsRememberGameSpeedEnabled));
+            if (_isRememberGameSpeedEnabled) _desiredSpeed = SettingsManager.Default.GameSpeed;
         }
     }
 }

@@ -71,6 +71,7 @@ namespace SilkySouls2
             var travelService = new TravelService(_memoryIo, _hookManager, playerService);
             var targetService = new TargetService(_memoryIo, _hookManager);
             var enemyService = new EnemyService(_memoryIo, _hookManager);
+            var eventService = new EventService(_memoryIo);
             _gameStateService = new GameStateService();
             var ezStateService = new EzStateService(_memoryIo, _hookManager);
             _itemService = new ItemService(_memoryIo);
@@ -78,12 +79,12 @@ namespace SilkySouls2
 
             _playerViewModel = new PlayerViewModel(playerService, hotkeyManager, _damageControlService, _gameStateService);
             _travelViewModel = new TravelViewModel(travelService, hotkeyManager);
-            _eventViewModel = new EventViewModel(utilityService);
-            _utilityViewModel = new UtilityViewModel(utilityService, hotkeyManager, _playerViewModel);
+            _eventViewModel = new EventViewModel(utilityService, eventService);
+            _utilityViewModel = new UtilityViewModel(utilityService, hotkeyManager, _playerViewModel, _gameStateService);
             _targetViewModel = new TargetViewModel(targetService, hotkeyManager, _damageControlService);
-            _enemyViewModel = new EnemyViewModel(enemyService, hotkeyManager, ezStateService, _gameStateService);
+            _enemyViewModel = new EnemyViewModel(enemyService, hotkeyManager, ezStateService, _gameStateService, eventService);
             _itemViewModel = new ItemViewModel(_itemService);
-            _settingsViewModel = new SettingsViewModel(settingsService, hotkeyManager);
+            _settingsViewModel = new SettingsViewModel(settingsService, hotkeyManager, _gameStateService);
 
             var playerTab = new PlayerTab(_playerViewModel);
             var travelTab = new TravelTab(_travelViewModel);
@@ -105,6 +106,7 @@ namespace SilkySouls2
             MainTabControl.Items.Add(new TabItem { Header = "Settings", Content = settingsTab });
 
             _settingsViewModel.ApplyStartUpOptions();
+            _utilityViewModel.ApplyStartUpOptions();
             Closing += MainWindow_Closing;
 
             _gameLoadedTimer = new DispatcherTimer
@@ -178,6 +180,7 @@ namespace SilkySouls2
 
                 if (!_hasAppliedLaunchFeatures)
                 {
+                    _gameStateService.Publish(GameState.Launched);
                     ApplyLaunchFeatures();
                 }
 
@@ -205,8 +208,8 @@ namespace SilkySouls2
                     {
                         if (!_memoryIo.IsLoadingScreen())
                         {
-                            ApplyDelayedFeatures();
                             _hasAppliedDelayedFeatures = true;
+                            _gameStateService.Publish(GameState.DelayedGameLoad);
                         }
                     }
                     if (_loaded) return;
@@ -214,7 +217,6 @@ namespace SilkySouls2
                     _gameStateService.Publish(GameState.Loaded);
                     TryEnableFeatures();
                     
-                    _settingsViewModel.ApplyLoadedOptions();
                     if (_appliedOneTimeFeatures) return;
                     _gameStateService.Publish(GameState.FirstLoaded);
                     ApplyOneTimeFeatures();
@@ -231,8 +233,10 @@ namespace SilkySouls2
             else
             {
                 _hookManager.ClearHooks();
+                _gameStateService.Publish(GameState.NotLoaded);
                 DisableFeatures();
                 _nopManager.ClearRegistry();
+                _gameStateService.Publish(GameState.Detached);
                 ResetState();
                 _hasScanned = false;
                 _loaded = false;
@@ -244,36 +248,27 @@ namespace SilkySouls2
             }
         }
 
-        private void ApplyDelayedFeatures()
-        {
-            _utilityViewModel.ApplyDelayedFeatures();
-        }
-
         private void ResetState()
         {
             _dllManager.ResetState();
             _settingsViewModel.ResetAttached();
             _itemService.Reset();
-            _utilityViewModel.Reset();
         }
 
         private void ApplyLaunchFeatures()
         {
-            _playerViewModel.ApplyLaunchFeatures();
             _itemViewModel.ApplyLaunchFeatures();
-            _utilityViewModel.ApplyLaunchFeatures();
         }
 
         private void ApplyOneTimeFeatures()
         {
-            _utilityViewModel.TryApplyOneTimeFeatures();
             _enemyViewModel.TryApplyOneTimeFeatures();
             _eventViewModel.TryApplyOneTimeFeatures();
         }
 
         private void TryEnableFeatures()
         {
-            _utilityViewModel.TryEnableFeatures();
+      
             _targetViewModel.TryEnableFeatures();
             _itemViewModel.TryEnableFeatures();
             _travelViewModel.TryEnableFeatures();
@@ -282,7 +277,6 @@ namespace SilkySouls2
 
         private void DisableFeatures()
         {
-            _utilityViewModel.DisableFeatures();
             _targetViewModel.DisableFeatures();
             _itemViewModel.DisableFeatures();
             _travelViewModel.DisableFeatures();

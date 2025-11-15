@@ -7,6 +7,8 @@
         Loaded,
         NotLoaded,
         FirstLoaded,
+        DelayedGameLoad,
+        Launched,
         GameStart
     }
 }

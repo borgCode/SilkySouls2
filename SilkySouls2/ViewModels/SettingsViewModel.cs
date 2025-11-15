@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using H.Hooks;
+using SilkySouls2.enums;
 using SilkySouls2.Services;
 using SilkySouls2.Utilities;
 
@@ -394,11 +395,14 @@ namespace SilkySouls2.ViewModels
         private readonly SettingsService _settingsService;
         private readonly HotkeyManager _hotkeyManager;
 
-        public SettingsViewModel(SettingsService settingsService, HotkeyManager hotkeyManager)
+        public SettingsViewModel(SettingsService settingsService, HotkeyManager hotkeyManager,
+            GameStateService gameStateService)
         {
             _settingsService = settingsService;
             _hotkeyManager = hotkeyManager;
 
+            gameStateService.Subscribe(GameState.Loaded, OnGameLoaded);
+            
             RegisterHotkeys();
             
             _propertySetters = new Dictionary<string, Action<string>>
@@ -446,6 +450,8 @@ namespace SilkySouls2.ViewModels
             
             LoadHotkeyDisplays();
         }
+
+      
 
         private void RegisterHotkeys()
         {
@@ -609,7 +615,7 @@ namespace SilkySouls2.ViewModels
         #endregion
         
         
-        public void ApplyLoadedOptions()
+        private void OnGameLoaded()
         {
             _isLoaded = true;
             if (IsFastQuitoutEnabled) _settingsService.ToggleFastQuitout(true);

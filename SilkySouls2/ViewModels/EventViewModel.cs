@@ -10,7 +10,8 @@ namespace SilkySouls2.ViewModels
     public class EventViewModel : BaseViewModel
     {
         private readonly UtilityService _utilityService;
-        
+        private readonly EventService _eventService;
+
         private NpcInfo _selectedNpc;
         private ObservableCollection<NpcInfo> _npcList;
         private bool _canMoveToMajula;
@@ -23,9 +24,10 @@ namespace SilkySouls2.ViewModels
 
         private bool _areButtonsEnabled;
         
-        public EventViewModel(UtilityService utilityService)
+        public EventViewModel(UtilityService utilityService, EventService eventService)
         {
             _utilityService = utilityService;
+            _eventService = eventService;
             LoadNpcs();
         }
 
@@ -67,25 +69,25 @@ namespace SilkySouls2.ViewModels
         public void SetNpcAlive()
         {
             if (SelectedNpc == null) return;
-            _utilityService.SetEventOff(SelectedNpc.DeathFlagId);
+            _eventService.SetEventOff(SelectedNpc.DeathFlagId);
         }
 
         public void SetNpcDead()
         {
             if (SelectedNpc == null) return;
-            _utilityService.SetEventOn(SelectedNpc.DeathFlagId);
+            _eventService.SetEventOn(SelectedNpc.DeathFlagId);
         }
 
         public void SetNpcFriendly()
         {
             if (SelectedNpc == null) return;
-            _utilityService.SetEventOff(SelectedNpc.HostileFlagId);
+            _eventService.SetEventOff(SelectedNpc.HostileFlagId);
         }
 
         public void SetNpcHostile()
         {
             if (SelectedNpc == null) return;
-            _utilityService.SetEventOn(SelectedNpc.HostileFlagId);
+            _eventService.SetEventOn(SelectedNpc.HostileFlagId);
         }
 
         public void MoveNpcToMajula()
@@ -93,18 +95,18 @@ namespace SilkySouls2.ViewModels
             if (SelectedNpc == null || !SelectedNpc.HasMajulaFlags) return;
             foreach (int flagId in SelectedNpc.MoveToMajulaFlagIds)
             {
-                _utilityService.SetEventOn(flagId);
+                _eventService.SetEventOn(flagId);
             }
         }
         
-        public void UnlockDarklurker() => _utilityService.SetMultipleEventOn(GameIds.EventFlags.DarklurkerDungeonsLit);
-        public void UnlockNash() => _utilityService.SetEventOn(GameIds.EventFlags.GiantLordDefeated);
-        public void UnlockAldia() => _utilityService.SetMultipleEventOn(GameIds.EventFlags.UnlockAldia);
-        public void VisibleAava() => _utilityService.SetEventOn(GameIds.EventFlags.VisibleAava);
-        public void BreakIce() => _utilityService.SetMultipleEventOn(GameIds.EventFlags.Dlc3Ice);
-        public void RescueKnights() => _utilityService.SetMultipleEventOn(GameIds.EventFlags.Dlc3Knights);
-        public void KingsRingAcquired() => _utilityService.SetEventOn(GameIds.EventFlags.KingsRingAcquired);
-        public void ActivateBrume() => _utilityService.SetMultipleEventOn(GameIds.EventFlags.Scepter);
+        public void UnlockDarklurker() => _eventService.SetMultipleEventOn(GameIds.EventFlags.DarklurkerDungeonsLit);
+        public void UnlockNash() => _eventService.SetEventOn(GameIds.EventFlags.GiantLordDefeated);
+        public void UnlockAldia() => _eventService.SetMultipleEventOn(GameIds.EventFlags.UnlockAldia);
+        public void VisibleAava() => _eventService.SetEventOn(GameIds.EventFlags.VisibleAava);
+        public void BreakIce() => _eventService.SetMultipleEventOn(GameIds.EventFlags.Dlc3Ice);
+        public void RescueKnights() => _eventService.SetMultipleEventOn(GameIds.EventFlags.Dlc3Knights);
+        public void KingsRingAcquired() => _eventService.SetEventOn(GameIds.EventFlags.KingsRingAcquired);
+        public void ActivateBrume() => _eventService.SetMultipleEventOn(GameIds.EventFlags.Scepter);
 
 
         public string SetFlagId
@@ -129,8 +131,8 @@ namespace SilkySouls2.ViewModels
             if (!long.TryParse(trimmedFlagId, out long flagIdValue) || flagIdValue <= 0)
                 return;
             
-            if (FlagStateIndex == 0) _utilityService.SetEventOn(flagIdValue);
-            else _utilityService.SetEventOff(flagIdValue);
+            if (FlagStateIndex == 0) _eventService.SetEventOn(flagIdValue);
+            else _eventService.SetEventOff(flagIdValue);
         }
         
         public string GetFlagId
@@ -161,7 +163,7 @@ namespace SilkySouls2.ViewModels
             if (!long.TryParse(trimmedFlagId, out long flagIdValue) || flagIdValue <= 0)
                 return;
 
-            if (_utilityService.GetEvent(flagIdValue))
+            if (_eventService.GetEvent(flagIdValue))
             {
                 EventStatusText = "True";
                 EventStatusColor = Brushes.Chartreuse;
@@ -198,7 +200,7 @@ namespace SilkySouls2.ViewModels
                 if (SetProperty(ref _isSnowstormDisabled, value))
                 {
                     _utilityService.ToggleSnowstormHook(_isSnowstormDisabled);
-                    if (AreButtonsEnabled) _utilityService.SetEventOff(GameIds.EventFlags.FrigidSnowstorm);
+                    if (AreButtonsEnabled) _eventService.SetEventOff(GameIds.EventFlags.FrigidSnowstorm);
                 }
             }
         }
@@ -233,7 +235,7 @@ namespace SilkySouls2.ViewModels
             if (IsSnowstormDisabled)
             {
                 _utilityService.ToggleSnowstormHook(true);
-                _utilityService.SetEventOff(GameIds.EventFlags.FrigidSnowstorm);
+                _eventService.SetEventOff(GameIds.EventFlags.FrigidSnowstorm);
             }
             if (IsMemoryTimerDisabled) _utilityService.ToggleMemoryTimer(true);
             if (IsIvorySkipEnabled) _utilityService.ToggleIvorySkip(true);
@@ -250,12 +252,7 @@ namespace SilkySouls2.ViewModels
                 _utilityService.ToggleIvorySkip(_isIvorySkipEnabled);
             }
         }
-
-        public void Test()
-        {
-           
-        }
-
+        
         public void OpenGargsDoor()
         {
             _utilityService.SetObjState(GameIds.Area.Bastille, GameIds.Obj.GargoylesDoor);

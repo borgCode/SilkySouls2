@@ -28,6 +28,8 @@ namespace SilkySouls2.Utilities
         public double HealthWindowTop { get; set; }
         public bool EnableUpdateChecks { get; set; } = true;
         public bool DoubleClick { get; set; } = true;
+        public bool RememberGameSpeed { get; set; } = true;
+        public float GameSpeed { get; set; }
 
         private static string SettingsPath => Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -62,6 +64,8 @@ namespace SilkySouls2.Utilities
                     $"HealthWindowTop={HealthWindowTop}",
                     $"EnableUpdateChecks={EnableUpdateChecks}",
                     $"DoubleClick={DoubleClick}",
+                    $"RememberGameSpeed={RememberGameSpeed}",
+                    $"GameSpeed={GameSpeed}",
                 };
 
                 File.WriteAllLines(SettingsPath, lines);
@@ -166,6 +170,14 @@ namespace SilkySouls2.Utilities
                                 case "DoubleClick":
                                     bool.TryParse(value, out bool dc);
                                     settings.DoubleClick = dc;
+                                    break;
+                                case "RememberGameSpeed":
+                                    bool.TryParse(value, out bool rgs);
+                                    settings.RememberGameSpeed = rgs;
+                                    break;
+                                case "GameSpeed":
+                                    float.TryParse(value, out float gs);
+                                    settings.GameSpeed = gs;
                                     break;
                             }
                         }

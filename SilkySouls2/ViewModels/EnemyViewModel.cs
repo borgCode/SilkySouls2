@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 using SilkySouls2.enums;
 using SilkySouls2.Memory;
 using SilkySouls2.Models;
@@ -17,17 +18,20 @@ namespace SilkySouls2.ViewModels
         private readonly EnemyService _enemyService;
         private readonly HotkeyManager _hotkeyManager;
         private readonly EzStateService _ezStateService;
+        private readonly EventService _eventService;
 
         public EnemyViewModel(EnemyService enemyService, HotkeyManager hotkeyManager, EzStateService ezStateService,
-            GameStateService gameStateService)
+            GameStateService gameStateService, EventService eventService)
         {
             _enemyService = enemyService;
             _hotkeyManager = hotkeyManager;
             _ezStateService = ezStateService;
+            _eventService = eventService;
 
 
             gameStateService.Subscribe(GameState.Loaded, OnGameStateLoaded);
             gameStateService.Subscribe(GameState.NotLoaded, OnGameStateNotLoaded);
+            gameStateService.Subscribe(GameState.DelayedGameLoad, OnDelayedGameLoad);
 
             RegisterHotkeys();
 
@@ -132,6 +136,51 @@ namespace SilkySouls2.ViewModels
                         _enemyService.ToggleElanaSummons(_isVelstadtSummonEnabled);
                     }
                 }
+            }
+        }
+        private bool _isMadWarriorSpawnEnabled;
+        public bool IsMadWarriorSpawnEnabled
+        {
+            get => _isMadWarriorSpawnEnabled;
+            set
+            {
+                if (!SetProperty(ref _isMadWarriorSpawnEnabled, value)) return;
+                if (_isMadWarriorSpawnEnabled)
+                {
+                    UpdateMadWarriorStatus();
+                }
+                else
+                {
+                    MadWarriorStatusText = "";
+                }
+                
+            }
+        }
+        private string _madWarriorStatusText;
+        public string MadWarriorStatusText
+        {
+            get => _madWarriorStatusText;
+            set => SetProperty(ref _madWarriorStatusText, value);
+        }
+        private Brush _madWarriorStatusColor;
+        public Brush MadWarriorStatusColor
+        {
+            get => _madWarriorStatusColor;
+            set => SetProperty(ref _madWarriorStatusColor, value);
+        }
+        
+        private void UpdateMadWarriorStatus()
+        {
+            if (!AreOptionsEnabled) return;
+            if (_eventService.GetEvent(GameIds.EventFlags.MadWarriorSpawn))
+            {
+                MadWarriorStatusText = "Spawned";
+                MadWarriorStatusColor = Brushes.Chartreuse;
+            }
+            else
+            {
+                MadWarriorStatusText = "Not Spawned";
+                MadWarriorStatusColor = Brushes.Red;
             }
         }
 
@@ -265,6 +314,11 @@ namespace SilkySouls2.ViewModels
         private void OnGameStateNotLoaded()
         {
             AreOptionsEnabled = false;
+        }
+        
+        private void OnDelayedGameLoad()
+        {
+            if (IsMadWarriorSpawnEnabled) UpdateMadWarriorStatus();
         }
     }
 }

@@ -322,15 +322,18 @@ namespace SilkySouls2.Memory
                     if (saved.TryGetValue("SetCurrectAct", out var value))
                     {
                         Offsets.Hooks.SetCurrectAct = value;
-                        Offsets.Hooks.SetCurrectAct2 = saved["SetCurrectAct2"];
                     }
                 }
                 else
                 {
-                    Offsets.Hooks.SetCurrectAct = setCurrectActLocs[0].ToInt32();
-                    Offsets.Hooks.SetCurrectAct2 = setCurrectActLocs[1].ToInt32();
-                    saved["SetCurrectAct"] = setCurrectActLocs[0].ToInt32();
-                    saved["SetCurrectAct2"] = setCurrectActLocs[1].ToInt32();
+                    byte[] bytes0 = _memoryIo.ReadBytes(setCurrectActLocs[0] - 10, 3);
+    
+                    bool isReturnInstruction = bytes0[0] == 0xC2 && bytes0[1] == 0x04 && bytes0[2] == 0x00;
+    
+                    IntPtr validAddress = !isReturnInstruction ? setCurrectActLocs[0] : setCurrectActLocs[1];
+    
+                    Offsets.Hooks.SetCurrectAct = validAddress.ToInt32();
+                    saved["SetCurrectAct"] = validAddress.ToInt32();
                 }
                 
                 
@@ -438,7 +441,6 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Hooks.NoClipUpdateCoords: 0x{Offsets.Hooks.NoClipUpdateCoords:X}");
             Console.WriteLine($"Hooks.KillboxFlagSet: 0x{Offsets.Hooks.KillboxFlagSet:X}");
             Console.WriteLine($"Hooks.SetCurrectAct: 0x{Offsets.Hooks.SetCurrectAct:X}");
-            Console.WriteLine($"Hooks.SetCurrectAct2: 0x{Offsets.Hooks.SetCurrectAct2:X}");
             Console.WriteLine($"Hooks.FasterMenu: 0x{Offsets.Hooks.FasterMenu:X}");
             Console.WriteLine($"Hooks.ProcessPhysics: 0x{Offsets.Hooks.ProcessPhysics:X}");
             Console.WriteLine($"Hooks.DisableTargetAi: 0x{Offsets.Hooks.DisableTargetAi:X}");

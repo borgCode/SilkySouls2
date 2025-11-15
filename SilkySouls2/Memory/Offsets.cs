@@ -572,7 +572,6 @@ namespace SilkySouls2.Memory
             public static long NoClipUpdateCoords;
             public static long KillboxFlagSet;
             public static long SetCurrectAct;
-            public static long SetCurrectAct2;
             public static long FasterMenu;
             public static long InfinitePoise;
             public static long SetEventWrapper;

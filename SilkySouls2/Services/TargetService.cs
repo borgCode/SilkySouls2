@@ -156,19 +156,19 @@ namespace SilkySouls2.Services
         public void ToggleCurrentActHook(bool isEnabled)
         {
             var code = CodeCaveOffsets.Base + (int)CodeCaveOffsets.RepeatAct.Code;
-            var code2 = CodeCaveOffsets.Base + (int)CodeCaveOffsets.RepeatAct.Code2;
 
             if (isEnabled)
             {
                 var repeatFlagLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.RepeatAct.RepeatFlag;
                 var attackId = CodeCaveOffsets.Base + (int)CodeCaveOffsets.RepeatAct.AttackId;
                 var lockedTargetPtr = CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr;
+          
                 var currectActOrigin = Hooks.SetCurrectAct;
-                var currectActOrigin2 = Hooks.SetCurrectAct2;
 
                 if (GameVersion.Current.Edition == GameEdition.Scholar)
                 {
                     var codeBytes = AsmLoader.GetAsmBytes("RepeatAct64");
+                    
                     AsmHelper.WriteRelativeOffsets(codeBytes, new[]
                     {
                         (code.ToInt64() + 0x8, lockedTargetPtr.ToInt64(), 7, 0x8 + 3),
@@ -178,19 +178,8 @@ namespace SilkySouls2.Services
                     });
 
                     _memoryIo.WriteBytes(code, codeBytes);
-                    AsmHelper.WriteRelativeOffsets(codeBytes, new[]
-                    {
-                        (code2.ToInt64() + 0x8, lockedTargetPtr.ToInt64(), 7, 0x8 + 3),
-                        (code2.ToInt64() + 0x28, repeatFlagLoc.ToInt64(), 7, 0x28 + 2),
-                        (code2.ToInt64() + 0x31, attackId.ToInt64(), 6, 0x31 + 2),
-                        (code2.ToInt64() + 0x3F, attackId.ToInt64(), 6, 0x3F + 2),
-                    });
-
-                    _memoryIo.WriteBytes(code2, codeBytes);
-
+                    
                     _hookManager.InstallHook(code.ToInt64(), currectActOrigin, new byte[]
-                        { 0x83, 0x89, 0x50, 0x03, 0x00, 0x00, 0x01 });
-                    _hookManager.InstallHook(code2.ToInt64(), currectActOrigin2, new byte[]
                         { 0x83, 0x89, 0x50, 0x03, 0x00, 0x00, 0x01 });
                 }
 
@@ -210,31 +199,15 @@ namespace SilkySouls2.Services
                         (currectActOrigin, 6, code + 0x41, 0x41 + 1),
                     });
                     _memoryIo.WriteBytes(code, codeBytes);
-
-                    AsmHelper.WriteAbsoluteAddresses32(codeBytes, new[]
-                    {
-                        (lockedTargetPtr.ToInt64(), 0x1 + 2),
-                        (repeatFlagLoc.ToInt64(), 0x1B + 2),
-                        (attackId.ToInt64(), 0x24 + 1),
-                        (attackId.ToInt64(), 0x35 + 1),
-                    });
-                    AsmHelper.WriteJumpOffsets(codeBytes, new[]
-                    {
-                        (currectActOrigin2, 6, code2 + 0x30, 0x30 + 1),
-                        (currectActOrigin2, 6, code2 + 0x41, 0x41 + 1),
-                    });
-                    _memoryIo.WriteBytes(code2, codeBytes);
-
+                    
                     _hookManager.InstallHook(code.ToInt64(), currectActOrigin, new byte[]
-                        { 0x89, 0x81, 0x5C, 0x02, 0x00, 0x00 });
-                    _hookManager.InstallHook(code2.ToInt64(), currectActOrigin2, new byte[]
                         { 0x89, 0x81, 0x5C, 0x02, 0x00, 0x00 });
                 }
             }
             else
             {
                 _hookManager.UninstallHook(code.ToInt64());
-                _hookManager.UninstallHook(code2.ToInt64());
+      
             }
         }
 

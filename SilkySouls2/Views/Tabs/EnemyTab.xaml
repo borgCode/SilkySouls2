@@ -51,7 +51,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <!-- Elana Section -->
+         
                 <StackPanel Grid.Column="0" Margin="0,0,10,0">
                     <TextBlock Text="Elana"
                                FontSize="18"

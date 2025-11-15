@@ -144,17 +144,17 @@ namespace SilkySouls2.Memory
                     if (saved.TryGetValue("SetCurrectAct", out var value))
                     {
                         Offsets.Hooks.SetCurrectAct = value;
-                        Offsets.Hooks.SetCurrectAct2 = saved["SetCurrectAct2"];
                     }
                 }
                 else
                 {
-                    Offsets.Hooks.SetCurrectAct = setCurrectActLocs[0].ToInt64();
-                    Offsets.Hooks.SetCurrectAct2 = setCurrectActLocs[1].ToInt64();
-                    saved["SetCurrectAct"] = setCurrectActLocs[0].ToInt64();
-                    saved["SetCurrectAct2"] = setCurrectActLocs[1].ToInt64();
+                    byte byte0 = _memoryIo.ReadBytes(setCurrectActLocs[0] - 1, 1)[0];
+    
+                    IntPtr validAddress = (byte0 != 0xC3) ? setCurrectActLocs[0] : setCurrectActLocs[1];
+    
+                    Offsets.Hooks.SetCurrectAct = validAddress.ToInt64();
+                    saved["SetCurrectAct"] = validAddress.ToInt64();
                 }
-
                 using (var writer = new StreamWriter(savePath))
                 {
                     foreach (var pair in saved)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Threading;
 using SilkySouls2.Services;
 using SilkySouls2.Utilities;

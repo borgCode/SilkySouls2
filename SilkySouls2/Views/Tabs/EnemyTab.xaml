@@ -74,23 +74,6 @@
                               IsChecked="{Binding IsVelstadtSummonEnabled}"
                               Margin="0,2" />
                 </StackPanel>
-
-                <StackPanel Grid.Column="1" Margin="0,0,10,0">
-                    <Button Content="Placeholder Button 1"
-                 
-                            Margin="0,0,0,5"
-                            Padding="10,5" />
-                    <Button Content="Placeholder Button 2"
-                            Padding="10,5" />
-                </StackPanel>
-
-                <StackPanel Grid.Column="2">
-                    <Button Content="Placeholder Button 3"
-                            Margin="0,0,0,5"
-                            Padding="10,5" />
-                    <Button Content="Placeholder Button 4"
-                            Padding="10,5" />
-                </StackPanel>
             </Grid>
         </Border>
 

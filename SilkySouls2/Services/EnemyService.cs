@@ -76,20 +76,37 @@ namespace SilkySouls2.Services
             var code = CodeCaveOffsets.Base + CodeCaveOffsets.ElanaSummons;
             if (isElanaSummonsEnabled)
             {
-                var hookLoc = Hooks.CompareEventRandValueElana;
-                var bytes = AsmLoader.GetAsmBytes("ElanaSummon64");
-                var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 7, code + 0x21);
-                Array.Copy(jmpBytes, 0, bytes, 0x1C + 1,  4);
-                _memoryIo.WriteBytes(code, bytes);
-                _memoryIo.WriteByte(code + 0x15, rngVal);
-                _hookManager.InstallHook(code.ToInt64(), hookLoc,
-                new byte[] {0x48, 0x8B, 0x51, 0x10, 0x48, 0x85, 0xD2});
+                if (GameVersion.Current.Edition == GameEdition.Scholar) ScholarElanaSummon(code, rngVal);
+                else VanillaElanaSummon(code, rngVal);
             }
             else
             {
                 _hookManager.UninstallHook(code.ToInt64());
             }
         }
-      
+        
+        private void ScholarElanaSummon(IntPtr code, int rngVal)
+        {
+            var hookLoc = Hooks.CompareEventRandValueElana;
+            var bytes = AsmLoader.GetAsmBytes("ElanaSummon64");
+            var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 7, code + 0x21);
+            Array.Copy(jmpBytes, 0, bytes, 0x1C + 1,  4);
+            _memoryIo.WriteBytes(code, bytes);
+            _memoryIo.WriteByte(code + 0x15, rngVal);
+            _hookManager.InstallHook(code.ToInt64(), hookLoc,
+                new byte[] {0x48, 0x8B, 0x51, 0x10, 0x48, 0x85, 0xD2});
+        }
+        
+        private void VanillaElanaSummon(IntPtr code, int rngVal)
+        {
+            var hookLoc = Hooks.CompareEventRandValueElana;
+            var bytes = AsmLoader.GetAsmBytes("ElanaSummon32");
+            var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 5, code + 0x1E);
+            Array.Copy(jmpBytes, 0, bytes, 0x19 + 1,  4);
+            _memoryIo.WriteBytes(code, bytes);
+            _memoryIo.WriteByte(code + 0x13, rngVal);
+            _hookManager.InstallHook(code.ToInt64(), hookLoc,
+                new byte[] {0x8B, 0x51, 0x08, 0x85, 0xD2});
+        }
     }
 }

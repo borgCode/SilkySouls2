@@ -571,6 +571,23 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 8b 51 08                mov    edx,DWORD PTR [ecx+0x8]
+        ///85 d2                   test   edx,edx
+        ///74 10                   je     17 &lt;exit&gt;
+        ///81 7a 48 3a 75 00 00    cmp    DWORD PTR [edx+0x48],0x753a
+        ///75 07                   jne    17 &lt;exit&gt;
+        ///c7 42 28 00 00 00 00    mov    DWORD PTR [edx+0x28],0x0
+        ///0017 &lt;exit&gt;:
+        ///85 d2                   test   edx,edx
+        ///e9 fc ff ff ff          jmp    1a &lt;exit+0x3&gt;.
+        /// </summary>
+        internal static string ElanaSummon32 {
+            get {
+                return ResourceManager.GetString("ElanaSummon32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 48 8b 51 10             mov    rdx,QWORD PTR [rcx+0x10]
         ///48 85 d2                test   rdx,rdx
         ///74 10                   je     19 &lt;exit&gt;

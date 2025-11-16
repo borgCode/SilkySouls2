@@ -537,5 +537,13 @@
             2,
             AddressingMode.Absolute
         );
+
+        public static readonly Pattern CompareEventRandVal = new Pattern(
+            new byte[] { 0x8B, 0x51, 0x08, 0x85, 0xD2, 0x74, 0x20 },
+            "xxxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
     }
 }

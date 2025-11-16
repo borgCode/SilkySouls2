@@ -315,6 +315,8 @@ namespace SilkySouls2.Memory
                     addr => Offsets.Hooks.NoShadedFogFar = addr.ToInt32(), saved);
                 TryPatternWithFallback("NoShadedFogCam", Patterns32.NoShadedFogCam,
                     addr => Offsets.Hooks.NoShadedFogCam = addr.ToInt32(), saved);
+                TryPatternWithFallback("CompareEventRandVal", Patterns32.CompareEventRandVal,
+                    addr => Offsets.Hooks.CompareEventRandValueElana = addr.ToInt32(), saved);
                 
                 var setCurrectActLocs = FindAddressesByPattern(Patterns32.SetCurrentAct, 2);
                 if (setCurrectActLocs.Count < 2 || setCurrectActLocs[0] == IntPtr.Zero)

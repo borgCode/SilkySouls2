@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Reflection;
+using System.Windows.Input;
 using System.Windows.Threading;
+using SilkySouls2.Core;
 using SilkySouls2.enums;
+using SilkySouls2.GameIds;
+using SilkySouls2.Interfaces;
 using SilkySouls2.Memory;
 using SilkySouls2.Models;
 using SilkySouls2.Services;
@@ -13,166 +17,83 @@ namespace SilkySouls2.ViewModels
 {
     public class PlayerViewModel : BaseViewModel
     {
-        private int _currentHp;
-        private int _currentMaxHp;
-
-        private bool _isPos1Saved;
-        private bool _isPos2Saved;
-        private bool _isStateIncluded;
-        private (float x, float y, float z) _coords;
-        private float _posX;
-        private float _posZ;
-        private float _posY;
-        private CharacterState _saveState1 = new CharacterState();
-        private CharacterState _saveState2 = new CharacterState();
-
-        private bool _isNoDeathEnabled;
-        private bool _isNoDamageEnabled;
-        private bool _isInfiniteStaminaEnabled;
-        private bool _isNoGoodsConsumeEnabled;
-        private bool _isInfiniteCastsEnabled;
-        private bool _isInfiniteDurabilityEnabled;
-        private bool _isOneShotEnabled;
-        private bool _isDealNoDamageEnabled;
-        private bool _isHiddenEnabled;
-        private bool _isSilentEnabled;
-        private bool _isNoSoulGainEnabled;
-        private bool _isNoSoulLossEnabled;
-        private bool _isNoHollowingEnabled;
-        private bool _isInfinitePoiseEnabled;
-        private bool _isAutoSetNewGameSevenEnabled;
-
-        private bool _isDisableSoulMemWriteEnabled;
-
-        private int _vigor;
-        private int _attunement;
-        private int _endurance;
-        private int _strength;
-        private int _dexterity;
-        private int _intelligence;
-        private int _faith;
-        private int _adp;
-        private int _vitality;
-        private int _soulLevel;
-        private int _soulMemory;
-        private int _souls = 10000;
-        private int _newGame;
-        private float _playerSpeed;
+        private CharacterState _saveState1 = new();
+        private CharacterState _saveState2 = new();
         private int _currentSoulLevel;
-
         private HealthWindow _healthWindow;
-        private bool _isHealthWindowOpen;
 
         private float _playerDesiredSpeed = -1f;
         private const float DefaultSpeed = 1f;
         private const float Epsilon = 0.0001f;
 
         private bool _pauseUpdates = true;
-        private bool _areOptionsEnabled;
-        private readonly DispatcherTimer _timer;
+        private bool _customHpHasBeenSet;
 
-        private readonly PlayerService _playerService;
+        private readonly DispatcherTimer _playerTick;
+
+        private readonly IPlayerService _playerService;
         private readonly DamageControlService _damageControlService;
+        private readonly INewGameService _newGameService;
         private readonly HotkeyManager _hotkeyManager;
 
-        public PlayerViewModel(PlayerService playerService, HotkeyManager hotkeyManager,
-            DamageControlService damageControlService, GameStateService gameStateService)
+        public PlayerViewModel(IPlayerService playerService, HotkeyManager hotkeyManager,
+            DamageControlService damageControlService, GameStateService gameStateService, INewGameService newGameService)
         {
             _playerService = playerService;
             _damageControlService = damageControlService;
+            _newGameService = newGameService;
             _hotkeyManager = hotkeyManager;
 
             gameStateService.Subscribe(GameState.Loaded, OnGameLoaded);
             gameStateService.Subscribe(GameState.NotLoaded, OnGameNotLoaded);
             gameStateService.Subscribe(GameState.FirstLoaded, OnGameFirstLoaded);
-            gameStateService.Subscribe(GameState.Launched, OnGameLaunched);
+            gameStateService.Subscribe(GameState.NewGameStarted, OnNewGameStarted);
+            gameStateService.Subscribe(GameState.Attached, OnGameAttached);
 
             RegisterHotkeys();
 
-            _timer = new DispatcherTimer
+            SetRtsrCommand = new DelegateCommand(SetRtsr);
+            SetMaxHpCommand = new DelegateCommand(SetMaxHp);
+            SetCustomHpCommand = new DelegateCommand(SetCustomHp);
+            DieCommand = new DelegateCommand(Die);
+
+            SavePositionCommand = new DelegateCommand(SavePosition);
+            RestorePositionCommand = new DelegateCommand(RestorePosition);
+
+            RestoreSpellcastsCommand = new DelegateCommand(RestoreSpellcasts);
+            RestoreHumanityCommand = new DelegateCommand(RestoreHumanity);
+            RestCommand = new DelegateCommand(Rest);
+
+            GiveSoulsCommand = new DelegateCommand(GiveSouls);
+
+
+            _playerTick = new DispatcherTimer
             {
                 Interval = TimeSpan.FromMilliseconds(100)
             };
-            _timer.Tick += (s, e) =>
-            {
-                if (_pauseUpdates) return;
-
-                CurrentHp = _playerService.GetHp();
-                CurrentMaxHp = _playerService.GetMaxHp();
-                PlayerSpeed = _playerService.GetPlayerSpeed();
-                int newSoulLevel = _playerService.GetSoulLevel();
-                SoulMemory = _playerService.GetSoulMemory();
-                _coords = _playerService.GetCoords();
-                PosX = _coords.x;
-                PosY = _coords.y;
-                PosZ = _coords.z;
-                if (_currentSoulLevel == newSoulLevel) return;
-                SoulLevel = newSoulLevel;
-                _currentSoulLevel = newSoulLevel;
-                LoadStats();
-            };
-            _timer.Start();
+            _playerTick.Tick += PlayerTick;
         }
 
+        #region Commands
 
-        private void RegisterHotkeys()
-        {
-            _hotkeyManager.RegisterAction("SavePos1", () => SavePos(0));
-            _hotkeyManager.RegisterAction("SavePos2", () => SavePos(1));
-            _hotkeyManager.RegisterAction("RestorePos1", () => RestorePos(0));
-            _hotkeyManager.RegisterAction("RestorePos2", () => RestorePos(1));
-            _hotkeyManager.RegisterAction("RTSR", SetRtsr);
-            _hotkeyManager.RegisterAction("NoDeath", () => { IsNoDeathEnabled = !IsNoDeathEnabled; });
-            _hotkeyManager.RegisterAction("OneShot", () => { IsOneShotEnabled = !IsOneShotEnabled; });
-            _hotkeyManager.RegisterAction("DealNoDamage", () => { IsDealNoDamageEnabled = !IsDealNoDamageEnabled; });
-            _hotkeyManager.RegisterAction("PlayerNoDamage", () => { IsNoDamageEnabled = !IsNoDamageEnabled; });
-            _hotkeyManager.RegisterAction("RestoreSpellcasts", () =>
-            {
-                if (!AreOptionsEnabled) return;
-                _playerService.RestoreSpellcasts();
-            });
-            _hotkeyManager.RegisterAction("RestoreHumanity", () =>
-            {
-                if (!AreOptionsEnabled) return;
-                _playerService.SetSpEffect(GameIds.SpEffects.SpEffectData.RestoreHumanity);
-            });
+        public ICommand SetRtsrCommand { get; set; }
+        public ICommand SetMaxHpCommand { get; set; }
+        public ICommand SetCustomHpCommand { get; set; }
+        public ICommand DieCommand { get; set; }
 
-            _hotkeyManager.RegisterAction("Rest", () =>
-            {
-                if (!AreOptionsEnabled) return;
-                _playerService.SetSpEffect(GameIds.SpEffects.SpEffectData.BonfireRest);
-            });
-            _hotkeyManager.RegisterAction("TogglePlayerSpeed", ToggleSpeed);
-            _hotkeyManager.RegisterAction("IncreasePlayerSpeed", () => SetSpeed(Math.Min(10, PlayerSpeed + 0.25f)));
-            _hotkeyManager.RegisterAction("DecreasePlayerSpeed", () => SetSpeed(Math.Max(0, PlayerSpeed - 0.25f)));
-        }
+        public ICommand SavePositionCommand { get; set; }
+        public ICommand RestorePositionCommand { get; set; }
 
-        private void LoadStats()
-        {
-            Vigor = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Vigor);
-            Endurance = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Endurance);
-            Vitality = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Vitality);
-            Attunement = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Attunement);
-            Strength = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Strength);
-            Dexterity = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Dexterity);
-            Adp = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Adp);
-            Intelligence = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Intelligence);
-            Faith = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Faith);
-            SoulLevel = _playerService.GetSoulLevel();
-            NewGame = _playerService.GetNewGame();
-            PlayerSpeed = _playerService.GetPlayerSpeed();
-        }
+        public ICommand RestoreSpellcastsCommand { get; set; }
+        public ICommand RestoreHumanityCommand { get; set; }
+        public ICommand RestCommand { get; set; }
+        public ICommand GiveSoulsCommand { get; set; }
 
+        #endregion
 
-        public void PauseUpdates()
-        {
-            _pauseUpdates = true;
-        }
+        #region Properties
 
-        public void ResumeUpdates()
-        {
-            _pauseUpdates = false;
-        }
+        private bool _areOptionsEnabled;
 
         public bool AreOptionsEnabled
         {
@@ -180,11 +101,15 @@ namespace SilkySouls2.ViewModels
             set => SetProperty(ref _areOptionsEnabled, value);
         }
 
+        private int _currentHp;
+
         public int CurrentHp
         {
             get => _currentHp;
             set => SetProperty(ref _currentHp, value);
         }
+
+        private int _currentMaxHp;
 
         public int CurrentMaxHp
         {
@@ -192,16 +117,21 @@ namespace SilkySouls2.ViewModels
             set => SetProperty(ref _currentMaxHp, value);
         }
 
-        public void SetHp(int hp)
+        private string _customHp;
+
+        public string CustomHp
         {
-            _playerService.SetHp(hp);
-            CurrentHp = hp;
+            get => _customHp;
+            set
+            {
+                if (SetProperty(ref _customHp, value))
+                {
+                    _customHpHasBeenSet = true;
+                }
+            }
         }
 
-        public void SetRtsr() => _playerService.SetRtsr();
-
-        public void SetMaxHp() => _playerService.SetFullHp();
-
+        private bool _isHealthWindowOpen;
 
         public bool IsHealthWindowOpen
         {
@@ -213,7 +143,7 @@ namespace SilkySouls2.ViewModels
                 {
                     if (_healthWindow != null && _healthWindow.IsVisible) return;
                     _healthWindow = new HealthWindow { DataContext = this };
-                    _healthWindow.Closed += (sender, args) => _isHealthWindowOpen = false;
+                    _healthWindow.Closed += (_, _) => _isHealthWindowOpen = false;
                     _healthWindow.Show();
                 }
                 else
@@ -225,11 +155,15 @@ namespace SilkySouls2.ViewModels
             }
         }
 
+        private bool _isPos1Saved;
+
         public bool IsPos1Saved
         {
             get => _isPos1Saved;
             set => SetProperty(ref _isPos1Saved, value);
         }
+
+        private bool _isPos2Saved;
 
         public bool IsPos2Saved
         {
@@ -237,42 +171,31 @@ namespace SilkySouls2.ViewModels
             set => SetProperty(ref _isPos2Saved, value);
         }
 
-        public void SavePos(int index)
+        private float _posX;
+
+        public float PosX
         {
-            var state = index == 0 ? _saveState1 : _saveState2;
-            if (index == 0) IsPos1Saved = true;
-            else IsPos2Saved = true;
-
-            state.IncludesState = IsStateIncluded;
-            if (IsStateIncluded)
-            {
-                state.Hp = CurrentHp;
-                state.Sp = _playerService.GetSp();
-            }
-
-            _playerService.SavePos(index);
+            get => _posX;
+            set => SetProperty(ref _posX, value);
         }
 
-        public void RestorePos(int index)
-        {
-            if (index == 0 && !IsPos1Saved) return;
-            if (index == 1 && !IsPos2Saved) return;
-            _playerService.RestorePos(index);
-            if (!IsStateIncluded) return;
+        private float _posY;
 
-            var state = index == 0 ? _saveState1 : _saveState2;
-            if (IsStateIncluded && state.IncludesState)
-            {
-                _playerService.SetHp(state.Hp);
-                _playerService.SetSp(state.Sp);
-            }
+        public float PosY
+        {
+            get => _posY;
+            set => SetProperty(ref _posY, value);
         }
 
-        public bool IsStateIncluded
+        private float _posZ;
+
+        public float PosZ
         {
-            get => _isStateIncluded;
-            set => SetProperty(ref _isStateIncluded, value);
+            get => _posZ;
+            set => SetProperty(ref _posZ, value);
         }
+
+        private bool _isNoDeathEnabled;
 
         public bool IsNoDeathEnabled
         {
@@ -281,28 +204,13 @@ namespace SilkySouls2.ViewModels
             {
                 if (SetProperty(ref _isNoDeathEnabled, value))
                 {
+                    if (!PatchManager.IsInitialized) return;
                     _playerService.ToggleNoDeath(_isNoDeathEnabled);
                 }
             }
         }
 
-        public float PosX
-        {
-            get => _posX;
-            set => SetProperty(ref _posX, value);
-        }
-
-        public float PosY
-        {
-            get => _posY;
-            set => SetProperty(ref _posY, value);
-        }
-
-        public float PosZ
-        {
-            get => _posZ;
-            set => SetProperty(ref _posZ, value);
-        }
+        private bool _isNoDamageEnabled;
 
         public bool IsNoDamageEnabled
         {
@@ -311,10 +219,13 @@ namespace SilkySouls2.ViewModels
             {
                 if (SetProperty(ref _isNoDamageEnabled, value))
                 {
+                    if (!PatchManager.IsInitialized) return;
                     _playerService.ToggleNoDamage(_isNoDamageEnabled);
                 }
             }
         }
+
+        private bool _isInfiniteStaminaEnabled;
 
         public bool IsInfiniteStaminaEnabled
         {
@@ -323,10 +234,13 @@ namespace SilkySouls2.ViewModels
             {
                 if (SetProperty(ref _isInfiniteStaminaEnabled, value))
                 {
+                    if (!PatchManager.IsInitialized) return;
                     _playerService.ToggleInfiniteStamina(_isInfiniteStaminaEnabled);
                 }
             }
         }
+
+        private bool _isNoGoodsConsumeEnabled;
 
         public bool IsNoGoodsConsumeEnabled
         {
@@ -335,10 +249,13 @@ namespace SilkySouls2.ViewModels
             {
                 if (SetProperty(ref _isNoGoodsConsumeEnabled, value))
                 {
+                    if (!PatchManager.IsInitialized) return;
                     _playerService.ToggleNoGoodsConsume(_isNoGoodsConsumeEnabled);
                 }
             }
         }
+
+        private bool _isInfiniteDurabilityEnabled;
 
         public bool IsInfiniteDurabilityEnabled
         {
@@ -347,11 +264,13 @@ namespace SilkySouls2.ViewModels
             {
                 if (SetProperty(ref _isInfiniteDurabilityEnabled, value))
                 {
+                    if (!PatchManager.IsInitialized) return;
                     _playerService.ToggleInfiniteDurability(_isInfiniteDurabilityEnabled);
                 }
             }
         }
 
+        private bool _isInfiniteCastsEnabled;
 
         public bool IsInfiniteCastsEnabled
         {
@@ -360,11 +279,13 @@ namespace SilkySouls2.ViewModels
             {
                 if (SetProperty(ref _isInfiniteCastsEnabled, value))
                 {
+                    if (!PatchManager.IsInitialized) return;
                     _playerService.ToggleInfiniteCasts(_isInfiniteCastsEnabled);
                 }
             }
         }
 
+        private bool _isDealNoDamageEnabled;
 
         public bool IsDealNoDamageEnabled
         {
@@ -372,6 +293,7 @@ namespace SilkySouls2.ViewModels
             set
             {
                 if (!SetProperty(ref _isDealNoDamageEnabled, value)) return;
+                if (!PatchManager.IsInitialized) return;
                 if (IsOneShotEnabled && _isDealNoDamageEnabled)
                 {
                     _damageControlService.ToggleOneShot(false);
@@ -382,12 +304,15 @@ namespace SilkySouls2.ViewModels
             }
         }
 
+        private bool _isOneShotEnabled;
+
         public bool IsOneShotEnabled
         {
             get => _isOneShotEnabled;
             set
             {
                 if (!SetProperty(ref _isOneShotEnabled, value)) return;
+                if (!PatchManager.IsInitialized) return;
                 if (IsDealNoDamageEnabled && _isOneShotEnabled)
                 {
                     _damageControlService.ToggleDealNoDamage(false);
@@ -398,6 +323,8 @@ namespace SilkySouls2.ViewModels
             }
         }
 
+        private bool _isHiddenEnabled;
+
         public bool IsHiddenEnabled
         {
             get => _isHiddenEnabled;
@@ -405,10 +332,13 @@ namespace SilkySouls2.ViewModels
             {
                 if (SetProperty(ref _isHiddenEnabled, value))
                 {
+                    if (!PatchManager.IsInitialized) return;
                     _playerService.ToggleHidden(_isHiddenEnabled);
                 }
             }
         }
+
+        private bool _isSilentEnabled;
 
         public bool IsSilentEnabled
         {
@@ -417,10 +347,13 @@ namespace SilkySouls2.ViewModels
             {
                 if (SetProperty(ref _isSilentEnabled, value))
                 {
+                    if (!PatchManager.IsInitialized) return;
                     _playerService.ToggleSilent(_isSilentEnabled);
                 }
             }
         }
+
+        private bool _isNoSoulLossEnabled;
 
         public bool IsNoSoulLossEnabled
         {
@@ -429,10 +362,13 @@ namespace SilkySouls2.ViewModels
             {
                 if (SetProperty(ref _isNoSoulLossEnabled, value))
                 {
+                    if (!PatchManager.IsInitialized) return;
                     _playerService.ToggleNoSoulLoss(_isNoSoulLossEnabled);
                 }
             }
         }
+
+        private bool _isNoSoulGainEnabled;
 
         public bool IsNoSoulGainEnabled
         {
@@ -441,10 +377,13 @@ namespace SilkySouls2.ViewModels
             {
                 if (SetProperty(ref _isNoSoulGainEnabled, value))
                 {
+                    if (!PatchManager.IsInitialized) return;
                     _playerService.ToggleNoSoulGain(_isNoSoulGainEnabled);
                 }
             }
         }
+
+        private bool _isNoHollowingEnabled;
 
         public bool IsNoHollowingEnabled
         {
@@ -453,10 +392,21 @@ namespace SilkySouls2.ViewModels
             {
                 if (SetProperty(ref _isNoHollowingEnabled, value))
                 {
+                    if (!PatchManager.IsInitialized) return;
                     _playerService.ToggleNoHollowing(_isNoHollowingEnabled);
                 }
             }
         }
+
+        private bool _isHotEnabled;
+
+        public bool IsHotEnabled
+        {
+            get => _isHotEnabled;
+            set => SetProperty(ref _isHotEnabled, value);
+        }
+
+        private bool _isInfinitePoiseEnabled;
 
         public bool IsInfinitePoiseEnabled
         {
@@ -465,10 +415,13 @@ namespace SilkySouls2.ViewModels
             {
                 if (SetProperty(ref _isInfinitePoiseEnabled, value))
                 {
+                    if (!PatchManager.IsInitialized) return;
                     _playerService.ToggleInfinitePoise(_isInfinitePoiseEnabled);
                 }
             }
         }
+
+        private bool _isAutoSetNewGameSevenEnabled;
 
         public bool IsAutoSetNewGameSevenEnabled
         {
@@ -477,21 +430,14 @@ namespace SilkySouls2.ViewModels
             {
                 if (SetProperty(ref _isAutoSetNewGameSevenEnabled, value))
                 {
-                    _playerService.ToggleAutoSetNg7(_isAutoSetNewGameSevenEnabled);
+                    if (!PatchManager.IsInitialized) return;
+                    if (_isAutoSetNewGameSevenEnabled) _newGameService.RequestNewGameDetect();
+                    else _newGameService.ReleaseNewGameDetect();
                 }
             }
         }
-        //
-        // public bool IsNoRollEnabled
-        // {
-        //     get => _isNoRollEnabled;
-        //     set
-        //     {
-        //         if (!SetProperty(ref _isNoRollEnabled, value)) return;
-        //         _playerService.ToggleNoRoll(_isNoRollEnabled);
-        //     }
-        // }
-        //
+
+        private bool _isDisableSoulMemWriteEnabled;
 
         public bool IsDisableSoulMemWriteEnabled
         {
@@ -499,11 +445,23 @@ namespace SilkySouls2.ViewModels
             set => SetProperty(ref _isDisableSoulMemWriteEnabled, value);
         }
 
+        private bool _isStateIncluded;
+
+        public bool IsStateIncluded
+        {
+            get => _isStateIncluded;
+            set => SetProperty(ref _isStateIncluded, value);
+        }
+
+        private int _vigor;
+
         public int Vigor
         {
             get => _vigor;
             set => SetProperty(ref _vigor, value);
         }
+
+        private int _attunement;
 
         public int Attunement
         {
@@ -511,11 +469,15 @@ namespace SilkySouls2.ViewModels
             set => SetProperty(ref _attunement, value);
         }
 
+        private int _endurance;
+
         public int Endurance
         {
             get => _endurance;
             set => SetProperty(ref _endurance, value);
         }
+
+        private int _strength;
 
         public int Strength
         {
@@ -523,11 +485,15 @@ namespace SilkySouls2.ViewModels
             set => SetProperty(ref _strength, value);
         }
 
+        private int _dexterity;
+
         public int Dexterity
         {
             get => _dexterity;
             set => SetProperty(ref _dexterity, value);
         }
+
+        private int _intelligence;
 
         public int Intelligence
         {
@@ -535,11 +501,15 @@ namespace SilkySouls2.ViewModels
             set => SetProperty(ref _intelligence, value);
         }
 
+        private int _faith;
+
         public int Faith
         {
             get => _faith;
             set => SetProperty(ref _faith, value);
         }
+
+        private int _adp;
 
         public int Adp
         {
@@ -547,11 +517,15 @@ namespace SilkySouls2.ViewModels
             set => SetProperty(ref _adp, value);
         }
 
+        private int _vitality;
+
         public int Vitality
         {
             get => _vitality;
             set => SetProperty(ref _vitality, value);
         }
+
+        private int _soulLevel;
 
         public int SoulLevel
         {
@@ -559,12 +533,63 @@ namespace SilkySouls2.ViewModels
             private set => SetProperty(ref _soulLevel, value);
         }
 
+        private int _soulMemory;
+
         public int SoulMemory
         {
             get => _soulMemory;
             private set => SetProperty(ref _soulMemory, value);
         }
 
+        private int _souls = 10000;
+
+        public int Souls
+        {
+            get => _souls;
+            set => SetProperty(ref _souls, value);
+        }
+
+        private int _newGame;
+
+        public int NewGame
+        {
+            get => _newGame;
+            set
+            {
+                if (SetProperty(ref _newGame, value))
+                {
+                    _playerService.SetNewGame(value);
+                }
+            }
+        }
+
+        private float _playerSpeed;
+
+        public float PlayerSpeed
+        {
+            get => _playerSpeed;
+            set
+            {
+                if (SetProperty(ref _playerSpeed, value))
+                {
+                    _playerService.SetPlayerSpeed(value);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        public void PauseUpdates() => _pauseUpdates = true;
+        public void ResumeUpdates() => _pauseUpdates = false;
+
+        public void SetHp(int hp)
+        {
+            _playerService.SetHp(hp);
+            CurrentHp = hp;
+        }
+        
         public void SetStat(string statName, int value)
         {
             var property = typeof(GameManagerImp.ChrCtrlOffsets.Stats)
@@ -579,62 +604,99 @@ namespace SilkySouls2.ViewModels
             }
             else
             {
-                throw new ArgumentException($"Invalid stat name: {statName}");
+                Console.WriteLine($@"Invalid stat name: {statName}");
             }
         }
 
-        public int Souls
-        {
-            get => _souls;
-            set => SetProperty(ref _souls, value);
-        }
+        
+        #endregion
 
-        public int NewGame
+        #region Private Methods
+
+        private void RegisterHotkeys()
         {
-            get => _newGame;
-            set
+            _hotkeyManager.RegisterAction(HotkeyActions.SavePos1, () => SavePosition(0));
+            _hotkeyManager.RegisterAction(HotkeyActions.SavePos2, () => SavePosition(1));
+            _hotkeyManager.RegisterAction(HotkeyActions.RestorePos1, () => RestorePosition(0));
+            _hotkeyManager.RegisterAction(HotkeyActions.RestorePos2, () => RestorePosition(1));
+            _hotkeyManager.RegisterAction(HotkeyActions.RTSR, SetRtsr);
+            _hotkeyManager.RegisterAction(HotkeyActions.MaxHp, SetMaxHp);
+            _hotkeyManager.RegisterAction(HotkeyActions.PlayerSetCustomHp, SetCustomHp);
+            _hotkeyManager.RegisterAction(HotkeyActions.NoDeath, () => { IsNoDeathEnabled = !IsNoDeathEnabled; });
+            _hotkeyManager.RegisterAction(HotkeyActions.OneShot, () => { IsOneShotEnabled = !IsOneShotEnabled; });
+            _hotkeyManager.RegisterAction(HotkeyActions.DealNoDamage,
+                () => { IsDealNoDamageEnabled = !IsDealNoDamageEnabled; });
+            _hotkeyManager.RegisterAction(HotkeyActions.PlayerNoDamage,
+                () => { IsNoDamageEnabled = !IsNoDamageEnabled; });
+            _hotkeyManager.RegisterAction(HotkeyActions.RestoreSpellcasts, () =>
             {
-                if (SetProperty(ref _newGame, value))
-                {
-                    _playerService.SetNewGame(value);
-                }
-            }
-        }
-
-        public float PlayerSpeed
-        {
-            get => _playerSpeed;
-            set
+                if (!AreOptionsEnabled) return;
+                _playerService.RestoreSpellcasts();
+            });
+            _hotkeyManager.RegisterAction(HotkeyActions.RestoreHumanity, () =>
             {
-                if (SetProperty(ref _playerSpeed, value))
-                {
-                    _playerService.SetPlayerSpeed(value);
-                }
-            }
-        }
-
-        public void SetSpeed(float value) => PlayerSpeed = value;
-
-        private void ToggleSpeed()
-        {
-            if (!AreOptionsEnabled) return;
-
-            if (!IsApproximately(PlayerSpeed, DefaultSpeed))
+                if (!AreOptionsEnabled) return;
+                _playerService.SetSpEffect(SpEffect.RestoreHumanity);
+            });
+            _hotkeyManager.RegisterAction(HotkeyActions.RestCharacter, () =>
             {
-                _playerDesiredSpeed = PlayerSpeed;
-                SetSpeed(DefaultSpeed);
-            }
-            else if (_playerDesiredSpeed >= 0)
-            {
-                SetSpeed(_playerDesiredSpeed);
-            }
+                if (!AreOptionsEnabled) return;
+                _playerService.SetSpEffect(SpEffect.BonfireRest);
+            });
+            _hotkeyManager.RegisterAction(HotkeyActions.TogglePlayerSpeed, ToggleSpeed);
+            _hotkeyManager.RegisterAction(HotkeyActions.IncreasePlayerSpeed,
+                () => SetSpeed(Math.Min(10, PlayerSpeed + 0.25f)));
+            _hotkeyManager.RegisterAction(HotkeyActions.DecreasePlayerSpeed,
+                () => SetSpeed(Math.Max(0, PlayerSpeed - 0.25f)));
         }
 
-        private bool IsApproximately(float a, float b)
+        private void PlayerTick(object sender, EventArgs e)
         {
-            return Math.Abs(a - b) < Epsilon;
+            if (IsHotEnabled) TryApplyHot();
+
+            if (_pauseUpdates) return;
+
+            CurrentHp = _playerService.GetHp();
+            CurrentMaxHp = _playerService.GetMaxHp();
+            PlayerSpeed = _playerService.GetPlayerSpeed();
+            int newSoulLevel = _playerService.GetSoulLevel();
+            SoulMemory = _playerService.GetSoulMemory();
+            var coords = _playerService.GetCoords();
+            PosX = coords.X;
+            PosY = coords.Y;
+            PosZ = coords.Z;
+
+
+            if (_currentSoulLevel == newSoulLevel) return;
+            SoulLevel = newSoulLevel;
+            _currentSoulLevel = newSoulLevel;
+            LoadStats();
         }
 
+        private void TryApplyHot()
+        {
+            if (CurrentHp >= CurrentMaxHp) return;
+            int hpToSet = CurrentHp + 10;
+            if (hpToSet >= CurrentMaxHp) hpToSet = CurrentMaxHp;
+            _playerService.SetHp(hpToSet);
+        }
+
+        private void LoadStats()
+        {
+            
+            Vigor = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Vigor);
+            Endurance = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Endurance);
+            Vitality = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Vitality);
+            Attunement = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Attunement);
+            Strength = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Strength);
+            Dexterity = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Dexterity);
+            Adp = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Adp);
+            Intelligence = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Intelligence);
+            Faith = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Faith);
+            SoulLevel = _playerService.GetSoulLevel();
+            NewGame = _playerService.GetNewGame();
+            PlayerSpeed = _playerService.GetPlayerSpeed();
+        }
 
         private void OnGameLoaded()
         {
@@ -642,7 +704,7 @@ namespace SilkySouls2.ViewModels
 
             AreOptionsEnabled = true;
             LoadStats();
-            _timer.Start();
+            _playerTick.Start();
         }
 
         private void OnGameFirstLoaded()
@@ -663,24 +725,129 @@ namespace SilkySouls2.ViewModels
             _pauseUpdates = false;
         }
 
-
         private void OnGameNotLoaded()
         {
             AreOptionsEnabled = false;
-            _timer.Stop();
+            _playerTick.Stop();
         }
 
-        public void GiveSouls() => _playerService.GiveSouls(Souls);
-
-        public void RestoreSpellcasts() => _playerService.RestoreSpellcasts();
-
-        private void OnGameLaunched()
+        private void OnNewGameStarted()
         {
-            if (IsAutoSetNewGameSevenEnabled) _playerService.ToggleAutoSetNg7(true);
+            if (!IsAutoSetNewGameSevenEnabled) return;
+            _playerService.SetNewGame(9);
+            NewGame = _playerService.GetNewGame();
+            // _ezStateService.ExecuteEvent(EzState.EventCommands.OpenCharacterCreationMenu);
         }
 
-        public void RestoreHumanity() => _playerService.SetSpEffect(GameIds.SpEffects.SpEffectData.RestoreHumanity);
+        private void OnGameAttached()
+        {
+            if (IsAutoSetNewGameSevenEnabled) _newGameService.RequestNewGameDetect();
+            else _newGameService.ReleaseNewGameDetect();
+        }
 
-        public void Rest() => _playerService.SetSpEffect(GameIds.SpEffects.SpEffectData.BonfireRest);
+        private void SavePosition(object parameter)
+        {
+            int index = Convert.ToInt32(parameter);
+            var state = index == 0 ? _saveState1 : _saveState2;
+            if (index == 0) IsPos1Saved = true;
+            else IsPos2Saved = true;
+
+            state.IncludesState = IsStateIncluded;
+            if (IsStateIncluded)
+            {
+                state.Hp = CurrentHp;
+                state.Sp = _playerService.GetSp();
+            }
+
+            _playerService.SavePos(index);
+        }
+
+        private void RestorePosition(object parameter)
+        {
+            int index = Convert.ToInt32(parameter);
+
+            if (index == 0 && !IsPos1Saved) return;
+            if (index == 1 && !IsPos2Saved) return;
+            _playerService.RestorePos(index);
+            if (!IsStateIncluded) return;
+
+            var state = index == 0 ? _saveState1 : _saveState2;
+            if (IsStateIncluded && state.IncludesState)
+            {
+                _playerService.SetHp(state.Hp);
+                _playerService.SetSp(state.Sp);
+            }
+        }
+
+        private void ToggleSpeed()
+        {
+            if (!AreOptionsEnabled) return;
+
+            if (!IsApproximately(PlayerSpeed, DefaultSpeed))
+            {
+                _playerDesiredSpeed = PlayerSpeed;
+                SetSpeed(DefaultSpeed);
+            }
+            else if (_playerDesiredSpeed >= 0)
+            {
+                SetSpeed(_playerDesiredSpeed);
+            }
+        }
+
+        private bool IsApproximately(float a, float b)
+        {
+            return Math.Abs(a - b) < Epsilon;
+        }
+        
+        private void SetRtsr() => _playerService.SetRtsr();
+        private void SetMaxHp() => _playerService.SetFullHp();
+        private void Die() => _playerService.SetHp(0);
+
+        private void SetCustomHp()
+        {
+            if (!_customHpHasBeenSet) return;
+            var (customHp, error) = ParseCustomHp();
+            if (customHp == null)
+            {
+                MsgBox.Show(error, "Invalid Input");
+                return;
+            }
+
+            if (customHp > CurrentMaxHp)
+                customHp = CurrentMaxHp;
+
+            _playerService.SetHp(customHp.Value);
+        }
+
+        private (int? value, string error) ParseCustomHp()
+        {
+            var input = CustomHp?.Trim();
+            if (string.IsNullOrEmpty(input))
+                return (null, "Please enter a value");
+
+            if (input.EndsWith("%"))
+            {
+                if (double.TryParse(input.TrimEnd('%'), out var percent))
+                    return ((int)(percent / 100.0 * CurrentMaxHp), null);
+                return (null, "Invalid percentage format");
+            }
+
+            if (int.TryParse(input, out var absolute))
+                return (absolute, null);
+
+            return (null, "Enter a number or percentage (e.g. 545 or 40%)");
+        }
+        
+        private void RestoreSpellcasts() => _playerService.RestoreSpellcasts();
+
+        private void RestoreHumanity() => _playerService.SetSpEffect(SpEffect.RestoreHumanity);
+
+        private void Rest() => _playerService.SetSpEffect(SpEffect.BonfireRest);
+
+        private void GiveSouls() => _playerService.GiveSouls(Souls);
+        
+        private void SetSpeed(float value) => PlayerSpeed = value;
+
+        #endregion
     }
 }

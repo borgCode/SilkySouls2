@@ -8,7 +8,8 @@
         NotLoaded,
         FirstLoaded,
         DelayedGameLoad,
-        Launched,
-        GameStart
+        NewGameStarted,
+        AppStart,
+        AreaChanged
     }
 }

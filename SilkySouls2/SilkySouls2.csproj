@@ -14,6 +14,7 @@
         <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
         <WarningLevel>4</WarningLevel>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <LangVersion>12</LangVersion>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <PlatformTarget>x64</PlatformTarget>
@@ -100,11 +101,36 @@
         <Compile Include="Converters\SpellIdToVisibilityConverter.cs"/>
         <Compile Include="Converters\SpellTypeToBrushConverter.cs"/>
         <Compile Include="Converters\StringToVisibilityConverter.cs"/>
+        <Compile Include="Core\DelegateCommand.cs" />
+        <Compile Include="enums\AsmScript.cs" />
         <Compile Include="enums\GameState.cs" />
+        <Compile Include="enums\HotkeyActions.cs" />
+        <Compile Include="GameIds\Area.cs" />
+        <Compile Include="GameIds\EventFlag.cs" />
+        <Compile Include="GameIds\EzState.cs" />
+        <Compile Include="GameIds\Navimesh.cs" />
+        <Compile Include="GameIds\Obj.cs" />
+        <Compile Include="GameIds\SpEffect.cs" />
+        <Compile Include="GameIds\WhiteDoor.cs" />
+        <Compile Include="Interfaces\IChrCtrlService.cs" />
+        <Compile Include="Interfaces\IDamageControlService.cs" />
+        <Compile Include="Interfaces\IEnemyService.cs" />
+        <Compile Include="Interfaces\IEventService.cs" />
+        <Compile Include="Interfaces\IEzStateService.cs" />
+        <Compile Include="Interfaces\IItemService.cs" />
+        <Compile Include="Interfaces\IMemoryService.cs" />
+        <Compile Include="Interfaces\INewGameService.cs" />
+        <Compile Include="Interfaces\IPlayerService.cs" />
+        <Compile Include="Interfaces\ISettingsService.cs" />
+        <Compile Include="Interfaces\ITargetService.cs" />
+        <Compile Include="Interfaces\ITravelService.cs" />
+        <Compile Include="Interfaces\IUtilityService.cs" />
         <Compile Include="Memory\DLLShared\DllManager.cs" />
         <Compile Include="Memory\DLLShared\DrawType.cs" />
         <Compile Include="Memory\DLLShared\SharedMemAddr.cs" />
-        <Compile Include="Memory\GameVersion.cs" />
+        <Compile Include="Memory\MemoryBlock.cs" />
+        <Compile Include="Memory\PatchBytes.cs" />
+        <Compile Include="Memory\PatchManager.cs" />
         <Compile Include="Memory\NopManager.cs" />
         <Compile Include="Memory\Patterns\Pattern.cs" />
         <Compile Include="Memory\Patterns\Patterns32.cs" />
@@ -115,14 +141,19 @@
         <Compile Include="Models\Loadout.cs" />
         <Compile Include="Models\NpcInfo.cs" />
         <Compile Include="Models\InventorySpell.cs" />
+        <Compile Include="Models\Target\TargetMaxValues.cs" />
+        <Compile Include="Models\Target\TargetState.cs" />
         <Compile Include="Models\WarpLocation.cs" />
         <Compile Include="Models\CharacterState.cs" />
         <Compile Include="Models\Forlorn.cs" />
+        <Compile Include="Services\ChrCtrlService.cs" />
         <Compile Include="Services\DamageControlService.cs" />
         <Compile Include="Services\EnemyService.cs" />
         <Compile Include="Services\EventService.cs" />
         <Compile Include="Services\EzStateService.cs" />
         <Compile Include="Services\GameStateService.cs" />
+        <Compile Include="Services\MemoryService.cs" />
+        <Compile Include="Services\NewGameService.cs" />
         <Compile Include="Services\TargetService.cs" />
         <Compile Include="Services\ItemService.cs" />
         <Compile Include="Services\PlayerService.cs" />
@@ -134,11 +165,15 @@
         <Compile Include="Utilities\DataLoader.cs" />
         <Compile Include="Utilities\GameLauncher.cs" />
         <Compile Include="Utilities\HotkeyManager.cs" />
+        <Compile Include="Utilities\MsgBox.cs" />
+        <Compile Include="Utilities\UpDownHelper.cs" />
+        <Compile Include="Utilities\VersionManager.cs" />
         <Compile Include="Utilities\SettingsManager.cs" />
         <Compile Include="Utilities\User32.cs" />
         <Compile Include="Utilities\VersionChecker.cs" />
         <Compile Include="ViewModels\BaseViewModel.cs" />
         <Compile Include="ViewModels\EnemyViewModel.cs" />
+        <Compile Include="ViewModels\HotkeyBindingViewModel.cs" />
         <Compile Include="ViewModels\TargetViewModel.cs" />
         <Compile Include="ViewModels\EventViewModel.cs" />
         <Compile Include="ViewModels\ItemViewModel.cs" />
@@ -176,6 +211,7 @@
         <Compile Include="Views\Windows\CreateLoadoutWindow.xaml.cs">
           <DependentUpon>CreateLoadoutWindow.xaml</DependentUpon>
         </Compile>
+        <Compile Include="Views\Windows\CustomMessageBox.xaml.cs" />
         <Compile Include="Views\Windows\DefenseWindow.xaml.cs">
           <DependentUpon>DefenseWindow.xaml</DependentUpon>
         </Compile>
@@ -207,6 +243,7 @@
         <Page Include="Views\Tabs\UtilityTab.xaml" />
         <Page Include="Views\Windows\AttunementWindow.xaml" />
         <Page Include="Views\Windows\CreateLoadoutWindow.xaml" />
+        <Page Include="Views\Windows\CustomMessageBox.xaml" />
         <Page Include="Views\Windows\DefenseWindow.xaml" />
         <Page Include="Views\Windows\HealthWindow.xaml" />
         <Page Include="Views\Windows\ResistancesWindow.xaml" />
@@ -214,10 +251,8 @@
     <ItemGroup>
         <Compile Include="Memory\AobScanner.cs" />
         <Compile Include="Memory\CodeCaveOffsets.cs" />
-        <Compile Include="Memory\GameIds.cs" />
         <Compile Include="Memory\HookManager.cs" />
         <Compile Include="Memory\Kernel32.cs" />
-        <Compile Include="Memory\MemoryIO.cs" />
         <Compile Include="Memory\Offsets.cs" />
         <Compile Include="Properties\AssemblyInfo.cs">
             <SubType>Code</SubType>
@@ -239,7 +274,6 @@
     <ItemGroup>
         <Resource Include="Assets\Silky.ico" />
         <Content Include="FodyWeavers.xml" />
-        <Content Include="Models\added.txt" />
         <Content Include="Resources\DLL\DrawScholar.dll">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>

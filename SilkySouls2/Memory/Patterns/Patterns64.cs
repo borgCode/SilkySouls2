@@ -41,7 +41,6 @@
             7
         );
 
-
         // Hooks
 
         public static readonly Pattern HpWrite = new Pattern(
@@ -64,7 +63,6 @@
             7,
             AddressingMode.Absolute
         );
-
 
         public static readonly Pattern InfinitePoise = new Pattern(
             new byte[] { 0x39, 0x9D, 0xEC, 0x05 },
@@ -108,7 +106,6 @@
             AddressingMode.Absolute
         );
 
-
         public static readonly Pattern NoShadedFogClose = new Pattern(
             new byte[] { 0x0F, 0x57, 0xC0, 0x66, 0x0F, 0x6E, 0xE0 },
             "xxxxxxx",
@@ -151,7 +148,6 @@
             AddressingMode.Absolute
         );
 
-
         public static readonly Pattern TriggersAndSpace = new Pattern(
             new byte[] { 0x4C, 0x8B, 0x7C, 0x24, 0x70, 0x48, 0x8B, 0x43 },
             "xxxxxxxx",
@@ -172,7 +168,6 @@
             0,
             AddressingMode.Absolute
         );
-
 
         public static readonly Pattern WarpCoordWrite = new Pattern(
             new byte[] { 0x0F, 0x5C, 0xC2, 0x0F, 0x29, 0x47, 0x50 },
@@ -208,7 +203,6 @@
             AddressingMode.Absolute
         );
 
-
         public static readonly Pattern CreditSkip = new Pattern(
             new byte[] { 0x48, 0x81, 0xEC, 0x20, 0x02, 0x00, 0x00, 0x8B, 0x41 },
             "xxxxxxxxx",
@@ -223,10 +217,17 @@
             AddressingMode.Absolute
         );
 
-
         public static readonly Pattern NumOfDrops = new Pattern(
             new byte[] { 0x41, 0x0F, 0xB6, 0x47, 0x01, 0xFF },
             "xxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+        //End of opening cutscene
+        public static readonly Pattern NewGameDetect = new Pattern(
+            new byte[] { 0xC7, 0x47, 0x54, 0xFF, 0xFF, 0xFF, 0xFF, 0x44, 0x89, 0x7F, 0x58, 0xC6, 0x47, 0x6F, 0x00 },
+            "xxxxxxxxxxxxxxx",
             0,
             AddressingMode.Absolute
         );
@@ -270,7 +271,6 @@
             AddressingMode.Absolute
         );
 
-
         public static readonly Pattern UnlockBonfire = new Pattern(
             new byte[] { 0x48, 0x8B, 0x4E, 0x58, 0x8B, 0x10, 0x44 },
             "xxxxxxx",
@@ -286,7 +286,6 @@
             -0x18,
             AddressingMode.Absolute
         );
-
 
         public static readonly Pattern GetMapObjStateActComponent = new Pattern(
             new byte[] { 0x75, 0x08, 0x48, 0x8B, 0x01, 0x48, 0x8B, 0x40, 0x40 },
@@ -317,7 +316,6 @@
             -0xA,
             AddressingMode.Absolute
         );
-
 
         public static readonly Pattern ConvertMapEntityToGameId = new Pattern(
             new byte[] { 0x48, 0x8B, 0xC1, 0x48, 0x8B, 0x5C, 0x24, 0x48 },
@@ -384,7 +382,6 @@
             5
         );
 
-
         public static readonly Pattern CreateSoundEvent = new Pattern(
             new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x84, 0xC0, 0x74, 0x4C, 0x48, 0x8B, 0x83 },
             "x????xxxxxxx",
@@ -394,7 +391,6 @@
             5
         );
 
-
         public static readonly Pattern SetRenderTargetsWrapper = new Pattern(
             new byte[] { 0x40, 0x53, 0x48, 0x83, 0xEC, 0x60, 0x41, 0x8B },
             "xxxxxxxx",
@@ -402,14 +398,12 @@
             AddressingMode.Absolute
         );
 
-
         public static readonly Pattern ParamLookUp = new Pattern(
             new byte[] { 0x48, 0x89, 0x5C, 0x24, 0x08, 0x4C, 0x8B, 0x59, 0x10 },
             "xxxxxxxxx",
             0,
             AddressingMode.Absolute
         );
-
 
         public static readonly Pattern SetEvent = new Pattern(
             new byte[] { 0x45, 0x0F, 0xB6, 0xD8, 0xB8 },
@@ -439,7 +433,6 @@
             AddressingMode.Absolute
         );
 
-
         public static readonly Pattern GameManUpdate = new Pattern(
             new byte[] { 0x33, 0xDB, 0xF6, 0x81, 0xB2 },
             "xxxxx",
@@ -447,11 +440,71 @@
             AddressingMode.Absolute
         );
 
-
         // Patches
 
         public static readonly Pattern InfiniteStam = new Pattern(
             new byte[] { 0x0F, 0x83, 0x26, 0x01, 0x00, 0x00, 0x48, 0x8B },
+            "xxxxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern InfiniteGoods = new Pattern(
+            new byte[] { 0x66, 0x29, 0x73, 0x20 },
+            "xxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern HideChrModels = new Pattern(
+            new byte[] { 0x74, 0x05, 0x80, 0xC9, 0x08 },
+            "xxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern HideMap = new Pattern(
+            new byte[] { 0x48, 0x8B, 0x4B, 0x20, 0x48, 0x98 },
+            "xxxxxx",
+            -0x6,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern InfiniteCasts = new Pattern(
+            new byte[] { 0x88, 0x4D, 0x20, 0x49 },
+            "xxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern InfiniteDurability = new Pattern(
+            new byte[] { 0xF3, 0x0F, 0x11, 0xB4, 0xC3 },
+            "xxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern DropRate = new Pattern(
+            new byte[] { 0x41, 0xF7, 0xF2, 0x41, 0x3B, 0xD1 },
+            "xxxxxx",
+            0,
+            AddressingMode.Absolute
+        );
+
+        public static readonly Pattern DisableAi = new Pattern(
+            new byte[] { 0x7F, 0x59, 0x48, 0x8D },
+            "xxxx",
+            0,
+            AddressingMode.Absolute);
+
+        public static readonly Pattern Silent = new Pattern(
+            new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x84, 0xC0, 0x74, 0x4C, 0x48, 0x8B, 0x83 },
+            "x????xxxxxxx",
+            0,
+            AddressingMode.Absolute);
+
+        public static readonly Pattern Hidden = new Pattern(
+            new byte[] { 0x0F, 0x84, 0x02, 0x02, 0x00, 0x00, 0x48, 0x85 },
             "xxxxxxxx",
             0,
             AddressingMode.Absolute
@@ -485,7 +538,6 @@
             AddressingMode.Absolute
         );
 
-
         public static readonly Pattern GetEyePosition = new Pattern(
             new byte[] { 0x48, 0x83, 0xC4, 0x30, 0x5F, 0xC3, 0x48, 0x8D, 0x54, 0x24, 0x20, 0xE8 },
             "xxxxxxxxxxxx",
@@ -495,33 +547,12 @@
             5
         );
 
-        public static readonly Pattern Silent = new Pattern(
-            new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x84, 0xC0, 0x74, 0x4C, 0x48, 0x8B, 0x83 },
-            "x????xxxxxxx",
-            0,
-            AddressingMode.Absolute);
-
-        public static readonly Pattern Hidden = new Pattern(
-            new byte[] { 0x0F, 0x84, 0x02, 0x02, 0x00, 0x00, 0x48, 0x85 },
-            "xxxxxxxx",
-            0,
-            AddressingMode.Absolute
-        );
-
         public static readonly Pattern SoulMemWrite = new Pattern(
             new byte[] { 0x8B, 0x00, 0x89, 0x81, 0xF4 },
             "xxxxx",
             2,
             AddressingMode.Absolute
         );
-
-
-        public static readonly Pattern DisableAi = new Pattern(
-            new byte[] { 0x7F, 0x59, 0x48, 0x8D },
-            "xxxx",
-            0,
-            AddressingMode.Absolute);
-
 
         public static readonly Pattern KillboxFlagSet = new Pattern(
             new byte[]
@@ -530,50 +561,6 @@
                 0x84
             },
             "xxxxxxxxxxxxxxxxxx",
-            0,
-            AddressingMode.Absolute
-        );
-
-
-        public static readonly Pattern InfiniteGoods = new Pattern(
-            new byte[] { 0x66, 0x29, 0x73, 0x20 },
-            "xxxx",
-            0,
-            AddressingMode.Absolute
-        );
-
-        public static readonly Pattern HideChrModels = new Pattern(
-            new byte[] { 0x74, 0x05, 0x80, 0xC9, 0x08 },
-            "xxxxx",
-            0,
-            AddressingMode.Absolute
-        );
-
-        public static readonly Pattern HideMap = new Pattern(
-            new byte[] { 0x48, 0x8B, 0x4B, 0x20, 0x48, 0x98 },
-            "xxxxxx",
-            -0x6,
-            AddressingMode.Absolute
-        );
-
-
-        public static readonly Pattern InfiniteCasts = new Pattern(
-            new byte[] { 0x88, 0x4D, 0x20, 0x49 },
-            "xxxx",
-            0,
-            AddressingMode.Absolute
-        );
-
-        public static readonly Pattern InfiniteDurability = new Pattern(
-            new byte[] { 0xF3, 0x0F, 0x11, 0xB4, 0xC3 },
-            "xxxxx",
-            0,
-            AddressingMode.Absolute
-        );
-
-        public static readonly Pattern DropRate = new Pattern(
-            new byte[] { 0x41, 0xF7, 0xF2, 0x41, 0x3B, 0xD1 },
-            "xxxxxx",
             0,
             AddressingMode.Absolute
         );

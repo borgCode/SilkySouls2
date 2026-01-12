@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="SilkySouls2.Views.TargetTab"
+﻿<UserControl x:Class="SilkySouls2.Views.Tabs.TargetTab"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -390,8 +390,6 @@
                                            Maximum="5"
                                            Increment="0.50"
                                            Width="100"
-                                           PreviewKeyDown="SpeedUpDown_PreviewKeyDown"
-                                           LostFocus="SpeedUpDown_LostFocus"
                                            HorizontalAlignment="Left">
                             <xctk:DoubleUpDown.IsEnabled>
                                 <MultiBinding Converter="{StaticResource BooleanAndConverter}">
@@ -428,7 +426,7 @@
                         <TextBlock Text="Last Act: " Margin="20,0,0,0" VerticalAlignment="Center" />
                         <TextBlock Text="{Binding LastAct}" VerticalAlignment="Center" Width="20" TextAlignment="Right" />
                         <Button Content="Defenses"
-                                IsEnabled="{Binding AreButtonsEnabled}"
+                                IsEnabled="{Binding AreOptionsEnabled}"
                                 HorizontalAlignment="Right"
                                 Margin="130,0,0,0"
                               Click="OpenDefenseWindow"

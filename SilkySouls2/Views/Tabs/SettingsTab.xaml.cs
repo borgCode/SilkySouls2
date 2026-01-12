@@ -2,10 +2,9 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Threading;
 using SilkySouls2.ViewModels;
 
-namespace SilkySouls2.Views
+namespace SilkySouls2.Views.Tabs
 {
     public partial class SettingsTab
     

@@ -338,16 +338,15 @@ namespace SilkySouls2.Properties {
         /// <summary>
         ///   Looks up a localized string similar to 0f 29 74 24 20          movaps XMMWORD PTR [rsp+0x20],xmm6
         ///41 83 78 34 00          cmp    DWORD PTR [r8+0x34],0x0
-        ///74 6a                   je     76 &lt;skip&gt;
+        ///74 5e                   je     6a &lt;skip&gt;
         ///51                      push   rcx
-        ///48 b9 00 00 00 00 00    movabs rcx,0x0
-        ///00 00 00
-        ///48 8b 09                mov    rcx,QWORD PTR [rcx]
+        ///48 8b 0d 00 00 00 00    mov    rcx,QWORD PTR [rip+0x0]        # 14 &lt;_main+0x14&gt;
         ///48 8b 89 d0 00 00 00    mov    rcx,QWORD PTR [rcx+0xd0]
         ///48 39 c1                cmp    rcx,rax
-        ///74 4f                   je     75 &lt;exit&gt;
-        ///49 3b 41 68             cmp    rax,QWORD PTR [r9+0x68]
-        ///74 06                 [rest of string was truncated]&quot;;.
+        ///74 49                   je     69 &lt;exit&gt;
+        ///49 3b 49 70             cmp    rcx,QWORD PTR [r9+0x70]
+        ///75 43                   jne    69 &lt;exit&gt;
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DamageControl64 {
             get {
@@ -647,9 +646,30 @@ namespace SilkySouls2.Properties {
         ///57                      push   rdi
         ///48 81 ec 80 00 00 00    [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string EzStateEventExecuteCommand64 {
+        internal static string EzStateEventExecuteGameThread64 {
             get {
-                return ResourceManager.GetString("EzStateEventExecuteCommand64", resourceCulture);
+                return ResourceManager.GetString("EzStateEventExecuteGameThread64", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 48 89 e5                mov    rbp,rsp
+        ///48 81 ec 78 04 00 00    sub    rsp,0x478
+        ///48 8d 8d 08 fc ff ff    lea    rcx,[rbp-0x3f8]
+        ///ba 00 00 00 00          mov    edx,0x0
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
+        ///ff d0                   call   rax
+        ///48 8d 8d 18 fe ff ff    lea    rcx,[rbp-0x1e8]
+        ///48 8d 95 d8 fe ff ff    lea    rdx,[rbp-0x128]
+        ///4c 8d 85 e8 fe ff ff    lea    r8,[rbp-0x118]
+        ///41 c7 40 18 00 00 00    mov    DWORD PTR [r8+0x18],0x0
+        ///00
+        ///41 c7 40 1c 00 00 00    mov    DWORD PTR [r8+0x1c],0x [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string EzStateExecuteEvent64 {
+            get {
+                return ResourceManager.GetString("EzStateExecuteEvent64", resourceCulture);
             }
         }
         
@@ -1151,6 +1171,42 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to c7 46 2c ff ff ff ff    mov    DWORD PTR [esi+0x2c],0xffffffff
+        ///81 7e 30 68 87 01 00    cmp    DWORD PTR [esi+0x30],0x18768
+        ///0f 85 fc ff ff ff       jne    10 &lt;_main+0x10&gt;
+        ///50                      push   eax
+        ///a1 ef be ad de          mov    eax,ds:0xdeadbeef
+        ///8b 40 60                mov    eax,DWORD PTR [eax+0x60]
+        ///8b 40 60                mov    eax,DWORD PTR [eax+0x60]
+        ///83 78 68 01             cmp    DWORD PTR [eax+0x68],0x1
+        ///75 07                   jne    2d &lt;exit&gt;
+        ///c6 05 00 00 00 00 01    mov    BYTE PTR  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string NewGameDetect32 {
+            get {
+                return ResourceManager.GetString("NewGameDetect32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to c7 47 54 ff ff ff ff    mov    DWORD PTR [rdi+0x54],0xffffffff
+        ///81 7f 58 68 87 01 00    cmp    DWORD PTR [rdi+0x58],0x18768
+        ///0f 85 00 00 00 00       jne    14 &lt;_main+0x14&gt;
+        ///50                      push   rax
+        ///48 8b 05 00 00 00 00    mov    rax,QWORD PTR [rip+0x0]        # 1c &lt;_main+0x1c&gt;
+        ///48 8b 80 a8 00 00 00    mov    rax,QWORD PTR [rax+0xa8]
+        ///48 8b 80 c0 00 00 00    mov    rax,QWORD PTR [rax+0xc0]
+        ///83 78 68 01             cmp    DWORD PTR [rax+0x68],0x1
+        ///75 07                   jne    37 &lt;exit&gt;
+        ///c6 05 00  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string NewGameDetect64 {
+            get {
+                return ResourceManager.GetString("NewGameDetect64", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to c6 05 00 00 00 00 01    mov    BYTE PTR ds:0x0,0x1
         ///e9 fc ff ff ff          jmp    8 &lt;_main+0x8&gt;.
         /// </summary>
@@ -1648,49 +1704,15 @@ namespace SilkySouls2.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to b9 00 00 00 00          mov    ecx,0x0
-        ///6a 00                   push   0x0
-        ///68 ef be ad de          push   0xdeadbeef
-        ///b8 00 00 00 00          mov    eax,0x0
-        ///ff d0                   call   eax
-        ///c3                      ret.
-        /// </summary>
-        internal static string SetEventOff32 {
-            get {
-                return ResourceManager.GetString("SetEventOff32", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 48 b9 00 00 00 00 00    movabs rcx,0x0
-        ///00 00 00
-        ///48 ba 00 00 00 00 00    movabs rdx,0x0
-        ///00 00 00
-        ///41 b8 00 00 00 00       mov    r8d,0x0
-        ///48 b8 00 00 00 00 00    movabs rax,0x0
-        ///00 00 00
-        ///48 83 ec 28             sub    rsp,0x28
-        ///ff d0                   call   rax
-        ///48 83 c4 28             add    rsp,0x28
-        ///c3                      ret
-        ///.
-        /// </summary>
-        internal static string SetEventOff64 {
-            get {
-                return ResourceManager.GetString("SetEventOff64", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to b9 00 00 00 00          mov    ecx,0x0
         ///6a 01                   push   0x1
         ///68 ef be ad de          push   0xdeadbeef
         ///b8 00 00 00 00          mov    eax,0x0
         ///ff d0                   call   eax
         ///c3                      ret.
         /// </summary>
-        internal static string SetEventOn32 {
+        internal static string SetEvent32 {
             get {
-                return ResourceManager.GetString("SetEventOn32", resourceCulture);
+                return ResourceManager.GetString("SetEvent32", resourceCulture);
             }
         }
         
@@ -1707,9 +1729,9 @@ namespace SilkySouls2.Properties {
         ///48 83 c4 28             add    rsp,0x28
         ///c3                      ret.
         /// </summary>
-        internal static string SetEventOn64 {
+        internal static string SetEvent64 {
             get {
-                return ResourceManager.GetString("SetEventOn64", resourceCulture);
+                return ResourceManager.GetString("SetEvent64", resourceCulture);
             }
         }
         

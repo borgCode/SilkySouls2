@@ -1,22 +1,23 @@
 using System;
 using System.IO;
 using System.IO.MemoryMappedFiles;
+using SilkySouls2.Interfaces;
+using SilkySouls2.Services;
 
 namespace SilkySouls2.Memory.DLLShared
 {
-    public class DllManager
+    public class DllManager(IMemoryService memoryService)
     {
-        private readonly MemoryIo _memoryIo;
-        private readonly string _drawScholarDllPath;
-        private readonly string _speedScholarDllPath;
-        private readonly string _drawVanillaDllPath;
-        private readonly string _speedVanillaDllPath;
+        private readonly string _drawScholarDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "DrawScholar.dll");
+        private readonly string _speedScholarDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "SilkySpeed.dll");
+        private readonly string _drawVanillaDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "DrawVanilla.dll");
+        private readonly string _speedVanillaDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "SilkySpeed32.dll");
         
         private static readonly int NumDrawFlags = Enum.GetValues(typeof(DrawType)).Length;
         private static readonly int NumAddresses = Enum.GetValues(typeof(SharedMemAddr)).Length;
         
         private static readonly int DrawFlagsSize = NumDrawFlags * sizeof(bool);
-        private static int AddressesSize => NumAddresses * (GameVersion.Current.Edition == GameEdition.Scholar ? 8 : 4);
+        private static int AddressesSize => NumAddresses * (PatchManager.IsScholar() ? 8 : 4);
         private static int TotalSize => DrawFlagsSize + AddressesSize;
 
         private MemoryMappedFile _drawSharedMemory;
@@ -27,30 +28,26 @@ namespace SilkySouls2.Memory.DLLShared
         
         private bool _drawIsInjected;
         private bool _speedIsInjected;
-        
-        public DllManager(MemoryIo memoryIo)
-        {
-            _memoryIo = memoryIo;
-            _drawScholarDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "DrawScholar.dll");
-            _speedScholarDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "SilkySpeed.dll");
-            _drawVanillaDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "DrawVanilla.dll");
-            _speedVanillaDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "SilkySpeed32.dll");
-        }
-        
+
         public void InjectDrawDll()
         {
             if (_drawIsInjected) return;
             
             SetAddress(SharedMemAddr.GameManagerImp, Offsets.GameManagerImp.Base.ToInt64());
-            SetAddress(SharedMemAddr.ParamLookup, Offsets.Funcs.ParamLookup);
-            if (GameVersion.Current.Edition == GameEdition.Scholar)
-                SetAddress(SharedMemAddr.SetRenderTargets, Offsets.Funcs.SetRenderTargets);
+            SetAddress(SharedMemAddr.ParamLookup, Offsets.Functions.ParamLookup);
+            if (PatchManager.IsScholar())
+            {
+                SetAddress(SharedMemAddr.SetRenderTargets, Offsets.Functions.SetRenderTargets);
+            }
             else
-                SetAddress(SharedMemAddr.SetRenderTargets, Offsets.Funcs.SetDepthStencilSurface);
-            SetAddress(SharedMemAddr.CreateSoundEvent, Offsets.Funcs.CreateSoundEvent);
-            SetAddress(SharedMemAddr.GetEyePosition, Offsets.Funcs.GetEyePosition);
-            string dllPath = GameVersion.Current.Edition == GameEdition.Scholar ? _drawScholarDllPath : _drawVanillaDllPath;
-            _drawIsInjected = _memoryIo.InjectDll(dllPath);
+            {
+                SetAddress(SharedMemAddr.SetRenderTargets, Offsets.Functions.SetDepthStencilSurface);
+            }
+
+            SetAddress(SharedMemAddr.CreateSoundEvent, Offsets.Functions.CreateSoundEvent);
+            SetAddress(SharedMemAddr.GetEyePosition, Offsets.Functions.GetEyePosition);
+            string dllPath = PatchManager.IsScholar() ? _drawScholarDllPath : _drawVanillaDllPath;
+            _drawIsInjected = memoryService.InjectDll(dllPath);
         }
         
         public void CreateDrawSharedMem()
@@ -76,7 +73,7 @@ namespace SilkySouls2.Memory.DLLShared
                 return;
             }
 
-            int pointerSize = GameVersion.Current.Edition == GameEdition.Scholar ? 8 : 4;
+            int pointerSize = PatchManager.Current.Edition == GameEdition.Scholar ? 8 : 4;
             int offset = DrawFlagsSize + ((int)addrType * pointerSize);
 
             if (pointerSize == 8) _drawViewAccessor.Write(offset, address);
@@ -88,8 +85,8 @@ namespace SilkySouls2.Memory.DLLShared
         public void InjectSpeedDll()
         {
             if (_speedIsInjected) return;
-            string dllPath = GameVersion.Current.Edition == GameEdition.Scholar ? _speedScholarDllPath : _speedVanillaDllPath;
-            _speedIsInjected = _memoryIo.InjectDll(dllPath);
+            string dllPath = PatchManager.Current.Edition == GameEdition.Scholar ? _speedScholarDllPath : _speedVanillaDllPath;
+            _speedIsInjected = memoryService.InjectDll(dllPath);
         }
 
         public void CreateSpeedSharedMem()
@@ -137,7 +134,7 @@ namespace SilkySouls2.Memory.DLLShared
 
         public void TestInject32()
         {
-            _memoryIo.InjectDll(_drawVanillaDllPath);
+            memoryService.InjectDll(_drawVanillaDllPath);
         }
 
         public bool IsSpeedInjected() => _speedIsInjected;

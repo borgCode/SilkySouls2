@@ -1,0 +1,95 @@
+﻿// 
+
+using static SilkySouls2.Memory.Patch;
+
+namespace SilkySouls2.Memory
+{
+    public class PatchBytes(byte[] enabled, byte[] disabled)
+    {
+        public byte[] Enabled { get; } = enabled;
+        public byte[] Disabled { get; } = disabled;
+
+        public byte[] Get(bool enabled) => enabled ? Enabled : Disabled;
+    }
+
+    public static class PatchDefinitions
+    {
+        public static PatchBytes InfiniteGoods => PatchManager.Current.PatchVersion switch
+        {
+            Scholar1_0_2 or Scholar1_0_3 => new([0x90, 0x90, 0x90, 0x90], [0x66, 0x29, 0x5E, 0x18]),
+            _ => new([0x90, 0x90, 0x90, 0x90], [0x66, 0x29, 0x5E, 0x18])
+        };
+
+        public static PatchBytes InfiniteCasts => PatchManager.Current.PatchVersion switch
+        {
+            Scholar1_0_2 or Scholar1_0_3 => new([0x90, 0x90, 0x90], [0x88, 0x4D, 0x20]),
+            _ => new([0x90, 0x90, 0x90], [0x88, 0x43, 0x18])
+        };
+
+        public static PatchBytes InfiniteDurability => PatchManager.Current.PatchVersion switch
+        {
+            Scholar1_0_2 or Scholar1_0_3 => new(
+                [0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90],
+                [0xF3, 0x0F, 0x11, 0xB4, 0xC3, 0x94, 0x00, 0x00, 0x00]
+            ),
+            _ => new([0x90, 0x90, 0x90, 0x90, 0x90,], [0xF3, 0x0F, 0x11, 0x47, 0x6C])
+        };
+
+        public static PatchBytes NoHollowing => PatchManager.Current.PatchVersion switch
+        {
+            Scholar1_0_2 or Scholar1_0_3 => new(
+                [0x90, 0x90, 0x90, 0x90, 0x90, 0x90],
+                [0x88, 0x81, 0xAC, 0x01, 0x00, 0x00]
+            ),
+            _ => new([0x90, 0x90, 0x90, 0x90, 0x90, 0x90], [0x88, 0x91, 0xA8, 0x01, 0x00, 0x00])
+        };
+
+        public static PatchBytes NoSoulLoss => PatchManager.Current.PatchVersion switch
+        {
+            Scholar1_0_2 or Scholar1_0_3 => new(
+                [0x90, 0x90, 0x90, 0x90, 0x90, 0x90],
+                [0x89, 0x90, 0xEC, 0x00, 0x00, 0x00]
+            ),
+            _ => new(
+                [0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90],
+                [0xC7, 0x80, 0xE8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+            )
+        };
+
+        public static PatchBytes SoulMemWrite1 => PatchManager.Current.PatchVersion switch
+        {
+            Scholar1_0_2 or Scholar1_0_3 => new(
+                [0x90, 0x90, 0x90, 0x90, 0x90, 0x90],
+                [0x89, 0x81, 0xF4, 0x00, 0x00, 0x00]
+            ),
+            _ => new(
+                [0x90, 0x90, 0x90, 0x90, 0x90, 0x90],
+                [0x89, 0x81, 0xF0, 0x00, 0x00, 0x00]
+            )
+        };
+
+        public static PatchBytes SoulMemWrite2 => PatchManager.Current.PatchVersion switch
+        {
+            Scholar1_0_2 or Scholar1_0_3 => new(
+                [0x90, 0x90, 0x90, 0x90, 0x90, 0x90],
+                [0x89, 0x81, 0xFC, 0x00, 0x00, 0x00]
+            ),
+            _ => new(
+                [0x90, 0x90, 0x90, 0x90, 0x90, 0x90],
+                [0x89, 0x91, 0xF8, 0x00, 0x00, 0x00]
+            )
+        };
+
+        public static PatchBytes DropRate => PatchManager.Current.PatchVersion switch
+        {
+            Scholar1_0_2 or Scholar1_0_3 => new(
+                [0x90, 0x90, 0x90],
+                [0x41, 0xF7, 0xF2]
+            ),
+            _ => new(
+                [0x90, 0x90],
+                [0xF7, 0xF6]
+            )
+        };
+    }
+}

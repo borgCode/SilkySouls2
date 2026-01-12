@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using SilkySouls2.Interfaces;
 using SilkySouls2.Memory.Patterns;
+using SilkySouls2.Services;
 
 namespace SilkySouls2.Memory
 {
-    public class AoBScanner
+    public class AoBScanner(IMemoryService memoryService)
     {
-        private readonly MemoryIo _memoryIo;
-
-        public AoBScanner(MemoryIo memoryIo)
-        {
-            _memoryIo = memoryIo;
-        }
-
-        public void Scan(bool is64Bit)
+        public void FallBackScan(bool is64Bit)
         {
 
             if (is64Bit)
@@ -43,8 +38,8 @@ namespace SilkySouls2.Memory
 
                 TryPatternWithFallback("InfiniteStam", Patterns64.InfiniteStam,
                     addr => Offsets.Patches.InfiniteStam = addr, saved);
-                TryPatternWithFallback("InfiniteGoods", Patterns64.InfiniteGoods,
-                    addr => Offsets.Patches.InfiniteGoods = addr, saved);
+                // TryPatternWithFallback("InfiniteGoods", Patterns64.InfiniteGoods,
+                //     addr => Offsets.Patches.InfiniteGoods = addr, saved);
                 TryPatternWithFallback("HideChrModels", Patterns64.HideChrModels,
                     addr => Offsets.Patches.HideChrModels = addr, saved);
                 TryPatternWithFallback("HideMap", Patterns64.HideMap, addr => Offsets.Patches.HideMap = addr,
@@ -90,7 +85,7 @@ namespace SilkySouls2.Memory
                     Patterns64.SetEventWrapper,
                     addr => Offsets.Hooks.SetEventWrapper = addr.ToInt64(), saved);
                 TryPatternWithFallback("HpWrite", Patterns64.HpWrite,
-                    addr => Offsets.Hooks.HpWrite = addr.ToInt64(), saved);
+                    addr => Offsets.Hooks.PlayerNoDamage = addr.ToInt64(), saved);
 
                 TryPatternWithFallback("WarpCoordWrite", Patterns64.WarpCoordWrite,
                     addr => Offsets.Hooks.WarpCoordWrite = addr.ToInt64(), saved);
@@ -135,6 +130,8 @@ namespace SilkySouls2.Memory
                     addr => Offsets.Hooks.NoShadedFogCam = addr.ToInt64(), saved);
                 TryPatternWithFallback("GameManUpdate", Patterns64.GameManUpdate,
                     addr => Offsets.Hooks.GameManUpdate = addr.ToInt64(), saved);
+                TryPatternWithFallback("NewGameDetect", Patterns64.NewGameDetect,
+                    addr => Offsets.Hooks.NewGameDetect = addr.ToInt64(), saved);
 
                 Offsets.Hooks.DisableTargetAi = Offsets.Patches.DisableAi.ToInt64() + 0x2C;
 
@@ -143,16 +140,16 @@ namespace SilkySouls2.Memory
                 {
                     if (saved.TryGetValue("SetCurrectAct", out var value))
                     {
-                        Offsets.Hooks.SetCurrectAct = value;
+                        Offsets.Hooks.SetCurrentAct = value;
                     }
                 }
                 else
                 {
-                    byte byte0 = _memoryIo.ReadBytes(setCurrectActLocs[0] - 1, 1)[0];
+                    byte byte0 = memoryService.ReadBytes(setCurrectActLocs[0] - 1, 1)[0];
     
                     IntPtr validAddress = (byte0 != 0xC3) ? setCurrectActLocs[0] : setCurrectActLocs[1];
     
-                    Offsets.Hooks.SetCurrectAct = validAddress.ToInt64();
+                    Offsets.Hooks.SetCurrentAct = validAddress.ToInt64();
                     saved["SetCurrectAct"] = validAddress.ToInt64();
                 }
                 using (var writer = new StreamWriter(savePath))
@@ -161,59 +158,59 @@ namespace SilkySouls2.Memory
                         writer.WriteLine($"{pair.Key}={pair.Value:X}");
                 }
 
-                Offsets.Funcs.WarpPrep = FindAddressByPattern(Patterns64.WarpPrep).ToInt64();
-                Offsets.Funcs.BonfireWarp = FindAddressByPattern(Patterns64.BonfireWarp).ToInt64();
-                Offsets.Funcs.RestoreSpellcasts = FindAddressByPattern(Patterns64.RestoreSpellcasts).ToInt64();
-                Offsets.Funcs.ParamLookup = FindAddressByPattern(Patterns64.ParamLookUp).ToInt64();
-                Offsets.Funcs.SetEvent = FindAddressByPattern(Patterns64.SetEvent).ToInt64();
-                Offsets.Funcs.GiveSouls = FindAddressByPattern(Patterns64.GiveSouls).ToInt64();
-                Offsets.Funcs.LevelLookup = FindAddressByPattern(Patterns64.LevelLookUp).ToInt64();
-                Offsets.Funcs.LevelUp = FindAddressByPattern(Patterns64.LevelUp).ToInt64();
-                Offsets.Patches.NegativeLevel = (IntPtr)Offsets.Funcs.LevelUp + 0x38;
+                Offsets.Functions.WarpPrep = FindAddressByPattern(Patterns64.WarpPrep).ToInt64();
+                Offsets.Functions.BonfireWarp = FindAddressByPattern(Patterns64.BonfireWarp).ToInt64();
+                Offsets.Functions.RestoreSpellcasts = FindAddressByPattern(Patterns64.RestoreSpellcasts).ToInt64();
+                Offsets.Functions.ParamLookup = FindAddressByPattern(Patterns64.ParamLookUp).ToInt64();
+                Offsets.Functions.SetEvent = FindAddressByPattern(Patterns64.SetEvent).ToInt64();
+                Offsets.Functions.GiveSouls = FindAddressByPattern(Patterns64.GiveSouls).ToInt64();
+                Offsets.Functions.LevelLookup = FindAddressByPattern(Patterns64.LevelLookUp).ToInt64();
+                Offsets.Functions.LevelUp = FindAddressByPattern(Patterns64.LevelUp).ToInt64();
+                Offsets.Patches.NegativeLevel = (IntPtr)Offsets.Functions.LevelUp + 0x38;
 
-                Offsets.Funcs.CurrentItemQuantityCheck =
+                Offsets.Functions.CurrentItemQuantityCheck =
                     FindAddressByPattern(Patterns64.CurrentItemQuantityCheck).ToInt64();
-                Offsets.Funcs.ItemGive = FindAddressByPattern(Patterns64.ItemGive).ToInt64();
-                Offsets.Funcs.BuildItemDialog = FindAddressByPattern(Patterns64.BuildItemDialog).ToInt64();
-                Offsets.Funcs.ShowItemDialog = FindAddressByPattern(Patterns64.ShowItemDialog).ToInt64();
-                Offsets.Funcs.GetEyePosition = FindAddressByPattern(Patterns64.GetEyePosition).ToInt64();
-                Offsets.Funcs.SetSpEffect = FindAddressByPattern(Patterns64.SetSpEffect).ToInt64();
-                Offsets.Funcs.HavokRayCast = FindAddressByPattern(Patterns64.HavokRayCast).ToInt64();
-                Offsets.Funcs.ConvertPxRigidToMapEntity =
+                Offsets.Functions.ItemGive = FindAddressByPattern(Patterns64.ItemGive).ToInt64();
+                Offsets.Functions.BuildItemDialog = FindAddressByPattern(Patterns64.BuildItemDialog).ToInt64();
+                Offsets.Functions.ShowItemDialog = FindAddressByPattern(Patterns64.ShowItemDialog).ToInt64();
+                Offsets.Functions.GetEyePosition = FindAddressByPattern(Patterns64.GetEyePosition).ToInt64();
+                Offsets.Functions.SetSpEffect = FindAddressByPattern(Patterns64.SetSpEffect).ToInt64();
+                Offsets.Functions.HavokRayCast = FindAddressByPattern(Patterns64.HavokRayCast).ToInt64();
+                Offsets.Functions.ConvertPxRigidToMapEntity =
                     FindAddressByPattern(Patterns64.ConvertPxRigidToMapEntity).ToInt64();
-                Offsets.Funcs.ConvertMapEntityToGameId =
+                Offsets.Functions.ConvertMapEntityToGameId =
                     FindAddressByPattern(Patterns64.ConvertMapEntityToGameId).ToInt64();
-                Offsets.Funcs.UnlockBonfire = FindAddressByPattern(Patterns64.UnlockBonfire).ToInt64();
-                Offsets.Funcs.GetMapObjStateActComponent =
+                Offsets.Functions.UnlockBonfire = FindAddressByPattern(Patterns64.UnlockBonfire).ToInt64();
+                Offsets.Functions.GetMapObjStateActComponent =
                     FindAddressByPattern(Patterns64.GetMapObjStateActComponent).ToInt64();
-                Offsets.Funcs.GetMapEntityWithAreaIdAndObjId =
+                Offsets.Functions.GetMapEntityWithAreaIdAndObjId =
                     FindAddressByPattern(Patterns64.GetMapEntityWithAreaIdAndObjId).ToInt64();
-                Offsets.Funcs.GetWhiteDoorComponent =
+                Offsets.Functions.GetWhiteDoorComponent =
                     FindAddressByPattern(Patterns64.GetWhiteDoorComponent).ToInt64();
-                Offsets.Funcs.AttuneSpell = FindAddressByPattern(Patterns64.AttuneSpell).ToInt64();
-                Offsets.Funcs.UpdateSpellSlots = FindAddressByPattern(Patterns64.UpdateSpellSlots).ToInt64();
-                Offsets.Funcs.GetEvent = FindAddressByPattern(Patterns64.GetEvent).ToInt64();
-                Offsets.Funcs.EzStateExternalEventCtor = FindAddressByPattern(Patterns64.EzStateExternalEventCtor).ToInt64();
-                Offsets.Funcs.EzStateEventExecuteCommand = FindAddressByPattern(Patterns64.EzStateEventExecuteCommand).ToInt64();
+                Offsets.Functions.AttuneSpell = FindAddressByPattern(Patterns64.AttuneSpell).ToInt64();
+                Offsets.Functions.UpdateSpellSlots = FindAddressByPattern(Patterns64.UpdateSpellSlots).ToInt64();
+                Offsets.Functions.GetEvent = FindAddressByPattern(Patterns64.GetEvent).ToInt64();
+                Offsets.Functions.EzStateExternalEventCtor = FindAddressByPattern(Patterns64.EzStateExternalEventCtor).ToInt64();
+                Offsets.Functions.EzStateEventExecuteCommand = FindAddressByPattern(Patterns64.EzStateEventExecuteCommand).ToInt64();
 
                 FindMultipleCallsInFunction(Patterns64.DisableNaviMesh, new Dictionary<Action<long>, int>
                 {
-                    { addr => Offsets.Funcs.GetNavimeshLoc = addr, -0xD },
-                    { addr => Offsets.Funcs.DisableNaviMesh = addr, 0xE },
+                    { addr => Offsets.Functions.GetNavimeshLoc = addr, -0xD },
+                    { addr => Offsets.Functions.DisableNavimesh = addr, 0xE },
                 });
 
                 FindMultipleCallsInFunction(Patterns64.GetNumOfSpellSlots, new Dictionary<Action<long>, int>
                 {
-                    { addr => Offsets.Funcs.GetNumOfSpellslots1 = addr, -0x12 },
-                    { addr => Offsets.Funcs.GetNumOfSpellslots2 = addr, -0x8 },
+                    { addr => Offsets.Functions.GetNumOfSpellSlots1 = addr, -0x12 },
+                    { addr => Offsets.Functions.GetNumOfSpellSlots2 = addr, -0x8 },
                 });
 
                 TryPatternWithFallback("SetRenderTargets",
                     Patterns64.SetRenderTargetsWrapper,
-                    addr => Offsets.Funcs.SetRenderTargets = addr.ToInt64(), saved);
+                    addr => Offsets.Functions.SetRenderTargets = addr.ToInt64(), saved);
                 TryPatternWithFallback("CreateSoundEvent",
                     Patterns64.CreateSoundEvent,
-                    addr => Offsets.Funcs.CreateSoundEvent = addr.ToInt64(), saved);
+                    addr => Offsets.Functions.CreateSoundEvent = addr.ToInt64(), saved);
             }
             else
             {
@@ -275,8 +272,8 @@ namespace SilkySouls2.Memory
                     addr => Offsets.Hooks.InfinitePoise = addr.ToInt32(), saved);
                 TryPatternWithFallback("DamageControl", Patterns32.DamageControl,
                     addr => Offsets.Hooks.DamageControl = addr.ToInt32(), saved);
-                TryPatternWithFallback("HpWrite", Patterns32.HpWrite,
-                    addr => Offsets.Hooks.HpWrite = addr.ToInt32(), saved);
+                // TryPatternWithFallback("PlayerNoDamage", Patterns32.PlayerNoDamage,
+                //     addr => Offsets.Hooks.PlayerNoDamage = addr.ToInt32(), saved);
                 TryPatternWithFallback("WarpCoordWrite", Patterns32.WarpCoordWrite,
                     addr => Offsets.Hooks.WarpCoordWrite = addr.ToInt32(), saved);
                 TryPatternWithFallback("SetSharedFlag", Patterns32.SetSharedFlag,
@@ -315,7 +312,7 @@ namespace SilkySouls2.Memory
                     addr => Offsets.Hooks.NoShadedFogFar = addr.ToInt32(), saved);
                 TryPatternWithFallback("NoShadedFogCam", Patterns32.NoShadedFogCam,
                     addr => Offsets.Hooks.NoShadedFogCam = addr.ToInt32(), saved);
-                TryPatternWithFallback("CompareEventRandVal", Patterns32.CompareEventRandVal,
+                TryPatternWithFallback("CompareEventRandValueElana", Patterns32.CompareEventRandValueElana,
                     addr => Offsets.Hooks.CompareEventRandValueElana = addr.ToInt32(), saved);
                 
                 var setCurrectActLocs = FindAddressesByPattern(Patterns32.SetCurrentAct, 2);
@@ -323,77 +320,77 @@ namespace SilkySouls2.Memory
                 {
                     if (saved.TryGetValue("SetCurrectAct", out var value))
                     {
-                        Offsets.Hooks.SetCurrectAct = value;
+                        Offsets.Hooks.SetCurrentAct = value;
                     }
                 }
                 else
                 {
-                    byte[] bytes0 = _memoryIo.ReadBytes(setCurrectActLocs[0] - 10, 3);
+                    byte[] bytes0 = memoryService.ReadBytes(setCurrectActLocs[0] - 10, 3);
     
                     bool isReturnInstruction = bytes0[0] == 0xC2 && bytes0[1] == 0x04 && bytes0[2] == 0x00;
     
                     IntPtr validAddress = !isReturnInstruction ? setCurrectActLocs[0] : setCurrectActLocs[1];
     
-                    Offsets.Hooks.SetCurrectAct = validAddress.ToInt32();
+                    Offsets.Hooks.SetCurrentAct = validAddress.ToInt32();
                     saved["SetCurrectAct"] = validAddress.ToInt32();
                 }
                 
                 
-                Offsets.Funcs.SetSpEffect = FindAddressByPattern(Patterns32.SetSpEffect).ToInt32();
-                Offsets.Funcs.GiveSouls = FindAddressByPattern(Patterns32.GiveSouls).ToInt32();
-                Offsets.Funcs.LevelUp = FindAddressByPattern(Patterns32.LevelUp).ToInt32();
-                Offsets.Funcs.LevelLookup = FindAddressByPattern(Patterns32.LevelLookup).ToInt32();
-                Offsets.Funcs.RestoreSpellcasts = FindAddressByPattern(Patterns32.RestoreSpellcasts).ToInt32();
-                Offsets.Funcs.CreateSoundEvent = FindAddressByPattern(Patterns32.CreateSoundEvent).ToInt32();
-                Offsets.Funcs.UnlockBonfire = FindAddressByPattern(Patterns32.UnlockBonfire).ToInt32();
-                Offsets.Funcs.SetEvent = FindAddressByPattern(Patterns32.SetEvent).ToInt32();
-                Offsets.Funcs.GetMapEntityWithAreaIdAndObjId = FindAddressByPattern(Patterns32.GetMapEntityWithAreaIdAndObjId).ToInt32();
-                Offsets.Funcs.GetMapObjStateActComponent = FindAddressByPattern(Patterns32.GetStateActComp).ToInt32();
-                Offsets.Funcs.GetWhiteDoorComponent = FindAddressByPattern(Patterns32.GetWhiteDoorComponent).ToInt32();
-                Offsets.Funcs.HavokRayCast = FindAddressByPattern(Patterns32.HavokRayCast).ToInt32();
-                Offsets.Funcs.ItemGive = FindAddressByPattern(Patterns32.ItemGive).ToInt32();
-                Offsets.Funcs.BuildItemDialog = FindAddressByPattern(Patterns32.BuildItemDialog).ToInt32();
-                Offsets.Funcs.ShowItemDialog = FindAddressByPattern(Patterns32.ShowItemDialog).ToInt32();
-                Offsets.Funcs.CurrentItemQuantityCheck = FindAddressByPattern(Patterns32.CurrentItemQuantityCheck).ToInt32();
-                Offsets.Funcs.Sleep = FindAddressByPattern(Patterns32.Sleep).ToInt32();
-                Offsets.Funcs.UpdateSpellSlots = FindAddressByPattern(Patterns32.UpdateSpellSlots).ToInt32();
-                Offsets.Funcs.AttuneSpell = FindAddressByPattern(Patterns32.AttuneSpell).ToInt32();
-                Offsets.Funcs.ParamLookup = FindAddressByPattern(Patterns32.ParamLookup).ToInt32();
-                Offsets.Funcs.GetEyePosition = FindAddressByPattern(Patterns32.GetEyePosition).ToInt32();
-                Offsets.Funcs.GetEvent = FindAddressByPattern(Patterns32.GetEvent).ToInt32();
+                Offsets.Functions.SetSpEffect = FindAddressByPattern(Patterns32.SetSpEffect).ToInt32();
+                Offsets.Functions.GiveSouls = FindAddressByPattern(Patterns32.GiveSouls).ToInt32();
+                Offsets.Functions.LevelUp = FindAddressByPattern(Patterns32.LevelUp).ToInt32();
+                Offsets.Functions.LevelLookup = FindAddressByPattern(Patterns32.LevelLookup).ToInt32();
+                Offsets.Functions.RestoreSpellcasts = FindAddressByPattern(Patterns32.RestoreSpellcasts).ToInt32();
+                Offsets.Functions.CreateSoundEvent = FindAddressByPattern(Patterns32.CreateSoundEvent).ToInt32();
+                Offsets.Functions.UnlockBonfire = FindAddressByPattern(Patterns32.UnlockBonfire).ToInt32();
+                Offsets.Functions.SetEvent = FindAddressByPattern(Patterns32.SetEvent).ToInt32();
+                Offsets.Functions.GetMapEntityWithAreaIdAndObjId = FindAddressByPattern(Patterns32.GetMapEntityWithAreaIdAndObjId).ToInt32();
+                Offsets.Functions.GetMapObjStateActComponent = FindAddressByPattern(Patterns32.GetStateActComp).ToInt32();
+                Offsets.Functions.GetWhiteDoorComponent = FindAddressByPattern(Patterns32.GetWhiteDoorComponent).ToInt32();
+                Offsets.Functions.HavokRayCast = FindAddressByPattern(Patterns32.HavokRayCast).ToInt32();
+                Offsets.Functions.ItemGive = FindAddressByPattern(Patterns32.ItemGive).ToInt32();
+                Offsets.Functions.BuildItemDialog = FindAddressByPattern(Patterns32.BuildItemDialog).ToInt32();
+                Offsets.Functions.ShowItemDialog = FindAddressByPattern(Patterns32.ShowItemDialog).ToInt32();
+                Offsets.Functions.CurrentItemQuantityCheck = FindAddressByPattern(Patterns32.CurrentItemQuantityCheck).ToInt32();
+                Offsets.Functions.Sleep = FindAddressByPattern(Patterns32.Sleep).ToInt32();
+                Offsets.Functions.UpdateSpellSlots = FindAddressByPattern(Patterns32.UpdateSpellSlots).ToInt32();
+                Offsets.Functions.AttuneSpell = FindAddressByPattern(Patterns32.AttuneSpell).ToInt32();
+                Offsets.Functions.ParamLookup = FindAddressByPattern(Patterns32.ParamLookup).ToInt32();
+                Offsets.Functions.GetEyePosition = FindAddressByPattern(Patterns32.GetEyePosition).ToInt32();
+                Offsets.Functions.GetEvent = FindAddressByPattern(Patterns32.GetEvent).ToInt32();
                 
                 FindMultipleCallsInFunction(Patterns32.GetNumOfSpellSlots, new Dictionary<Action<long>, int>
                 {
-                    { addr => Offsets.Funcs.GetNumOfSpellslots1 = addr, -0xE },
-                    { addr => Offsets.Funcs.GetNumOfSpellslots2 = addr, -0x5 },
+                    { addr => Offsets.Functions.GetNumOfSpellSlots1 = addr, -0xE },
+                    { addr => Offsets.Functions.GetNumOfSpellSlots2 = addr, -0x5 },
                 });
           
                 FindMultipleCallsInFunction(Patterns32.ConvertPxRigidToMapEntity, new Dictionary<Action<long>, int>
                 {
-                    { addr => Offsets.Funcs.ConvertPxRigidToMapEntity = addr, 0 },
-                    { addr => Offsets.Funcs.ConvertMapEntityToGameId = addr, 0x17 },
+                    { addr => Offsets.Functions.ConvertPxRigidToMapEntity = addr, 0 },
+                    { addr => Offsets.Functions.ConvertMapEntityToGameId = addr, 0x17 },
                 });
                 
                 FindMultipleCallsInFunction(Patterns32.BonfireWarp, new Dictionary<Action<long>, int>
                 {
-                    { addr => Offsets.Funcs.WarpPrep = addr, 0x7 },
-                    { addr => Offsets.Funcs.BonfireWarp = addr, 0x1F },
+                    { addr => Offsets.Functions.WarpPrep = addr, 0x7 },
+                    { addr => Offsets.Functions.BonfireWarp = addr, 0x1F },
                 });
                 
                 FindMultipleCallsInFunction(Patterns32.DisableNavimesh, new Dictionary<Action<long>, int>
                 {
-                    { addr => Offsets.Funcs.GetNavimeshLoc = addr, -0xE },
-                    { addr => Offsets.Funcs.DisableNaviMesh = addr, 0xB },
+                    { addr => Offsets.Functions.GetNavimeshLoc = addr, -0xE },
+                    { addr => Offsets.Functions.DisableNavimesh = addr, 0xB },
                 });
                 
-                Offsets.Patches.NegativeLevel = (IntPtr)Offsets.Funcs.LevelUp + 0x31;
+                Offsets.Patches.NegativeLevel = (IntPtr)Offsets.Functions.LevelUp + 0x31;
                 Offsets.Patches.SoulMemWrite1 = FindAddressByPattern(Patterns32.SoulMemWrite);
                 Offsets.Patches.SoulMemWrite2 = Offsets.Patches.SoulMemWrite1 + 0x4A;
                 
                 
                 TryPatternWithFallback("SetDepthStencilSurface",
                     Patterns32.SetDepthStencilSurface,
-                    addr => Offsets.Funcs.SetDepthStencilSurface = addr.ToInt64(), saved);
+                    addr => Offsets.Functions.SetDepthStencilSurface = addr.ToInt64(), saved);
                 
                 using (var writer = new StreamWriter(savePath))
                 {
@@ -431,7 +428,7 @@ namespace SilkySouls2.Memory
            
             Console.WriteLine($"Hooks.SetAreaVariable: 0x{Offsets.Hooks.SetAreaVariable:X}");
             Console.WriteLine($"Hooks.CompareEventRandValue: 0x{Offsets.Hooks.CompareEventRandValueForlorn:X}");
-            Console.WriteLine($"Hooks.HpWrite: 0x{Offsets.Hooks.HpWrite:X}");
+            Console.WriteLine($"Hooks.HpWrite: 0x{Offsets.Hooks.PlayerNoDamage:X}");
             Console.WriteLine($"Hooks.SetEventWrapper: 0x{Offsets.Hooks.SetEventWrapper:X}");
             Console.WriteLine($"Hooks.WarpCoordWrite: 0x{Offsets.Hooks.WarpCoordWrite:X}");
             Console.WriteLine($"Hooks.LockedTarget: 0x{Offsets.Hooks.LockedTarget:X}");
@@ -442,7 +439,7 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Hooks.Ctrl: 0x{Offsets.Hooks.Ctrl:X}");
             Console.WriteLine($"Hooks.NoClipUpdateCoords: 0x{Offsets.Hooks.NoClipUpdateCoords:X}");
             Console.WriteLine($"Hooks.KillboxFlagSet: 0x{Offsets.Hooks.KillboxFlagSet:X}");
-            Console.WriteLine($"Hooks.SetCurrectAct: 0x{Offsets.Hooks.SetCurrectAct:X}");
+            Console.WriteLine($"Hooks.SetCurrectAct: 0x{Offsets.Hooks.SetCurrentAct:X}");
             Console.WriteLine($"Hooks.FasterMenu: 0x{Offsets.Hooks.FasterMenu:X}");
             Console.WriteLine($"Hooks.ProcessPhysics: 0x{Offsets.Hooks.ProcessPhysics:X}");
             Console.WriteLine($"Hooks.DisableTargetAi: 0x{Offsets.Hooks.DisableTargetAi:X}");
@@ -456,41 +453,42 @@ namespace SilkySouls2.Memory
             Console.WriteLine($"Hooks.NoShadedFogFar: 0x{Offsets.Hooks.NoShadedFogFar:X}");
             Console.WriteLine($"Hooks.NoShadedFogCam: 0x{Offsets.Hooks.NoShadedFogCam:X}");
             Console.WriteLine($"Hooks.GameManUpdate: 0x{Offsets.Hooks.GameManUpdate:X}");
+            Console.WriteLine($"Hooks.NewGameDetect: 0x{Offsets.Hooks.NewGameDetect:X}");
             
-            Console.WriteLine($"Funcs.WarpPrep: 0x{Offsets.Funcs.WarpPrep:X}");
-            Console.WriteLine($"Funcs.BonfireWarp: 0x{Offsets.Funcs.BonfireWarp:X}");
-            Console.WriteLine($"Funcs.GiveSouls: 0x{Offsets.Funcs.GiveSouls:X}");
-            Console.WriteLine($"Funcs.SetEvent: 0x{Offsets.Funcs.SetEvent:X}");
-            Console.WriteLine($"Funcs.RestoreSpellcasts: 0x{Offsets.Funcs.RestoreSpellcasts:X}");
-            Console.WriteLine($"Funcs.ParamLookUp: 0x{Offsets.Funcs.ParamLookup:X}");
-            Console.WriteLine($"Funcs.SetRenderTargets: 0x{Offsets.Funcs.SetRenderTargets:X}");
-            Console.WriteLine($"Funcs.CreateSoundEvent: 0x{Offsets.Funcs.CreateSoundEvent:X}");
-            Console.WriteLine($"Funcs.LevelLookUp: 0x{Offsets.Funcs.LevelLookup:X}");
-            Console.WriteLine($"Funcs.LevelUp: 0x{Offsets.Funcs.LevelUp:X}");
-            Console.WriteLine($"Funcs.CurrentItemQuantityCheck: 0x{Offsets.Funcs.CurrentItemQuantityCheck:X}");
-            Console.WriteLine($"Funcs.ItemGive: 0x{Offsets.Funcs.ItemGive:X}");
-            Console.WriteLine($"Funcs.BuildItemDialog: 0x{Offsets.Funcs.BuildItemDialog:X}");
-            Console.WriteLine($"Funcs.ShowItemDialog: 0x{Offsets.Funcs.ShowItemDialog:X}");
-            Console.WriteLine($"Funcs.GetEyePosition: 0x{Offsets.Funcs.GetEyePosition:X}");
-            Console.WriteLine($"Funcs.SetSpEffect: 0x{Offsets.Funcs.SetSpEffect:X}");
-            Console.WriteLine($"Funcs.HavokRayCast: 0x{Offsets.Funcs.HavokRayCast:X}");
-            Console.WriteLine($"Funcs.ConvertPxRigidToMapEntity: 0x{Offsets.Funcs.ConvertPxRigidToMapEntity:X}");
-            Console.WriteLine($"Funcs.ConvertMapEntityToGameId: 0x{Offsets.Funcs.ConvertMapEntityToGameId:X}");
-            Console.WriteLine($"Funcs.UnlockBonfire: 0x{Offsets.Funcs.UnlockBonfire:X}");
-            Console.WriteLine($"Funcs.GetMapObjStateActComponent: 0x{Offsets.Funcs.GetMapObjStateActComponent:X}");
-            Console.WriteLine($"Funcs.GetMapEntityWithAreaIdAndObjId: 0x{Offsets.Funcs.GetMapEntityWithAreaIdAndObjId:X}");
-            Console.WriteLine($"Funcs.GetNavimeshLoc: 0x{Offsets.Funcs.GetNavimeshLoc:X}");
-            Console.WriteLine($"Funcs.DisableNaviMesh: 0x{Offsets.Funcs.DisableNaviMesh:X}");
-            Console.WriteLine($"Funcs.GetWhiteDoorComponent: 0x{Offsets.Funcs.GetWhiteDoorComponent:X}");
-            Console.WriteLine($"Funcs.AttuneSpell: 0x{Offsets.Funcs.AttuneSpell:X}");
-            Console.WriteLine($"Funcs.GetNumOfSpellslots1: 0x{Offsets.Funcs.GetNumOfSpellslots1:X}");
-            Console.WriteLine($"Funcs.GetNumOfSpellslots2: 0x{Offsets.Funcs.GetNumOfSpellslots2:X}");
-            Console.WriteLine($"Funcs.UpdateSpellSlots: 0x{Offsets.Funcs.UpdateSpellSlots:X}");
-            Console.WriteLine($"Funcs.Sleep: 0x{Offsets.Funcs.Sleep:X}");
-            Console.WriteLine($"Funcs.SetDepthStencilSurface: 0x{Offsets.Funcs.SetDepthStencilSurface:X}");
-            Console.WriteLine($"Funcs.GetEvent: 0x{Offsets.Funcs.GetEvent:X}");
-            Console.WriteLine($"Funcs.EzStateExternalEventCtor: 0x{Offsets.Funcs.EzStateExternalEventCtor:X}");
-            Console.WriteLine($"Funcs.EzStateEventExecuteCommand: 0x{Offsets.Funcs.EzStateEventExecuteCommand:X}");
+            Console.WriteLine($"Funcs.WarpPrep: 0x{Offsets.Functions.WarpPrep:X}");
+            Console.WriteLine($"Funcs.BonfireWarp: 0x{Offsets.Functions.BonfireWarp:X}");
+            Console.WriteLine($"Funcs.GiveSouls: 0x{Offsets.Functions.GiveSouls:X}");
+            Console.WriteLine($"Funcs.SetEvent: 0x{Offsets.Functions.SetEvent:X}");
+            Console.WriteLine($"Funcs.RestoreSpellcasts: 0x{Offsets.Functions.RestoreSpellcasts:X}");
+            Console.WriteLine($"Funcs.ParamLookUp: 0x{Offsets.Functions.ParamLookup:X}");
+            Console.WriteLine($"Funcs.SetRenderTargets: 0x{Offsets.Functions.SetRenderTargets:X}");
+            Console.WriteLine($"Funcs.CreateSoundEvent: 0x{Offsets.Functions.CreateSoundEvent:X}");
+            Console.WriteLine($"Funcs.LevelLookUp: 0x{Offsets.Functions.LevelLookup:X}");
+            Console.WriteLine($"Funcs.LevelUp: 0x{Offsets.Functions.LevelUp:X}");
+            Console.WriteLine($"Funcs.CurrentItemQuantityCheck: 0x{Offsets.Functions.CurrentItemQuantityCheck:X}");
+            Console.WriteLine($"Funcs.ItemGive: 0x{Offsets.Functions.ItemGive:X}");
+            Console.WriteLine($"Funcs.BuildItemDialog: 0x{Offsets.Functions.BuildItemDialog:X}");
+            Console.WriteLine($"Funcs.ShowItemDialog: 0x{Offsets.Functions.ShowItemDialog:X}");
+            Console.WriteLine($"Funcs.GetEyePosition: 0x{Offsets.Functions.GetEyePosition:X}");
+            Console.WriteLine($"Funcs.SetSpEffect: 0x{Offsets.Functions.SetSpEffect:X}");
+            Console.WriteLine($"Funcs.HavokRayCast: 0x{Offsets.Functions.HavokRayCast:X}");
+            Console.WriteLine($"Funcs.ConvertPxRigidToMapEntity: 0x{Offsets.Functions.ConvertPxRigidToMapEntity:X}");
+            Console.WriteLine($"Funcs.ConvertMapEntityToGameId: 0x{Offsets.Functions.ConvertMapEntityToGameId:X}");
+            Console.WriteLine($"Funcs.UnlockBonfire: 0x{Offsets.Functions.UnlockBonfire:X}");
+            Console.WriteLine($"Funcs.GetMapObjStateActComponent: 0x{Offsets.Functions.GetMapObjStateActComponent:X}");
+            Console.WriteLine($"Funcs.GetMapEntityWithAreaIdAndObjId: 0x{Offsets.Functions.GetMapEntityWithAreaIdAndObjId:X}");
+            Console.WriteLine($"Funcs.GetNavimeshLoc: 0x{Offsets.Functions.GetNavimeshLoc:X}");
+            Console.WriteLine($"Funcs.DisableNaviMesh: 0x{Offsets.Functions.DisableNavimesh:X}");
+            Console.WriteLine($"Funcs.GetWhiteDoorComponent: 0x{Offsets.Functions.GetWhiteDoorComponent:X}");
+            Console.WriteLine($"Funcs.AttuneSpell: 0x{Offsets.Functions.AttuneSpell:X}");
+            Console.WriteLine($"Funcs.GetNumOfSpellslots1: 0x{Offsets.Functions.GetNumOfSpellSlots1:X}");
+            Console.WriteLine($"Funcs.GetNumOfSpellslots2: 0x{Offsets.Functions.GetNumOfSpellSlots2:X}");
+            Console.WriteLine($"Funcs.UpdateSpellSlots: 0x{Offsets.Functions.UpdateSpellSlots:X}");
+            Console.WriteLine($"Funcs.Sleep: 0x{Offsets.Functions.Sleep:X}");
+            Console.WriteLine($"Funcs.SetDepthStencilSurface: 0x{Offsets.Functions.SetDepthStencilSurface:X}");
+            Console.WriteLine($"Funcs.GetEvent: 0x{Offsets.Functions.GetEvent:X}");
+            Console.WriteLine($"Funcs.EzStateExternalEventCtor: 0x{Offsets.Functions.EzStateExternalEventCtor:X}");
+            Console.WriteLine($"Funcs.EzStateEventExecuteCommand: 0x{Offsets.Functions.EzStateEventExecuteCommand:X}");
 #endif
         }
 
@@ -529,13 +527,13 @@ namespace SilkySouls2.Memory
                         break;
                     case AddressingMode.Direct32:
                     {
-                        uint absoluteAddr = _memoryIo.ReadUInt32(IntPtr.Add(instructionAddress, pattern.OffsetLocation));
+                        uint absoluteAddr = memoryService.Read<uint>(IntPtr.Add(instructionAddress, pattern.OffsetLocation));
                         addresses[i] = (IntPtr)absoluteAddr;
                         break;
                     }
                     default:
                     {
-                        int offset = _memoryIo.ReadInt32(IntPtr.Add(instructionAddress, pattern.OffsetLocation));
+                        int offset = memoryService.Read<int>(IntPtr.Add(instructionAddress, pattern.OffsetLocation));
                         addresses[i] = IntPtr.Add(instructionAddress, offset + pattern.InstructionLength);
                         break;
                     }
@@ -550,7 +548,7 @@ namespace SilkySouls2.Memory
             const int chunkSize = 4096 * 16;
             byte[] buffer = new byte[chunkSize];
 
-            IntPtr currentAddress = _memoryIo.BaseAddress;
+            IntPtr currentAddress = memoryService.BaseAddress;
             IntPtr endAddress = IntPtr.Add(currentAddress, 0x3200000);
 
             List<IntPtr> addresses = new List<IntPtr>();
@@ -563,7 +561,7 @@ namespace SilkySouls2.Memory
                 if (bytesToRead < pattern.Length)
                     break;
 
-                buffer = _memoryIo.ReadBytes(currentAddress, bytesToRead);
+                buffer = memoryService.ReadBytes(currentAddress, bytesToRead);
 
                 for (int i = 0; i <= bytesToRead - pattern.Length; i++)
                 {
@@ -600,11 +598,16 @@ namespace SilkySouls2.Memory
             {
                 var callInstructionAddr = IntPtr.Add(baseInstructionAddr, mapping.Value);
         
-                int callOffset = _memoryIo.ReadInt32(IntPtr.Add(callInstructionAddr, 1));
+                int callOffset = memoryService.Read<int>(IntPtr.Add(callInstructionAddr, 1));
                 var callTarget = IntPtr.Add(callInstructionAddr, callOffset + 5);
         
                 mapping.Key(callTarget.ToInt64());
             }
+        }
+
+        public void DoFallbackScan()
+        {
+           
         }
     }
 }

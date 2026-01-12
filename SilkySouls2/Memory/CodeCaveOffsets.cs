@@ -135,6 +135,9 @@ namespace SilkySouls2.Memory
 
         public const int EzStateEventParams = 0x2500;
         public const int ShouldExecuteFlag = 0x2530;
-        public const int EzStateEventCode = 0x2540;
+        public const int EzStateEventCode = 0x2540; // 0x13A
+
+        public const int NewGameStartedFlag = 0x2700;
+        public const int NewGameDetect = 0x2710;
     }
 }

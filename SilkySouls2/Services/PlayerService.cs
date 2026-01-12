@@ -1,116 +1,118 @@
 ﻿using System;
+using System.Numerics;
+using SilkySouls2.enums;
+using SilkySouls2.GameIds;
+using SilkySouls2.Interfaces;
 using SilkySouls2.Memory;
 using SilkySouls2.Utilities;
 using static SilkySouls2.Memory.Offsets;
 
 namespace SilkySouls2.Services
 {
-    public class PlayerService
+    public class PlayerService(
+        IMemoryService memoryService,
+        HookManager hookManager,
+        NopManager nopManager,
+        IChrCtrlService chrCtrlService)
+        : IPlayerService
     {
-        private readonly MemoryIo _memoryIo;
-        private readonly HookManager _hookManager;
-        private readonly NopManager _nopManager;
-        
-        public PlayerService(MemoryIo memoryIo, HookManager hookManager, NopManager nopManager)
-        {
-            _memoryIo = memoryIo;
-            _hookManager = hookManager;
-            _nopManager = nopManager;
-        }
-
         public int GetHp() =>
-            _memoryIo.ReadInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Hp));
+            memoryService.Read<int>(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Hp));
 
         public int GetMaxHp() =>
-            _memoryIo.ReadInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.MaxHp));
+            memoryService.Read<int>(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.FullHpWithHollowing));
 
         public void SetHp(int hp) =>
-            _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Hp), hp);
-
+            memoryService.Write(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Hp), hp);
 
         public void SetFullHp()
         {
-            var full = _memoryIo.ReadInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.FullHpWithHollowing));
-            _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Hp), full);
+            var full = memoryService.Read<int>(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.FullHpWithHollowing));
+            memoryService.Write(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Hp), full);
         }
 
         public void SetRtsr()
         {
-            var full = _memoryIo.ReadInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.FullHpWithHollowing));
-            _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Hp), (full * 30) / 100 - 1);
+            var full = memoryService.Read<int>(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.FullHpWithHollowing));
+            memoryService.Write(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Hp), (full * 30) / 100 - 1);
         }
 
         public int GetSp() =>
-            _memoryIo.ReadInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Stamina));
+            memoryService.Read<int>(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Stamina));
 
         public void SetSp(int sp) =>
-            _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Stamina), sp);
+            memoryService.Write(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Stamina), sp);
 
         private IntPtr GetPlayerCtrlField(int fieldOffset) =>
-            _memoryIo.FollowPointers(GameManagerImp.Base, new[] { GameManagerImp.Offsets.PlayerCtrl, fieldOffset },
+            memoryService.FollowPointers(GameManagerImp.Base, [GameManagerImp.PlayerCtrl, fieldOffset],
                 false);
 
-
         public void ToggleNoDeath(bool isNoDeathEnabled) =>
-            _memoryIo.WriteInt32(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.MinHp),
+            memoryService.Write(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.MinHp),
                 isNoDeathEnabled ? 1 : -99999);
 
         public void ToggleNoDamage(bool isNoDamageEnabled)
         {
-            var hookLoc = Hooks.HpWrite;
             var code = CodeCaveOffsets.Base + CodeCaveOffsets.PlayerNoDamage;
 
-            if (isNoDamageEnabled)
+            if (!isNoDamageEnabled)
             {
-                if (GameVersion.Current.Edition == GameEdition.Scholar)
-                {
-                    var codeBytes = AsmLoader.GetAsmBytes("PlayerNoDamage64");
-                    var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt64());
-                    Array.Copy(bytes, 0, codeBytes, 0x1 + 2, 8);
-                    bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 6, code + 0x2C);
-                    Array.Copy(bytes, 0, codeBytes, 0x27 + 1, 4);
-                    _memoryIo.WriteBytes(code, codeBytes);
+                hookManager.UninstallHook(code.ToInt64());
+                return;
+            }
 
-                    _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[] { 0x89, 0x83, 0x68, 0x01, 0x00, 0x00 });
-                }
-                else
-                {
-                    var codeBytes = AsmLoader.GetAsmBytes("PlayerNoDamage32");
-                    var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt32());
-                    Array.Copy(bytes, 0, codeBytes, 0x1 + 1, 4);
-                    bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 6, code + 0x1F);
-                    Array.Copy(bytes, 0, codeBytes, 0x1A + 1, 4);
-                    _memoryIo.WriteBytes(code, codeBytes);
-                    _hookManager.InstallHook(code.ToInt64(), hookLoc, new byte[] { 0x89, 0x8E, 0xFC, 0x00, 0x00, 0x00 });
-                }
-                
+            var hookLoc = Hooks.PlayerNoDamage;
+            if (PatchManager.IsScholar())
+            {
+                InstallScholarNoDamageHook(hookLoc, code);
             }
             else
             {
-                _hookManager.UninstallHook(code.ToInt64());
+                InstallVanillaNoDamageHook(hookLoc, code);
             }
         }
 
+        private void InstallScholarNoDamageHook(long hookLoc, IntPtr code)
+        {
+            var codeBytes = AsmLoader.GetAsmBytes(AsmScript.PlayerNoDamage64);
+            var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt64());
+            Array.Copy(bytes, 0, codeBytes, 0x1 + 2, 8);
+            bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 6, code + 0x2C);
+            Array.Copy(bytes, 0, codeBytes, 0x27 + 1, 4);
+            memoryService.WriteBytes(code, codeBytes);
+
+            hookManager.InstallHook(code.ToInt64(), hookLoc, [0x89, 0x83, 0x68, 0x01, 0x00, 0x00]);
+        }
+
+        private void InstallVanillaNoDamageHook(long hookLoc, IntPtr code)
+        {
+            var codeBytes = AsmLoader.GetAsmBytes(AsmScript.PlayerNoDamage32);
+            var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt32());
+            Array.Copy(bytes, 0, codeBytes, 0x1 + 1, 4);
+            bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 6, code + 0x1F);
+            Array.Copy(bytes, 0, codeBytes, 0x1A + 1, 4);
+            memoryService.WriteBytes(code, codeBytes);
+            hookManager.InstallHook(code.ToInt64(), hookLoc, [0x89, 0x8E, 0xFC, 0x00, 0x00, 0x00]);
+        }
 
         public void ToggleInfiniteStamina(bool isInfiniteStaminaEnabled) =>
-            _memoryIo.WriteByte(Patches.InfiniteStam + 1, isInfiniteStaminaEnabled ? 0x82 : 0x83);
+            memoryService.Write(Patches.InfiniteStam + 1, isInfiniteStaminaEnabled ? (byte)0x82 : (byte)0x83);
 
-        public int GetPlayerStat(int statOffset) => _memoryIo.ReadUInt8(GetStatPtr(statOffset));
+        public int GetPlayerStat(int statOffset) => memoryService.Read<byte>(GetStatPtr(statOffset));
 
         private IntPtr GetStatPtr(int statOffset)
         {
-            return _memoryIo.FollowPointers(GameManagerImp.Base, new[]
-            {
-                GameManagerImp.Offsets.PlayerCtrl,
+            return memoryService.FollowPointers(GameManagerImp.Base, [
+                GameManagerImp.PlayerCtrl,
                 GameManagerImp.ChrCtrlOffsets.StatsPtr,
                 statOffset
-            }, false);
+            ], false);
         }
 
         public void SetPlayerStat(int statOffset, byte val)
         {
             var currentStatVal = GetPlayerStat(statOffset);
-            _memoryIo.WriteUInt8(GetStatPtr(statOffset), val);
+            memoryService.Write(GetStatPtr(statOffset), val);
             var numOfLevels = val - currentStatVal;
 
             var buffer = CodeCaveOffsets.Base + (int)CodeCaveOffsets.LevelUp.Buffer;
@@ -124,50 +126,48 @@ namespace SilkySouls2.Services
             var requiredSouls = buffer + 0xFC;
             var soulsAfterLevelUp = buffer + 0xF8;
 
-            var giveSouls = Funcs.GiveSouls;
-            var levelLookUp = Funcs.LevelLookup;
-            var levelUp = Funcs.LevelUp;
+            var giveSouls = Functions.GiveSouls;
+            var levelLookUp = Functions.LevelLookup;
+            var levelUp = Functions.LevelUp;
 
-            var statsEntity = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
+            var statsEntity = memoryService.FollowPointers(GameManagerImp.Base, new[]
             {
-                GameManagerImp.Offsets.PlayerCtrl,
+                GameManagerImp.PlayerCtrl,
                 GameManagerImp.ChrCtrlOffsets.StatsPtr
             }, true);
 
-            var currentStatBytes = _memoryIo.ReadBytes(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.Vigor), 22);
-            var currentLevel = _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.SoulLevel));
+            var currentStatBytes = memoryService.ReadBytes(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.Vigor), 22);
+            var currentLevel = memoryService.ReadInt32(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.SoulLevel));
 
             if (numOfLevels <= 0)
             {
-                _memoryIo.WriteBytes(Patches.NegativeLevel + 1, new byte[] { 0x85 });
+                memoryService.WriteBytes(Patches.NegativeLevel + 1, [0x85]);
             }
 
-            _memoryIo.WriteByte(negativeFlag, numOfLevels <= 0 ? 1 : 0);
+            memoryService.Write(negativeFlag, numOfLevels <= 0);
 
-            _memoryIo.WriteBytes(buffer, currentStatBytes);
-            _memoryIo.WriteByte(numOfLevelsShortLoc, numOfLevels);
-            _memoryIo.WriteInt32(numOfLevelsIntLoc, numOfLevels);
-            _memoryIo.WriteInt32(currentLevelLoc, currentLevel);
-            _memoryIo.WriteInt32(newLevelLoc, currentLevel + numOfLevels);
-            var currentSouls = _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.CurrentSouls));
-            _memoryIo.WriteInt32(currentSoulsLoc, currentSouls);
+            memoryService.WriteBytes(buffer, currentStatBytes);
+            memoryService.Write(numOfLevelsShortLoc, (byte)numOfLevels);
+            memoryService.Write(numOfLevelsIntLoc, numOfLevels);
+            memoryService.Write(currentLevelLoc, currentLevel);
+            memoryService.Write(newLevelLoc, currentLevel + numOfLevels);
+            var currentSouls = memoryService.Read<int>(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.CurrentSouls));
+            memoryService.Write(currentSoulsLoc, currentSouls);
 
-            if (GameVersion.Current.Edition == GameEdition.Scholar)
+            if (PatchManager.IsScholar())
             {
-                var bytes = AsmLoader.GetAsmBytes("LevelUp64");
+                var bytes = AsmLoader.GetAsmBytes(AsmScript.LevelUp64);
 
-                AsmHelper.WriteAbsoluteAddresses64(bytes, new[]
-                {
+                AsmHelper.WriteAbsoluteAddresses64(bytes, [
                     (levelLookUp, 0x18 + 2),
                     (statsEntity.ToInt64(), 0x4D + 2),
                     (giveSouls, 0x57 + 2),
                     (statsEntity.ToInt64(), 0x6C + 2),
                     (statsEntity.ToInt64(), 0x90 + 2),
                     (levelUp, 0xA8 + 2)
-                });
+                ]);
 
-                AsmHelper.WriteRelativeOffsets(bytes, new[]
-                {
+                AsmHelper.WriteRelativeOffsets(bytes, [
                     (code.ToInt64(), currentLevelLoc.ToInt64(), 6, 0x0 + 2),
                     (code.ToInt64() + 0xD, negativeFlag.ToInt64(), 7, 0xD + 2),
                     (code.ToInt64() + 0x33, newLevelLoc.ToInt64(), 6, 0x33 + 2),
@@ -177,15 +177,14 @@ namespace SilkySouls2.Services
                     (code.ToInt64() + 0x82, requiredSouls.ToInt64(), 6, 0x82 + 2),
                     (code.ToInt64() + 0x8A, soulsAfterLevelUp.ToInt64(), 6, 0x8A + 2),
                     (code.ToInt64() + 0x9A, buffer.ToInt64(), 7, 0x9A + 3)
-                });
+                ]);
 
-                _memoryIo.WriteBytes(code, bytes);
+                memoryService.WriteBytes(code, bytes);
             }
             else
             {
-                var bytes = AsmLoader.GetAsmBytes("LevelUp32");
-                AsmHelper.WriteAbsoluteAddresses32(bytes, new[]
-                {
+                var bytes = AsmLoader.GetAsmBytes(AsmScript.LevelUp32);
+                AsmHelper.WriteAbsoluteAddresses32(bytes, [
                     (currentLevelLoc.ToInt64(), 2),
                     (negativeFlag.ToInt64(), 0xC + 2),
                     (levelLookUp, 0x15 + 1),
@@ -201,405 +200,303 @@ namespace SilkySouls2.Services
                     (buffer.ToInt64(), 0x6F + 2),
                     (statsEntity.ToInt64(), 0x76 + 1),
                     (levelUp, 0x7B + 1)
-                });
-                _memoryIo.WriteBytes(code, bytes);
+                ]);
+                memoryService.WriteBytes(code, bytes);
             }
 
 
-            _memoryIo.RunThreadAndWaitForCompletion(code);
-            if (numOfLevels <= 0) _memoryIo.WriteBytes(Patches.NegativeLevel + 1, new byte[] { 0x84 });
+            memoryService.RunThreadAndWaitForCompletion(code);
+            if (numOfLevels <= 0) memoryService.WriteBytes(Patches.NegativeLevel + 1, [0x84]);
 
-            var newSouls = _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.CurrentSouls));
+            var newSouls = memoryService.Read<int>(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.CurrentSouls));
             GiveSouls(currentSouls - newSouls);
         }
 
-        public int GetSoulLevel() => _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.SoulLevel));
+        public int GetSoulLevel() =>
+            memoryService.Read<int>(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.SoulLevel));
 
-        public float GetPlayerSpeed() => _memoryIo.ReadFloat(GetSpeedPtr());
+        public float GetPlayerSpeed() => chrCtrlService.GetSpeed(GetPlayerCtrl());
 
-        public void SetPlayerSpeed(float speed) => _memoryIo.WriteFloat(GetSpeedPtr(), speed);
+        public void SetPlayerSpeed(float speed) => chrCtrlService.SetSpeed(GetPlayerCtrl(), speed);
 
-        private IntPtr GetSpeedPtr()
-        {
-            return _memoryIo.FollowPointers(GameManagerImp.Base, new[]
-            {
-                GameManagerImp.Offsets.PlayerCtrl,
-                GameManagerImp.ChrCtrlOffsets.Speed
-            }, false);
-        }
+        public void ToggleNoGoodsConsume(bool enabled) =>
+            memoryService.WriteBytes(Patches.InfiniteGoods, PatchDefinitions.InfiniteGoods.Get(enabled));
 
-        public void ToggleNoGoodsConsume(bool isNoGoodsConsumeEnabled)
-        {
-            if (GameVersion.Current.Edition == GameEdition.Scholar)
-            {
-                _memoryIo.WriteBytes(Patches.InfiniteGoods,
-                    isNoGoodsConsumeEnabled
-                        ? new byte[] { 0x90, 0x90, 0x90, 0x90 }
-                        : new byte[] { 0x66, 0x29, 0x73, 0x20 });
-            }
-            else
-            {
-                _memoryIo.WriteBytes(Patches.InfiniteGoods,
-                    isNoGoodsConsumeEnabled
-                        ? new byte[] { 0x90, 0x90, 0x90, 0x90 }
-                        : new byte[] { 0x66, 0x29, 0x5E, 0x18 }
-                );
-            }
-        }
+        public void ToggleInfiniteCasts(bool enabled) =>
+            memoryService.WriteBytes(Patches.InfiniteCasts, PatchDefinitions.InfiniteCasts.Get(enabled));
 
-        public void ToggleInfiniteCasts(bool isInfiniteCastsEnabled)
-        {
-            if (GameVersion.Current.Edition == GameEdition.Scholar)
-            {
-                _memoryIo.WriteBytes(Patches.InfiniteCasts,
-                    isInfiniteCastsEnabled
-                        ? new byte[] { 0x90, 0x90, 0x90 }
-                        : new byte[] { 0x88, 0x4D, 0x20 });
-            }
-            else
-            {
-                _memoryIo.WriteBytes(Patches.InfiniteCasts,
-                    isInfiniteCastsEnabled
-                        ? new byte[] { 0x90, 0x90, 0x90 }
-                        : new byte[] { 0x88, 0x43, 0x18 });
-            }
-        }
+        public void ToggleInfiniteDurability(bool enabled) =>
+            memoryService.WriteBytes(Patches.InfiniteDurability, PatchDefinitions.InfiniteDurability.Get(enabled));
 
-        public void ToggleInfiniteDurability(bool isInfiniteDuraEnabled)
-        {
-            if (GameVersion.Current.Edition == GameEdition.Scholar)
-            {
-                _memoryIo.WriteBytes(Patches.InfiniteDurability,
-                    isInfiniteDuraEnabled
-                        ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 }
-                        : new byte[] { 0xF3, 0x0F, 0x11, 0xB4, 0xC3, 0x94, 0x00, 0x00, 0x00 });
-            }
-            else
-            {
-                _memoryIo.WriteBytes(Patches.InfiniteDurability,
-                    isInfiniteDuraEnabled
-                        ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, }
-                        : new byte[] { 0xF3, 0x0F, 0x11, 0x47, 0x6C });
-            }
-        }
+        private byte[] _savedPos1Bytes;
+        private byte[] _savedPos2Bytes;
 
-        private byte[] savedPos1Bytes;
-        private byte[] savedPos2Bytes;
-        
         public void SavePos(int index)
         {
-            byte[] positionBytes = _memoryIo.ReadBytes(GetPositionPtr(), 0x40);
-            if (index == 0) savedPos1Bytes = positionBytes;
-            else savedPos2Bytes = positionBytes;
+            byte[] positionBytes = memoryService.ReadBytes(GetPositionPtr(), 0x40);
+            if (index == 0) _savedPos1Bytes = positionBytes;
+            else _savedPos2Bytes = positionBytes;
         }
 
         public void RestorePos(int index)
         {
             byte[] positionBytes;
-            if (index == 0) positionBytes = savedPos1Bytes;
-            else positionBytes = savedPos2Bytes;
-            _memoryIo.WriteBytes(GetPositionPtr(), positionBytes);
+            if (index == 0) positionBytes = _savedPos1Bytes;
+            else positionBytes = _savedPos2Bytes;
+            memoryService.WriteBytes(GetPositionPtr(), positionBytes);
         }
 
-        private IntPtr GetPositionPtr() =>
-            _memoryIo.FollowPointers(GameManagerImp.Base, new[]
-            {
-                GameManagerImp.Offsets.PxWorldPtr,
-                GameManagerImp.PxWorld.HkpWorld,
-                GameManagerImp.PxWorld.HkpChrRigidBodyArray,
-                GameManagerImp.PxWorld.HkpChrRigidBody,
-                GameManagerImp.PxWorld.HkpRigidBodyPtr,
-                GameManagerImp.PxWorld.PlayerCoords
-            }, false);
+        public Vector3 GetCoords() => chrCtrlService.GetPos(GetPlayerCtrl());
+        
+        public void SetNewGame(int value) => memoryService.Write(GetNewGamePtr(), (byte)value);
 
-        public (float x, float y, float z) GetCoords()
-        {
-            var xyzPtr = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
-            {
-                GameManagerImp.Offsets.PlayerCtrl,
-                GameManagerImp.ChrCtrlOffsets.ChrPhysicsCtrlPtr,
-                GameManagerImp.ChrCtrlOffsets.ChrPhysicsCtrl.Xyz
-            }, false);
-
-            var coordBytes = _memoryIo.ReadBytes(xyzPtr, 12);
-            float x = BitConverter.ToSingle(coordBytes, 0);
-            float z = BitConverter.ToSingle(coordBytes, 4);
-            float y = BitConverter.ToSingle(coordBytes, 8);
-            return (x, y, z);
-        }
-
-        public void SetNewGame(int value) => _memoryIo.WriteByte(GetNewGamePtr(), value);
-
-        public int GetNewGame() => _memoryIo.ReadUInt8(GetNewGamePtr());
+        public int GetNewGame() => memoryService.Read<byte>(GetNewGamePtr());
 
         private IntPtr GetNewGamePtr() =>
-            _memoryIo.FollowPointers(GameManagerImp.Base, new[]
-            {
-                GameManagerImp.Offsets.GameDataManager,
+            memoryService.FollowPointers(GameManagerImp.Base, [
+                GameManagerImp.GameDataManager,
                 GameManagerImp.GameDataManagerOffsets.NewGamePtr,
                 GameManagerImp.GameDataManagerOffsets.NewGame
-            }, false);
+            ], false);
 
         public void GiveSouls(int souls)
         {
-            var giveSoulsFunc = Funcs.GiveSouls;
-            var statsEntity = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
-            {
-                GameManagerImp.Offsets.PlayerCtrl,
+            var giveSoulsFunc = Functions.GiveSouls;
+            var statsEntity = memoryService.FollowPointers(GameManagerImp.Base, [
+                GameManagerImp.PlayerCtrl,
                 GameManagerImp.ChrCtrlOffsets.StatsPtr
-            }, true);
+            ], true);
 
-            if (GameVersion.Current.Edition == GameEdition.Scholar)
+            if (PatchManager.IsScholar())
             {
-                var codeBytes = AsmLoader.GetAsmBytes("GiveSouls64");
-                AsmHelper.WriteAbsoluteAddresses64(codeBytes, new[]
-                {
-                    (statsEntity.ToInt64(), 0x0 + 2),
-                    (souls, 0x0A + 2),
-                    (giveSoulsFunc, 0x18 + 2)
-                });
-                _memoryIo.AllocateAndExecute(codeBytes);
+                ScholarGiveSouls(statsEntity, souls, giveSoulsFunc);
             }
             else
             {
-                var codeBytes = AsmLoader.GetAsmBytes("GiveSouls32");
-                AsmHelper.WriteAbsoluteAddresses32(codeBytes, new[]
-                {
-                    (souls, 0x0 + 1),
-                    (statsEntity.ToInt64(), 0x06 + 1),
-                    (giveSoulsFunc, 0xb + 1)
-                });
-                _memoryIo.AllocateAndExecute(codeBytes);
+                VanillaGiveSouls(statsEntity, souls, giveSoulsFunc);
             }
         }
 
+        private void ScholarGiveSouls(IntPtr statsEntity, int souls, long giveSoulsFunc)
+        {
+            var codeBytes = AsmLoader.GetAsmBytes(AsmScript.GiveSouls64);
+            AsmHelper.WriteAbsoluteAddresses64(codeBytes, [
+                (statsEntity.ToInt64(), 0x0 + 2),
+                (souls, 0x0A + 2),
+                (giveSoulsFunc, 0x18 + 2)
+            ]);
+            memoryService.AllocateAndExecute(codeBytes);
+        }
+
+        private void VanillaGiveSouls(IntPtr statsEntity, int souls, long giveSoulsFunc)
+        {
+            var codeBytes = AsmLoader.GetAsmBytes(AsmScript.GiveSouls32);
+            AsmHelper.WriteAbsoluteAddresses32(codeBytes, [
+                (souls, 0x0 + 1),
+                (statsEntity.ToInt64(), 0x06 + 1),
+                (giveSoulsFunc, 0xb + 1)
+            ]);
+            memoryService.AllocateAndExecute(codeBytes);
+        }
+
         public int GetSoulMemory() =>
-            _memoryIo.ReadInt32(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.SoulMemory));
+            memoryService.Read<int>(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.SoulMemory));
 
         public void RestoreSpellcasts()
         {
-            var func = Funcs.RestoreSpellcasts;
-            if (GameVersion.Current.Edition == GameEdition.Scholar)
-            {
-                var inventoryBag = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
-                {
-                    GameManagerImp.Offsets.GameDataManager,
-                    GameManagerImp.GameDataManagerOffsets.InventoryPtr,
-                    GameManagerImp.GameDataManagerOffsets.Inventory.ItemInventory2BagListForSpells
-                }, true);
-                
-                var codeBytes = AsmLoader.GetAsmBytes("RestoreSpellcasts64");
-                AsmHelper.WriteAbsoluteAddresses64(codeBytes, new[]
-                {
-                    (inventoryBag.ToInt64(), 0x0 + 2),
-                    (func, 0x20 + 2)
-                });
+            var func = Functions.RestoreSpellcasts;
+            if (PatchManager.IsScholar())
 
-                _memoryIo.AllocateAndExecute(codeBytes);
-            }
+                ScholarRestoreSpells(func);
+
             else
             {
-                var inventoryBag = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
-                {
-                    GameManagerImp.Offsets.GameDataManager,
-                    GameManagerImp.GameDataManagerOffsets.InventoryPtr,
-                    GameManagerImp.GameDataManagerOffsets.Inventory.InventoryLists
-                }, true);
-                
-                var codeBytes = AsmLoader.GetAsmBytes("RestoreSpellcasts32");
-                AsmHelper.WriteAbsoluteAddresses32(codeBytes, new []
-                {
-                    (inventoryBag.ToInt64(), 1),
-                    (func, 0x1E + 1)
-                });
-                _memoryIo.AllocateAndExecute(codeBytes);
+                VanillaRestoreSpells(func);
             }
-            
+        }
+
+        private void ScholarRestoreSpells(long func)
+        {
+            var inventoryBag = memoryService.FollowPointers(GameManagerImp.Base, new[]
+            {
+                GameManagerImp.GameDataManager,
+                GameManagerImp.GameDataManagerOffsets.InventoryPtr,
+                GameManagerImp.GameDataManagerOffsets.Inventory.ItemInventory2BagListForSpells
+            }, true);
+
+            var codeBytes = AsmLoader.GetAsmBytes(AsmScript.RestoreSpellcasts64);
+            AsmHelper.WriteAbsoluteAddresses64(codeBytes, [
+                (inventoryBag.ToInt64(), 0x0 + 2),
+                (func, 0x20 + 2)
+            ]);
+
+            memoryService.AllocateAndExecute(codeBytes);
+        }
+
+        private void VanillaRestoreSpells(long func)
+        {
+            var inventoryBag = memoryService.FollowPointers(GameManagerImp.Base, [
+                GameManagerImp.GameDataManager,
+                GameManagerImp.GameDataManagerOffsets.InventoryPtr,
+                GameManagerImp.GameDataManagerOffsets.Inventory.InventoryLists
+            ], true);
+
+            var codeBytes = AsmLoader.GetAsmBytes(AsmScript.RestoreSpellcasts32);
+            AsmHelper.WriteAbsoluteAddresses32(codeBytes, [
+                (inventoryBag.ToInt64(), 1),
+                (func, 0x1E + 1)
+            ]);
+            memoryService.AllocateAndExecute(codeBytes);
         }
 
         public void ToggleSilent(bool isSilentEnabled)
         {
+            //TODO get rid of nop manager
             if (isSilentEnabled)
             {
-                _nopManager.InstallNop(Patches.Silent.ToInt64(),
-                    GameVersion.Current.Edition == GameEdition.Scholar ? 5 : 16);
+                nopManager.InstallNop(Patches.Silent.ToInt64(),
+                    PatchManager.Current.Edition == GameEdition.Scholar ? 5 : 16);
             }
-            else _nopManager.RestoreNop(Patches.Silent.ToInt64());
+            else nopManager.RestoreNop(Patches.Silent.ToInt64());
         }
 
         public void ToggleHidden(bool isHiddenEnabled) =>
-            _memoryIo.WriteBytes(Patches.Hidden + 1, isHiddenEnabled ? new byte[] { 0x85 } : new byte[] { 0x84 });
+            memoryService.WriteBytes(Patches.Hidden + 1, isHiddenEnabled ? [0x85] : [0x84]);
 
         public void ToggleInfinitePoise(bool isInfinitePoiseEnabled)
         {
             var code = CodeCaveOffsets.Base + CodeCaveOffsets.InfinitePoise;
 
-            if (isInfinitePoiseEnabled)
+            if (!isInfinitePoiseEnabled)
             {
-                var origin = Hooks.InfinitePoise;
-                var gameMan = GameManagerImp.Base;
+                hookManager.UninstallHook(code.ToInt64());
+                return;
+            }
 
-                if (GameVersion.Current.Edition == GameEdition.Scholar)
-                {
-                    var codeBytes = AsmLoader.GetAsmBytes("InfinitePoise64");
+            var origin = Hooks.InfinitePoise;
+            var gameMan = GameManagerImp.Base;
 
-                    var bytes = BitConverter.GetBytes(gameMan.ToInt64());
-                    Array.Copy(bytes, 0, codeBytes, 0x1 + 2, 8);
-                    bytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 6, code + 0x2C);
-                    Array.Copy(bytes, 0, codeBytes, 0x27 + 1, 4);
-                    _memoryIo.WriteBytes(code, codeBytes);
-                    _hookManager.InstallHook(code.ToInt64(), origin, new byte[]
-                        { 0x39, 0x9D, 0xEC, 0x05, 0x00, 0x00 });
-                }
-                else
-                {
-                    var codeBytes = AsmLoader.GetAsmBytes("InfinitePoise32");
-                    var bytes = BitConverter.GetBytes(gameMan.ToInt32());
-                    Array.Copy(bytes, 0, codeBytes, 0x1 + 1, 4);
-                    bytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 7, code + 0x21);
-                    Array.Copy(bytes, 0, codeBytes, 0x1C + 1, 4);
-                    _memoryIo.WriteBytes(code, codeBytes);
-                    _hookManager.InstallHook(code.ToInt64(), origin, new byte[]
-                        { 0x83, 0xBB, 0xEC, 0x05, 0x00, 0x00, 0x00 });
-                }
+            if (PatchManager.IsScholar())
+            {
+                InstallScholarInfinitePoise(code, origin, gameMan);
             }
             else
             {
-                _hookManager.UninstallHook(code.ToInt64());
+                InstallVanillaInfinitePoise(code, origin, gameMan);
             }
         }
 
-        public void ToggleAutoSetNg7(bool isAutoSetNewGameSevenEnabled) =>
-            _memoryIo.WriteByte(Patches.Ng7 + 3, isAutoSetNewGameSevenEnabled ? 9 : 1);
+        private void InstallScholarInfinitePoise(IntPtr code, long origin, IntPtr gameMan)
+        {
+            var codeBytes = AsmLoader.GetAsmBytes(AsmScript.InfinitePoise64);
 
-        public void SetSpEffect(GameIds.SpEffects.SpEffectData restoreHumanity)
+            var bytes = BitConverter.GetBytes(gameMan.ToInt64());
+            Array.Copy(bytes, 0, codeBytes, 0x1 + 2, 8);
+            bytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 6, code + 0x2C);
+            Array.Copy(bytes, 0, codeBytes, 0x27 + 1, 4);
+            memoryService.WriteBytes(code, codeBytes);
+            hookManager.InstallHook(code.ToInt64(), origin, [0x39, 0x9D, 0xEC, 0x05, 0x00, 0x00]);
+        }
+
+        private void InstallVanillaInfinitePoise(IntPtr code, long origin, IntPtr gameMan)
+        {
+            var codeBytes = AsmLoader.GetAsmBytes(AsmScript.InfinitePoise32);
+            var bytes = BitConverter.GetBytes(gameMan.ToInt32());
+            Array.Copy(bytes, 0, codeBytes, 0x1 + 1, 4);
+            bytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 7, code + 0x21);
+            Array.Copy(bytes, 0, codeBytes, 0x1C + 1, 4);
+            memoryService.WriteBytes(code, codeBytes);
+            hookManager.InstallHook(code.ToInt64(), origin, [0x83, 0xBB, 0xEC, 0x05, 0x00, 0x00, 0x00]);
+        }
+
+        public void SetSpEffect(SpEffect restoreHumanity)
         {
             var spEffectParams = CodeCaveOffsets.Base + CodeCaveOffsets.SpEffectParams;
             var code = CodeCaveOffsets.Base + CodeCaveOffsets.SpEffectCode;
 
-            var chrSpEffectCtrl = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
-            {
-                GameManagerImp.Offsets.PlayerCtrl,
+            var chrSpEffectCtrl = memoryService.FollowPointers(GameManagerImp.Base, [
+                GameManagerImp.PlayerCtrl,
                 GameManagerImp.ChrCtrlOffsets.ChrSpEffectCtrl
-            }, true);
+            ], true);
 
-            var setEffectFunc = Funcs.SetSpEffect;
+            var setEffectFunc = Functions.SetSpEffect;
 
-            _memoryIo.WriteInt32(spEffectParams, restoreHumanity.EffectId);
-            _memoryIo.WriteInt32(spEffectParams + 0x4, restoreHumanity.Quantity);
-            _memoryIo.WriteFloat(spEffectParams + 0x8, restoreHumanity.FloatValue);
-            _memoryIo.WriteByte(spEffectParams + 0xC, restoreHumanity.EffectType);
-            _memoryIo.WriteByte(spEffectParams + 0xD, restoreHumanity.Param1);
-            _memoryIo.WriteByte(spEffectParams + 0xE, restoreHumanity.Param2);
-            _memoryIo.WriteByte(spEffectParams + 0xF, restoreHumanity.Param3);
+            memoryService.Write(spEffectParams, restoreHumanity.EffectId);
+            memoryService.Write(spEffectParams + 0x4, restoreHumanity.Quantity);
+            memoryService.Write(spEffectParams + 0x8, restoreHumanity.FloatValue);
+            memoryService.Write(spEffectParams + 0xC, restoreHumanity.EffectType);
+            memoryService.Write(spEffectParams + 0xD, restoreHumanity.Param1);
+            memoryService.Write(spEffectParams + 0xE, restoreHumanity.Param2);
+            memoryService.Write(spEffectParams + 0xF, restoreHumanity.Param3);
 
-            if (GameVersion.Current.Edition == GameEdition.Scholar)
+            if (PatchManager.IsScholar())
             {
-                var codeBytes = AsmLoader.GetAsmBytes("SetSpEffect64");
-                var bytes = BitConverter.GetBytes(chrSpEffectCtrl.ToInt64());
-                Array.Copy(bytes, 0, codeBytes, 0x7 + 2, 8);
-                AsmHelper.WriteRelativeOffsets(codeBytes, new[]
-                {
-                    (code.ToInt64(), spEffectParams.ToInt64(), 7, 0x0 + 3),
-                    (code.ToInt64() + 0x15, setEffectFunc, 5, 0x15 + 1)
-                });
-
-                _memoryIo.WriteBytes(code, codeBytes);
+                ScholarSetSpEffect(code, chrSpEffectCtrl, spEffectParams, setEffectFunc);
             }
             else
             {
-                var codeBytes = AsmLoader.GetAsmBytes("SetSpEffect32");
-
-                var bytes = BitConverter.GetBytes(spEffectParams.ToInt32());
-                Array.Copy(bytes, 0, codeBytes, 0x3 + 2, 4);
-                bytes = BitConverter.GetBytes(chrSpEffectCtrl.ToInt32());
-                Array.Copy(bytes, 0, codeBytes, 0xA + 1, 4);
-
-                AsmHelper.WriteRelativeOffsets(codeBytes, new[]
-                {
-                    (code.ToInt64() + 0xF, setEffectFunc, 5, 0xF + 1)
-                });
-
-                _memoryIo.WriteBytes(code, codeBytes);
+                VanillaSetSpEffect(code, chrSpEffectCtrl, spEffectParams, setEffectFunc);
             }
 
-            _memoryIo.RunThread(code);
+            memoryService.RunThread(code);
+        }
+
+        private void ScholarSetSpEffect(IntPtr code, IntPtr chrSpEffectCtrl, IntPtr spEffectParams, long setEffectFunc)
+        {
+            var codeBytes = AsmLoader.GetAsmBytes(AsmScript.SetSpEffect64);
+            var bytes = BitConverter.GetBytes(chrSpEffectCtrl.ToInt64());
+            Array.Copy(bytes, 0, codeBytes, 0x7 + 2, 8);
+            AsmHelper.WriteRelativeOffsets(codeBytes, new[]
+            {
+                (code.ToInt64(), spEffectParams.ToInt64(), 7, 0x0 + 3),
+                (code.ToInt64() + 0x15, setEffectFunc, 5, 0x15 + 1)
+            });
+
+            memoryService.WriteBytes(code, codeBytes);
+        }
+
+        private void VanillaSetSpEffect(IntPtr code, IntPtr chrSpEffectCtrl, IntPtr spEffectParams, long setEffectFunc)
+        {
+            var codeBytes = AsmLoader.GetAsmBytes(AsmScript.SetSpEffect32);
+
+            var bytes = BitConverter.GetBytes(spEffectParams.ToInt32());
+            Array.Copy(bytes, 0, codeBytes, 0x3 + 2, 4);
+            bytes = BitConverter.GetBytes(chrSpEffectCtrl.ToInt32());
+            Array.Copy(bytes, 0, codeBytes, 0xA + 1, 4);
+
+            AsmHelper.WriteRelativeOffsets(codeBytes, [
+                (code.ToInt64() + 0xF, setEffectFunc, 5, 0xF + 1)
+            ]);
+
+            memoryService.WriteBytes(code, codeBytes);
         }
 
         public void ToggleNoSoulGain(bool isEnabled)
         {
-            if (isEnabled) _nopManager.InstallNop(Patches.NoSoulGain.ToInt64(), 5);
-            else _nopManager.RestoreNop(Patches.NoSoulGain.ToInt64());
+            if (isEnabled) nopManager.InstallNop(Patches.NoSoulGain.ToInt64(), 5);
+            else nopManager.RestoreNop(Patches.NoSoulGain.ToInt64());
         }
 
-        public void ToggleNoHollowing(bool isEnabled)
+        public void ToggleNoHollowing(bool enabled) =>
+            memoryService.WriteBytes(Patches.NoHollowing, PatchDefinitions.NoHollowing.Get(enabled));
+
+        public void ToggleNoSoulLoss(bool enabled) =>
+            memoryService.WriteBytes(Patches.NoSoulLoss, PatchDefinitions.NoSoulLoss.Get(enabled));
+
+        public void ToggleSoulMemWrite(bool enabled)
         {
-            if (GameVersion.Current.Edition == GameEdition.Scholar)
-            {
-                _memoryIo.WriteBytes(Patches.NoHollowing,
-                    isEnabled
-                        ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 }
-                        : new byte[] { 0x88, 0x81, 0xAC, 0x01, 0x00, 0x00 }
-                );
-            }
-            else
-            {
-                _memoryIo.WriteBytes(Patches.NoHollowing,
-                    isEnabled
-                        ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 }
-                        : new byte[] { 0x88, 0x91, 0xA8, 0x01, 0x00, 0x00 }
-                );
-            }
+            memoryService.WriteBytes(Patches.SoulMemWrite1, PatchDefinitions.SoulMemWrite1.Get(enabled));
+            memoryService.WriteBytes(Patches.SoulMemWrite2, PatchDefinitions.SoulMemWrite2.Get(enabled));
         }
 
-        public void ToggleNoSoulLoss(bool isEnabled)
-        {
-            if (GameVersion.Current.Edition == GameEdition.Scholar)
-            {
-                _memoryIo.WriteBytes(Patches.NoSoulLoss,
-                    isEnabled
-                        ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 }
-                        : new byte[] { 0x89, 0x90, 0xEC, 0x00, 0x00, 0x00 }
-                );
-            }
-            else
-            {
-                _memoryIo.WriteBytes(Patches.NoSoulLoss,
-                    isEnabled
-                        ? new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 }
-                        : new byte[] { 0xC7, 0x80, 0xE8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
-                );
-            }
-        }
+        private IntPtr GetPositionPtr() =>
+            memoryService.FollowPointers(GameManagerImp.Base,
+            [
+                GameManagerImp.PxWorld, ..GameManagerImp.PxWorldOffsets.PlayerCoordsChain
+            ], false);
+        
 
-        public void ToggleSoulMemWrite(bool isEnabled)
-        {
-            if (GameVersion.Current.Edition == GameEdition.Scholar)
-            {
-                if (isEnabled)
-                {
-                    _memoryIo.WriteBytes(Patches.SoulMemWrite1, new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 });
-                    _memoryIo.WriteBytes(Patches.SoulMemWrite2, new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 });
-                }
-                else
-                {
-                    _memoryIo.WriteBytes(Patches.SoulMemWrite1, new byte[] { 0x89, 0x81, 0xF4, 0x00, 0x00, 0x00 });
-                    _memoryIo.WriteBytes(Patches.SoulMemWrite2, new byte[] { 0x89, 0x81, 0xFC, 0x00, 0x00, 0x00 });
-                }
-            }
-            else
-            {
-                if (isEnabled)
-                {
-                    _memoryIo.WriteBytes(Patches.SoulMemWrite1, new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 });
-                    _memoryIo.WriteBytes(Patches.SoulMemWrite2, new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 });
-                }
-                else
-                {
-                    _memoryIo.WriteBytes(Patches.SoulMemWrite1, new byte[] { 0x89, 0x81, 0xF0, 0x00, 0x00, 0x00 });
-                    _memoryIo.WriteBytes(Patches.SoulMemWrite2, new byte[] { 0x89, 0x91, 0xF8, 0x00, 0x00, 0x00 });
-                }
-            }
-        }
+        private nint GetPlayerCtrl() => memoryService.FollowPointers(GameManagerImp.Base,
+            [GameManagerImp.PlayerCtrl], true);
     }
 }

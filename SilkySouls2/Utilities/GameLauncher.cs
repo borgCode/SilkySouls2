@@ -10,19 +10,25 @@ namespace SilkySouls2.Utilities
 {
     public static class GameLauncher
     {
-        public static bool IsDlc2Available { get; private set; } = true;
-        
-        public static void LaunchDarkSouls2()
+
+        public static void LaunchDarkSouls2(String steamName)
         {
             try
             {
-                string exePath = GetDarkSouls2ExePath();
+                string exePath = GetDarkSouls2ExePath(steamName);
                 if (exePath == null)
                 {
                     return;
                 }
 
-                var process = new Process { StartInfo = new ProcessStartInfo(exePath) };
+                var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo(exePath)
+                    {
+                        UseShellExecute = true,
+                        CreateNoWindow = false
+                    }
+                };
                 process.Start();
             }
             catch (Exception ex)
@@ -31,8 +37,8 @@ namespace SilkySouls2.Utilities
                     "Launch Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        
-        private static string GetDarkSouls2ExePath()
+
+        private static string GetDarkSouls2ExePath(string steamName)
         {
             try
             {
@@ -66,9 +72,12 @@ namespace SilkySouls2.Utilities
                     if (match.Success) paths.Add(match.Groups[1].Value.Replace(@"\\", @"\"));
                 }
 
+                String exePath = $@"steamapps\common\{steamName}\Game\DarkSoulsII.exe";
+               
+
                 foreach (var path in paths)
                 {
-                    string fullPath = Path.Combine(path, @"steamapps\common\Dark Souls II Scholar of the First Sin\Game\DarkSoulsII.exe");
+                    string fullPath = Path.Combine(path, exePath);
                     if (File.Exists(fullPath)) return fullPath;
                 }
 
@@ -98,11 +107,12 @@ namespace SilkySouls2.Utilities
                         return selectedPath;
                     }
 
-                    MessageBox.Show("Please select DarkSoulsII.exe.", "Invalid File", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("Please select DarkSoulsII.exe.", "Invalid File", MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
                     return null;
                 }
+
                 return null;
-                
             }
             catch (Exception ex)
             {

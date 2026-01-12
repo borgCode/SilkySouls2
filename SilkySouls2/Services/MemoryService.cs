@@ -1,19 +1,23 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.IO.MemoryMappedFiles;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Timers;
-using SilkySouls2.Utilities;
+using SilkySouls2.Interfaces;
+using SilkySouls2.Memory;
 
-namespace SilkySouls2.Memory
+namespace SilkySouls2.Services
 {
-    public class MemoryIo : IDisposable
+    public class MemoryService : IMemoryService
     {
-        public Process TargetProcess;
-        public IntPtr ProcessHandle = IntPtr.Zero;
-        public IntPtr BaseAddress;
-        
+        public bool IsAttached { get; private set; }
+        public Process? TargetProcess { get; private set; }
+        public IntPtr ProcessHandle { get; private set; } = IntPtr.Zero;
+        public nint BaseAddress { get; private set; }
+        public int ModuleMemorySize { get; private set; }
+
         private const int ProcessVmRead = 0x0010;
         private const int ProcessVmWrite = 0x0020;
         private const int ProcessVmOperation = 0x0008;
@@ -21,7 +25,6 @@ namespace SilkySouls2.Memory
 
         private const string ProcessName = "darksoulsii";
         private bool _disposed;
-        public bool IsAttached;
 
         private Timer _autoAttachTimer;
 
@@ -69,6 +72,7 @@ namespace SilkySouls2.Memory
                     if (TargetProcess.MainModule != null)
                     {
                         BaseAddress = TargetProcess.MainModule.BaseAddress;
+                        ModuleMemorySize = TargetProcess.MainModule.ModuleMemorySize;
                     }
 
                     IsAttached = true;
@@ -101,50 +105,34 @@ namespace SilkySouls2.Memory
             GC.SuppressFinalize(this);
         }
 
-        ~MemoryIo()
+        public T Read<T>(nint addr) where T : unmanaged
+        {
+            int size = Unsafe.SizeOf<T>();
+            var bytes = ReadBytes(addr, size);
+            return MemoryMarshal.Read<T>(bytes);
+        }
+
+        public void Write<T>(IntPtr addr, T value) where T : unmanaged
+        {
+            int size = Unsafe.SizeOf<T>();
+            var bytes = new byte[size];
+            MemoryMarshal.Write(bytes, ref value);
+            WriteBytes(addr, bytes);
+        }
+
+        public void Write(IntPtr addr, bool value) =>
+            Write(addr, value ? (byte)1 : (byte)0);
+
+        ~MemoryService()
         {
             Dispose();
         }
 
-        public bool ReadTest(IntPtr addr)
+        public bool IsBitSet(IntPtr addr, int flagMask)
         {
-            var array = new byte[1];
-            var lpNumberOfBytesRead = 1;
-            return Kernel32.ReadProcessMemory(ProcessHandle, addr, array, 1, ref lpNumberOfBytesRead) &&
-                   lpNumberOfBytesRead == 1;
-        }
+            byte currentByte = Read<byte>(addr);
 
-        public void ReadTestFull(IntPtr addr)
-        {
-            Console.WriteLine($"Testing Address: 0x{addr.ToInt64():X}");
-
-            bool available = ReadTest(addr);
-            Console.WriteLine($"Availability: {available}");
-
-            if (!available)
-            {
-                Console.WriteLine("Memory is not readable at this address.");
-                return;
-            }
-
-            try
-            {
-                Console.WriteLine($"Int32: {ReadInt32(addr)}");
-                Console.WriteLine($"Int64: {ReadInt64(addr)}");
-                Console.WriteLine($"UInt8: {ReadUInt8(addr)}");
-                Console.WriteLine($"UInt32: {ReadUInt32(addr)}");
-                Console.WriteLine($"UInt64: {ReadUInt64(addr)}");
-                Console.WriteLine($"Float: {ReadFloat(addr)}");
-                Console.WriteLine($"Double: {ReadDouble(addr)}");
-                Console.WriteLine($"String: {ReadString(addr)}");
-
-                byte[] bytes = ReadBytes(addr, 16);
-                Console.WriteLine("Bytes: " + BitConverter.ToString(bytes));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error reading memory: " + ex.Message);
-            }
+            return (currentByte & flagMask) != 0;
         }
 
         public uint RunThread(IntPtr address, uint timeout = 0xFFFFFFFF)
@@ -155,11 +143,12 @@ namespace SilkySouls2.Memory
             Kernel32.CloseHandle(thread);
             return ret;
         }
-        
+
         public void RunPersistentThread(IntPtr address)
         {
-            IntPtr thread = Kernel32.CreateRemoteThread(ProcessHandle, IntPtr.Zero, 0, address, IntPtr.Zero, 0, IntPtr.Zero);
-            Kernel32.CloseHandle(thread); 
+            IntPtr thread =
+                Kernel32.CreateRemoteThread(ProcessHandle, IntPtr.Zero, 0, address, IntPtr.Zero, 0, IntPtr.Zero);
+            Kernel32.CloseHandle(thread);
         }
 
         public bool RunThreadAndWaitForCompletion(IntPtr address, uint timeout = 0xFFFFFFFF)
@@ -209,12 +198,6 @@ namespace SilkySouls2.Memory
             var bytes = ReadBytes(addr, 1);
             return bytes[0];
         }
-        
-        public uint ReadUInt16(IntPtr addr)
-        {
-            var bytes = ReadBytes(addr, 2);
-            return BitConverter.ToUInt16(bytes, 0);
-        }
 
         public uint ReadUInt32(IntPtr addr)
         {
@@ -234,18 +217,18 @@ namespace SilkySouls2.Memory
             return BitConverter.ToSingle(bytes, 0);
         }
 
-        public double ReadDouble(IntPtr addr)
-        {
-            var bytes = ReadBytes(addr, 8);
-            return BitConverter.ToDouble(bytes, 0);
-        }
-
         public byte[] ReadBytes(IntPtr addr, int size)
         {
             var array = new byte[size];
             var lpNumberOfBytesRead = 1;
             Kernel32.ReadProcessMemory(ProcessHandle, addr, array, size, ref lpNumberOfBytesRead);
             return array;
+        }
+
+        public void WriteUInt8(nint addr, int val)
+        {
+            var bytes = new[] { (byte)val };
+            WriteBytes(addr, bytes);
         }
 
         public string ReadString(IntPtr addr, int maxLength = 32)
@@ -269,17 +252,10 @@ namespace SilkySouls2.Memory
 
             return Encoding.Unicode.GetString(bytes, 0, stringLength);
         }
-        
-        public void WriteInt64(IntPtr addr, long val)
-        {
-            WriteBytes(addr, BitConverter.GetBytes(val));
-        }
 
-        public void WriteInt32(IntPtr addr, int val)
-        {
-            WriteBytes(addr, BitConverter.GetBytes(val));
-        }
-        
+        public void WriteInt64(nint addr, long val) => WriteBytes(addr, BitConverter.GetBytes(val));
+        public void WriteInt32(IntPtr addr, int val) => WriteBytes(addr, BitConverter.GetBytes(val));
+
         public void WriteInt16(IntPtr addr, short val)
         {
             WriteBytes(addr, BitConverter.GetBytes(val));
@@ -295,20 +271,26 @@ namespace SilkySouls2.Memory
             WriteBytes(addr, BitConverter.GetBytes(val));
         }
 
-        public void WriteUInt8(IntPtr addr, byte val)
-        {
-            var bytes = new byte[] { val };
-            WriteBytes(addr, bytes);
-        }
-
         public void WriteByte(IntPtr addr, int value)
         {
-            Kernel32.WriteProcessMemory(ProcessHandle, addr, new byte[] { (byte)value }, 1, 0);
+            Kernel32.WriteProcessMemory(ProcessHandle, addr, [(byte)value], 1, 0);
         }
 
         public void WriteBytes(IntPtr addr, byte[] val)
         {
             Kernel32.WriteProcessMemory(ProcessHandle, addr, val, val.Length, 0);
+        }
+
+        public void SetBitValue(IntPtr addr, int flagMask, bool setValue)
+        {
+            byte currentByte = Read<byte>(addr);
+            byte modifiedByte;
+
+            if (setValue)
+                modifiedByte = (byte)(currentByte | flagMask);
+            else
+                modifiedByte = (byte)(currentByte & ~flagMask);
+            Write(addr, modifiedByte);
         }
 
         public void WriteString(IntPtr addr, string value, int maxLength = 32)
@@ -319,10 +301,9 @@ namespace SilkySouls2.Memory
             WriteBytes(addr, bytes);
         }
 
-
-        internal IntPtr FollowPointers(IntPtr baseAddress, int[] offsets, bool readFinalPtr)
+        public IntPtr FollowPointers(IntPtr baseAddress, int[] offsets, bool readFinalPtr)
         {
-            if (GameVersion.Current.Edition == GameEdition.Scholar)
+            if (PatchManager.Current.Edition == GameEdition.Scholar)
             {
                 ulong ptr = ReadUInt64(baseAddress);
 
@@ -355,25 +336,23 @@ namespace SilkySouls2.Memory
 
                 return finalAddress;
             }
-            
         }
-        
 
         public void SetBitValue(IntPtr addr, byte flagMask, bool setValue)
         {
-            byte currentByte = ReadUInt8(addr);
+            byte currentByte = Read<byte>(addr);
             byte modifiedByte;
 
             if (setValue)
                 modifiedByte = (byte)(currentByte | flagMask);
             else
                 modifiedByte = (byte)(currentByte & ~flagMask);
-            WriteUInt8(addr, modifiedByte);
+            Write(addr, modifiedByte);
         }
 
         public bool IsBitSet(IntPtr addr, byte flagMask)
         {
-            byte currentByte = ReadUInt8(addr);
+            byte currentByte = Read<byte>(addr);
 
             return (currentByte & flagMask) != 0;
         }
@@ -384,7 +363,7 @@ namespace SilkySouls2.Memory
 
             int bitPos = bitPosition % 32;
 
-            uint currentValue = ReadUInt32(wordAddr);
+            uint currentValue = Read<uint>(wordAddr);
 
             uint bitMask = 1u << bitPos;
 
@@ -392,24 +371,24 @@ namespace SilkySouls2.Memory
                 ? currentValue | bitMask
                 : currentValue & ~bitMask;
 
-            WriteInt32(wordAddr, (int)newValue);
+            Write(wordAddr, (int)newValue);
         }
 
         public bool IsGameLoaded()
         {
-            if (GameVersion.Current.Edition == GameEdition.Scholar)
+            if (PatchManager.Current.Edition == GameEdition.Scholar)
             {
-                return (IntPtr)ReadUInt64((IntPtr)ReadUInt64(Offsets.GameManagerImp.Base) +
-                                          Offsets.GameManagerImp.Offsets.PlayerCtrl) != IntPtr.Zero;
+                return Read<nint>(Read<nint>(Offsets.GameManagerImp.Base) + Offsets.GameManagerImp.PlayerCtrl) !=
+                       IntPtr.Zero;
             }
 
-            return (IntPtr)ReadUInt32((IntPtr)ReadUInt32(Offsets.GameManagerImp.Base) +
-                                      Offsets.GameManagerImp.Offsets.PlayerCtrl) != IntPtr.Zero;
+            return (nint)Read<int>(Read<int>(Offsets.GameManagerImp.Base) +
+                                   Offsets.GameManagerImp.PlayerCtrl) != IntPtr.Zero;
         }
 
         public void AllocCodeCave()
         {
-            if (GameVersion.Current.Edition == GameEdition.Scholar)
+            if (PatchManager.Current.Edition == GameEdition.Scholar)
             {
                 IntPtr searchRangeStart = BaseAddress - 0x40000000;
                 IntPtr searchRangeEnd = BaseAddress - 0x30000;
@@ -429,7 +408,7 @@ namespace SilkySouls2.Memory
             }
             else
             {
-                IntPtr moduleEnd = new IntPtr(BaseAddress.ToInt64() + GameVersion.Current.FileSize);
+                IntPtr moduleEnd = new IntPtr(BaseAddress + GetFileSize());
                 IntPtr searchRangeStart = moduleEnd + 0x10000;
                 IntPtr searchRangeEnd = BaseAddress + 0x7F000000;
                 uint codeCaveSize = 0x3000;
@@ -445,7 +424,6 @@ namespace SilkySouls2.Memory
                     }
                 }
             }
-            
         }
 
         public bool InjectDll(string dllPath)
@@ -479,11 +457,12 @@ namespace SilkySouls2.Memory
                 }
 
                 WriteBytes(dllPathAddress, dllPathBytes);
-                
+
                 IntPtr loadLibraryAddr;
-                if (GameVersion.Current.Edition == GameEdition.Scholar) loadLibraryAddr = GetProcAddress("kernel32.dll", "LoadLibraryW");
+                if (PatchManager.Current.Edition == GameEdition.Scholar)
+                    loadLibraryAddr = GetProcAddress("kernel32.dll", "LoadLibraryW");
                 else loadLibraryAddr = (IntPtr)ReadInt32(Offsets.LoadLibraryW);
-                
+
                 if (loadLibraryAddr == IntPtr.Zero)
                 {
                     Console.WriteLine("Failed to get LoadLibraryW address");
@@ -529,13 +508,13 @@ namespace SilkySouls2.Memory
 
             return Kernel32.GetProcAddress(moduleHandle, procName);
         }
-        
-        public long GetFileSize()
+
+        private long GetFileSize()
         {
             if (TargetProcess.MainModule == null) return 0;
             var fileInfo = new FileInfo(TargetProcess.MainModule.FileName);
+            Console.WriteLine($"FileVersion: {TargetProcess.MainModule.FileVersionInfo.FileVersion}");
             return fileInfo.Length;
-
         }
 
         public void Detach()
@@ -545,13 +524,13 @@ namespace SilkySouls2.Memory
                 Kernel32.CloseHandle(ProcessHandle);
                 ProcessHandle = IntPtr.Zero;
             }
-    
+
             TargetProcess = null;
             IsAttached = false;
         }
 
         public bool IsLoadingScreen() =>
             ReadUInt8((IntPtr)ReadInt64(Offsets.GameManagerImp.Base) +
-                                Offsets.GameManagerImp.Offsets.LoadingFlag) == 1;
+                      Offsets.GameManagerImp.LoadingFlag) == 1;
     }
 }

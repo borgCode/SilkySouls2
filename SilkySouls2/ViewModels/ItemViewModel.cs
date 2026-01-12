@@ -4,6 +4,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using SilkySouls2.Core;
+using SilkySouls2.enums;
+using SilkySouls2.Interfaces;
 using SilkySouls2.Memory;
 using SilkySouls2.Models;
 using SilkySouls2.Services;
@@ -15,72 +19,56 @@ namespace SilkySouls2.ViewModels
     public class ItemViewModel : BaseViewModel
     {
         private readonly ItemService _itemService;
+        private readonly INewGameService _newGameService;
 
         private ILookup<string, Item> _allItems;
 
-        private readonly Dictionary<string, ObservableCollection<Item>> _itemsByCategory =
-            new Dictionary<string, ObservableCollection<Item>>();
+        private readonly Dictionary<string, ObservableCollection<Item>> _itemsByCategory = new();
 
-        private readonly ObservableCollection<Item> _searchResultsCollection = new ObservableCollection<Item>();
+        private readonly ObservableCollection<Item> _searchResultsCollection = new();
 
-        public string[] _infusionNames =
+        public readonly string[] InfusionNames =
             { "Normal", "Fire", "Magic", "Lightning", "Dark", "Poison", "Bleed", "Raw", "Enchanted", "Mundane" };
 
-        public Dictionary<int, int[]> _infusionDict;
+        public Dictionary<int, int[]> InfusionDict;
 
         private ObservableCollection<string> _loadouts;
-        private Dictionary<string, LoadoutTemplate> _loadoutTemplatesByName = new Dictionary<string, LoadoutTemplate>();
+        private Dictionary<string, LoadoutTemplate> _loadoutTemplatesByName = new();
 
-        private readonly HashSet<int> _vanillaExcludedItems = new HashSet<int> { 26940101,26940102,26940100,26940103,1997000,3080000,42000000 };
-        
-        
-        
-        public ItemViewModel(ItemService itemService)
+        private string _preSearchCategory;
+
+        private readonly HashSet<int> _vanillaExcludedItems =
+            new() { 26940101, 26940102, 26940100, 26940103, 1997000, 3080000, 42000000 };
+
+        public ItemViewModel(ItemService itemService, GameStateService gameStateService, INewGameService newGameService)
         {
             _itemService = itemService;
+            _newGameService = newGameService;
+
+            gameStateService.Subscribe(GameState.Loaded, OnGameLoaded);
+            gameStateService.Subscribe(GameState.NotLoaded, OnGameNotLoaded);
+            gameStateService.Subscribe(GameState.NewGameStarted, OnNewGameStarted);
+            gameStateService.Subscribe(GameState.Attached, OnGameAttached);
+
+            SpawnItemCommand = new DelegateCommand(SpawnItem);
+            MassSpawnCommand = new DelegateCommand(MassSpawn);
+            ShowLoadoutWindowCommand = new DelegateCommand(ShowCreateLoadoutWindow);
+            SpawnLoadoutCommand = new DelegateCommand(SpawnLoadout);
+
             LoadData();
         }
 
-        private void LoadData()
-        {
-            Categories.Add("Ammo");
-            Categories.Add("Armor");
-            Categories.Add("Consumables");
-            Categories.Add("Gestures");
-            Categories.Add("Key Items");
-            Categories.Add("Rings");
-            Categories.Add("Spells");
-            Categories.Add("Upgrade Materials");
-            Categories.Add("Weapons");
+        
+        #region Commands
+        
+        public ICommand SpawnItemCommand { get; set; }
+        public ICommand MassSpawnCommand { get; set; }
+        public ICommand ShowLoadoutWindowCommand { get; set; }
+        public ICommand SpawnLoadoutCommand { get; set; }
 
-            _itemsByCategory.Add("Ammo", new ObservableCollection<Item>(DataLoader.GetItemList("Ammo")));
-            _itemsByCategory.Add("Armor", new ObservableCollection<Item>(DataLoader.GetItemList("Armor")));
-            _itemsByCategory.Add("Consumables", new ObservableCollection<Item>(DataLoader.GetItemList("Consumables")));
-            _itemsByCategory.Add("Gestures", new ObservableCollection<Item>(DataLoader.GetItemList("Gestures")));
-            _itemsByCategory.Add("Key Items", new ObservableCollection<Item>(DataLoader.GetItemList("KeyItems")));
-            _itemsByCategory.Add("Rings", new ObservableCollection<Item>(DataLoader.GetItemList("Rings")));
-            _itemsByCategory.Add("Spells", new ObservableCollection<Item>(DataLoader.GetItemList("Spells")));
-            _itemsByCategory.Add("Upgrade Materials",
-                new ObservableCollection<Item>(DataLoader.GetItemList("UpgradeMaterials")));
-            _itemsByCategory.Add("Weapons", new ObservableCollection<Item>(DataLoader.GetItemList("Weapons")));
+        #endregion
 
-            _allItems = _itemsByCategory.Values.SelectMany(x => x).ToLookup(i => i.Name);
-
-            _infusionDict = DataLoader.GetInfusions();
-
-
-            _loadoutTemplatesByName = LoadoutTemplates.All.ToDictionary(lt => lt.Name);
-
-            LoadCustomLoadouts();
-
-            _loadouts = new ObservableCollection<string>(_loadoutTemplatesByName.Keys);
-
-            SelectedLoadoutName = Loadouts.FirstOrDefault();
-            SelectedCategory = Categories.FirstOrDefault();
-            SelectedMassSpawnCategory = Categories.FirstOrDefault();
-            SelectedAutoSpawnWeapon = WeaponList.FirstOrDefault();
-        }
-
+        #region Properties
 
         private bool _areOptionsEnabled;
 
@@ -122,8 +110,6 @@ namespace SilkySouls2.ViewModels
             private set => SetProperty(ref _isSearchActive, value);
         }
 
-        private string _preSearchCategory;
-
         private string _searchText = string.Empty;
 
         public string SearchText
@@ -161,27 +147,6 @@ namespace SilkySouls2.ViewModels
             }
         }
 
-        private void ApplyFilter()
-        {
-            _searchResultsCollection.Clear();
-            var searchTextLower = SearchText.ToLower();
-
-            foreach (var category in _itemsByCategory)
-            {
-                foreach (var item in category.Value)
-                {
-                    if (item.Name.ToLower().Contains(searchTextLower))
-                    {
-                        item.CategoryName = category.Key;
-                        _searchResultsCollection.Add(item);
-                    }
-                }
-            }
-
-            Items = _searchResultsCollection;
-        }
-
-
         private Item _selectedItem;
 
         public Item SelectedItem
@@ -196,13 +161,13 @@ namespace SilkySouls2.ViewModels
                 MaxQuantity = _selectedItem.StackSize;
                 SelectedQuantity = _selectedItem.StackSize;
                 AvailableInfusions.Clear();
-                int[] infusionFlags = _infusionDict[_selectedItem.InfuseId];
+                int[] infusionFlags = InfusionDict[_selectedItem.InfuseId];
 
                 for (int i = 0; i < infusionFlags.Length; i++)
                 {
                     if (infusionFlags[i] == 1)
                     {
-                        AvailableInfusions.Add(_infusionNames[i]);
+                        AvailableInfusions.Add(InfusionNames[i]);
                     }
                 }
 
@@ -261,7 +226,6 @@ namespace SilkySouls2.ViewModels
             set => SetProperty(ref _selectedUpgrade, Math.Max(0, Math.Min(value, MaxUpgradeLevel)));
         }
 
-
         private bool _quantityEnabled;
 
         public bool QuantityEnabled
@@ -285,7 +249,6 @@ namespace SilkySouls2.ViewModels
             get => _selectedInfusionType;
             set => SetProperty(ref _selectedInfusionType, value);
         }
-
 
         private string _selectedCategory;
 
@@ -319,39 +282,6 @@ namespace SilkySouls2.ViewModels
             set => SetProperty(ref _selectedMassSpawnCategory, value);
         }
 
-        private bool _autoSpawnEnabled;
-
-        public bool AutoSpawnEnabled
-        {
-            get => _autoSpawnEnabled;
-            set
-            {
-                if (SetProperty(ref _autoSpawnEnabled, value))
-                {
-                    if (GameVersion.Current.Edition == GameEdition.Vanilla &&
-                        _vanillaExcludedItems.Contains(SelectedAutoSpawnWeapon.Id)) return;
-                    _itemService.SetAutoSpawnWeapon(!_autoSpawnEnabled ? 3400000 : SelectedAutoSpawnWeapon.Id);
-                }
-            }
-        }
-
-        private Item _selectedAutoSpawnWeapon;
-
-        public Item SelectedAutoSpawnWeapon
-        {
-            get => _selectedAutoSpawnWeapon;
-            set
-            {
-                if (SetProperty(ref _selectedAutoSpawnWeapon, value))
-                {
-                    if (!AutoSpawnEnabled) return;
-                    if (GameVersion.Current.Edition == GameEdition.Vanilla &&
-                        _vanillaExcludedItems.Contains(SelectedAutoSpawnWeapon.Id)) return;
-                    _itemService.SetAutoSpawnWeapon(SelectedAutoSpawnWeapon.Id);
-                }
-            }
-        }
-
         public ObservableCollection<Item> WeaponList => new ObservableCollection<Item>(_itemsByCategory["Weapons"]);
 
         public ObservableCollection<string> Loadouts
@@ -368,69 +298,117 @@ namespace SilkySouls2.ViewModels
             set => SetProperty(ref _selectedLoadoutName, value);
         }
 
-        public void SpawnItem()
-        {
-            if (_selectedItem == null) return;
-            if (GameVersion.Current.Edition == GameEdition.Vanilla &&
-                _vanillaExcludedItems.Contains(_selectedItem.Id)) return;
+        private bool _isAutoSpawnEnabled;
 
-            _itemService.SpawnItem(_selectedItem, SelectedUpgrade, SelectedQuantity,
-                Array.IndexOf(_infusionNames, SelectedInfusionType), _selectedItem.Durability);
+        public bool IsAutoSpawnEnabled
+        {
+            get => _isAutoSpawnEnabled;
+            set
+            {
+                if (SetProperty(ref _isAutoSpawnEnabled, value))
+                {
+                    if (!PatchManager.IsInitialized) return;
+                    if (_isAutoSpawnEnabled) _newGameService.RequestNewGameDetect();
+                    else _newGameService.ReleaseNewGameDetect();
+                }
+            }
         }
 
-        public void TryEnableFeatures()
+        private Item _selectedAutoSpawnWeapon;
+
+        public Item SelectedAutoSpawnWeapon
+        {
+            get => _selectedAutoSpawnWeapon;
+            set => SetProperty(ref _selectedAutoSpawnWeapon, value);
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void LoadData()
+        {
+            Categories.Add("Ammo");
+            Categories.Add("Armor");
+            Categories.Add("Consumables");
+            Categories.Add("Gestures");
+            Categories.Add("Key Items");
+            Categories.Add("Rings");
+            Categories.Add("Spells");
+            Categories.Add("Upgrade Materials");
+            Categories.Add("Weapons");
+
+            _itemsByCategory.Add("Ammo", new ObservableCollection<Item>(DataLoader.GetItemList("Ammo")));
+            _itemsByCategory.Add("Armor", new ObservableCollection<Item>(DataLoader.GetItemList("Armor")));
+            _itemsByCategory.Add("Consumables", new ObservableCollection<Item>(DataLoader.GetItemList("Consumables")));
+            _itemsByCategory.Add("Gestures", new ObservableCollection<Item>(DataLoader.GetItemList("Gestures")));
+            _itemsByCategory.Add("Key Items", new ObservableCollection<Item>(DataLoader.GetItemList("KeyItems")));
+            _itemsByCategory.Add("Rings", new ObservableCollection<Item>(DataLoader.GetItemList("Rings")));
+            _itemsByCategory.Add("Spells", new ObservableCollection<Item>(DataLoader.GetItemList("Spells")));
+            _itemsByCategory.Add("Upgrade Materials",
+                new ObservableCollection<Item>(DataLoader.GetItemList("UpgradeMaterials")));
+            _itemsByCategory.Add("Weapons", new ObservableCollection<Item>(DataLoader.GetItemList("Weapons")));
+
+            _allItems = _itemsByCategory.Values.SelectMany(x => x).ToLookup(i => i.Name);
+
+            InfusionDict = DataLoader.GetInfusions();
+
+
+            _loadoutTemplatesByName = LoadoutTemplates.All.ToDictionary(lt => lt.Name);
+
+            LoadCustomLoadouts();
+
+            _loadouts = new ObservableCollection<string>(_loadoutTemplatesByName.Keys);
+
+            SelectedLoadoutName = Loadouts.FirstOrDefault();
+            SelectedCategory = Categories.FirstOrDefault();
+            SelectedMassSpawnCategory = Categories.FirstOrDefault();
+            SelectedAutoSpawnWeapon = WeaponList.FirstOrDefault();
+        }
+
+        private void ApplyFilter()
+        {
+            _searchResultsCollection.Clear();
+            var searchTextLower = SearchText.ToLower();
+
+            foreach (var category in _itemsByCategory)
+            {
+                foreach (var item in category.Value)
+                {
+                    if (item.Name.ToLower().Contains(searchTextLower))
+                    {
+                        item.CategoryName = category.Key;
+                        _searchResultsCollection.Add(item);
+                    }
+                }
+            }
+
+            Items = _searchResultsCollection;
+        }
+
+        private void OnGameLoaded()
         {
             AreOptionsEnabled = true;
         }
 
-        public void DisableFeatures()
+        private void OnGameNotLoaded()
         {
             AreOptionsEnabled = false;
         }
-
-        public void MassSpawn()
+        
+        private void OnGameAttached()
         {
-            Task.Run(() =>
-            {
-                if (SelectedMassSpawnCategory == "Weapons")
-                {
-                    foreach (var weapon in _itemsByCategory[SelectedMassSpawnCategory])
-                    {
-                        if (GameVersion.Current.Edition == GameEdition.Vanilla &&
-                            _vanillaExcludedItems.Contains(weapon.Id)) continue;
-                        _itemService.SpawnItem(weapon, 0, 1, 0, weapon.Durability);
-                        Thread.Sleep(10);
-                    }
-                }
-                else
-                {
-                    foreach (var item in _itemsByCategory[SelectedMassSpawnCategory])
-                    {
-                        if (GameVersion.Current.Edition == GameEdition.Vanilla &&
-                            _vanillaExcludedItems.Contains(item.Id)) continue;
-                        _itemService.SpawnItem(item, 0, item.StackSize, 0, item.Durability);
-                        Thread.Sleep(10);
-                    }
-                }
-            });
+            if (IsAutoSpawnEnabled) _newGameService.RequestNewGameDetect();
+            else _newGameService.ReleaseNewGameDetect();
         }
 
-        public void ApplyLaunchFeatures()
+        private void OnNewGameStarted()
         {
-            if (!AutoSpawnEnabled) return;
-            if (GameVersion.Current.Edition == GameEdition.Vanilla &&
-                _vanillaExcludedItems.Contains(SelectedAutoSpawnWeapon.Id)) return;
-            _itemService.SetAutoSpawnWeapon(SelectedAutoSpawnWeapon.Id);
+            if (!IsAutoSpawnEnabled) return;
+            if (!PatchManager.IsScholar() && _vanillaExcludedItems.Contains(SelectedAutoSpawnWeapon.Id)) return;
+            _itemService.SpawnItem(SelectedAutoSpawnWeapon, 0, 1, 0);
         }
-
-        public void ShowCreateLoadoutWindow()
-        {
-            var createLoadoutWindow = new CreateLoadoutWindow(_categories, _itemsByCategory, _loadoutTemplatesByName,
-                _customLoadoutTemplates, _infusionNames);
-
-            if (createLoadoutWindow.ShowDialog() == true) RefreshLoadouts();
-        }
-
+        
         private void RefreshLoadouts()
         {
             _loadoutTemplatesByName = LoadoutTemplates.All.ToDictionary(lt => lt.Name);
@@ -471,8 +449,53 @@ namespace SilkySouls2.ViewModels
                 _loadoutTemplatesByName[loadout.Name] = loadout;
             }
         }
+        
+        private void SpawnItem()
+        {
+            if (_selectedItem == null) return;
+            if (PatchManager.Current.Edition == GameEdition.Vanilla &&
+                _vanillaExcludedItems.Contains(_selectedItem.Id)) return;
 
-        public void SpawnLoadout()
+            _itemService.SpawnItem(_selectedItem, SelectedUpgrade, SelectedQuantity,
+                Array.IndexOf(InfusionNames, SelectedInfusionType), _selectedItem.Durability);
+        }
+
+        private void MassSpawn()
+        {
+            Task.Run(() =>
+            {
+                if (SelectedMassSpawnCategory == "Weapons")
+                {
+                    foreach (var weapon in _itemsByCategory[SelectedMassSpawnCategory])
+                    {
+                        if (PatchManager.Current.Edition == GameEdition.Vanilla &&
+                            _vanillaExcludedItems.Contains(weapon.Id)) continue;
+                        _itemService.SpawnItem(weapon, 0, 1, 0, weapon.Durability);
+                        Thread.Sleep(10);
+                    }
+                }
+                else
+                {
+                    foreach (var item in _itemsByCategory[SelectedMassSpawnCategory])
+                    {
+                        if (PatchManager.Current.Edition == GameEdition.Vanilla &&
+                            _vanillaExcludedItems.Contains(item.Id)) continue;
+                        _itemService.SpawnItem(item, 0, item.StackSize, 0, item.Durability);
+                        Thread.Sleep(10);
+                    }
+                }
+            });
+        }
+        
+        private void ShowCreateLoadoutWindow()
+        {
+            var createLoadoutWindow = new CreateLoadoutWindow(_categories, _itemsByCategory, _loadoutTemplatesByName,
+                _customLoadoutTemplates, InfusionNames);
+
+            if (createLoadoutWindow.ShowDialog() == true) RefreshLoadouts();
+        }
+        
+        private void SpawnLoadout()
         {
             if (string.IsNullOrEmpty(SelectedLoadoutName) || !_loadoutTemplatesByName.ContainsKey(SelectedLoadoutName))
                 return;
@@ -483,10 +506,10 @@ namespace SilkySouls2.ViewModels
             {
                 foreach (var item in _allItems[template.ItemName])
                 {
-                    int infusionIndex = Array.IndexOf(_infusionNames, template.Infusion);
+                    int infusionIndex = Array.IndexOf(InfusionNames, template.Infusion);
                     int quantity = template.Quantity > 0 ? template.Quantity : item.StackSize;
 
-                    if (GameVersion.Current.Edition == GameEdition.Vanilla &&
+                    if (PatchManager.Current.Edition == GameEdition.Vanilla &&
                         _vanillaExcludedItems.Contains(item.Id)) continue;
 
                     _itemService.SpawnItem(item, template.Upgrade, quantity, infusionIndex, item.Durability);
@@ -494,6 +517,7 @@ namespace SilkySouls2.ViewModels
                 }
             }
         }
-        
+
+        #endregion
     }
 }

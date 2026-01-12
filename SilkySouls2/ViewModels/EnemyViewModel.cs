@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using SilkySouls2.enums;
+using SilkySouls2.GameIds;
+using SilkySouls2.Interfaces;
 using SilkySouls2.Memory;
 using SilkySouls2.Models;
 using SilkySouls2.Services;
@@ -17,11 +19,11 @@ namespace SilkySouls2.ViewModels
     {
         private readonly EnemyService _enemyService;
         private readonly HotkeyManager _hotkeyManager;
-        private readonly EzStateService _ezStateService;
-        private readonly EventService _eventService;
+        private readonly IEzStateService _ezStateService;
+        private readonly IEventService _eventService;
 
-        public EnemyViewModel(EnemyService enemyService, HotkeyManager hotkeyManager, EzStateService ezStateService,
-            GameStateService gameStateService, EventService eventService)
+        public EnemyViewModel(EnemyService enemyService, HotkeyManager hotkeyManager, IEzStateService ezStateService,
+            GameStateService gameStateService, IEventService eventService)
         {
             _enemyService = enemyService;
             _hotkeyManager = hotkeyManager;
@@ -29,8 +31,8 @@ namespace SilkySouls2.ViewModels
             _eventService = eventService;
 
 
-            gameStateService.Subscribe(GameState.Loaded, OnGameStateLoaded);
-            gameStateService.Subscribe(GameState.NotLoaded, OnGameStateNotLoaded);
+            gameStateService.Subscribe(GameState.Loaded, OnGameLoaded);
+            gameStateService.Subscribe(GameState.NotLoaded, OnGameNotLoaded);
             gameStateService.Subscribe(GameState.DelayedGameLoad, OnDelayedGameLoad);
 
             RegisterHotkeys();
@@ -45,7 +47,7 @@ namespace SilkySouls2.ViewModels
 
         private void RegisterHotkeys()
         {
-            _hotkeyManager.RegisterAction("DisableAi", () => { IsAllDisableAiEnabled = !IsAllDisableAiEnabled; });
+            _hotkeyManager.RegisterAction(HotkeyActions.DisableAi, () => { IsAllDisableAiEnabled = !IsAllDisableAiEnabled; });
         }
 
         private bool _areOptionsEnabled;
@@ -172,7 +174,7 @@ namespace SilkySouls2.ViewModels
         private void UpdateMadWarriorStatus()
         {
             if (!AreOptionsEnabled) return;
-            if (_eventService.GetEvent(GameIds.EventFlags.MadWarriorSpawn))
+            if (_eventService.GetEvent(EventFlag.MadWarriorSpawn))
             {
                 MadWarriorStatusText = "Spawned";
                 MadWarriorStatusColor = Brushes.Chartreuse;
@@ -290,8 +292,8 @@ namespace SilkySouls2.ViewModels
 
             Task.Run(() =>
             {
-                _ezStateService.ExecuteEzStateEventCommand(overrideCommand, areaId, areaIndex);
-                _ezStateService.ExecuteEzStateEventCommand(generateCommand, areaId, areaIndex);
+                _ezStateService.ExecuteEventFromGameThread(overrideCommand, areaId, areaIndex);
+                _ezStateService.ExecuteEventFromGameThread(generateCommand, areaId, areaIndex);
             });
         }
 
@@ -299,10 +301,10 @@ namespace SilkySouls2.ViewModels
         public void TryApplyOneTimeFeatures()
         {
             if (IsAllDisableAiEnabled) _enemyService.ToggleDisableAi(true);
-            IsScholar = GameVersion.Current.Edition == GameEdition.Scholar;
+            IsScholar = PatchManager.Current.Edition == GameEdition.Scholar;
         }
 
-        private void OnGameStateLoaded()
+        private void OnGameLoaded()
         {
             AreOptionsEnabled = true;
             if (IsPigSummonsEnabled) _enemyService.ToggleElanaSummons(IsPigSummonsEnabled, 0);
@@ -311,7 +313,7 @@ namespace SilkySouls2.ViewModels
         }
 
 
-        private void OnGameStateNotLoaded()
+        private void OnGameNotLoaded()
         {
             AreOptionsEnabled = false;
         }

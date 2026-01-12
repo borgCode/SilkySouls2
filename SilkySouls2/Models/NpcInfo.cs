@@ -1,20 +1,12 @@
 ﻿namespace SilkySouls2.Models
 {
-    public class NpcInfo
+    public class NpcInfo(string npcName, int deathFlag, int hostileFlag, params int[] majulaFlags)
     {
-        public NpcInfo(string npcName, int deathFlag, int hostileFlag, params int[] majulaFlags)
-        {
-            Name = npcName;
-            DeathFlagId = deathFlag;
-            HostileFlagId = hostileFlag;
-            MoveToMajulaFlagIds = majulaFlags;
-        }
+        public string Name { get; set; } = npcName;
+        public int DeathFlagId { get; set; } = deathFlag;
+        public int HostileFlagId { get; set; } = hostileFlag;
+        public int[] MoveToMajulaFlagIds { get; } = majulaFlags;
 
-        public string Name { get; set; }
-        public int DeathFlagId { get; set; }
-        public int HostileFlagId { get; set; }
-        public int[] MoveToMajulaFlagIds { get; }
-        
         public bool HasMajulaFlags => MoveToMajulaFlagIds != null && MoveToMajulaFlagIds.Length > 0;
     }
 }

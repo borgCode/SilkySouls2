@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SilkySouls2.Interfaces;
+using SilkySouls2.Services;
 
 namespace SilkySouls2.Memory
 {
     public class NopManager
     {
-        private readonly MemoryIo _memoryIo;
+        private readonly IMemoryService _memoryService;
         private readonly Dictionary<long, byte[]> _nopRegistry = new Dictionary<long, byte[]>();
 
-        public NopManager(MemoryIo memoryIo)
+        public NopManager(IMemoryService memoryService)
         {
-            _memoryIo = memoryIo;
+            _memoryService = memoryService;
         }
 
 
@@ -19,10 +21,10 @@ namespace SilkySouls2.Memory
         {
             if (_nopRegistry.ContainsKey(address))
                 return;
-            byte[] originalBytes = _memoryIo.ReadBytes((IntPtr)address, length);
+            byte[] originalBytes = _memoryService.ReadBytes((IntPtr)address, length);
             byte[] nopBytes = Enumerable.Repeat((byte)0x90, length).ToArray();
         
-            _memoryIo.WriteBytes((IntPtr)address, nopBytes);
+            _memoryService.WriteBytes((IntPtr)address, nopBytes);
             _nopRegistry[address] = originalBytes;
         }
     
@@ -30,7 +32,7 @@ namespace SilkySouls2.Memory
         {
             if (_nopRegistry.TryGetValue(address, out byte[] originalBytes))
             {
-                _memoryIo.WriteBytes((IntPtr)address, originalBytes);
+                _memoryService.WriteBytes((IntPtr)address, originalBytes);
                 _nopRegistry.Remove(address);
             }
         }

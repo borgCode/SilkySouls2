@@ -6,7 +6,8 @@ namespace SilkySouls2.Services
 {
     public class GameStateService
     {
-        private readonly Dictionary<GameState, List<Action>> _eventHandlers = new Dictionary<GameState, List<Action>>();
+        private readonly Dictionary<GameState, List<Action>> _eventHandlers = new();
+        private readonly Dictionary<GameState, List<Action<object[]>>> _eventHandlersWithArgs = new();
         
         public void Publish(GameState eventType)
         {
@@ -16,7 +17,7 @@ namespace SilkySouls2.Services
                     handler.Invoke();
             }
         }
-
+        
         public void Subscribe(GameState eventType, Action handler)
         {
             if (!_eventHandlers.ContainsKey(eventType))
@@ -24,11 +25,24 @@ namespace SilkySouls2.Services
    
             _eventHandlers[eventType].Add(handler);
         }
-
-        public void Unsubscribe(GameState eventType, Action handler)
+        
+        public void Publish(GameState eventType, params object[] args)
         {
-            if (_eventHandlers.ContainsKey(eventType))
-                _eventHandlers[eventType].Remove(handler);
+            if (_eventHandlersWithArgs.ContainsKey(eventType))
+            {
+                foreach (var handler in _eventHandlersWithArgs[eventType])
+                    handler.Invoke(args);
+            }
         }
+        
+        public void Subscribe(GameState eventType, Action<object[]> handler)
+        {
+            if (!_eventHandlersWithArgs.ContainsKey(eventType))
+                _eventHandlersWithArgs[eventType] = new List<Action<object[]>>();
+   
+            _eventHandlersWithArgs[eventType].Add(handler);
+        }
+
+        
     }
 }

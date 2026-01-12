@@ -1,57 +1,49 @@
 ﻿using System;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Threading;
 using SilkySouls2.ViewModels;
 
-namespace SilkySouls2.Views
+namespace SilkySouls2.Views.Tabs
 {
     public partial class ItemTab
     {
-        private readonly ItemViewModel _itemViewModel;
         private string _lastValidText;
+
         public ItemTab(ItemViewModel itemViewModel)
         {
             InitializeComponent();
-            _itemViewModel = itemViewModel;
-            DataContext = _itemViewModel;
+            DataContext = itemViewModel;
         }
-
-        private void SpawnButton_Click(object sender, RoutedEventArgs e) => _itemViewModel.SpawnItem();
 
         private void AutoSpawn_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (!(sender is ComboBox combo)) return;
             _lastValidText = combo.Text;
-            
+
             combo.PreviewMouseDown -= AutoSpawn_PreviewMouseDown;
             combo.DropDownClosed += AutoSpawn_DropDownClosed;
-                
+
             combo.Dispatcher.BeginInvoke(new Action(() =>
             {
                 combo.IsEditable = true;
                 combo.Focus();
                 combo.IsDropDownOpen = true;
-            }), System.Windows.Threading.DispatcherPriority.Input);
+            }), DispatcherPriority.Input);
         }
-        
+
         private void AutoSpawn_DropDownClosed(object sender, EventArgs e)
         {
             if (!(sender is ComboBox combo)) return;
-            
+
             if (string.IsNullOrWhiteSpace(combo.Text))
             {
                 combo.Text = _lastValidText;
             }
+
             combo.IsEditable = false;
             combo.DropDownClosed -= AutoSpawn_DropDownClosed;
             combo.PreviewMouseDown += AutoSpawn_PreviewMouseDown;
         }
-
-        private void MassSpawn_Click(object sender, RoutedEventArgs e) => _itemViewModel.MassSpawn();
-
-        private void Create_Click(object sender, RoutedEventArgs e) => _itemViewModel.ShowCreateLoadoutWindow();
-
-        private void LoadPreset_Click(object sender, RoutedEventArgs e) => _itemViewModel.SpawnLoadout();
     }
 }

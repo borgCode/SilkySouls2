@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -8,13 +7,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using SilkySouls2.enums;
+using SilkySouls2.Interfaces;
 using SilkySouls2.Memory;
 using SilkySouls2.Memory.DLLShared;
 using SilkySouls2.Services;
 using SilkySouls2.Utilities;
 using SilkySouls2.ViewModels;
-using SilkySouls2.Views;
 using SilkySouls2.Views.Tabs;
+using static SilkySouls2.Memory.Offsets;
 
 namespace SilkySouls2
 {
@@ -23,30 +23,29 @@ namespace SilkySouls2
     /// </summary>
     public partial class MainWindow
     {
-        private readonly MemoryIo _memoryIo;
+        private readonly IMemoryService _memoryService;
         private readonly AoBScanner _aobScanner;
         private readonly DispatcherTimer _gameLoadedTimer;
         private readonly HookManager _hookManager;
         private readonly NopManager _nopManager;
         private readonly GameStateService _gameStateService;
 
-        private readonly PlayerViewModel _playerViewModel;
-        private readonly TravelViewModel _travelViewModel;
-
-        private readonly UtilityViewModel _utilityViewModel;
-        private readonly TargetViewModel _targetViewModel;
         private readonly EnemyViewModel _enemyViewModel;
-        private readonly EventViewModel _eventViewModel;
         private readonly ItemViewModel _itemViewModel;
         private readonly SettingsViewModel _settingsViewModel;
         private readonly DamageControlService _damageControlService;
         private readonly DllManager _dllManager;
         private readonly ItemService _itemService;
+        private readonly INewGameService _newGameService;
+
+        private const string VanillaSteamName = "Dark Souls II";
+        private const string ScholarSteamName = "Dark Souls II Scholar of the First Sin";
+        private const int StartingCutsceneId = 100200;
 
         public MainWindow()
         {
-            _memoryIo = new MemoryIo();
-            _memoryIo.StartAutoAttach();
+            _memoryService = new MemoryService();
+            _memoryService.StartAutoAttach();
 
             InitializeComponent();
 
@@ -59,38 +58,51 @@ namespace SilkySouls2
             else WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
 
-            _hookManager = new HookManager(_memoryIo);
-            _nopManager = new NopManager(_memoryIo);
-            _aobScanner = new AoBScanner(_memoryIo);
-            _dllManager = new DllManager(_memoryIo);
-            var hotkeyManager = new HotkeyManager(_memoryIo);
+            _hookManager = new HookManager(_memoryService);
+            _nopManager = new NopManager(_memoryService);
+            _aobScanner = new AoBScanner(_memoryService);
+            _dllManager = new DllManager(_memoryService);
+            var hotkeyManager = new HotkeyManager(_memoryService);
 
-            _damageControlService = new DamageControlService(_memoryIo, _hookManager);
-            var playerService = new PlayerService(_memoryIo, _hookManager, _nopManager);
-            var utilityService = new UtilityService(_memoryIo, _hookManager, _dllManager);
-            var travelService = new TravelService(_memoryIo, _hookManager, playerService);
-            var targetService = new TargetService(_memoryIo, _hookManager);
-            var enemyService = new EnemyService(_memoryIo, _hookManager);
-            var eventService = new EventService(_memoryIo);
             _gameStateService = new GameStateService();
-            var ezStateService = new EzStateService(_memoryIo, _hookManager);
-            _itemService = new ItemService(_memoryIo);
-            var settingsService = new SettingsService(_memoryIo, _hookManager);
+            _damageControlService = new DamageControlService(_memoryService, _hookManager);
+            IChrCtrlService chrCtrlService = new ChrCtrlService(_memoryService);
+            IPlayerService playerService = new PlayerService(_memoryService, _hookManager, _nopManager, chrCtrlService);
+            var utilityService = new UtilityService(_memoryService, _hookManager, _dllManager);
+            ITravelService travelService = new TravelService(_memoryService, _hookManager, playerService);
+            var targetService = new TargetService(_memoryService, _hookManager, chrCtrlService);
+            var enemyService = new EnemyService(_memoryService, _hookManager);
+            IEventService eventService = new EventService(_memoryService);
+            IEzStateService ezStateService = new EzStateService(_memoryService, _hookManager);
+            _itemService = new ItemService(_memoryService);
+            _newGameService = new NewGameService(_memoryService, _hookManager, _gameStateService);
+            ISettingsService settingsService = new SettingsService(_memoryService, _hookManager);
 
-            _playerViewModel = new PlayerViewModel(playerService, hotkeyManager, _damageControlService, _gameStateService);
-            _travelViewModel = new TravelViewModel(travelService, hotkeyManager);
-            _eventViewModel = new EventViewModel(utilityService, eventService);
-            _utilityViewModel = new UtilityViewModel(utilityService, hotkeyManager, _playerViewModel, _gameStateService);
-            _targetViewModel = new TargetViewModel(targetService, hotkeyManager, _damageControlService);
-            _enemyViewModel = new EnemyViewModel(enemyService, hotkeyManager, ezStateService, _gameStateService, eventService);
-            _itemViewModel = new ItemViewModel(_itemService);
+            var playerViewModel = new PlayerViewModel(playerService, hotkeyManager, _damageControlService,
+                _gameStateService, _newGameService);
+
+            var travelViewModel = new TravelViewModel(travelService, hotkeyManager, _gameStateService);
+
+            var eventViewModel = new EventViewModel(utilityService, eventService, ezStateService, _gameStateService);
+
+            var utilityViewModel = new UtilityViewModel(utilityService, hotkeyManager, playerViewModel,
+                _gameStateService, ezStateService);
+
+            var targetViewModel =
+                new TargetViewModel(targetService, hotkeyManager, _damageControlService, _gameStateService);
+
+            _enemyViewModel = new EnemyViewModel(enemyService, hotkeyManager, ezStateService, _gameStateService,
+                eventService);
+
+            _itemViewModel = new ItemViewModel(_itemService, _gameStateService, _newGameService);
+
             _settingsViewModel = new SettingsViewModel(settingsService, hotkeyManager, _gameStateService);
 
-            var playerTab = new PlayerTab(_playerViewModel);
-            var travelTab = new TravelTab(_travelViewModel);
-            var eventTab = new EventTab(_eventViewModel);
-            var utilityTab = new UtilityTab(_utilityViewModel);
-            var targetTab = new TargetTab(_targetViewModel);
+            var playerTab = new PlayerTab(playerViewModel);
+            var travelTab = new TravelTab(travelViewModel);
+            var eventTab = new EventTab(eventViewModel);
+            var utilityTab = new UtilityTab(utilityViewModel);
+            var targetTab = new TargetTab(targetViewModel);
             var enemyTab = new EnemyTab(_enemyViewModel);
             var itemTab = new ItemTab(_itemViewModel);
             var settingsTab = new SettingsTab(_settingsViewModel);
@@ -105,8 +117,8 @@ namespace SilkySouls2
             MainTabControl.Items.Add(new TabItem { Header = "Items", Content = itemTab });
             MainTabControl.Items.Add(new TabItem { Header = "Settings", Content = settingsTab });
 
-            _settingsViewModel.ApplyStartUpOptions();
-            _utilityViewModel.ApplyStartUpOptions();
+            _gameStateService.Publish(GameState.AppStart);
+
             Closing += MainWindow_Closing;
 
             _gameLoadedTimer = new DispatcherTimer
@@ -134,89 +146,104 @@ namespace SilkySouls2
         private bool _hasAppliedNoLogo;
 
         private bool _appliedOneTimeFeatures;
-        private bool _hasAppliedLaunchFeatures;
         private int _storedArea;
         private int _currentArea;
-        private bool _hasShownVersionError;
+        private bool _hasCheckedPatch;
+        private bool _waitingForDetectNewGame;
+        private DateTime? _attachedTime;
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            if (_memoryIo.IsAttached)
+            if (_memoryService.IsAttached)
             {
                 IsAttachedText.Text = "Attached to game";
                 IsAttachedText.Foreground = (SolidColorBrush)Application.Current.Resources["AttachedBrush"];
 
-                LaunchGameButton.IsEnabled = false;
+                LaunchVanillaButton.IsEnabled = false;
+                LaunchScholarButton.IsEnabled = false;
 
-                if (!_hasScanned)
+                if (!_attachedTime.HasValue)
                 {
-                    if (!GameVersion.TryDetectVersion(_memoryIo.GetFileSize()))
-                    {
-                        _memoryIo.Detach();
+                    _attachedTime = DateTime.Now;
+                    return;
+                }
 
-                        Dispatcher.Invoke(() =>
-                        {
-                            if (!_hasShownVersionError)
-                            {
-                                _hasShownVersionError = true;
-                                MessageBox.Show(
-                                    "Unknown game version detected. Please ensure you're running a supported version of Dark Souls 2.");
-                            }
-                            
-                            IsAttachedText.Foreground =
-                                (SolidColorBrush)Application.Current.Resources["NotAttachedBrush"];
-                            LaunchGameButton.IsEnabled = true;
-                        });
-                        return;
+                if ((DateTime.Now - _attachedTime.Value).TotalSeconds < 2)
+                    return;
+
+                if (!_hasCheckedPatch)
+                {
+                    if (!PatchManager.TryDetectVersion(_memoryService))
+                    {
+                        _aobScanner.FallBackScan(true);
                     }
 
-                    _hasShownVersionError = false;
-                    _aobScanner.Scan(GameVersion.Current.Edition == GameEdition.Scholar);
-                    _hasScanned = true;
-                    Offsets.Initialize(GameVersion.Current.Edition);
-                    Console.WriteLine($"Base: 0x{_memoryIo.BaseAddress.ToInt64():X}");
+#if DEBUG
+                    Console.WriteLine($@"Base: 0x{(long)_memoryService.BaseAddress:X}");
+#endif
+                    _hasCheckedPatch = true;
                 }
 
-
-                if (!_hasAppliedLaunchFeatures)
-                {
-                    _gameStateService.Publish(GameState.Launched);
-                    ApplyLaunchFeatures();
-                }
-
-
-                _currentArea = _memoryIo.ReadInt32(Offsets.MapId);
+                _currentArea = _memoryService.Read<int>(MapId);
                 if (_currentArea != _storedArea)
                 {
-                    _eventViewModel.AreaChange(_currentArea);
+                    _gameStateService.Publish(GameState.AreaChanged, _currentArea);
                     _storedArea = _currentArea;
                 }
 
                 if (!_hasAllocatedMemory)
                 {
-                    _memoryIo.AllocCodeCave();
+                    _memoryService.AllocCodeCave();
+
+#if DEBUG
                     Console.WriteLine($"Code cave: 0x{CodeCaveOffsets.Base.ToInt64():X}");
+#endif
                     _hasAllocatedMemory = true;
                     _damageControlService.WriteDamageControlCode();
                     _dllManager.CreateDrawSharedMem();
                     _dllManager.CreateSpeedSharedMem();
+                    _gameStateService.Publish(GameState.Attached);
                 }
 
-                if (_memoryIo.IsGameLoaded())
+                if (_waitingForDetectNewGame)
+                {
+                    var newGameFlagLoc = CodeCaveOffsets.Base + CodeCaveOffsets.NewGameStartedFlag;
+                    if (_memoryService.Read<byte>(newGameFlagLoc) == 1)
+                    {
+                        _gameStateService.Publish(GameState.NewGameStarted);
+                        _memoryService.Write(newGameFlagLoc, (byte)0);
+                        _waitingForDetectNewGame = false;
+                    }
+                }
+
+                if (_memoryService.IsGameLoaded())
                 {
                     if (!_hasAppliedDelayedFeatures)
                     {
-                        if (!_memoryIo.IsLoadingScreen())
+                        if (!_memoryService.IsLoadingScreen())
                         {
                             _hasAppliedDelayedFeatures = true;
                             _gameStateService.Publish(GameState.DelayedGameLoad);
                         }
                     }
+
                     if (_loaded) return;
                     _loaded = true;
+
+                    if (_newGameService.GetCount() > 0)
+                    {
+                        var gameMan = _memoryService.Read<nint>(GameManagerImp.Base);
+
+                        if (_memoryService.Read<int>((IntPtr)gameMan + GameManagerImp.PendingCutsceneId) ==
+                            StartingCutsceneId)
+                        {
+                            _waitingForDetectNewGame = true;
+                        }
+                    }
+
+
                     _gameStateService.Publish(GameState.Loaded);
-                    TryEnableFeatures();
-                    
+
                     if (_appliedOneTimeFeatures) return;
                     _gameStateService.Publish(GameState.FirstLoaded);
                     ApplyOneTimeFeatures();
@@ -225,7 +252,6 @@ namespace SilkySouls2
                 else if (_loaded)
                 {
                     _gameStateService.Publish(GameState.NotLoaded);
-                    DisableFeatures();
                     _loaded = false;
                     _hasAppliedDelayedFeatures = false;
                 }
@@ -234,9 +260,11 @@ namespace SilkySouls2
             {
                 _hookManager.ClearHooks();
                 _gameStateService.Publish(GameState.NotLoaded);
-                DisableFeatures();
                 _nopManager.ClearRegistry();
                 _gameStateService.Publish(GameState.Detached);
+                _newGameService.Reset();
+                _attachedTime = null;
+                _hasCheckedPatch = false;
                 ResetState();
                 _hasScanned = false;
                 _loaded = false;
@@ -244,7 +272,8 @@ namespace SilkySouls2
                 _appliedOneTimeFeatures = false;
                 IsAttachedText.Text = "Not attached";
                 IsAttachedText.Foreground = (SolidColorBrush)Application.Current.Resources["NotAttachedBrush"];
-                LaunchGameButton.IsEnabled = true;
+                LaunchVanillaButton.IsEnabled = true;
+                LaunchScholarButton.IsEnabled = true;
             }
         }
 
@@ -255,32 +284,9 @@ namespace SilkySouls2
             _itemService.Reset();
         }
 
-        private void ApplyLaunchFeatures()
-        {
-            _itemViewModel.ApplyLaunchFeatures();
-        }
-
         private void ApplyOneTimeFeatures()
         {
             _enemyViewModel.TryApplyOneTimeFeatures();
-            _eventViewModel.TryApplyOneTimeFeatures();
-        }
-
-        private void TryEnableFeatures()
-        {
-      
-            _targetViewModel.TryEnableFeatures();
-            _itemViewModel.TryEnableFeatures();
-            _travelViewModel.TryEnableFeatures();
-            _eventViewModel.TryEnableFeatures();
-        }
-
-        private void DisableFeatures()
-        {
-            _targetViewModel.DisableFeatures();
-            _itemViewModel.DisableFeatures();
-            _travelViewModel.DisableFeatures();
-            _eventViewModel.DisableFeatures();
         }
 
         private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -311,7 +317,12 @@ namespace SilkySouls2
             _nopManager.RestoreAll();
         }
 
-        private void LaunchGame_Click(object sender, RoutedEventArgs e) => Task.Run(GameLauncher.LaunchDarkSouls2);
         private void CheckUpdate_Click(object sender, RoutedEventArgs e) => VersionChecker.CheckForUpdates(this, true);
+
+        private void LaunchVanilla_Click(object sender, RoutedEventArgs e) =>
+            Task.Run(() => GameLauncher.LaunchDarkSouls2(VanillaSteamName));
+
+        private void LaunchScholar_Click(object sender, RoutedEventArgs e) =>
+            Task.Run(() => GameLauncher.LaunchDarkSouls2(ScholarSteamName));
     }
 }

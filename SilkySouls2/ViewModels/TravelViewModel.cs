@@ -2,7 +2,10 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
+using System.Windows.Input;
+using SilkySouls2.Core;
+using SilkySouls2.enums;
+using SilkySouls2.Interfaces;
 using SilkySouls2.Models;
 using SilkySouls2.Services;
 using SilkySouls2.Utilities;
@@ -11,87 +14,76 @@ namespace SilkySouls2.ViewModels
 {
     public class TravelViewModel : BaseViewModel
     {
-        private readonly TravelService _travelService;
+        private readonly ITravelService _travelService;
         private readonly HotkeyManager _hotkeyManager;
 
-        private bool _areButtonsEnabled;
-        
-        private ObservableCollection<string> _mainAreas;
-        private ObservableCollection<WarpLocation> _areaLocations;
-        
-        private string _selectedMainArea;
-        private WarpLocation _selectedWarpLocation;
-        
         private Dictionary<string, List<WarpLocation>> _locationDict;
         private List<WarpLocation> _allLocations;
-        
-        private string _searchText = string.Empty;
-        private bool _isSearchActive;
-        private string _preSearchMainArea;
-        private readonly ObservableCollection<WarpLocation> _searchResultsCollection = new ObservableCollection<WarpLocation>();
 
-        private bool _isRestOnWarpEnabled;
-        
-        public TravelViewModel(TravelService travelService, HotkeyManager hotkeyManager)
+        private string _preSearchMainArea;
+        private readonly ObservableCollection<WarpLocation> _searchResultsCollection = new();
+
+        public TravelViewModel(ITravelService travelService, HotkeyManager hotkeyManager,
+            GameStateService gameStateService)
         {
             _travelService = travelService;
             _hotkeyManager = hotkeyManager;
-            
+
             _mainAreas = new ObservableCollection<string>();
             _areaLocations = new ObservableCollection<WarpLocation>();
+
+            gameStateService.Subscribe(GameState.Loaded, OnGameLoaded);
+            gameStateService.Subscribe(GameState.NotLoaded, OnGameNotLoaded);
+
+            WarpCommand = new DelegateCommand(Warp);
+            UnlockBonfiresCommand = new DelegateCommand(UnlockAllBonfires);
 
             LoadLocations();
             RegisterHotkeys();
         }
 
-        private void RegisterHotkeys()
+        #region Commands
+
+        public ICommand WarpCommand { get; set; }
+        public ICommand UnlockBonfiresCommand { get; set; }
+
+        #endregion
+
+        #region Properties
+
+        private bool _areOptionsEnabled;
+
+        public bool AreOptionsEnabled
         {
-            _hotkeyManager.RegisterAction("Warp", () =>
-            {
-                if (!AreButtonsEnabled) return;
-                Task.Run(() => _travelService.Warp(SelectedWarpLocation, IsRestOnWarpEnabled));
-            });
+            get => _areOptionsEnabled;
+            set => SetProperty(ref _areOptionsEnabled, value);
         }
 
-        private void LoadLocations()
-        {
-            _locationDict = DataLoader.GetLocations();
-            
-            _allLocations = _locationDict.Values.SelectMany(x => x).ToList();
-            
-            foreach (var area in _locationDict.Keys)
-            {
-                _mainAreas.Add(area);
-            }
-            
-            SelectedMainArea = _mainAreas.FirstOrDefault();
-        }
-        
-        public bool AreButtonsEnabled
-        {
-            get => _areButtonsEnabled;
-            set => SetProperty(ref _areButtonsEnabled, value);
-        }
-        
+        private ObservableCollection<string> _mainAreas;
+
         public ObservableCollection<string> MainAreas
         {
             get => _mainAreas;
             private set => SetProperty(ref _mainAreas, value);
         }
-        
+
+        private ObservableCollection<WarpLocation> _areaLocations;
+
         public ObservableCollection<WarpLocation> AreaLocations
         {
             get => _areaLocations;
             set => SetProperty(ref _areaLocations, value);
         }
-        
+
+        private string _selectedMainArea;
+
         public string SelectedMainArea
         {
             get => _selectedMainArea;
             set
             {
                 if (!SetProperty(ref _selectedMainArea, value) || value == null) return;
-                
+
                 if (_isSearchActive)
                 {
                     IsSearchActive = false;
@@ -99,34 +91,40 @@ namespace SilkySouls2.ViewModels
                     OnPropertyChanged(nameof(SearchText));
                     _preSearchMainArea = null;
                 }
-                
+
                 UpdateLocationsList();
             }
         }
-        
+
+        private WarpLocation _selectedWarpLocation;
+
         public WarpLocation SelectedWarpLocation
         {
             get => _selectedWarpLocation;
             set => SetProperty(ref _selectedWarpLocation, value);
         }
-        
+
+        private bool _isSearchActive;
+
         public bool IsSearchActive
         {
             get => _isSearchActive;
             private set => SetProperty(ref _isSearchActive, value);
         }
-        
+
+        private string _searchText = string.Empty;
+
         public string SearchText
         {
             get => _searchText;
             set
             {
                 if (!SetProperty(ref _searchText, value)) return;
-                
+
                 if (string.IsNullOrEmpty(value))
                 {
                     _isSearchActive = false;
-                    
+
                     if (_preSearchMainArea != null)
                     {
                         _selectedMainArea = _preSearchMainArea;
@@ -141,12 +139,57 @@ namespace SilkySouls2.ViewModels
                         _preSearchMainArea = SelectedMainArea;
                         _isSearchActive = true;
                     }
-                    
+
                     ApplyFilter();
                 }
             }
         }
-        
+
+        private bool _isRestOnWarpEnabled;
+
+        public bool IsRestOnWarpEnabled
+        {
+            get => _isRestOnWarpEnabled;
+            set => SetProperty(ref _isRestOnWarpEnabled, value);
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void RegisterHotkeys()
+        {
+            _hotkeyManager.RegisterAction(HotkeyActions.Warp, () =>
+            {
+                if (!AreOptionsEnabled) return;
+                Task.Run(() => _travelService.Warp(SelectedWarpLocation, IsRestOnWarpEnabled));
+            });
+        }
+
+        private void OnGameLoaded()
+        {
+            AreOptionsEnabled = true;
+        }
+
+        private void OnGameNotLoaded()
+        {
+            AreOptionsEnabled = false;
+        }
+
+        private void LoadLocations()
+        {
+            _locationDict = DataLoader.GetLocations();
+
+            _allLocations = _locationDict.Values.SelectMany(x => x).ToList();
+
+            foreach (var area in _locationDict.Keys)
+            {
+                _mainAreas.Add(area);
+            }
+
+            SelectedMainArea = _mainAreas.FirstOrDefault();
+        }
+
         private void UpdateLocationsList()
         {
             if (string.IsNullOrEmpty(SelectedMainArea) || !_locationDict.ContainsKey(SelectedMainArea))
@@ -154,60 +197,43 @@ namespace SilkySouls2.ViewModels
                 AreaLocations = new ObservableCollection<WarpLocation>();
                 return;
             }
-            
+
             AreaLocations = new ObservableCollection<WarpLocation>(_locationDict[SelectedMainArea]);
             SelectedWarpLocation = AreaLocations.FirstOrDefault();
         }
-        
+
         private void ApplyFilter()
         {
             _searchResultsCollection.Clear();
             var searchTextLower = SearchText.ToLower();
-            
+
             foreach (var location in _allLocations)
             {
-                if (location.LocationName.ToLower().Contains(searchTextLower) || 
+                if (location.LocationName.ToLower().Contains(searchTextLower) ||
                     location.MainArea.ToLower().Contains(searchTextLower))
                 {
                     _searchResultsCollection.Add(location);
                 }
             }
-            
+
             AreaLocations = new ObservableCollection<WarpLocation>(_searchResultsCollection);
             SelectedWarpLocation = AreaLocations.FirstOrDefault();
         }
 
-        public void Warp() => Task.Run(() => _travelService.Warp(SelectedWarpLocation, IsRestOnWarpEnabled));
+        private void Warp() => Task.Run(() => _travelService.Warp(SelectedWarpLocation, IsRestOnWarpEnabled));
 
-        public void UnlockAllBonfires()
+        private void UnlockAllBonfires()
         {
-            var result = MessageBox.Show(
+            var result = MsgBox.ShowOkCancel(
                 "Are you sure you want to unlock all bonfires?",
-                "Confirm Action",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Question);
+                "Unlock Bonfires");
 
-            if (result == MessageBoxResult.Yes)
+            if (result)
             {
                 _travelService.UnlockAllBonfires();
             }
         }
-        
-        
-        public bool IsRestOnWarpEnabled
-        {
-            get => _isRestOnWarpEnabled;
-            set => SetProperty(ref _isRestOnWarpEnabled, value);
-        }
 
-        public void TryEnableFeatures()
-        {
-            AreButtonsEnabled = true;
-        }
-
-        public void DisableFeatures()
-        {
-            AreButtonsEnabled = false;
-        }
+        #endregion
     }
 }

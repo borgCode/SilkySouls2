@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SilkySouls2.enums;
+using SilkySouls2.Interfaces;
 using SilkySouls2.Memory;
 using SilkySouls2.Models;
 using SilkySouls2.Utilities;
@@ -6,15 +7,9 @@ using static SilkySouls2.Memory.Offsets;
 
 namespace SilkySouls2.Services
 {
-    public class ItemService
+    public class ItemService(IMemoryService memoryService)
     {
-        private readonly MemoryIo _memoryIo;
-        private bool _codeIswritten;
-
-        public ItemService(MemoryIo memoryIo)
-        {
-            _memoryIo = memoryIo;
-        }
+        private bool _codeIsWritten;
 
         public void SpawnItem(Item selectedItem, int selectedUpgrade, int selectedQuantity, int selectedInfusion,
             float durability = 0.0f)
@@ -30,44 +25,42 @@ namespace SilkySouls2.Services
             var stackSpace = CodeCaveOffsets.Base + (int)CodeCaveOffsets.ItemSpawn.StackSpace;
             var code = CodeCaveOffsets.Base + (int)CodeCaveOffsets.ItemSpawn.Code;
 
-            var getCurrentQuantity = Funcs.CurrentItemQuantityCheck;
-            var itemGive = Funcs.ItemGive;
-            var buildItemDialog = Funcs.BuildItemDialog;
-            var showItemPopup = Funcs.ShowItemDialog;
-            var sleepAddr = _memoryIo.GetProcAddress("kernel32.dll", "Sleep");
+            var getCurrentQuantity = Functions.CurrentItemQuantityCheck;
+            var itemGive = Functions.ItemGive;
+            var buildItemDialog = Functions.BuildItemDialog;
+            var showItemPopup = Functions.ShowItemDialog;
+            var sleepAddr = memoryService.GetProcAddress("kernel32.dll", "Sleep");
 
-            _memoryIo.WriteInt32(currentQuantity, 0);
-            _memoryIo.WriteInt32(stackCount, 0);
+            memoryService.Write(currentQuantity, 0);
+            memoryService.Write(stackCount, 0);
 
-            _memoryIo.WriteInt32(maxQuantity, selectedItem.StackSize);
-            _memoryIo.WriteInt32(itemStruct + 0x4, selectedItem.Id);
-            _memoryIo.WriteFloat(itemStruct + 0x8, durability);
-            _memoryIo.WriteInt16(itemStruct + 0xC, (short)selectedQuantity);
-            _memoryIo.WriteByte(itemStruct + 0xE, (byte)selectedUpgrade);
-            _memoryIo.WriteByte(itemStruct + 0xF, (byte)selectedInfusion);
-            _memoryIo.WriteInt32(itemCount, 1);
-            _memoryIo.WriteByte(adjustQuantityFlag, selectedItem.StackSize > 1 ? 1 : 0);
-            _memoryIo.WriteByte(shouldProcessFlag, 1);
+            memoryService.Write(maxQuantity, selectedItem.StackSize);
+            memoryService.Write(itemStruct + 0x4, selectedItem.Id);
+            memoryService.Write(itemStruct + 0x8, durability);
+            memoryService.Write(itemStruct + 0xC, (short)selectedQuantity);
+            memoryService.Write(itemStruct + 0xE, (byte)selectedUpgrade);
+            memoryService.Write(itemStruct + 0xF, (byte)selectedInfusion);
+            memoryService.Write(itemCount, 1);
+            memoryService.Write(adjustQuantityFlag, selectedItem.StackSize > 1);
+            memoryService.Write(shouldProcessFlag, (byte)1);
 
-            if (!_codeIswritten)
+            if (!_codeIsWritten)
             {
                 byte[] bytes;
-                if (GameVersion.Current.Edition == GameEdition.Scholar)
+                if (PatchManager.Current.Edition == GameEdition.Scholar)
                 {
-                    bytes = AsmLoader.GetAsmBytes("ItemSpawn64");
+                    bytes = AsmLoader.GetAsmBytes(AsmScript.ItemSpawn64);
 
-                    AsmHelper.WriteAbsoluteAddresses64(bytes, new[]
-                    {
+                    AsmHelper.WriteAbsoluteAddresses64(bytes, [
                         (GameManagerImp.Base.ToInt64(), 0xD + 2),
                         (getCurrentQuantity, 0x55 + 2),
                         (itemGive, 0xAD + 2),
                         (buildItemDialog, 0xD5 + 2),
                         (showItemPopup, 0xF0 + 2),
                         (sleepAddr.ToInt64(), 0x104 + 2)
-                    });
+                    ]);
 
-                    AsmHelper.WriteRelativeOffsets(bytes, new[]
-                    {
+                    AsmHelper.WriteRelativeOffsets(bytes, [
                         (code.ToInt64(), shouldProcessFlag.ToInt64(), 7, 0x0 + 2),
                         (code.ToInt64() + 0x2C, shouldProcessFlag.ToInt64(), 7, 0x2C + 2),
                         (code.ToInt64() + 0x33, adjustQuantityFlag.ToInt64(), 7, 0x33 + 2),
@@ -86,14 +79,13 @@ namespace SilkySouls2.Services
                         (code.ToInt64() + 0xC1, itemStruct.ToInt64(), 7, 0xC1 + 3),
                         (code.ToInt64() + 0xC8, itemCount.ToInt64(), 7, 0xC8 + 3),
                         (code.ToInt64() + 0xE9, stackSpace.ToInt64(), 7, 0xE9 + 3),
-                        (code.ToInt64() + 0x117, shouldExitFlag.ToInt64(), 7, 0x117 + 2),
-                    });
+                        (code.ToInt64() + 0x117, shouldExitFlag.ToInt64(), 7, 0x117 + 2)
+                    ]);
                 }
                 else
                 {
-                    bytes = AsmLoader.GetAsmBytes("ItemSpawn32");
-                    AsmHelper.WriteAbsoluteAddresses32(bytes, new []
-                    {
+                    bytes = AsmLoader.GetAsmBytes(AsmScript.ItemSpawn32);
+                    AsmHelper.WriteAbsoluteAddresses32(bytes, [
                         (shouldProcessFlag.ToInt64(), 2),
                         (GameManagerImp.Base.ToInt64(), 0xD + 2),
                         (shouldProcessFlag.ToInt64(), 0x1E + 2),
@@ -113,46 +105,33 @@ namespace SilkySouls2.Services
                         (itemStruct.ToInt64(), 0x8F + 2),
                         (stackSpace.ToInt64(), 0x96 + 2),
                         (stackSpace.ToInt64(), 0xAB + 2),
-                        (Funcs.Sleep, 0xB7 + 1),
+                        (Functions.Sleep, 0xB7 + 1),
                         (shouldExitFlag.ToInt64(), 0xC0 + 2)
-                    });
-                    AsmHelper.WriteRelativeOffsets(bytes, new []
-                    {
+                    ]);
+                    AsmHelper.WriteRelativeOffsets(bytes, [
                         (code.ToInt64() + 0x46, getCurrentQuantity, 5, 0x46 + 1),
                         (code.ToInt64() + 0x82, itemGive, 5, 0x82 + 1),
                         (code.ToInt64() + 0x9D, buildItemDialog, 5, 0x9D + 1),
-                        (code.ToInt64() + 0xB2, showItemPopup, 5, 0xB2 + 1),
-                    });
+                        (code.ToInt64() + 0xB2, showItemPopup, 5, 0xB2 + 1)
+                    ]);
                     
                 }
 
-                _memoryIo.WriteBytes(code, bytes);
-                _codeIswritten = true;
-                _memoryIo.RunPersistentThread(code);
+                memoryService.WriteBytes(code, bytes);
+                _codeIsWritten = true;
+                memoryService.RunPersistentThread(code);
             }
         }
-
-        public void SetAutoSpawnWeapon(int wepId)
-        {
-            
-            var startingWeapon = _memoryIo.FollowPointers(GameManagerImp.Base, new[]
-            {
-                GameManagerImp.Offsets.CharacterManager,
-                GameManagerImp.CharacterManagerOffsets.PlayerStatusParamPtr,
-                GameManagerImp.CharacterManagerOffsets.PlayerStatusParam,
-                GameManagerImp.CharacterManagerOffsets.StartingWeapon,
-            }, false);
-            _memoryIo.WriteInt32(startingWeapon, wepId);
-        }
+        
 
         public void Reset()
         {
-            _codeIswritten = false;
+            _codeIsWritten = false;
         }
 
         public void SignalClose()
         {
-            _memoryIo.WriteByte(CodeCaveOffsets.Base + (int)CodeCaveOffsets.ItemSpawn.ShouldExitFlag, 1);
+            memoryService.Write(CodeCaveOffsets.Base + (int)CodeCaveOffsets.ItemSpawn.ShouldExitFlag, (byte)1);
         }
     }
 }

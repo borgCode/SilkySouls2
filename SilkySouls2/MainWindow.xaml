@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="SilkySouls2"
         Height="640"
-        Width="520"
+        Width="600"
         Background="{StaticResource BackgroundBrush}"
         Foreground="{StaticResource TextBrush}"
         BorderBrush="{StaticResource BorderBrush}"
@@ -106,9 +106,15 @@
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"/>
             
+  
+            
             <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button x:Name="LaunchGameButton" Content="Launch Game"
-                        Click="LaunchGame_Click"
+                <Button x:Name="LaunchVanillaButton" Content="Launch Vanilla"
+                        Click="LaunchVanilla_Click"
+                        Margin="0,0,10,0"
+                        VerticalAlignment="Center"/>
+                <Button x:Name="LaunchScholarButton" Content="Launch Scholar"
+                        Click="LaunchScholar_Click"
                         Margin="0,0,10,0"
                         VerticalAlignment="Center"/>
                 <TextBlock x:Name="IsAttachedText" Text=""

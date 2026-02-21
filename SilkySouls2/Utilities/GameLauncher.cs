@@ -25,8 +25,8 @@ namespace SilkySouls2.Utilities
                 {
                     StartInfo = new ProcessStartInfo(exePath)
                     {
-                        UseShellExecute = true,
-                        CreateNoWindow = false
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
                     }
                 };
                 process.Start();

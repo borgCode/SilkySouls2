@@ -47,8 +47,8 @@ namespace SilkySouls2.Services
         {
             var bytes = AsmLoader.GetAsmBytes(AsmScript.SetEvent32);
             
-            var setValBytes = BitConverter.GetBytes(setVal ? 1 : 0);
-            Array.Copy(setValBytes, 0, bytes, 0x14 + 2, setValBytes.Length);
+            var setValBytes = new[] { (byte)(setVal ? 1 : 0) };
+            Array.Copy(setValBytes, 0, bytes, 0x5 + 1, setValBytes.Length);
             AsmHelper.WriteAbsoluteAddresses32(bytes, [
                 (eventFlagMan.ToInt64(), 1),
                 (eventId, 0x7 + 1),

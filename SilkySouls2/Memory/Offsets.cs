@@ -979,8 +979,8 @@ namespace SilkySouls2.Memory
 
             Patches.NegativeLevel = baseAddr + PatchManager.Current.PatchVersion switch
             {
-                Vanilla1_0_11 => 0x3AD62D,
-                Vanilla1_0_12 => 0x3B3FCD,
+                Vanilla1_0_11 => 0x3AD631,
+                Vanilla1_0_12 => 0x3B3FD1,
                 Scholar1_0_2 => 0x384878,
                 Scholar1_0_3 => 0x38B1D8,
                 _ => 0
@@ -1485,9 +1485,11 @@ namespace SilkySouls2.Memory
             };
 
 
-            _baseAddr = baseAddr;
+        
 
 #if DEBUG
+
+    _baseAddr = baseAddr;
             Console.WriteLine("\n========== OFFSETS DEBUG ==========\n");
 
             // --- Base Pointers ---
@@ -1597,9 +1599,10 @@ namespace SilkySouls2.Memory
         private static IntPtr _baseAddr;
         private static void PrintOffset(string name, long value)
         {
-            if (value - _baseAddr.ToInt64() <= 0)
-                Console.WriteLine($"  {name,-40} *** NOT SET ***");
-            else
+            var rel = value - _baseAddr.ToInt64();
+            Console.WriteLine(rel <= 0
+                ? $"  {name,-40} *** NOT SET ***"
+                : $"  {name,-40} 0x{value:X}  (0x{rel:X})");
                 Console.WriteLine($"  {name,-40} 0x{value:X}");
         }
 #endif

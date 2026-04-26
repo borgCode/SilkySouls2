@@ -9,27 +9,7 @@ namespace SilkySouls2.Memory
         {
             public static IntPtr Base;
 
-            public static int CharacterManager => PatchManager.Current.PatchVersion switch
-            {
-                Vanilla1_0_11 or Vanilla1_0_12 => 0x18,
-                Scholar1_0_2 or Scholar1_0_3 => 0x18,
-                _ => 0x0
-            };
-
-            public static int CameraManager => PatchManager.Current.PatchVersion switch
-            {
-                Vanilla1_0_11 or Vanilla1_0_12 => 0x1C,
-                Scholar1_0_2 or Scholar1_0_3 => 0x20,
-                _ => 0x0
-            };
-
-            public static int AiManager => PatchManager.Current.PatchVersion switch
-            {
-                Vanilla1_0_11 or Vanilla1_0_12 => 0x0,
-                Scholar1_0_2 or Scholar1_0_3 => 0x28,
-                _ => 0x0
-            };
-
+            
             public static int EventManager => PatchManager.Current.PatchVersion switch
             {
                 Vanilla1_0_11 or Vanilla1_0_12 => 0x44,
@@ -64,21 +44,7 @@ namespace SilkySouls2.Memory
                 Scholar1_0_2 or Scholar1_0_3 => 0x660,
                 _ => 0x0
             };
-
-            public static int ViewMatrixPtr => PatchManager.Current.PatchVersion switch
-            {
-                Vanilla1_0_11 or Vanilla1_0_12 => 0x650,
-                Scholar1_0_2 or Scholar1_0_3 => 0x1158,
-                _ => 0x0
-            };
-
-            public static int DLBackAllocator => PatchManager.Current.PatchVersion switch
-            {
-                Vanilla1_0_11 or Vanilla1_0_12 => 0xCC4,
-                Scholar1_0_2 or Scholar1_0_3 => 0x22E0,
-                _ => 0x0
-            };
-
+            
             public static int Quitout => PatchManager.Current.PatchVersion switch
             {
                 Vanilla1_0_11 or Vanilla1_0_12 => 0xDF1,
@@ -99,31 +65,7 @@ namespace SilkySouls2.Memory
                 Scholar1_0_2 or Scholar1_0_3 => 0x24D8,
                 _ => 0x0
             };
-
-            public static class CharacterManagerOffsets
-            {
-                public static int PlayerStatusParamPtr => PatchManager.Current.PatchVersion switch
-                {
-                    Vanilla1_0_11 or Vanilla1_0_12 => 0x398,
-                    Scholar1_0_2 or Scholar1_0_3 => 0x730,
-                    _ => 0x0
-                };
-
-                public static int PlayerStatusParam => PatchManager.Current.PatchVersion switch
-                {
-                    Vanilla1_0_11 or Vanilla1_0_12 => 0x94,
-                    Scholar1_0_2 or Scholar1_0_3 => 0xD8,
-                    _ => 0x0
-                };
-
-                public static int StartingWeapon => PatchManager.Current.PatchVersion switch
-                {
-                    Vanilla1_0_11 or Vanilla1_0_12 => 0x1A0,
-                    Scholar1_0_2 or Scholar1_0_3 => 0x278,
-                    _ => 0x0
-                };
-            }
-
+            
             public static class EventManagerOffsets
             {
                 public static int EventFlagManager => PatchManager.Current.PatchVersion switch
@@ -1237,10 +1179,10 @@ namespace SilkySouls2.Memory
 
             Hooks.SetCurrentAct = baseAddr.ToInt64() + PatchManager.Current.PatchVersion switch
             {
-                Vanilla1_0_11 => 0x1B5AD0,
-                Vanilla1_0_12 => 0x1B5D30,
-                Scholar1_0_2 => 0x125F4B,
-                Scholar1_0_3 => 0x12601B,
+                Vanilla1_0_11 => 0x430E9D,
+                Vanilla1_0_12 => 0x43812D,
+                Scholar1_0_2 => 0x41F320,
+                Scholar1_0_3 => 0x4264A0,
                 _ => 0
             };
 

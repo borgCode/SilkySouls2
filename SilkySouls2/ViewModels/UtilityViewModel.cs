@@ -22,9 +22,11 @@ namespace SilkySouls2.ViewModels
         private AttunementWindow _attunementWindow;
 
         private readonly HotkeyManager _hotkeyManager;
-        private readonly UtilityService _utilityService;
+
+        private readonly IUtilityService _utilityService;
         private readonly PlayerViewModel _playerViewModel;
         private readonly IEzStateService _ezStateService;
+        private readonly IMenuService _menuService;
 
         private float _desiredSpeed = -1f;
         private const float DefaultSpeed = 1f;
@@ -39,12 +41,15 @@ namespace SilkySouls2.ViewModels
 
         private readonly Dictionary<int, AttunementSpell> _spellLookup;
 
-        public UtilityViewModel(UtilityService utilityService, HotkeyManager hotkeyManager,
-            PlayerViewModel playerViewModel, GameStateService gameStateService, IEzStateService ezStateService)
+        public UtilityViewModel(IUtilityService utilityService, HotkeyManager hotkeyManager,
+            PlayerViewModel playerViewModel, StateService stateService, IEzStateService ezStateService,
+            IMenuService menuService)
         {
+            _utilityService = utilityService;
             _playerViewModel = playerViewModel;
             _ezStateService = ezStateService;
-            _utilityService = utilityService;
+            _menuService = menuService;
+        
             _hotkeyManager = hotkeyManager;
 
             _spellLookup = DataLoader.GetAttunementSpells();
@@ -52,25 +57,31 @@ namespace SilkySouls2.ViewModels
             AvailableSpells = new ObservableCollection<InventorySpell>();
             EquippedSpells = new ObservableCollection<EquippedSpell>();
 
-            gameStateService.Subscribe(GameState.FirstLoaded, OnGameFirstLoaded);
-            gameStateService.Subscribe(GameState.Loaded, OnGameLoaded);
-            gameStateService.Subscribe(GameState.NotLoaded, OnGameNotLoaded);
-            gameStateService.Subscribe(GameState.Detached, OnGameDetached);
-            gameStateService.Subscribe(GameState.Attached, OnGameAttached);
-            gameStateService.Subscribe(GameState.AppStart, OnAppStart);
+            stateService.Subscribe(State.FirstLoaded, OnGameFirstLoaded);
+            stateService.Subscribe(State.Loaded, OnGameLoaded);
+            stateService.Subscribe(State.NotLoaded, OnGameNotLoaded);
+            stateService.Subscribe(State.Detached, OnGameDetached);
+            stateService.Subscribe(State.Attached, OnGameAttached);
+            stateService.Subscribe(State.AppStart, OnAppStart);
 
             RegisterHotkeys();
 
             ForceSaveCommand = new DelegateCommand(ForceSave);
             OpenAttunementCommand = new DelegateCommand(OpenAttunementWindow);
+            OpenShopCommand = new DelegateCommand<ShopRange>(OpenShop);
+            NoArgsMenuCommand = new DelegateCommand<NpcMenuType>(OpenNoArgsMenu);
+            OpenTradeCommand = new DelegateCommand<TradeRange>(OpenTrade);
         }
-        
 
+        
         #region Commands
 
         public ICommand ForceSaveCommand { get; set; }
         public ICommand OpenAttunementCommand { get; set; }
-
+        public ICommand OpenShopCommand { get; set; }
+        public ICommand NoArgsMenuCommand { get; set; }
+        public ICommand OpenTradeCommand { get; set; }
+        
         #endregion
 
         #region Properties
@@ -398,7 +409,7 @@ namespace SilkySouls2.ViewModels
                 }
             }
         }
-        
+
         private bool _isRememberGameSpeedEnabled;
 
         public bool IsRememberGameSpeedEnabled
@@ -451,6 +462,39 @@ namespace SilkySouls2.ViewModels
         public int EquippedSlotsRows => (int)Math.Ceiling(NumOfSlots / 7.0);
         public bool HasAttunementSlots => NumOfSlots > 0;
         public bool HasSpellsInInventory => AvailableSpells?.Count > 0;
+
+        #endregion
+
+        #region Public Methods
+
+        public async void HandleSpellAttune(InventorySpell spell)
+        {
+            if (!AreOptionsEnabled) return;
+            int emptySlots = EquippedSpells.Count(s => s.Id <= 0);
+
+            if (spell.SlotReq > emptySlots)
+            {
+                MessageBox.Show($"Cannot attune spell. Requires {spell.SlotReq} slots but only {emptySlots} available.",
+                    "Insufficient Slots", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            int slotIndex = GetFirstAvailableSlot();
+            if (slotIndex != -1)
+            {
+                _utilityService.AttuneSpell(slotIndex, spell.EntryAddress);
+                await Task.Delay(50);
+                RefreshSpells();
+            }
+        }
+
+        public async void HandleUnAttune(int slotIndex)
+        {
+            if (!AreOptionsEnabled) return;
+            _utilityService.AttuneSpell(slotIndex, IntPtr.Zero);
+            await Task.Delay(50);
+            RefreshSpells();
+        }
 
         #endregion
 
@@ -565,6 +609,7 @@ namespace SilkySouls2.ViewModels
             _gameSpeed = 1.0f;
             OnPropertyChanged(nameof(GameSpeed));
             _utilityService.Reset();
+            _menuService.Reset();
             _isAttached = false;
         }
 
@@ -572,7 +617,7 @@ namespace SilkySouls2.ViewModels
         {
             _isAttached = true;
         }
-        
+
         private void OnAppStart()
         {
             _isRememberGameSpeedEnabled = SettingsManager.Default.RememberGameSpeed;
@@ -668,38 +713,9 @@ namespace SilkySouls2.ViewModels
         private void ForceSave() => _utilityService.ForceSave();
         private void SetSpeed(float value) => GameSpeed = value;
 
-        #endregion
-
-        #region Public Methods
-
-        public async void HandleSpellAttune(InventorySpell spell)
-        {
-            if (!AreOptionsEnabled) return;
-            int emptySlots = EquippedSpells.Count(s => s.Id <= 0);
-
-            if (spell.SlotReq > emptySlots)
-            {
-                MessageBox.Show($"Cannot attune spell. Requires {spell.SlotReq} slots but only {emptySlots} available.",
-                    "Insufficient Slots", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            int slotIndex = GetFirstAvailableSlot();
-            if (slotIndex != -1)
-            {
-                _utilityService.AttuneSpell(slotIndex, spell.EntryAddress);
-                await Task.Delay(50);
-                RefreshSpells();
-            }
-        }
-
-        public async void HandleUnAttune(int slotIndex)
-        {
-            if (!AreOptionsEnabled) return;
-            _utilityService.AttuneSpell(slotIndex, IntPtr.Zero);
-            await Task.Delay(50);
-            RefreshSpells();
-        }
+        private void OpenShop(ShopRange range) => _menuService.OpenMenu(NpcMenuType.ShopBuy, range.Start, range.End);
+        private void OpenNoArgsMenu(NpcMenuType type) => _menuService.OpenMenu(type);
+        private void OpenTrade(TradeRange range) => _menuService.OpenMenu(NpcMenuType.Trade, range.Start, range.End);
 
         #endregion
     }

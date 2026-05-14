@@ -2,7 +2,7 @@
 
 namespace SilkySouls2.GameIds
 {
-    public class EzState
+    public static class EzState
     {
         public struct EventCommand(int commandId, params int[] parameters)
         {

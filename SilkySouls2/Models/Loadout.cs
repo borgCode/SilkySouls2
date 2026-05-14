@@ -18,7 +18,7 @@ namespace SilkySouls2.Models
 
     public static class LoadoutTemplates
     {
-        public static readonly List<LoadoutTemplate> All = new List<LoadoutTemplate> { };
+        public static readonly List<LoadoutTemplate> All = new List<LoadoutTemplate>();
     }
 
 }

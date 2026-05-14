@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using SilkySouls2.enums;
+using SilkySouls2.Properties;
 
 namespace SilkySouls2.Utilities
 {
@@ -24,7 +25,7 @@ namespace SilkySouls2.Utilities
 
         private static string GetResourceContent(string resourceName)
         {
-            object resource = Properties.Resources.ResourceManager.GetObject(resourceName);
+            object resource = Resources.ResourceManager.GetObject(resourceName);
             return resource as string ??
                    throw new ArgumentException($"Resource '{resourceName}' not found or is not a string.");
         }

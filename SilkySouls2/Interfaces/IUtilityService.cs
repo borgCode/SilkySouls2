@@ -1,6 +1,5 @@
 ﻿// 
 
-using System;
 using System.Collections.Generic;
 using SilkySouls2.GameIds;
 using SilkySouls2.Memory.DLLShared;
@@ -38,7 +37,7 @@ namespace SilkySouls2.Interfaces
         List<InventorySpell> GetInventorySpells();
         List<EquippedSpell> GetEquippedSpells();
         int GetTotalAvailableSlots();
-        void AttuneSpell(int slotIndex, IntPtr entryAddr);
+        void AttuneSpell(int slotIndex, nint entryAddr);
         void Reset();
         void ToggleLightGutter(bool isEnabled);
         void ToggleShadedFog(bool isNoFogEnabled);

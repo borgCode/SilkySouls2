@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using SilkySouls2.Interfaces;
-using SilkySouls2.Services;
 
 namespace SilkySouls2.Memory
 {

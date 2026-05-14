@@ -1,7 +1,6 @@
 ﻿// 
 
 using System;
-using SilkySouls2.Memory;
 using SilkySouls2.Services;
 
 namespace SilkySouls2.Utilities

@@ -242,6 +242,41 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 6a 00                   push   0x0
+        ///68 f0 23 74 c9          push   0xc97423f0
+        ///68 ef be ad de          push   0xdeadbeef
+        ///b9 ef be ad de          mov    ecx,0xdeadbeef
+        ///b8 ef be ad de          mov    eax,0xdeadbeef
+        ///ff d0                   call   eax
+        ///c3                      ret.
+        /// </summary>
+        internal static string BreakWeapon32 {
+            get {
+                return ResourceManager.GetString("BreakWeapon32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 48 83 ec 28             sub    rsp,0x28
+        ///48 b9 00 00 00 00 00    movabs rcx,0x0
+        ///00 00 00 
+        ///ba ef be ad de          mov    edx,0xdeadbeef
+        ///b8 c1 bd f0 ff          mov    eax,0xfff0bdc1
+        ///f3 0f 2a d0             cvtsi2ss xmm2,eax
+        ///41 b1 01                mov    r9b,0x1
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00 
+        ///ff d0                   call   rax
+        ///48 83 c4 28             add    rsp,0x28
+        ///c3                      ret.
+        /// </summary>
+        internal static string BreakWeapon64 {
+            get {
+                return ResourceManager.GetString("BreakWeapon64", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 44 8b 41 1c             mov    r8d,DWORD PTR [rcx+0x1c]
         ///53                      push   rbx
         ///8b 1d 00 00 00 00       mov    ebx,DWORD PTR [rip+0x0]        # b &lt;_main+0xb&gt;
@@ -723,6 +758,44 @@ namespace SilkySouls2.Properties {
         internal static string Gestures {
             get {
                 return ResourceManager.GetString("Gestures", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 8b 4e 1c                mov    ecx,DWORD PTR [esi+0x1c]
+        ///3b 0d 00 00 00 00       cmp    ecx,DWORD PTR ds:0x0
+        ///75 4a                   jne    55 &lt;early_exit&gt;
+        ///a1 00 00 00 00          mov    eax,ds:0x0
+        ///85 c0                   test   eax,eax
+        ///74 41                   je     55 &lt;early_exit&gt;
+        ///8b 40 74                mov    eax,DWORD PTR [eax+0x74]
+        ///85 c0                   test   eax,eax
+        ///74 3a                   je     55 &lt;early_exit&gt;
+        ///53                      push   ebx
+        ///56                      push   esi
+        ///57     [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string GetDist32 {
+            get {
+                return ResourceManager.GetString("GetDist32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 48 8b 4b 38             mov    rcx,QWORD PTR [rbx+0x38]
+        ///48 3b 0d 00 00 00 00    cmp    rcx,QWORD PTR [rip+0x0]        # b &lt;_main+0xb&gt;
+        ///0f 85 a2 00 00 00       jne    b3 &lt;early_exit&gt;
+        ///48 8b 05 00 00 00 00    mov    rax,QWORD PTR [rip+0x0]        # 18 &lt;_main+0x18&gt;
+        ///48 8b 80 d0 00 00 00    mov    rax,QWORD PTR [rax+0xd0]
+        ///48 85 c0                test   rax,rax
+        ///0f 84 8b 00 00 00       je     b3 &lt;early_exit&gt;
+        ///48 83 ec 60             sub    rsp,0x60
+        ///f3 0f 7f 74 24 20       movdqu XMMWORD PTR [rsp+0x20],xmm6
+        ///4 [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string GetDist64 {
+            get {
+                return ResourceManager.GetString("GetDist64", resourceCulture);
             }
         }
         
@@ -1463,26 +1536,31 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 48 81 ec 08 02 00 00    sub    rsp,0x208
-        ///48 8d 8c 24 80 01 00    lea    rcx,[rsp+0x180]
-        ///00
-        ///48 ba 00 00 00 00 00    movabs rdx,0x0
-        ///00 00 00
-        ///48 b8 00 00 00 00 00    movabs rax,0x0
-        ///00 00 00
-        ///ff d0                   call   rax
-        ///49 bf 00 00 00 00 00    movabs r15,0x0
-        ///00 00 00
-        ///4d 8b 3f                mov    r15,QWORD PTR [r15]
-        ///49 8b 8f d0 00 00 00    mov    rcx,QWORD PTR [r15+0xd0]
-        ///48 8b 01                mov    rax,QWORD PTR [rcx]
-        ///48 8d 94 24 60 01 00    lea    rdx,[rsp+0x160]
-        ///00
-        ///ff 90 48 01 00 00   [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to 68 ef be ad de          push   0xdeadbeef
+        ///68 ef be ad de          push   0xdeadbeef
+        ///b9 ef be ad de          mov    ecx,0xdeadbeef
+        ///e8 ec 9e 61 00          call   619f00 &lt;_main+0x619f00&gt;
+        ///c3                      ret.
         /// </summary>
-        internal static string OpenNpcMenu {
+        internal static string OpenMenu32 {
             get {
-                return ResourceManager.GetString("OpenNpcMenu", resourceCulture);
+                return ResourceManager.GetString("OpenMenu32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 48 83 ec 28             sub    rsp,0x28
+        ///48 b9 00 00 00 00 00    movabs rcx,0x0
+        ///00 00 00 
+        ///48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 15 &lt;_main+0x15&gt;
+        ///4c 8d 05 00 00 00 00    lea    r8,[rip+0x0]        # 1c &lt;_main+0x1c&gt;
+        ///e8 00 00 00 00          call   21 &lt;_main+0x21&gt;
+        ///48 83 c4 28             add    rsp,0x28
+        ///c3                      ret.
+        /// </summary>
+        internal static string OpenMenu64 {
+            get {
+                return ResourceManager.GetString("OpenMenu64", resourceCulture);
             }
         }
         
@@ -1736,6 +1814,38 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 6a 00                   push   0x0
+        ///6a 11                   push   0x11
+        ///b9 ef be ad de          mov    ecx,0xdeadbeef
+        ///b8 ef be ad de          mov    eax,0xdeadbeef
+        ///ff d0                   call   eax
+        ///c3                      ret.
+        /// </summary>
+        internal static string SetMenuOpenChrState32 {
+            get {
+                return ResourceManager.GetString("SetMenuOpenChrState32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 48 83 ec 28             sub    rsp,0x28
+        ///48 b9 00 00 00 00 00    movabs rcx,0x0
+        ///00 00 00 
+        ///ba 11 00 00 00          mov    edx,0x11
+        ///41 b8 00 00 00 00       mov    r8d,0x0
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00 
+        ///ff d0                   call   rax
+        ///48 83 c4 28             add    rsp,0x28
+        ///c3                      ret.
+        /// </summary>
+        internal static string SetMenuOpenChrState64 {
+            get {
+                return ResourceManager.GetString("SetMenuOpenChrState64", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to bb 00 00 00 00          mov    ebx,0x0
         ///bf 00 00 00 00          mov    edi,0x0
         ///68 ef be ad de          push   0xdeadbeef
@@ -1830,6 +1940,46 @@ namespace SilkySouls2.Properties {
         internal static string Spells {
             get {
                 return ResourceManager.GetString("Spells", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 8b 0e                   mov    ecx,DWORD PTR [esi]
+        ///89 c7                   mov    edi,eax
+        ///8b 01                   mov    eax,DWORD PTR [ecx]
+        ///53                      push   ebx
+        ///bb ef be ad de          mov    ebx,0xdeadbeef
+        ///3b 5c 24 10             cmp    ebx,DWORD PTR [esp+0x10]
+        ///75 05                   jne    17 &lt;normal&gt;
+        ///bf ef be ad de          mov    edi,0xdeadbeef
+        ///
+        ///0017 &lt;normal&gt;:
+        ///5b                      pop    ebx
+        ///e9 fc ff ff ff          jmp    19 &lt;normal+0x2&gt;.
+        /// </summary>
+        internal static string TrySetReminder32 {
+            get {
+                return ResourceManager.GetString("TrySetReminder32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 48 8b 0b                mov    rcx,QWORD PTR [rbx]
+        ///48 8b 11                mov    rdx,QWORD PTR [rcx]
+        ///53                      push   rbx
+        ///48 bb 00 00 00 00 00    movabs rbx,0x0
+        ///00 00 00 
+        ///48 3b 5c 24 30          cmp    rbx,QWORD PTR [rsp+0x30]
+        ///75 07                   jne    1f &lt;normal&gt;
+        ///48 8d 05 00 00 00 00    lea    rax,[rip+0x0]        # 1f &lt;normal&gt;
+        ///
+        ///00000000001f &lt;normal&gt;:
+        ///5b                      pop    rbx
+        ///e9 00 00 00 00          jmp    25 &lt;normal+0x6&gt;.
+        /// </summary>
+        internal static string TrySetReminder64 {
+            get {
+                return ResourceManager.GetString("TrySetReminder64", resourceCulture);
             }
         }
         

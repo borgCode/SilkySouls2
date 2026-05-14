@@ -17,13 +17,13 @@ namespace SilkySouls2.ViewModels
 {
     public class EnemyViewModel : BaseViewModel
     {
-        private readonly EnemyService _enemyService;
+        private readonly IEnemyService _enemyService;
         private readonly HotkeyManager _hotkeyManager;
         private readonly IEzStateService _ezStateService;
         private readonly IEventService _eventService;
 
-        public EnemyViewModel(EnemyService enemyService, HotkeyManager hotkeyManager, IEzStateService ezStateService,
-            GameStateService gameStateService, IEventService eventService)
+        public EnemyViewModel(IEnemyService enemyService, HotkeyManager hotkeyManager, IEzStateService ezStateService,
+            StateService stateService, IEventService eventService)
         {
             _enemyService = enemyService;
             _hotkeyManager = hotkeyManager;
@@ -31,9 +31,10 @@ namespace SilkySouls2.ViewModels
             _eventService = eventService;
 
 
-            gameStateService.Subscribe(GameState.Loaded, OnGameLoaded);
-            gameStateService.Subscribe(GameState.NotLoaded, OnGameNotLoaded);
-            gameStateService.Subscribe(GameState.DelayedGameLoad, OnDelayedGameLoad);
+            stateService.Subscribe(State.Loaded, OnGameLoaded);
+            stateService.Subscribe(State.NotLoaded, OnGameNotLoaded);
+            stateService.Subscribe(State.DelayedGameLoad, OnDelayedGameLoad);
+            stateService.Subscribe(State.FirstLoaded, OnGameFirstLoaded);
 
             RegisterHotkeys();
 
@@ -85,7 +86,7 @@ namespace SilkySouls2.ViewModels
                     {
                         IsSkellySummonsEnabled = false;
                         IsVelstadtSummonEnabled = false;
-                        _enemyService.ToggleElanaSummons(_isPigSummonsEnabled, 0);
+                        _enemyService.ToggleElanaSummons(_isPigSummonsEnabled);
                     }
                     else
                     {
@@ -298,7 +299,7 @@ namespace SilkySouls2.ViewModels
         }
 
 
-        public void TryApplyOneTimeFeatures()
+        private void OnGameFirstLoaded()
         {
             if (IsAllDisableAiEnabled) _enemyService.ToggleDisableAi(true);
             IsScholar = PatchManager.Current.Edition == GameEdition.Scholar;
@@ -307,7 +308,7 @@ namespace SilkySouls2.ViewModels
         private void OnGameLoaded()
         {
             AreOptionsEnabled = true;
-            if (IsPigSummonsEnabled) _enemyService.ToggleElanaSummons(IsPigSummonsEnabled, 0);
+            if (IsPigSummonsEnabled) _enemyService.ToggleElanaSummons(IsPigSummonsEnabled);
             if (IsSkellySummonsEnabled) _enemyService.ToggleElanaSummons(_isSkellySummonsEnabled, 0x5);
             if (IsVelstadtSummonEnabled) _enemyService.ToggleElanaSummons(_isVelstadtSummonEnabled, 0x62);
         }

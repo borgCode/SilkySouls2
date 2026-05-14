@@ -11,14 +11,19 @@ namespace SilkySouls2.Services;
 
 public class NewGameService : INewGameService
 {
+    private const int StartingCutsceneId = 100200;
+
     private int _clientCount;
     private readonly IMemoryService _memoryService;
     private readonly HookManager _hookManager;
+    private readonly IStateService _stateService;
 
-    public NewGameService(IMemoryService memoryService, HookManager hookManager, GameStateService gameStateService)
+    public NewGameService(IMemoryService memoryService, HookManager hookManager, IStateService stateService)
     {
         _memoryService = memoryService;
         _hookManager = hookManager;
+        _stateService = stateService;
+        stateService.Subscribe(State.Detached, Reset);
     }
     public void RequestNewGameDetect()
     {
@@ -36,6 +41,22 @@ public class NewGameService : INewGameService
     }
 
     public int GetCount() => _clientCount;
+
+    public bool IsAtNewGameStartCutscene()
+    {
+        var gameMan = _memoryService.Read<nint>(GameManagerImp.Base);
+        return _memoryService.Read<int>(gameMan + GameManagerImp.PendingCutsceneId) == StartingCutsceneId;
+    }
+
+    public bool PollNewGameStarted()
+    {
+        var flag = CustomCodeOffsets.Base + CustomCodeOffsets.NewGameStartedFlag;
+        if (_memoryService.Read<byte>(flag) != 1) return false;
+
+        _stateService.Publish(State.NewGameStarted);
+        _memoryService.Write(flag, (byte)0);
+        return true;
+    }
     
     public void Reset()
     {
@@ -46,16 +67,16 @@ public class NewGameService : INewGameService
         
     private void ToggleNewGameDetect(bool enabled)
     {
-        var code = CodeCaveOffsets.Base + CodeCaveOffsets.NewGameDetect;
+        var code = CustomCodeOffsets.Base + CustomCodeOffsets.NewGameDetect;
 
         if (!enabled)
         {
-            _hookManager.UninstallHook(code.ToInt64());
+            _hookManager.UninstallHook(code);
             return;
         }
 
         var hookLoc = Hooks.NewGameDetect;
-        var flag = CodeCaveOffsets.Base + CodeCaveOffsets.NewGameStartedFlag;
+        var flag = CustomCodeOffsets.Base + CustomCodeOffsets.NewGameStartedFlag;
         if (PatchManager.IsScholar())
         {
             InstallScholarNewGameDetect(code, hookLoc, flag);
@@ -66,42 +87,41 @@ public class NewGameService : INewGameService
         }
     }
 
-    private void InstallScholarNewGameDetect(IntPtr code, long hookLoc, IntPtr flag)
+    private void InstallScholarNewGameDetect(IntPtr code, nint hookLoc, IntPtr flag)
     {
         var bytes = AsmLoader.GetAsmBytes(AsmScript.NewGameDetect64);
 
         int originalInstructionLength = 0x7;
-        
+
         AsmHelper.WriteRelativeOffsets(bytes, [
-        (code.ToInt64() + 0xE, hookLoc + originalInstructionLength, 6, 0xE + 2),
-        (code.ToInt64() + 0x15, GameManagerImp.Base.ToInt64(), 7, 0x15 + 3),
-        (code.ToInt64() + 0x30, flag.ToInt64(), 0x7, 0x30 + 2),
-        (code.ToInt64() + 0x38, hookLoc + originalInstructionLength, 5, 0x38 + 1)
+        (code + 0xE, hookLoc + originalInstructionLength, 6, 0xE + 2),
+        (code + 0x15, GameManagerImp.Base, 7, 0x15 + 3),
+        (code + 0x30, flag, 0x7, 0x30 + 2),
+        (code + 0x38, hookLoc + originalInstructionLength, 5, 0x38 + 1)
         ]);
 
         _memoryService.WriteBytes(code, bytes);
-        _hookManager.InstallHook(code.ToInt64(), hookLoc, [0xC7, 0x47, 0x54, 0xFF, 0xFF, 0xFF, 0xFF]);
+        _hookManager.InstallHook(code, hookLoc, [0xC7, 0x47, 0x54, 0xFF, 0xFF, 0xFF, 0xFF]);
     }
 
-    private void InstallVanillaNewGameDetect(IntPtr code, long hookLoc, IntPtr flag)
+    private void InstallVanillaNewGameDetect(IntPtr code, nint hookLoc, IntPtr flag)
     {
         var bytes = AsmLoader.GetAsmBytes(AsmScript.NewGameDetect32);
-        
+
         int originalInstructionLength = 0x7;
-        
-        AsmHelper.WriteAbsoluteAddresses32(bytes, new[]
-        {
-            (GameManagerImp.Base.ToInt64(), 0x15 + 1),
-            (flag.ToInt64(), 0x26 + 2),
-        });
+
+        AsmHelper.WriteAbsoluteAddresses32(bytes, [
+            (GameManagerImp.Base, 0x15 + 1),
+            (flag, 0x26 + 2),
+        ]);
 
         AsmHelper.WriteRelativeOffsets(bytes, new[]
         {
-            (code.ToInt64() + 0xE, hookLoc + originalInstructionLength, 6, 0xE + 2),
-            (code.ToInt64() + 0x2E, hookLoc + originalInstructionLength, 5, 0x2E + 1),
+            (code + 0xE, hookLoc + originalInstructionLength, 6, 0xE + 2),
+            (code + 0x2E, hookLoc + originalInstructionLength, 5, 0x2E + 1),
         });
-        
+
         _memoryService.WriteBytes(code, bytes);
-        _hookManager.InstallHook(code.ToInt64(), hookLoc, [ 0xC7, 0x46, 0x2C, 0xFF, 0xFF, 0xFF, 0xFF]);
+        _hookManager.InstallHook(code, hookLoc, [ 0xC7, 0x46, 0x2C, 0xFF, 0xFF, 0xFF, 0xFF]);
     }
 }

@@ -432,6 +432,14 @@
                               Click="OpenDefenseWindow"
                         />
                     </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                        <TextBlock Text="Dist: " Margin="10,0,0,0" VerticalAlignment="Center"
+                                   FontSize="16" />
+                        <TextBlock Text="{Binding Dist, StringFormat={}{0:F2}}"
+                                   VerticalAlignment="Center"
+                                   FontSize="16"
+                                   Foreground="Gold" />
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
         </Border>

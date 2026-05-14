@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,21 +27,12 @@ namespace SilkySouls2
         private readonly IMemoryService _memoryService;
         private readonly AoBScanner _aobScanner;
         private readonly DispatcherTimer _gameLoadedTimer;
-        private readonly HookManager _hookManager;
-        private readonly NopManager _nopManager;
-        private readonly GameStateService _gameStateService;
+        private readonly StateService _stateService;
 
-        private readonly EnemyViewModel _enemyViewModel;
-        private readonly ItemViewModel _itemViewModel;
-        private readonly SettingsViewModel _settingsViewModel;
-        private readonly DamageControlService _damageControlService;
-        private readonly DllManager _dllManager;
-        private readonly ItemService _itemService;
         private readonly INewGameService _newGameService;
 
         private const string VanillaSteamName = "Dark Souls II";
         private const string ScholarSteamName = "Dark Souls II Scholar of the First Sin";
-        private const int StartingCutsceneId = 100200;
 
         public MainWindow()
         {
@@ -50,74 +42,81 @@ namespace SilkySouls2
             InitializeComponent();
 
 
-            if (SettingsManager.Default.WindowLeft != 0 || SettingsManager.Default.WindowTop != 0)
+            var savedLeft = SettingsManager.Default.WindowLeft;
+            var savedTop = SettingsManager.Default.WindowTop;
+            if ((savedLeft != 0 || savedTop != 0) && IsOnVisibleScreen(savedLeft, savedTop))
             {
-                Left = SettingsManager.Default.WindowLeft;
-                Top = SettingsManager.Default.WindowTop;
+                Left = savedLeft;
+                Top = savedTop;
             }
             else WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
+            _stateService = new StateService(_memoryService);
 
-            _hookManager = new HookManager(_memoryService);
-            _nopManager = new NopManager(_memoryService);
+            var hookManager = new HookManager(_memoryService, _stateService);
             _aobScanner = new AoBScanner(_memoryService);
-            _dllManager = new DllManager(_memoryService);
+            var dllManager = new DllManager(_memoryService, _stateService);
             var hotkeyManager = new HotkeyManager(_memoryService);
 
-            _gameStateService = new GameStateService();
-            _damageControlService = new DamageControlService(_memoryService, _hookManager);
+
+            IGameTickService gameTickService = new GameTickService(_stateService);
+            IMenuService menuService = new MenuService(_memoryService, gameTickService);
+            IReminderService reminderService = new ReminderService(_memoryService, hookManager, _stateService);
+            IDamageControlService damageControlService = new DamageControlService(_memoryService, hookManager, _stateService);
             IChrCtrlService chrCtrlService = new ChrCtrlService(_memoryService);
-            IPlayerService playerService = new PlayerService(_memoryService, _hookManager, _nopManager, chrCtrlService);
-            var utilityService = new UtilityService(_memoryService, _hookManager, _dllManager);
-            ITravelService travelService = new TravelService(_memoryService, _hookManager, playerService);
-            var targetService = new TargetService(_memoryService, _hookManager, chrCtrlService);
-            var enemyService = new EnemyService(_memoryService, _hookManager);
+            IPlayerService playerService =
+                new PlayerService(_memoryService, hookManager, chrCtrlService, reminderService);
+            IUtilityService utilityService = new UtilityService(_memoryService, hookManager, dllManager);
+            ITravelService travelService = new TravelService(_memoryService, hookManager, playerService);
+            ITargetService targetService = new TargetService(_memoryService, hookManager, chrCtrlService);
+            IEnemyService enemyService = new EnemyService(_memoryService, hookManager);
             IEventService eventService = new EventService(_memoryService);
-            IEzStateService ezStateService = new EzStateService(_memoryService, _hookManager);
-            _itemService = new ItemService(_memoryService);
-            _newGameService = new NewGameService(_memoryService, _hookManager, _gameStateService);
-            ISettingsService settingsService = new SettingsService(_memoryService, _hookManager);
+            IEzStateService ezStateService = new EzStateService(_memoryService, hookManager);
+            IItemService itemService = new ItemService(_memoryService, _stateService);
+            _newGameService = new NewGameService(_memoryService, hookManager, _stateService);
+            ISettingsService settingsService = new SettingsService(_memoryService, hookManager);
 
-            var playerViewModel = new PlayerViewModel(playerService, hotkeyManager, _damageControlService,
-                _gameStateService, _newGameService);
+            var playerViewModel = new PlayerViewModel(playerService, hotkeyManager, damageControlService,
+                _stateService, _newGameService, gameTickService);
 
-            var travelViewModel = new TravelViewModel(travelService, hotkeyManager, _gameStateService);
+            var travelViewModel = new TravelViewModel(travelService, hotkeyManager, _stateService);
 
-            var eventViewModel = new EventViewModel(utilityService, eventService, ezStateService, _gameStateService);
+            var eventViewModel = new EventViewModel(utilityService, eventService, ezStateService, _stateService);
 
             var utilityViewModel = new UtilityViewModel(utilityService, hotkeyManager, playerViewModel,
-                _gameStateService, ezStateService);
+                _stateService, ezStateService, menuService);
 
             var targetViewModel =
-                new TargetViewModel(targetService, hotkeyManager, _damageControlService, _gameStateService);
+                new TargetViewModel(targetService, hotkeyManager, damageControlService, _stateService, reminderService,
+                    gameTickService);
 
-            _enemyViewModel = new EnemyViewModel(enemyService, hotkeyManager, ezStateService, _gameStateService,
+            var enemyViewModel = new EnemyViewModel(enemyService, hotkeyManager, ezStateService, _stateService,
                 eventService);
 
-            _itemViewModel = new ItemViewModel(_itemService, _gameStateService, _newGameService);
+            var itemViewModel = new ItemViewModel(itemService, _stateService, _newGameService);
 
-            _settingsViewModel = new SettingsViewModel(settingsService, hotkeyManager, _gameStateService);
+            var settingsViewModel = new SettingsViewModel(settingsService, hotkeyManager, _stateService);
 
             var playerTab = new PlayerTab(playerViewModel);
             var travelTab = new TravelTab(travelViewModel);
             var eventTab = new EventTab(eventViewModel);
             var utilityTab = new UtilityTab(utilityViewModel);
             var targetTab = new TargetTab(targetViewModel);
-            var enemyTab = new EnemyTab(_enemyViewModel);
-            var itemTab = new ItemTab(_itemViewModel);
-            var settingsTab = new SettingsTab(_settingsViewModel);
+            var enemyTab = new EnemyTab(enemyViewModel);
+            var itemTab = new ItemTab(itemViewModel);
+            var settingsTab = new SettingsTab(settingsViewModel);
 
 
             MainTabControl.Items.Add(new TabItem { Header = "Player", Content = playerTab });
             MainTabControl.Items.Add(new TabItem { Header = "Travel", Content = travelTab });
-            MainTabControl.Items.Add(new TabItem { Header = "Event", Content = eventTab });
-            MainTabControl.Items.Add(new TabItem { Header = "Utility", Content = utilityTab });
-            MainTabControl.Items.Add(new TabItem { Header = "Target", Content = targetTab });
             MainTabControl.Items.Add(new TabItem { Header = "Enemies", Content = enemyTab });
+            MainTabControl.Items.Add(new TabItem { Header = "Target", Content = targetTab });
+            MainTabControl.Items.Add(new TabItem { Header = "Utility", Content = utilityTab });
+            MainTabControl.Items.Add(new TabItem { Header = "Event", Content = eventTab });
             MainTabControl.Items.Add(new TabItem { Header = "Items", Content = itemTab });
             MainTabControl.Items.Add(new TabItem { Header = "Settings", Content = settingsTab });
 
-            _gameStateService.Publish(GameState.AppStart);
+            _stateService.Publish(State.AppStart);
 
             Closing += MainWindow_Closing;
 
@@ -138,155 +137,132 @@ namespace SilkySouls2
 
         private bool _loaded;
         private bool _hasAppliedDelayedFeatures;
-
-        private bool _hasScanned;
-
-        private bool _hasAllocatedMemory;
-
-        private bool _hasAppliedNoLogo;
-
         private bool _appliedOneTimeFeatures;
         private int _storedArea;
         private int _currentArea;
-        private bool _hasCheckedPatch;
         private bool _waitingForDetectNewGame;
-        private DateTime? _attachedTime;
+        private bool _wasAttached;
+        private bool _isReady;
+        private CancellationTokenSource _attachCts;
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            if (_memoryService.IsAttached)
+            var isAttached = _memoryService.IsAttached;
+
+            if (isAttached != _wasAttached)
             {
-                IsAttachedText.Text = "Attached to game";
-                IsAttachedText.Foreground = (SolidColorBrush)Application.Current.Resources["AttachedBrush"];
-
-                LaunchVanillaButton.IsEnabled = false;
-                LaunchScholarButton.IsEnabled = false;
-
-                if (!_attachedTime.HasValue)
-                {
-                    _attachedTime = DateTime.Now;
-                    return;
-                }
-
-                if ((DateTime.Now - _attachedTime.Value).TotalSeconds < 2)
-                    return;
-
-                if (!_hasCheckedPatch)
-                {
-                    if (!PatchManager.TryDetectVersion(_memoryService))
-                    {
-                        _aobScanner.FallBackScan(true);
-                    }
-
-#if DEBUG
-                    Console.WriteLine($@"Base: 0x{(long)_memoryService.BaseAddress:X}");
-#endif
-                    _hasCheckedPatch = true;
-                }
-
-                _currentArea = _memoryService.Read<int>(MapId);
-                if (_currentArea != _storedArea)
-                {
-                    _gameStateService.Publish(GameState.AreaChanged, _currentArea);
-                    _storedArea = _currentArea;
-                }
-
-                if (!_hasAllocatedMemory)
-                {
-                    _memoryService.AllocCodeCave();
-
-#if DEBUG
-                    Console.WriteLine($"Code cave: 0x{CodeCaveOffsets.Base.ToInt64():X}");
-#endif
-                    _hasAllocatedMemory = true;
-                    _damageControlService.WriteDamageControlCode();
-                    _dllManager.CreateDrawSharedMem();
-                    _dllManager.CreateSpeedSharedMem();
-                    _gameStateService.Publish(GameState.Attached);
-                }
-
-                if (_waitingForDetectNewGame)
-                {
-                    var newGameFlagLoc = CodeCaveOffsets.Base + CodeCaveOffsets.NewGameStartedFlag;
-                    if (_memoryService.Read<byte>(newGameFlagLoc) == 1)
-                    {
-                        _gameStateService.Publish(GameState.NewGameStarted);
-                        _memoryService.Write(newGameFlagLoc, (byte)0);
-                        _waitingForDetectNewGame = false;
-                    }
-                }
-
-                if (_memoryService.IsGameLoaded())
-                {
-                    if (!_hasAppliedDelayedFeatures)
-                    {
-                        if (!_memoryService.IsLoadingScreen())
-                        {
-                            _hasAppliedDelayedFeatures = true;
-                            _gameStateService.Publish(GameState.DelayedGameLoad);
-                        }
-                    }
-
-                    if (_loaded) return;
-                    _loaded = true;
-
-                    if (_newGameService.GetCount() > 0)
-                    {
-                        var gameMan = _memoryService.Read<nint>(GameManagerImp.Base);
-
-                        if (_memoryService.Read<int>((IntPtr)gameMan + GameManagerImp.PendingCutsceneId) ==
-                            StartingCutsceneId)
-                        {
-                            _waitingForDetectNewGame = true;
-                        }
-                    }
-
-
-                    _gameStateService.Publish(GameState.Loaded);
-
-                    if (_appliedOneTimeFeatures) return;
-                    _gameStateService.Publish(GameState.FirstLoaded);
-                    ApplyOneTimeFeatures();
-                    _appliedOneTimeFeatures = true;
-                }
-                else if (_loaded)
-                {
-                    _gameStateService.Publish(GameState.NotLoaded);
-                    _loaded = false;
-                    _hasAppliedDelayedFeatures = false;
-                }
+                _wasAttached = isAttached;
+                if (isAttached) OnAttached();
+                else OnDetached();
             }
-            else
+
+            if (!isAttached || !_isReady) return;
+
+            _currentArea = _memoryService.Read<int>(MapId);
+            if (_currentArea != _storedArea)
             {
-                _hookManager.ClearHooks();
-                _gameStateService.Publish(GameState.NotLoaded);
-                _nopManager.ClearRegistry();
-                _gameStateService.Publish(GameState.Detached);
-                _newGameService.Reset();
-                _attachedTime = null;
-                _hasCheckedPatch = false;
-                ResetState();
-                _hasScanned = false;
+                _stateService.Publish(State.AreaChanged, _currentArea);
+                _storedArea = _currentArea;
+            }
+
+            if (_waitingForDetectNewGame && _newGameService.PollNewGameStarted())
+            {
+                _waitingForDetectNewGame = false;
+            }
+
+            if (_stateService.IsGameLoaded())
+            {
+                if (!_hasAppliedDelayedFeatures)
+                {
+                    if (!_stateService.IsLoadingScreen())
+                    {
+                        _hasAppliedDelayedFeatures = true;
+                        _stateService.Publish(State.DelayedGameLoad);
+                    }
+                }
+
+                if (_loaded) return;
+                _loaded = true;
+
+                if (_newGameService.GetCount() > 0 && _newGameService.IsAtNewGameStartCutscene())
+                {
+                    _waitingForDetectNewGame = true;
+                }
+
+                _stateService.Publish(State.Loaded);
+
+                if (_appliedOneTimeFeatures) return;
+                _stateService.Publish(State.FirstLoaded);
+                _appliedOneTimeFeatures = true;
+            }
+            else if (_loaded)
+            {
+                _stateService.Publish(State.NotLoaded);
                 _loaded = false;
-                _hasAllocatedMemory = false;
-                _appliedOneTimeFeatures = false;
-                IsAttachedText.Text = "Not attached";
-                IsAttachedText.Foreground = (SolidColorBrush)Application.Current.Resources["NotAttachedBrush"];
-                LaunchVanillaButton.IsEnabled = true;
-                LaunchScholarButton.IsEnabled = true;
+                _hasAppliedDelayedFeatures = false;
             }
         }
 
-        private void ResetState()
+        private void OnAttached()
         {
-            _dllManager.ResetState();
-            _settingsViewModel.ResetAttached();
-            _itemService.Reset();
+            IsAttachedText.Text = "Attached to game";
+            IsAttachedText.Foreground = (SolidColorBrush)Application.Current.Resources["AttachedBrush"];
+            LaunchVanillaButton.IsEnabled = false;
+            LaunchScholarButton.IsEnabled = false;
+
+            _attachCts = new CancellationTokenSource();
+            _ = RunAttachSequenceAsync(_attachCts.Token);
         }
 
-        private void ApplyOneTimeFeatures()
+        private void OnDetached()
         {
-            _enemyViewModel.TryApplyOneTimeFeatures();
+            _attachCts?.Cancel();
+            _isReady = false;
+            _loaded = false;
+            _hasAppliedDelayedFeatures = false;
+            _appliedOneTimeFeatures = false;
+            _stateService.Publish(State.NotLoaded);
+            _stateService.Publish(State.Detached);
+            IsAttachedText.Text = "Not attached";
+            IsAttachedText.Foreground = (SolidColorBrush)Application.Current.Resources["NotAttachedBrush"];
+            LaunchVanillaButton.IsEnabled = true;
+            LaunchScholarButton.IsEnabled = true;
+        }
+
+        private async Task RunAttachSequenceAsync(CancellationToken ct)
+        {
+            try
+            {
+                await Task.Delay(TimeSpan.FromSeconds(2), ct);
+
+                if (!PatchManager.TryDetectVersion(_memoryService))
+                {
+                    _aobScanner.FallBackScan();
+                }
+
+#if DEBUG
+                Console.WriteLine($@"Base: 0x{(long)_memoryService.BaseAddress:X}");
+#endif
+
+                ct.ThrowIfCancellationRequested();
+                _memoryService.AllocCodeCave();
+
+#if DEBUG
+                Console.WriteLine($"Code cave: 0x{(long)CustomCodeOffsets.Base:X}");
+#endif
+
+                _stateService.Publish(State.Attached);
+
+                ct.ThrowIfCancellationRequested();
+                _isReady = true;
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Attach sequence failed: {ex}");
+            }
         }
 
         private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -312,12 +288,23 @@ namespace SilkySouls2
             SettingsManager.Default.WindowLeft = Left;
             SettingsManager.Default.WindowTop = Top;
             SettingsManager.Default.Save();
-            _itemService.SignalClose();
-            _hookManager.UninstallAllHooks();
-            _nopManager.RestoreAll();
         }
 
         private void CheckUpdate_Click(object sender, RoutedEventArgs e) => VersionChecker.CheckForUpdates(this, true);
+
+        private static bool IsOnVisibleScreen(double left, double top)
+        {
+            const double minVisibleX = 100;
+            const double minVisibleY = 30;
+            var vLeft = SystemParameters.VirtualScreenLeft;
+            var vTop = SystemParameters.VirtualScreenTop;
+            var vRight = vLeft + SystemParameters.VirtualScreenWidth;
+            var vBottom = vTop + SystemParameters.VirtualScreenHeight;
+            return left + minVisibleX > vLeft
+                   && left < vRight - minVisibleX
+                   && top + minVisibleY > vTop
+                   && top < vBottom - minVisibleY;
+        }
 
         private void LaunchVanilla_Click(object sender, RoutedEventArgs e) =>
             Task.Run(() => GameLauncher.LaunchDarkSouls2(VanillaSteamName));

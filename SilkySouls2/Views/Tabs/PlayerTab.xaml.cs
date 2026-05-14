@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using SilkySouls2.Utilities;
+﻿using SilkySouls2.Utilities;
 using SilkySouls2.ViewModels;
 
 namespace SilkySouls2.Views.Tabs

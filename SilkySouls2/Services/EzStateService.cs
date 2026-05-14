@@ -12,26 +12,26 @@ namespace SilkySouls2.Services
     {
         public void ExecuteEventFromGameThread(EventCommand command, int areaId = 0, int areaIndex = 0)
         {
-            var code = CodeCaveOffsets.Base + CodeCaveOffsets.EzStateEventCode;
+            var code = CustomCodeOffsets.Base + CustomCodeOffsets.EzStateEventCode;
             var hookLoc = Hooks.GameManUpdate;
-            var paramsLocation = CodeCaveOffsets.Base + CodeCaveOffsets.EzStateEventParams;
+            var paramsLocation = CustomCodeOffsets.Base + CustomCodeOffsets.EzStateEventParams;
             
             for (int i = 0; i < command.Params.Length; i++)
             {
                 memoryService.Write(paramsLocation + i * 4, command.Params[i]);
             }
 
-            var shouldExecuteFlag = CodeCaveOffsets.Base + CodeCaveOffsets.ShouldExecuteFlag;
+            var shouldExecuteFlag = CustomCodeOffsets.Base + CustomCodeOffsets.ShouldExecuteFlag;
 
             var bytes = AsmLoader.GetAsmBytes(AsmScript.EzStateEventExecuteGameThread64);
            
             AsmHelper.WriteRelativeOffsets(bytes, [
-                (code.ToInt64(), shouldExecuteFlag.ToInt64(), 7, 0x0 + 2),
-                (code.ToInt64() + 0xD, shouldExecuteFlag.ToInt64(), 7, 0xD + 2),
-                (code.ToInt64() + 0x62, Functions.EzStateExternalEventCtor, 5, 0x62 + 1),
-                (code.ToInt64() + 0xA4, paramsLocation.ToInt64(), 7, 0xA4 + 3),
-                (code.ToInt64() + 0xE7, Functions.EzStateEventExecuteCommand, 5, 0xE7 + 1),
-                (code.ToInt64() + 0x135, hookLoc + 11, 5, 0x135 + 1)
+                (code, shouldExecuteFlag, 7, 0x0 + 2),
+                (code + 0xD, shouldExecuteFlag, 7, 0xD + 2),
+                (code + 0x62, Functions.EzStateExternalEventCtor, 5, 0x62 + 1),
+                (code + 0xA4, paramsLocation, 7, 0xA4 + 3),
+                (code + 0xE7, Functions.EzStateEventExecuteCommand, 5, 0xE7 + 1),
+                (code + 0x135, hookLoc + 11, 5, 0x135 + 1)
             ]);
             
             AsmHelper.WriteImmediateDwords(bytes, [
@@ -43,10 +43,10 @@ namespace SilkySouls2.Services
             
             memoryService.Write(shouldExecuteFlag, (byte)1);
             memoryService.WriteBytes(code, bytes);
-            hookManager.InstallHook(code.ToInt64(), hookLoc,
+            hookManager.InstallHook(code, hookLoc,
                 [0x40, 0x53, 0x55, 0x56, 0x48, 0x81, 0xEC, 0x00, 0x04, 0x00, 0x00]);
             Task.Delay(100).Wait();
-            hookManager.UninstallHook(code.ToInt64());
+            hookManager.UninstallHook(code);
         }
 
         public void ExecuteEvent(EventCommand command, int areaId = 0, int areaIndex = 0)
@@ -61,7 +61,7 @@ namespace SilkySouls2.Services
         private void ExecuteEvent64(EventCommand command, int areaId, int areaIndex)
         {
             
-            var paramsLocation = CodeCaveOffsets.Base + CodeCaveOffsets.EzStateEventParams;
+            var paramsLocation = CustomCodeOffsets.Base + CustomCodeOffsets.EzStateEventParams;
             
             for (int i = 0; i < command.Params.Length; i++)
             {
@@ -72,7 +72,7 @@ namespace SilkySouls2.Services
             
             AsmHelper.WriteAbsoluteAddresses64(bytes, [
             (Functions.EzStateExternalEventCtor, 0x16 + 2),
-            (paramsLocation.ToInt64(), 0x66 + 2),
+            (paramsLocation, 0x66 + 2),
             (Functions.EzStateEventExecuteCommand, 0xAF + 2)
             ]);
             

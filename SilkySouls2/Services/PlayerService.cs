@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Numerics;
 using SilkySouls2.enums;
 using SilkySouls2.GameIds;
@@ -12,87 +12,78 @@ namespace SilkySouls2.Services
     public class PlayerService(
         IMemoryService memoryService,
         HookManager hookManager,
-        NopManager nopManager,
-        IChrCtrlService chrCtrlService)
+        IChrCtrlService chrCtrlService,
+        IReminderService reminderService)
         : IPlayerService
     {
         public int GetHp() =>
-            memoryService.Read<int>(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Hp));
+            memoryService.Read<int>(GetPlayerCtrlField(ChrCtrl.Hp));
 
         public int GetMaxHp() =>
-            memoryService.Read<int>(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.FullHpWithHollowing));
+            memoryService.Read<int>(GetPlayerCtrlField(ChrCtrl.FullHpWithHollowing));
 
         public void SetHp(int hp) =>
-            memoryService.Write(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Hp), hp);
+            memoryService.Write(GetPlayerCtrlField(ChrCtrl.Hp), hp);
 
         public void SetFullHp()
         {
-            var full = memoryService.Read<int>(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.FullHpWithHollowing));
-            memoryService.Write(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Hp), full);
+            var full = memoryService.Read<int>(GetPlayerCtrlField(ChrCtrl.FullHpWithHollowing));
+            memoryService.Write(GetPlayerCtrlField(ChrCtrl.Hp), full);
         }
 
         public void SetRtsr()
         {
-            var full = memoryService.Read<int>(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.FullHpWithHollowing));
-            memoryService.Write(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Hp), (full * 30) / 100 - 1);
+            var full = memoryService.Read<int>(GetPlayerCtrlField(ChrCtrl.FullHpWithHollowing));
+            memoryService.Write(GetPlayerCtrlField(ChrCtrl.Hp), (full * 30) / 100 - 1);
         }
 
         public int GetSp() =>
-            memoryService.Read<int>(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Stamina));
+            memoryService.Read<int>(GetPlayerCtrlField(ChrCtrl.Stamina));
 
         public void SetSp(int sp) =>
-            memoryService.Write(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.Stamina), sp);
+            memoryService.Write(GetPlayerCtrlField(ChrCtrl.Stamina), sp);
 
-        private IntPtr GetPlayerCtrlField(int fieldOffset) =>
+        private nint GetPlayerCtrlField(int fieldOffset) =>
             memoryService.FollowPointers(GameManagerImp.Base, [GameManagerImp.PlayerCtrl, fieldOffset],
                 false);
 
         public void ToggleNoDeath(bool isNoDeathEnabled) =>
-            memoryService.Write(GetPlayerCtrlField(GameManagerImp.ChrCtrlOffsets.MinHp),
+            memoryService.Write(GetPlayerCtrlField(ChrCtrl.MinHp),
                 isNoDeathEnabled ? 1 : -99999);
 
         public void ToggleNoDamage(bool isNoDamageEnabled)
         {
-            var code = CodeCaveOffsets.Base + CodeCaveOffsets.PlayerNoDamage;
+            var code = CustomCodeOffsets.Base + CustomCodeOffsets.PlayerNoDamage;
 
             if (!isNoDamageEnabled)
             {
-                hookManager.UninstallHook(code.ToInt64());
+                hookManager.UninstallHook(code);
                 return;
             }
-
-            var hookLoc = Hooks.PlayerNoDamage;
-            if (PatchManager.IsScholar())
-            {
-                InstallScholarNoDamageHook(hookLoc, code);
-            }
-            else
-            {
-                InstallVanillaNoDamageHook(hookLoc, code);
-            }
+            
+            if (PatchManager.IsScholar()) InstallScholarNoDamageHook(code);
+            else InstallVanillaNoDamageHook(code);
         }
 
-        private void InstallScholarNoDamageHook(long hookLoc, IntPtr code)
+        private void InstallScholarNoDamageHook(nint code)
         {
             var codeBytes = AsmLoader.GetAsmBytes(AsmScript.PlayerNoDamage64);
-            var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt64());
-            Array.Copy(bytes, 0, codeBytes, 0x1 + 2, 8);
-            bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 6, code + 0x2C);
-            Array.Copy(bytes, 0, codeBytes, 0x27 + 1, 4);
+            AsmHelper.WriteAbsoluteAddress64(codeBytes, GameManagerImp.Base, 0x1 + 2);
+            var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(Hooks.PlayerNoDamage, 6, code + 0x2C);
+            Array.Copy(jmpBytes, 0, codeBytes, 0x27 + 1, 4);
             memoryService.WriteBytes(code, codeBytes);
 
-            hookManager.InstallHook(code.ToInt64(), hookLoc, [0x89, 0x83, 0x68, 0x01, 0x00, 0x00]);
+            hookManager.InstallHook(code, Hooks.PlayerNoDamage, [0x89, 0x83, 0x68, 0x01, 0x00, 0x00]);
         }
 
-        private void InstallVanillaNoDamageHook(long hookLoc, IntPtr code)
+        private void InstallVanillaNoDamageHook(nint code)
         {
             var codeBytes = AsmLoader.GetAsmBytes(AsmScript.PlayerNoDamage32);
-            var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt32());
-            Array.Copy(bytes, 0, codeBytes, 0x1 + 1, 4);
-            bytes = AsmHelper.GetJmpOriginOffsetBytes(hookLoc, 6, code + 0x1F);
-            Array.Copy(bytes, 0, codeBytes, 0x1A + 1, 4);
+            AsmHelper.WriteAbsoluteAddress32(codeBytes, GameManagerImp.Base, 0x1 + 1);
+            var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(Hooks.PlayerNoDamage, 6, code + 0x1F);
+            Array.Copy(jmpBytes, 0, codeBytes, 0x1A + 1, 4);
             memoryService.WriteBytes(code, codeBytes);
-            hookManager.InstallHook(code.ToInt64(), hookLoc, [0x89, 0x8E, 0xFC, 0x00, 0x00, 0x00]);
+            hookManager.InstallHook(code, Hooks.PlayerNoDamage, [0x89, 0x8E, 0xFC, 0x00, 0x00, 0x00]);
         }
 
         public void ToggleInfiniteStamina(bool isInfiniteStaminaEnabled) =>
@@ -100,11 +91,11 @@ namespace SilkySouls2.Services
 
         public int GetPlayerStat(int statOffset) => memoryService.Read<byte>(GetStatPtr(statOffset));
 
-        private IntPtr GetStatPtr(int statOffset)
+        private nint GetStatPtr(int statOffset)
         {
             return memoryService.FollowPointers(GameManagerImp.Base, [
                 GameManagerImp.PlayerCtrl,
-                GameManagerImp.ChrCtrlOffsets.StatsPtr,
+                ChrCtrl.StatsPtr,
                 statOffset
             ], false);
         }
@@ -115,9 +106,9 @@ namespace SilkySouls2.Services
             memoryService.Write(GetStatPtr(statOffset), val);
             var numOfLevels = val - currentStatVal;
 
-            var buffer = CodeCaveOffsets.Base + (int)CodeCaveOffsets.LevelUp.Buffer;
-            var code = CodeCaveOffsets.Base + (int)CodeCaveOffsets.LevelUp.Code;
-            var negativeFlag = CodeCaveOffsets.Base + (int)CodeCaveOffsets.LevelUp.NegativeFlag;
+            var buffer = CustomCodeOffsets.Base + (int)CustomCodeOffsets.LevelUp.Buffer;
+            var code = CustomCodeOffsets.Base + (int)CustomCodeOffsets.LevelUp.Code;
+            var negativeFlag = CustomCodeOffsets.Base + (int)CustomCodeOffsets.LevelUp.NegativeFlag;
             var numOfLevelsShortLoc = buffer + 0xE2;
             var numOfLevelsIntLoc = buffer + 0xE8;
             var currentLevelLoc = buffer + 0xEC;
@@ -130,14 +121,13 @@ namespace SilkySouls2.Services
             var levelLookUp = Functions.LevelLookup;
             var levelUp = Functions.LevelUp;
 
-            var statsEntity = memoryService.FollowPointers(GameManagerImp.Base, new[]
-            {
+            var statsEntity = memoryService.FollowPointers(GameManagerImp.Base, [
                 GameManagerImp.PlayerCtrl,
-                GameManagerImp.ChrCtrlOffsets.StatsPtr
-            }, true);
+                ChrCtrl.StatsPtr
+            ], true);
 
-            var currentStatBytes = memoryService.ReadBytes(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.Vigor), 22);
-            var currentLevel = memoryService.ReadInt32(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.SoulLevel));
+            var currentStatBytes = memoryService.ReadBytes(GetStatPtr(ChrCtrl.Stats.Vigor), 22);
+            var currentLevel = memoryService.Read<int>(GetStatPtr(ChrCtrl.Stats.SoulLevel));
 
             if (numOfLevels <= 0)
             {
@@ -151,7 +141,7 @@ namespace SilkySouls2.Services
             memoryService.Write(numOfLevelsIntLoc, numOfLevels);
             memoryService.Write(currentLevelLoc, currentLevel);
             memoryService.Write(newLevelLoc, currentLevel + numOfLevels);
-            var currentSouls = memoryService.Read<int>(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.CurrentSouls));
+            var currentSouls = memoryService.Read<int>(GetStatPtr(ChrCtrl.Stats.CurrentSouls));
             memoryService.Write(currentSoulsLoc, currentSouls);
 
             if (PatchManager.IsScholar())
@@ -160,23 +150,23 @@ namespace SilkySouls2.Services
 
                 AsmHelper.WriteAbsoluteAddresses64(bytes, [
                     (levelLookUp, 0x18 + 2),
-                    (statsEntity.ToInt64(), 0x4D + 2),
+                    (statsEntity, 0x4D + 2),
                     (giveSouls, 0x57 + 2),
-                    (statsEntity.ToInt64(), 0x6C + 2),
-                    (statsEntity.ToInt64(), 0x90 + 2),
+                    (statsEntity, 0x6C + 2),
+                    (statsEntity, 0x90 + 2),
                     (levelUp, 0xA8 + 2)
                 ]);
 
                 AsmHelper.WriteRelativeOffsets(bytes, [
-                    (code.ToInt64(), currentLevelLoc.ToInt64(), 6, 0x0 + 2),
-                    (code.ToInt64() + 0xD, negativeFlag.ToInt64(), 7, 0xD + 2),
-                    (code.ToInt64() + 0x33, newLevelLoc.ToInt64(), 6, 0x33 + 2),
-                    (code.ToInt64() + 0x3B, requiredSouls.ToInt64(), 6, 0x3B + 2),
-                    (code.ToInt64() + 0x41, currentSoulsLoc.ToInt64(), 6, 0x41 + 2),
-                    (code.ToInt64() + 0x7C, currentSoulsLoc.ToInt64(), 6, 0x7C + 2),
-                    (code.ToInt64() + 0x82, requiredSouls.ToInt64(), 6, 0x82 + 2),
-                    (code.ToInt64() + 0x8A, soulsAfterLevelUp.ToInt64(), 6, 0x8A + 2),
-                    (code.ToInt64() + 0x9A, buffer.ToInt64(), 7, 0x9A + 3)
+                    (code, currentLevelLoc, 6, 0x0 + 2),
+                    (code + 0xD, negativeFlag, 7, 0xD + 2),
+                    (code + 0x33, newLevelLoc, 6, 0x33 + 2),
+                    (code + 0x3B, requiredSouls, 6, 0x3B + 2),
+                    (code + 0x41, currentSoulsLoc, 6, 0x41 + 2),
+                    (code + 0x7C, currentSoulsLoc, 6, 0x7C + 2),
+                    (code + 0x82, requiredSouls, 6, 0x82 + 2),
+                    (code + 0x8A, soulsAfterLevelUp, 6, 0x8A + 2),
+                    (code + 0x9A, buffer, 7, 0x9A + 3)
                 ]);
 
                 memoryService.WriteBytes(code, bytes);
@@ -185,35 +175,34 @@ namespace SilkySouls2.Services
             {
                 var bytes = AsmLoader.GetAsmBytes(AsmScript.LevelUp32);
                 AsmHelper.WriteAbsoluteAddresses32(bytes, [
-                    (currentLevelLoc.ToInt64(), 2),
-                    (negativeFlag.ToInt64(), 0xC + 2),
+                    (currentLevelLoc, 2),
+                    (negativeFlag, 0xC + 2),
                     (levelLookUp, 0x15 + 1),
-                    (newLevelLoc.ToInt64(), 0x23 + 2),
-                    (requiredSouls.ToInt64(), 0x2B + 2),
-                    (currentSoulsLoc.ToInt64(), 0x31 + 2),
-                    (statsEntity.ToInt64(), 0x3E + 1),
+                    (newLevelLoc, 0x23 + 2),
+                    (requiredSouls, 0x2B + 2),
+                    (currentSoulsLoc, 0x31 + 2),
+                    (statsEntity, 0x3E + 1),
                     (giveSouls, 0x43 + 1),
-                    (statsEntity.ToInt64(), 0x4A + 1),
-                    (currentSoulsLoc.ToInt64(), 0x55 + 2),
-                    (requiredSouls.ToInt64(), 0x5B + 2),
-                    (soulsAfterLevelUp.ToInt64(), 0x63 + 2),
-                    (buffer.ToInt64(), 0x6F + 2),
-                    (statsEntity.ToInt64(), 0x76 + 1),
+                    (statsEntity, 0x4A + 1),
+                    (currentSoulsLoc, 0x55 + 2),
+                    (requiredSouls, 0x5B + 2),
+                    (soulsAfterLevelUp, 0x63 + 2),
+                    (buffer, 0x6F + 2),
+                    (statsEntity, 0x76 + 1),
                     (levelUp, 0x7B + 1)
                 ]);
                 memoryService.WriteBytes(code, bytes);
             }
-
-
+            
             memoryService.RunThreadAndWaitForCompletion(code);
             if (numOfLevels <= 0) memoryService.WriteBytes(Patches.NegativeLevel + 1, [0x84]);
 
-            var newSouls = memoryService.Read<int>(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.CurrentSouls));
+            var newSouls = memoryService.Read<int>(GetStatPtr(ChrCtrl.Stats.CurrentSouls));
             GiveSouls(currentSouls - newSouls);
         }
 
         public int GetSoulLevel() =>
-            memoryService.Read<int>(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.SoulLevel));
+            memoryService.Read<int>(GetStatPtr(ChrCtrl.Stats.SoulLevel));
 
         public float GetPlayerSpeed() => chrCtrlService.GetSpeed(GetPlayerCtrl());
 
@@ -247,12 +236,12 @@ namespace SilkySouls2.Services
         }
 
         public Vector3 GetCoords() => chrCtrlService.GetPos(GetPlayerCtrl());
-        
+
         public void SetNewGame(int value) => memoryService.Write(GetNewGamePtr(), (byte)value);
 
         public int GetNewGame() => memoryService.Read<byte>(GetNewGamePtr());
 
-        private IntPtr GetNewGamePtr() =>
+        private nint GetNewGamePtr() =>
             memoryService.FollowPointers(GameManagerImp.Base, [
                 GameManagerImp.GameDataManager,
                 GameManagerImp.GameDataManagerOffsets.NewGamePtr,
@@ -264,100 +253,98 @@ namespace SilkySouls2.Services
             var giveSoulsFunc = Functions.GiveSouls;
             var statsEntity = memoryService.FollowPointers(GameManagerImp.Base, [
                 GameManagerImp.PlayerCtrl,
-                GameManagerImp.ChrCtrlOffsets.StatsPtr
+                ChrCtrl.StatsPtr
             ], true);
 
-            if (PatchManager.IsScholar())
-            {
-                ScholarGiveSouls(statsEntity, souls, giveSoulsFunc);
-            }
-            else
-            {
-                VanillaGiveSouls(statsEntity, souls, giveSoulsFunc);
-            }
+            if (PatchManager.IsScholar()) ScholarGiveSouls(statsEntity, souls, giveSoulsFunc);
+            else VanillaGiveSouls(statsEntity, souls, giveSoulsFunc);
         }
 
-        private void ScholarGiveSouls(IntPtr statsEntity, int souls, long giveSoulsFunc)
+        private void ScholarGiveSouls(nint statsEntity, int souls, nint giveSoulsFunc)
         {
             var codeBytes = AsmLoader.GetAsmBytes(AsmScript.GiveSouls64);
             AsmHelper.WriteAbsoluteAddresses64(codeBytes, [
-                (statsEntity.ToInt64(), 0x0 + 2),
+                (statsEntity, 0x0 + 2),
                 (souls, 0x0A + 2),
                 (giveSoulsFunc, 0x18 + 2)
             ]);
             memoryService.AllocateAndExecute(codeBytes);
         }
 
-        private void VanillaGiveSouls(IntPtr statsEntity, int souls, long giveSoulsFunc)
+        private void VanillaGiveSouls(nint statsEntity, int souls, nint giveSoulsFunc)
         {
             var codeBytes = AsmLoader.GetAsmBytes(AsmScript.GiveSouls32);
             AsmHelper.WriteAbsoluteAddresses32(codeBytes, [
                 (souls, 0x0 + 1),
-                (statsEntity.ToInt64(), 0x06 + 1),
+                (statsEntity, 0x06 + 1),
                 (giveSoulsFunc, 0xb + 1)
             ]);
             memoryService.AllocateAndExecute(codeBytes);
         }
 
         public int GetSoulMemory() =>
-            memoryService.Read<int>(GetStatPtr(GameManagerImp.ChrCtrlOffsets.Stats.SoulMemory));
+            memoryService.Read<int>(GetStatPtr(ChrCtrl.Stats.SoulMemory));
 
         public void RestoreSpellcasts()
         {
-            var func = Functions.RestoreSpellcasts;
-            if (PatchManager.IsScholar())
+            var scholar = PatchManager.IsScholar();
 
-                ScholarRestoreSpells(func);
+            var chainTail = scholar
+                ? GameManagerImp.GameDataManagerOffsets.Inventory.ItemInventory2BagListForSpells
+                : GameManagerImp.GameDataManagerOffsets.Inventory.InventoryLists;
 
-            else
-            {
-                VanillaRestoreSpells(func);
-            }
-        }
-
-        private void ScholarRestoreSpells(long func)
-        {
-            var inventoryBag = memoryService.FollowPointers(GameManagerImp.Base, new[]
-            {
-                GameManagerImp.GameDataManager,
-                GameManagerImp.GameDataManagerOffsets.InventoryPtr,
-                GameManagerImp.GameDataManagerOffsets.Inventory.ItemInventory2BagListForSpells
-            }, true);
-
-            var codeBytes = AsmLoader.GetAsmBytes(AsmScript.RestoreSpellcasts64);
-            AsmHelper.WriteAbsoluteAddresses64(codeBytes, [
-                (inventoryBag.ToInt64(), 0x0 + 2),
-                (func, 0x20 + 2)
-            ]);
-
-            memoryService.AllocateAndExecute(codeBytes);
-        }
-
-        private void VanillaRestoreSpells(long func)
-        {
             var inventoryBag = memoryService.FollowPointers(GameManagerImp.Base, [
                 GameManagerImp.GameDataManager,
                 GameManagerImp.GameDataManagerOffsets.InventoryPtr,
-                GameManagerImp.GameDataManagerOffsets.Inventory.InventoryLists
+                chainTail
             ], true);
 
+            if (scholar) ScholarRestoreSpells(inventoryBag);
+            else VanillaRestoreSpells(inventoryBag);
+        }
+
+        private void ScholarRestoreSpells(nint inventoryBag)
+        {
+            var codeBytes = AsmLoader.GetAsmBytes(AsmScript.RestoreSpellcasts64);
+            AsmHelper.WriteAbsoluteAddresses64(codeBytes, [
+                (inventoryBag, 0x0 + 2),
+                (Functions.RestoreSpellcasts, 0x20 + 2)
+            ]);
+            memoryService.AllocateAndExecute(codeBytes);
+        }
+
+        private void VanillaRestoreSpells(nint inventoryBag)
+        {
             var codeBytes = AsmLoader.GetAsmBytes(AsmScript.RestoreSpellcasts32);
             AsmHelper.WriteAbsoluteAddresses32(codeBytes, [
-                (inventoryBag.ToInt64(), 1),
-                (func, 0x1E + 1)
+                (inventoryBag, 1),
+                (Functions.RestoreSpellcasts, 0x1E + 1)
             ]);
             memoryService.AllocateAndExecute(codeBytes);
         }
 
         public void ToggleSilent(bool isSilentEnabled)
         {
-            //TODO get rid of nop manager
+            var scholar = PatchManager.IsScholar();
+            var length = scholar ? 5 : 16;
+
+            byte[] bytes;
             if (isSilentEnabled)
             {
-                nopManager.InstallNop(Patches.Silent.ToInt64(),
-                    PatchManager.Current.Edition == GameEdition.Scholar ? 5 : 16);
+                bytes = new byte[length];
+                for (var i = 0; i < length; i++) bytes[i] = 0x90;
             }
-            else nopManager.RestoreNop(Patches.Silent.ToInt64());
+            else if (scholar)
+            {
+                bytes = AsmHelper.BuildNearCall(Patches.Silent, Functions.OriginalMakeSound);
+            }
+            else
+            {
+                byte[] prefix = [0x51, 0xF3, 0x0F, 0x11, 0x04, 0x24, 0x52, 0x50, 0x53, 0x8B, 0xCF];
+                var call = AsmHelper.BuildNearCall(Patches.Silent + 0xB, Functions.OriginalMakeSound);
+                bytes = [..prefix, ..call];
+            }
+            memoryService.WriteBytes(Patches.Silent, bytes);
         }
 
         public void ToggleHidden(bool isHiddenEnabled) =>
@@ -365,107 +352,75 @@ namespace SilkySouls2.Services
 
         public void ToggleInfinitePoise(bool isInfinitePoiseEnabled)
         {
-            var code = CodeCaveOffsets.Base + CodeCaveOffsets.InfinitePoise;
+            var code = CustomCodeOffsets.Base + CustomCodeOffsets.InfinitePoise;
 
             if (!isInfinitePoiseEnabled)
             {
-                hookManager.UninstallHook(code.ToInt64());
+                hookManager.UninstallHook(code);
                 return;
             }
 
-            var origin = Hooks.InfinitePoise;
-            var gameMan = GameManagerImp.Base;
-
-            if (PatchManager.IsScholar())
-            {
-                InstallScholarInfinitePoise(code, origin, gameMan);
-            }
-            else
-            {
-                InstallVanillaInfinitePoise(code, origin, gameMan);
-            }
+            if (PatchManager.IsScholar()) InstallScholarInfinitePoise(code);
+            else InstallVanillaInfinitePoise(code);
         }
 
-        private void InstallScholarInfinitePoise(IntPtr code, long origin, IntPtr gameMan)
+        private void InstallScholarInfinitePoise(nint code)
         {
             var codeBytes = AsmLoader.GetAsmBytes(AsmScript.InfinitePoise64);
-
-            var bytes = BitConverter.GetBytes(gameMan.ToInt64());
-            Array.Copy(bytes, 0, codeBytes, 0x1 + 2, 8);
-            bytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 6, code + 0x2C);
-            Array.Copy(bytes, 0, codeBytes, 0x27 + 1, 4);
+            AsmHelper.WriteAbsoluteAddress64(codeBytes, GameManagerImp.Base, 0x1 + 2);
+            var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(Hooks.InfinitePoise, 6, code + 0x2C);
+            Array.Copy(jmpBytes, 0, codeBytes, 0x27 + 1, 4);
             memoryService.WriteBytes(code, codeBytes);
-            hookManager.InstallHook(code.ToInt64(), origin, [0x39, 0x9D, 0xEC, 0x05, 0x00, 0x00]);
+            hookManager.InstallHook(code, Hooks.InfinitePoise, [0x39, 0x9D, 0xEC, 0x05, 0x00, 0x00]);
         }
 
-        private void InstallVanillaInfinitePoise(IntPtr code, long origin, IntPtr gameMan)
+        private void InstallVanillaInfinitePoise(nint code)
         {
             var codeBytes = AsmLoader.GetAsmBytes(AsmScript.InfinitePoise32);
-            var bytes = BitConverter.GetBytes(gameMan.ToInt32());
-            Array.Copy(bytes, 0, codeBytes, 0x1 + 1, 4);
-            bytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 7, code + 0x21);
-            Array.Copy(bytes, 0, codeBytes, 0x1C + 1, 4);
+            AsmHelper.WriteAbsoluteAddress32(codeBytes, GameManagerImp.Base, 0x1 + 1);
+            var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(Hooks.InfinitePoise, 7, code + 0x21);
+            Array.Copy(jmpBytes, 0, codeBytes, 0x1C + 1, 4);
             memoryService.WriteBytes(code, codeBytes);
-            hookManager.InstallHook(code.ToInt64(), origin, [0x83, 0xBB, 0xEC, 0x05, 0x00, 0x00, 0x00]);
+            hookManager.InstallHook(code, Hooks.InfinitePoise, [0x83, 0xBB, 0xEC, 0x05, 0x00, 0x00, 0x00]);
         }
 
-        public void SetSpEffect(SpEffect restoreHumanity)
+        public void SetSpEffect(SpEffect spEffect)
         {
-            var spEffectParams = CodeCaveOffsets.Base + CodeCaveOffsets.SpEffectParams;
-            var code = CodeCaveOffsets.Base + CodeCaveOffsets.SpEffectCode;
+            var spEffectParams = CustomCodeOffsets.Base + CustomCodeOffsets.SpEffectParams;
+            var code = CustomCodeOffsets.Base + CustomCodeOffsets.SpEffectCode;
 
             var chrSpEffectCtrl = memoryService.FollowPointers(GameManagerImp.Base, [
                 GameManagerImp.PlayerCtrl,
-                GameManagerImp.ChrCtrlOffsets.ChrSpEffectCtrl
+                ChrCtrl.ChrSpEffectCtrl
             ], true);
+            
+            memoryService.WriteBytes(spEffectParams, spEffect.ToBytes());
 
-            var setEffectFunc = Functions.SetSpEffect;
-
-            memoryService.Write(spEffectParams, restoreHumanity.EffectId);
-            memoryService.Write(spEffectParams + 0x4, restoreHumanity.Quantity);
-            memoryService.Write(spEffectParams + 0x8, restoreHumanity.FloatValue);
-            memoryService.Write(spEffectParams + 0xC, restoreHumanity.EffectType);
-            memoryService.Write(spEffectParams + 0xD, restoreHumanity.Param1);
-            memoryService.Write(spEffectParams + 0xE, restoreHumanity.Param2);
-            memoryService.Write(spEffectParams + 0xF, restoreHumanity.Param3);
-
-            if (PatchManager.IsScholar())
-            {
-                ScholarSetSpEffect(code, chrSpEffectCtrl, spEffectParams, setEffectFunc);
-            }
-            else
-            {
-                VanillaSetSpEffect(code, chrSpEffectCtrl, spEffectParams, setEffectFunc);
-            }
+            if (PatchManager.IsScholar()) ScholarSetSpEffect(code, chrSpEffectCtrl, spEffectParams);
+            else VanillaSetSpEffect(code, chrSpEffectCtrl, spEffectParams);
 
             memoryService.RunThread(code);
         }
 
-        private void ScholarSetSpEffect(IntPtr code, IntPtr chrSpEffectCtrl, IntPtr spEffectParams, long setEffectFunc)
+        private void ScholarSetSpEffect(nint code, nint chrSpEffectCtrl, nint spEffectParams)
         {
             var codeBytes = AsmLoader.GetAsmBytes(AsmScript.SetSpEffect64);
-            var bytes = BitConverter.GetBytes(chrSpEffectCtrl.ToInt64());
-            Array.Copy(bytes, 0, codeBytes, 0x7 + 2, 8);
-            AsmHelper.WriteRelativeOffsets(codeBytes, new[]
-            {
-                (code.ToInt64(), spEffectParams.ToInt64(), 7, 0x0 + 3),
-                (code.ToInt64() + 0x15, setEffectFunc, 5, 0x15 + 1)
-            });
+            AsmHelper.WriteAbsoluteAddress64(codeBytes, chrSpEffectCtrl, 0x7 + 2);
+            AsmHelper.WriteRelativeOffsets(codeBytes, [
+                (code, spEffectParams, 7, 0x0 + 3),
+                (code + 0x15, Functions.SetSpEffect, 5, 0x15 + 1)
+            ]);
 
             memoryService.WriteBytes(code, codeBytes);
         }
 
-        private void VanillaSetSpEffect(IntPtr code, IntPtr chrSpEffectCtrl, IntPtr spEffectParams, long setEffectFunc)
+        private void VanillaSetSpEffect(nint code, nint chrSpEffectCtrl, nint spEffectParams)
         {
             var codeBytes = AsmLoader.GetAsmBytes(AsmScript.SetSpEffect32);
-
-            var bytes = BitConverter.GetBytes(spEffectParams.ToInt32());
-            Array.Copy(bytes, 0, codeBytes, 0x3 + 2, 4);
-            bytes = BitConverter.GetBytes(chrSpEffectCtrl.ToInt32());
-            Array.Copy(bytes, 0, codeBytes, 0xA + 1, 4);
-
+            AsmHelper.WriteAbsoluteAddress32(codeBytes, spEffectParams, 0x3 + 2);
+            AsmHelper.WriteAbsoluteAddress32(codeBytes, chrSpEffectCtrl, 0xA + 1);
             AsmHelper.WriteRelativeOffsets(codeBytes, [
-                (code.ToInt64() + 0xF, setEffectFunc, 5, 0xF + 1)
+                (code + 0xF, Functions.SetSpEffect, 5, 0xF + 1)
             ]);
 
             memoryService.WriteBytes(code, codeBytes);
@@ -473,8 +428,10 @@ namespace SilkySouls2.Services
 
         public void ToggleNoSoulGain(bool isEnabled)
         {
-            if (isEnabled) nopManager.InstallNop(Patches.NoSoulGain.ToInt64(), 5);
-            else nopManager.RestoreNop(Patches.NoSoulGain.ToInt64());
+            var bytes = isEnabled
+                ? [0x90, 0x90, 0x90, 0x90, 0x90]
+                : AsmHelper.BuildNearCall(Patches.NoSoulGain, Functions.OriginalSoulGain);
+            memoryService.WriteBytes(Patches.NoSoulGain, bytes);
         }
 
         public void ToggleNoHollowing(bool enabled) =>
@@ -489,12 +446,66 @@ namespace SilkySouls2.Services
             memoryService.WriteBytes(Patches.SoulMemWrite2, PatchDefinitions.SoulMemWrite2.Get(enabled));
         }
 
-        private IntPtr GetPositionPtr() =>
+        public void ToggleNoHit(bool isEnabled)
+        {
+            var flags = memoryService.FollowPointers(GameManagerImp.Base, [
+                GameManagerImp.PlayerCtrl,
+                ChrCtrl.ChrFlags
+            ], true);
+
+            if (isEnabled) reminderService.TrySetReminder();
+            memoryService.SetBitValue(flags + ChrCtrl.NoHit.Offset, ChrCtrl.NoHit.Mask, isEnabled);
+            memoryService.WriteBytes(Patches.NoHitPatch, PatchDefinitions.NoHit.Get(isEnabled));
+        }
+
+        public void BreakWeapon(ChrAsmSlotSelector slotSelector)
+        {
+            if (PatchManager.IsScholar()) BreakWeaponScholar(slotSelector);
+            else BreakWeaponVanilla(slotSelector);
+        }
+
+        private void BreakWeaponScholar(ChrAsmSlotSelector slotSelector)
+        {
+            var bytes = AsmLoader.GetAsmBytes(AsmScript.BreakWeapon64);
+            var equipBrokenActionCtrl = memoryService.FollowPointers(GameManagerImp.Base, [
+                GameManagerImp.PlayerCtrl,
+                ChrCtrl.ChrActionCtrl,
+                ChrActionCtrl.ChrEquipBrokenActionCtrl
+            ], true);
+            
+            AsmHelper.WriteAbsoluteAddresses64(bytes, [
+            (equipBrokenActionCtrl, 0x4 + 2),
+            (Functions.ApplyDurabilityDamage, 0x1F + 2)
+            ]);
+            
+            AsmHelper.WriteImmediateDword(bytes, (int)slotSelector, 0xE + 1);
+            memoryService.AllocateAndExecute(bytes);
+        }
+
+        private void BreakWeaponVanilla(ChrAsmSlotSelector slotSelector)
+        {
+            var bytes = AsmLoader.GetAsmBytes(AsmScript.BreakWeapon32);
+            var equipBrokenActionCtrl = memoryService.FollowPointers(GameManagerImp.Base, [
+                GameManagerImp.PlayerCtrl,
+                ChrCtrl.ChrActionCtrl,
+                ChrActionCtrl.ChrEquipBrokenActionCtrl
+            ], true);
+            
+            AsmHelper.WriteAbsoluteAddresses32(bytes, [
+                (equipBrokenActionCtrl, 0xC + 1),
+                (Functions.ApplyDurabilityDamage, 0x11 + 1)
+            ]);
+            
+            AsmHelper.WriteImmediateDword(bytes, (int)slotSelector, 0x7 + 1);
+            memoryService.AllocateAndExecute(bytes);
+            
+        }
+
+        private nint GetPositionPtr() =>
             memoryService.FollowPointers(GameManagerImp.Base,
             [
                 GameManagerImp.PxWorld, ..GameManagerImp.PxWorldOffsets.PlayerCoordsChain
             ], false);
-        
 
         private nint GetPlayerCtrl() => memoryService.FollowPointers(GameManagerImp.Base,
             [GameManagerImp.PlayerCtrl], true);

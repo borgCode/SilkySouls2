@@ -180,43 +180,11 @@ namespace SilkySouls2.Services
 
             Kernel32.VirtualFreeEx(ProcessHandle, allocatedMemory, 0, 0x8000);
         }
+        
+        public nint ReadPointer(nint addr) =>
+            PatchManager.Current.Edition == GameEdition.Scholar ? Read<nint>(addr) : Read<int>(addr);
 
-        public int ReadInt32(IntPtr addr)
-        {
-            var bytes = ReadBytes(addr, 4);
-            return BitConverter.ToInt32(bytes, 0);
-        }
-
-        public long ReadInt64(IntPtr addr)
-        {
-            var bytes = ReadBytes(addr, 8);
-            return BitConverter.ToInt64(bytes, 0);
-        }
-
-        public byte ReadUInt8(IntPtr addr)
-        {
-            var bytes = ReadBytes(addr, 1);
-            return bytes[0];
-        }
-
-        public uint ReadUInt32(IntPtr addr)
-        {
-            var bytes = ReadBytes(addr, 4);
-            return BitConverter.ToUInt32(bytes, 0);
-        }
-
-        public ulong ReadUInt64(IntPtr addr)
-        {
-            var bytes = ReadBytes(addr, 8);
-            return BitConverter.ToUInt64(bytes, 0);
-        }
-
-        public float ReadFloat(IntPtr addr)
-        {
-            var bytes = ReadBytes(addr, 4);
-            return BitConverter.ToSingle(bytes, 0);
-        }
-
+        
         public byte[] ReadBytes(IntPtr addr, int size)
         {
             var array = new byte[size];
@@ -225,60 +193,19 @@ namespace SilkySouls2.Services
             return array;
         }
 
-        public void WriteUInt8(nint addr, int val)
-        {
-            var bytes = new[] { (byte)val };
-            WriteBytes(addr, bytes);
-        }
-
-        public string ReadString(IntPtr addr, int maxLength = 32)
-        {
-            var bytes = ReadBytes(addr, maxLength * 2);
-
-            int stringLength = 0;
-            for (int i = 0; i < bytes.Length - 1; i += 2)
-            {
-                if (bytes[i] == 0 && bytes[i + 1] == 0)
-                {
-                    stringLength = i;
-                    break;
-                }
-            }
-
-            if (stringLength == 0)
-            {
-                stringLength = bytes.Length - (bytes.Length % 2);
-            }
-
-            return Encoding.Unicode.GetString(bytes, 0, stringLength);
-        }
-
-        public void WriteInt64(nint addr, long val) => WriteBytes(addr, BitConverter.GetBytes(val));
-        public void WriteInt32(IntPtr addr, int val) => WriteBytes(addr, BitConverter.GetBytes(val));
-
-        public void WriteInt16(IntPtr addr, short val)
-        {
-            WriteBytes(addr, BitConverter.GetBytes(val));
-        }
-
-        public void WriteFloat(IntPtr addr, float val)
-        {
-            WriteBytes(addr, BitConverter.GetBytes(val));
-        }
-
-        public void WriteDouble(IntPtr addr, double val)
-        {
-            WriteBytes(addr, BitConverter.GetBytes(val));
-        }
-
-        public void WriteByte(IntPtr addr, int value)
-        {
-            Kernel32.WriteProcessMemory(ProcessHandle, addr, [(byte)value], 1, 0);
-        }
-
         public void WriteBytes(IntPtr addr, byte[] val)
         {
             Kernel32.WriteProcessMemory(ProcessHandle, addr, val, val.Length, 0);
+        }
+
+        public void WriteWString(nint addr, string value, int maxChars = 32)
+        {
+            var charsToWrite = Math.Min(value.Length, maxChars - 1);
+            var bytes = new byte[maxChars * 2];
+
+            Encoding.Unicode.GetBytes(value, 0, charsToWrite, bytes, 0);
+
+            WriteBytes(addr, bytes);
         }
 
         public void SetBitValue(IntPtr addr, int flagMask, bool setValue)
@@ -293,49 +220,18 @@ namespace SilkySouls2.Services
             Write(addr, modifiedByte);
         }
 
-        public void WriteString(IntPtr addr, string value, int maxLength = 32)
+
+
+        public nint FollowPointers(nint baseAddress, int[] offsets, bool readFinalPtr)
         {
-            var bytes = new byte[maxLength];
-            var stringBytes = Encoding.Unicode.GetBytes(value);
-            Array.Copy(stringBytes, bytes, Math.Min(stringBytes.Length, maxLength));
-            WriteBytes(addr, bytes);
-        }
+            var ptr = ReadPointer(baseAddress);
 
-        public IntPtr FollowPointers(IntPtr baseAddress, int[] offsets, bool readFinalPtr)
-        {
-            if (PatchManager.Current.Edition == GameEdition.Scholar)
-            {
-                ulong ptr = ReadUInt64(baseAddress);
+            for (int i = 0; i < offsets.Length - 1; i++)
+                ptr = ReadPointer(ptr + offsets[i]);
 
-                for (int i = 0; i < offsets.Length - 1; i++)
-                {
-                    ptr = ReadUInt64((IntPtr)ptr + offsets[i]);
-                }
+            var finalAddress = ptr + offsets[offsets.Length - 1];
 
-                IntPtr finalAddress = (IntPtr)ptr + offsets[offsets.Length - 1];
-
-                if (readFinalPtr)
-                    return (IntPtr)ReadUInt64(finalAddress);
-
-
-                return finalAddress;
-            }
-            else
-            {
-                uint ptr = ReadUInt32(baseAddress);
-
-                for (int i = 0; i < offsets.Length - 1; i++)
-                {
-                    ptr = ReadUInt32((IntPtr)ptr + offsets[i]);
-                }
-
-                IntPtr finalAddress = (IntPtr)ptr + offsets[offsets.Length - 1];
-
-                if (readFinalPtr)
-                    return (IntPtr)ReadUInt32(finalAddress);
-
-                return finalAddress;
-            }
+            return readFinalPtr ? ReadPointer(finalAddress) : finalAddress;
         }
 
         public void SetBitValue(IntPtr addr, byte flagMask, bool setValue)
@@ -374,34 +270,21 @@ namespace SilkySouls2.Services
             Write(wordAddr, (int)newValue);
         }
 
-        public bool IsGameLoaded()
-        {
-            if (PatchManager.Current.Edition == GameEdition.Scholar)
-            {
-                return Read<nint>(Read<nint>(Offsets.GameManagerImp.Base) + Offsets.GameManagerImp.PlayerCtrl) !=
-                       IntPtr.Zero;
-            }
-
-            return (nint)Read<int>(Read<int>(Offsets.GameManagerImp.Base) +
-                                   Offsets.GameManagerImp.PlayerCtrl) != IntPtr.Zero;
-        }
-
         public void AllocCodeCave()
         {
             if (PatchManager.Current.Edition == GameEdition.Scholar)
             {
                 IntPtr searchRangeStart = BaseAddress - 0x40000000;
                 IntPtr searchRangeEnd = BaseAddress - 0x30000;
-                uint codeCaveSize = 0x4000;
-                IntPtr allocatedMemory;
+                uint codeCaveSize = 0x5000;
 
                 for (IntPtr addr = searchRangeEnd; addr.ToInt64() > searchRangeStart.ToInt64(); addr -= 0x10000)
                 {
-                    allocatedMemory = Kernel32.VirtualAllocEx(ProcessHandle, addr, codeCaveSize);
+                    var allocatedMemory = Kernel32.VirtualAllocEx(ProcessHandle, addr, codeCaveSize);
 
                     if (allocatedMemory != IntPtr.Zero)
                     {
-                        CodeCaveOffsets.Base = allocatedMemory;
+                        CustomCodeOffsets.Base = allocatedMemory;
                         break;
                     }
                 }
@@ -411,15 +294,14 @@ namespace SilkySouls2.Services
                 IntPtr moduleEnd = new IntPtr(BaseAddress + GetFileSize());
                 IntPtr searchRangeStart = moduleEnd + 0x10000;
                 IntPtr searchRangeEnd = BaseAddress + 0x7F000000;
-                uint codeCaveSize = 0x3000;
-                IntPtr allocatedMemory;
+                uint codeCaveSize = 0x4000;
 
                 for (IntPtr addr = searchRangeStart; addr.ToInt64() < searchRangeEnd.ToInt64(); addr += 0x10000)
                 {
-                    allocatedMemory = Kernel32.VirtualAllocEx(ProcessHandle, addr, codeCaveSize);
+                    var allocatedMemory = Kernel32.VirtualAllocEx(ProcessHandle, addr, codeCaveSize);
                     if (allocatedMemory != IntPtr.Zero)
                     {
-                        CodeCaveOffsets.Base = allocatedMemory;
+                        CustomCodeOffsets.Base = allocatedMemory;
                         break;
                     }
                 }
@@ -461,7 +343,7 @@ namespace SilkySouls2.Services
                 IntPtr loadLibraryAddr;
                 if (PatchManager.Current.Edition == GameEdition.Scholar)
                     loadLibraryAddr = GetProcAddress("kernel32.dll", "LoadLibraryW");
-                else loadLibraryAddr = (IntPtr)ReadInt32(Offsets.LoadLibraryW);
+                else loadLibraryAddr = (IntPtr)Read<int>(Offsets.LoadLibraryW);
 
                 if (loadLibraryAddr == IntPtr.Zero)
                 {
@@ -529,8 +411,5 @@ namespace SilkySouls2.Services
             IsAttached = false;
         }
 
-        public bool IsLoadingScreen() =>
-            ReadUInt8((IntPtr)ReadInt64(Offsets.GameManagerImp.Base) +
-                      Offsets.GameManagerImp.LoadingFlag) == 1;
     }
 }

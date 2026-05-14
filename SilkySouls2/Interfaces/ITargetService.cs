@@ -1,4 +1,7 @@
-﻿// 
+//
+
+using System.Numerics;
+using SilkySouls2.Models.Target;
 
 namespace SilkySouls2.Interfaces
 {
@@ -8,21 +11,24 @@ namespace SilkySouls2.Interfaces
         int GetTargetHp();
         int GetTargetMaxHp();
         void SetTargetHp(int health);
-        long GetTargetChrCtrl();
-        float[] GetTargetPos();
+        nint GetTargetChrCtrl();
+        Vector3 GetTargetPos();
         int GetLastAct();
         (bool PoisonToxic, bool Bleed) GetImmunities();
-        float GetTargetResistance(int offset);
         void ToggleCurrentActHook(bool isEnabled);
         void ToggleRepeatAct(bool isRepeatActEnabled);
         void SetTargetSpeed(float value);
         float GetTargetSpeed();
         void ClearLockedTarget();
         void ToggleTargetAi(bool isDisableTargetAiEnabled);
-        bool IsAiDisabled(long targetChrCtrl);
+        bool IsAiDisabled(nint targetChrCtrl);
         void ClearDisableEntities();
         bool IsLightPoiseImmune();
         int GetChrParam(int chrParamOffset);
         float GetChrCommonParam(int chrCommonOffset);
+        TargetState GetTargetState();
+        TargetMaxValues GetMaxValues();
+        void ToggleDistHook(bool isEnabled);
+        float GetDist();
     }
 }

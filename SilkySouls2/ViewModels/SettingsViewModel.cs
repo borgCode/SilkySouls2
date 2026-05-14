@@ -7,7 +7,6 @@ using System.Windows;
 using H.Hooks;
 using SilkySouls2.enums;
 using SilkySouls2.Interfaces;
-using SilkySouls2.Services;
 using SilkySouls2.Utilities;
 
 namespace SilkySouls2.ViewModels
@@ -31,13 +30,14 @@ namespace SilkySouls2.ViewModels
         public ObservableCollection<HotkeyBindingViewModel> UtilityHotkeys { get; }
 
         public SettingsViewModel(ISettingsService settingsService, HotkeyManager hotkeyManager,
-            GameStateService gameStateService)
+            IStateService stateService)
         {
             _settingsService = settingsService;
             _hotkeyManager = hotkeyManager;
 
-            gameStateService.Subscribe(GameState.Loaded, OnGameLoaded);
-            gameStateService.Subscribe(GameState.AppStart, OnAppStart);
+            stateService.Subscribe(State.Loaded, OnGameLoaded);
+            stateService.Subscribe(State.AppStart, OnAppStart);
+            stateService.Subscribe(State.Detached, ResetAttached);
 
             RegisterHotkeys();
 

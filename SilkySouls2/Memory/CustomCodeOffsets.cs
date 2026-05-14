@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace SilkySouls2.Memory
+﻿namespace SilkySouls2.Memory
 {
-    public static class CodeCaveOffsets
+    public static class CustomCodeOffsets
     {
-        public static IntPtr Base;
+        public static nint Base;
 
         public enum Forlorn
         {
@@ -139,5 +137,16 @@ namespace SilkySouls2.Memory
 
         public const int NewGameStartedFlag = 0x2700;
         public const int NewGameDetect = 0x2710;
+
+        public const int NpcTalkParam = 0x2A00;
+        public const int AvailableMenus = 0x2A40;
+        public const int NpcPos = 0x2A70;
+        public const int OpenShopCode = 0x2A90;
+
+        public const int SetReminderCode = 0x2D00;
+        public const int ReminderText = 0x2D50;
+
+        public const int TargetDist = 0x2E00;
+        public const int GetDistCode = 0x2E10;
     }
 }

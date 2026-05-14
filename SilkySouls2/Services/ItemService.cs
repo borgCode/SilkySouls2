@@ -7,42 +7,49 @@ using static SilkySouls2.Memory.Offsets;
 
 namespace SilkySouls2.Services
 {
-    public class ItemService(IMemoryService memoryService)
+    public class ItemService : IItemService
     {
+        private readonly IMemoryService _memoryService;
         private bool _codeIsWritten;
+
+        public ItemService(IMemoryService memoryService, IStateService stateService)
+        {
+            _memoryService = memoryService;
+            stateService.Subscribe(State.Detached, Reset);
+        }
 
         public void SpawnItem(Item selectedItem, int selectedUpgrade, int selectedQuantity, int selectedInfusion,
             float durability = 0.0f)
         {
-            var shouldExitFlag = CodeCaveOffsets.Base + (int)CodeCaveOffsets.ItemSpawn.ShouldExitFlag;
-            var shouldProcessFlag = CodeCaveOffsets.Base + (int)CodeCaveOffsets.ItemSpawn.ShouldProcessFlag;
-            var adjustQuantityFlag = CodeCaveOffsets.Base + (int)CodeCaveOffsets.ItemSpawn.AdjustQuantityFlag;
-            var maxQuantity = CodeCaveOffsets.Base + (int)CodeCaveOffsets.ItemSpawn.MaxQuantity;
-            var itemCount = CodeCaveOffsets.Base + (int)CodeCaveOffsets.ItemSpawn.ItemCount;
-            var currentQuantity = CodeCaveOffsets.Base + (int)CodeCaveOffsets.ItemSpawn.CurrentQuantity;
-            var stackCount = CodeCaveOffsets.Base + (int)CodeCaveOffsets.ItemSpawn.StackCount;
-            var itemStruct = CodeCaveOffsets.Base + (int)CodeCaveOffsets.ItemSpawn.ItemStruct;
-            var stackSpace = CodeCaveOffsets.Base + (int)CodeCaveOffsets.ItemSpawn.StackSpace;
-            var code = CodeCaveOffsets.Base + (int)CodeCaveOffsets.ItemSpawn.Code;
+            var shouldExitFlag = CustomCodeOffsets.Base + (int)CustomCodeOffsets.ItemSpawn.ShouldExitFlag;
+            var shouldProcessFlag = CustomCodeOffsets.Base + (int)CustomCodeOffsets.ItemSpawn.ShouldProcessFlag;
+            var adjustQuantityFlag = CustomCodeOffsets.Base + (int)CustomCodeOffsets.ItemSpawn.AdjustQuantityFlag;
+            var maxQuantity = CustomCodeOffsets.Base + (int)CustomCodeOffsets.ItemSpawn.MaxQuantity;
+            var itemCount = CustomCodeOffsets.Base + (int)CustomCodeOffsets.ItemSpawn.ItemCount;
+            var currentQuantity = CustomCodeOffsets.Base + (int)CustomCodeOffsets.ItemSpawn.CurrentQuantity;
+            var stackCount = CustomCodeOffsets.Base + (int)CustomCodeOffsets.ItemSpawn.StackCount;
+            var itemStruct = CustomCodeOffsets.Base + (int)CustomCodeOffsets.ItemSpawn.ItemStruct;
+            var stackSpace = CustomCodeOffsets.Base + (int)CustomCodeOffsets.ItemSpawn.StackSpace;
+            var code = CustomCodeOffsets.Base + (int)CustomCodeOffsets.ItemSpawn.Code;
 
             var getCurrentQuantity = Functions.CurrentItemQuantityCheck;
             var itemGive = Functions.ItemGive;
             var buildItemDialog = Functions.BuildItemDialog;
             var showItemPopup = Functions.ShowItemDialog;
-            var sleepAddr = memoryService.GetProcAddress("kernel32.dll", "Sleep");
+            var sleepAddr = _memoryService.GetProcAddress("kernel32.dll", "Sleep");
 
-            memoryService.Write(currentQuantity, 0);
-            memoryService.Write(stackCount, 0);
+            _memoryService.Write(currentQuantity, 0);
+            _memoryService.Write(stackCount, 0);
 
-            memoryService.Write(maxQuantity, selectedItem.StackSize);
-            memoryService.Write(itemStruct + 0x4, selectedItem.Id);
-            memoryService.Write(itemStruct + 0x8, durability);
-            memoryService.Write(itemStruct + 0xC, (short)selectedQuantity);
-            memoryService.Write(itemStruct + 0xE, (byte)selectedUpgrade);
-            memoryService.Write(itemStruct + 0xF, (byte)selectedInfusion);
-            memoryService.Write(itemCount, 1);
-            memoryService.Write(adjustQuantityFlag, selectedItem.StackSize > 1);
-            memoryService.Write(shouldProcessFlag, (byte)1);
+            _memoryService.Write(maxQuantity, selectedItem.StackSize);
+            _memoryService.Write(itemStruct + 0x4, selectedItem.Id);
+            _memoryService.Write(itemStruct + 0x8, durability);
+            _memoryService.Write(itemStruct + 0xC, (short)selectedQuantity);
+            _memoryService.Write(itemStruct + 0xE, (byte)selectedUpgrade);
+            _memoryService.Write(itemStruct + 0xF, (byte)selectedInfusion);
+            _memoryService.Write(itemCount, 1);
+            _memoryService.Write(adjustQuantityFlag, selectedItem.StackSize > 1);
+            _memoryService.Write(shouldProcessFlag, (byte)1);
 
             if (!_codeIsWritten)
             {
@@ -52,74 +59,74 @@ namespace SilkySouls2.Services
                     bytes = AsmLoader.GetAsmBytes(AsmScript.ItemSpawn64);
 
                     AsmHelper.WriteAbsoluteAddresses64(bytes, [
-                        (GameManagerImp.Base.ToInt64(), 0xD + 2),
+                        (GameManagerImp.Base, 0xD + 2),
                         (getCurrentQuantity, 0x55 + 2),
                         (itemGive, 0xAD + 2),
                         (buildItemDialog, 0xD5 + 2),
                         (showItemPopup, 0xF0 + 2),
-                        (sleepAddr.ToInt64(), 0x104 + 2)
+                        (sleepAddr, 0x104 + 2)
                     ]);
 
                     AsmHelper.WriteRelativeOffsets(bytes, [
-                        (code.ToInt64(), shouldProcessFlag.ToInt64(), 7, 0x0 + 2),
-                        (code.ToInt64() + 0x2C, shouldProcessFlag.ToInt64(), 7, 0x2C + 2),
-                        (code.ToInt64() + 0x33, adjustQuantityFlag.ToInt64(), 7, 0x33 + 2),
-                        (code.ToInt64() + 0x40, currentQuantity.ToInt64(), 7, 0x40 + 3),
-                        (code.ToInt64() + 0x47, stackCount.ToInt64(), 7, 0x47 + 3),
-                        (code.ToInt64() + 0x4E, itemStruct.ToInt64() + 0x4, 7, 0x4E + 3),
-                        (code.ToInt64() + 0x6A, itemStruct.ToInt64() + 0xC, 7, 0x6A + 3),
-                        (code.ToInt64() + 0x71, currentQuantity.ToInt64(), 6, 0x71 + 2),
-                        (code.ToInt64() + 0x77, maxQuantity.ToInt64(), 6, 0x77 + 2),
-                        (code.ToInt64() + 0x7F, maxQuantity.ToInt64(), 6, 0x7F + 2),
-                        (code.ToInt64() + 0x85, currentQuantity.ToInt64(), 6, 0x85 + 2),
-                        (code.ToInt64() + 0x8B, itemStruct.ToInt64() + 0xC, 7, 0x8B + 3),
-                        (code.ToInt64() + 0x9C, itemStruct.ToInt64(), 7, 0x9C + 3),
-                        (code.ToInt64() + 0xA3, itemCount.ToInt64(), 7, 0xA3 + 3),
-                        (code.ToInt64() + 0xBA, stackSpace.ToInt64(), 7, 0xBA + 3),
-                        (code.ToInt64() + 0xC1, itemStruct.ToInt64(), 7, 0xC1 + 3),
-                        (code.ToInt64() + 0xC8, itemCount.ToInt64(), 7, 0xC8 + 3),
-                        (code.ToInt64() + 0xE9, stackSpace.ToInt64(), 7, 0xE9 + 3),
-                        (code.ToInt64() + 0x117, shouldExitFlag.ToInt64(), 7, 0x117 + 2)
+                        (code, shouldProcessFlag, 7, 0x0 + 2),
+                        (code + 0x2C, shouldProcessFlag, 7, 0x2C + 2),
+                        (code + 0x33, adjustQuantityFlag, 7, 0x33 + 2),
+                        (code + 0x40, currentQuantity, 7, 0x40 + 3),
+                        (code + 0x47, stackCount, 7, 0x47 + 3),
+                        (code + 0x4E, itemStruct + 0x4, 7, 0x4E + 3),
+                        (code + 0x6A, itemStruct + 0xC, 7, 0x6A + 3),
+                        (code + 0x71, currentQuantity, 6, 0x71 + 2),
+                        (code + 0x77, maxQuantity, 6, 0x77 + 2),
+                        (code + 0x7F, maxQuantity, 6, 0x7F + 2),
+                        (code + 0x85, currentQuantity, 6, 0x85 + 2),
+                        (code + 0x8B, itemStruct + 0xC, 7, 0x8B + 3),
+                        (code + 0x9C, itemStruct, 7, 0x9C + 3),
+                        (code + 0xA3, itemCount, 7, 0xA3 + 3),
+                        (code + 0xBA, stackSpace, 7, 0xBA + 3),
+                        (code + 0xC1, itemStruct, 7, 0xC1 + 3),
+                        (code + 0xC8, itemCount, 7, 0xC8 + 3),
+                        (code + 0xE9, stackSpace, 7, 0xE9 + 3),
+                        (code + 0x117, shouldExitFlag, 7, 0x117 + 2)
                     ]);
                 }
                 else
                 {
                     bytes = AsmLoader.GetAsmBytes(AsmScript.ItemSpawn32);
                     AsmHelper.WriteAbsoluteAddresses32(bytes, [
-                        (shouldProcessFlag.ToInt64(), 2),
-                        (GameManagerImp.Base.ToInt64(), 0xD + 2),
-                        (shouldProcessFlag.ToInt64(), 0x1E + 2),
-                        (adjustQuantityFlag.ToInt64(), 0x25 + 2),
-                        (itemStruct.ToInt64() + 0x4, 0x31 + 2),
-                        (stackCount.ToInt64(), 0x38 + 2),
-                        (currentQuantity.ToInt64(), 0x3F + 2),
-                        (itemStruct.ToInt64() + 0xC, 0x4B + 3),
-                        (currentQuantity.ToInt64(), 0x52 + 2),
-                        (maxQuantity.ToInt64(), 0x58 + 2),
-                        (maxQuantity.ToInt64(), 0x60 + 1),
-                        (currentQuantity.ToInt64(), 0x65 + 2),
-                        (itemStruct.ToInt64() + 0xC, 0x6B + 2),
-                        (itemCount.ToInt64(), 0x75 + 2),
-                        (itemStruct.ToInt64(), 0x7B + 2),
-                        (itemCount.ToInt64(), 0x89 + 2),
-                        (itemStruct.ToInt64(), 0x8F + 2),
-                        (stackSpace.ToInt64(), 0x96 + 2),
-                        (stackSpace.ToInt64(), 0xAB + 2),
+                        (shouldProcessFlag, 2),
+                        (GameManagerImp.Base, 0xD + 2),
+                        (shouldProcessFlag, 0x1E + 2),
+                        (adjustQuantityFlag, 0x25 + 2),
+                        (itemStruct + 0x4, 0x31 + 2),
+                        (stackCount, 0x38 + 2),
+                        (currentQuantity, 0x3F + 2),
+                        (itemStruct + 0xC, 0x4B + 3),
+                        (currentQuantity, 0x52 + 2),
+                        (maxQuantity, 0x58 + 2),
+                        (maxQuantity, 0x60 + 1),
+                        (currentQuantity, 0x65 + 2),
+                        (itemStruct + 0xC, 0x6B + 2),
+                        (itemCount, 0x75 + 2),
+                        (itemStruct, 0x7B + 2),
+                        (itemCount, 0x89 + 2),
+                        (itemStruct, 0x8F + 2),
+                        (stackSpace, 0x96 + 2),
+                        (stackSpace, 0xAB + 2),
                         (Functions.Sleep, 0xB7 + 1),
-                        (shouldExitFlag.ToInt64(), 0xC0 + 2)
+                        (shouldExitFlag, 0xC0 + 2)
                     ]);
                     AsmHelper.WriteRelativeOffsets(bytes, [
-                        (code.ToInt64() + 0x46, getCurrentQuantity, 5, 0x46 + 1),
-                        (code.ToInt64() + 0x82, itemGive, 5, 0x82 + 1),
-                        (code.ToInt64() + 0x9D, buildItemDialog, 5, 0x9D + 1),
-                        (code.ToInt64() + 0xB2, showItemPopup, 5, 0xB2 + 1)
+                        (code + 0x46, getCurrentQuantity, 5, 0x46 + 1),
+                        (code + 0x82, itemGive, 5, 0x82 + 1),
+                        (code + 0x9D, buildItemDialog, 5, 0x9D + 1),
+                        (code + 0xB2, showItemPopup, 5, 0xB2 + 1)
                     ]);
                     
                 }
 
-                memoryService.WriteBytes(code, bytes);
+                _memoryService.WriteBytes(code, bytes);
                 _codeIsWritten = true;
-                memoryService.RunPersistentThread(code);
+                _memoryService.RunPersistentThread(code);
             }
         }
         
@@ -131,7 +138,7 @@ namespace SilkySouls2.Services
 
         public void SignalClose()
         {
-            memoryService.Write(CodeCaveOffsets.Base + (int)CodeCaveOffsets.ItemSpawn.ShouldExitFlag, (byte)1);
+            _memoryService.Write(CustomCodeOffsets.Base + (int)CustomCodeOffsets.ItemSpawn.ShouldExitFlag, (byte)1);
         }
     }
 }

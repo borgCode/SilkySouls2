@@ -91,5 +91,29 @@ namespace SilkySouls2.Memory
                 [0xF7, 0xF6]
             )
         };
+
+        public static PatchBytes NoHit => PatchManager.Current.PatchVersion switch
+        {
+            Scholar1_0_2 or Scholar1_0_3 => new(
+                [0x90, 0x90, 0x90],
+                [0x83, 0x20, 0xFE]
+            ),
+            _ => new(
+                [0x90, 0x90, 0x90],
+                [0x83, 0x22, 0xFE]
+            )
+        };
+        
+        public static PatchBytes MenuTransition => PatchManager.Current.PatchVersion switch
+        {
+            Scholar1_0_2 or Scholar1_0_3 => new(
+                [0x74, 0xEA],
+                [0x75, 0xEA]
+            ),
+            _ => new(
+                [0x0F, 0x84],
+                [0x0F, 0x85]
+            )
+        };
     }
 }

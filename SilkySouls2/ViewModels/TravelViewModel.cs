@@ -24,7 +24,7 @@ namespace SilkySouls2.ViewModels
         private readonly ObservableCollection<WarpLocation> _searchResultsCollection = new();
 
         public TravelViewModel(ITravelService travelService, HotkeyManager hotkeyManager,
-            GameStateService gameStateService)
+            StateService stateService)
         {
             _travelService = travelService;
             _hotkeyManager = hotkeyManager;
@@ -32,8 +32,8 @@ namespace SilkySouls2.ViewModels
             _mainAreas = new ObservableCollection<string>();
             _areaLocations = new ObservableCollection<WarpLocation>();
 
-            gameStateService.Subscribe(GameState.Loaded, OnGameLoaded);
-            gameStateService.Subscribe(GameState.NotLoaded, OnGameNotLoaded);
+            stateService.Subscribe(State.Loaded, OnGameLoaded);
+            stateService.Subscribe(State.NotLoaded, OnGameNotLoaded);
 
             WarpCommand = new DelegateCommand(Warp);
             UnlockBonfiresCommand = new DelegateCommand(UnlockAllBonfires);

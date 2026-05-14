@@ -2476,35 +2476,6 @@ f3 0f 10 80 98 37 00    movss  xmm0,DWORD PTR [rax+0x3798]
 0f 29 44 24 20          movaps XMMWORD PTR [rsp+0x20],xmm0
 e9 00 00 00 00          jmp    33 &lt;_main+0x33&gt;</value>
   </data>
-  <data name="OpenNpcMenu" xml:space="preserve">
-    <value>48 81 ec 08 02 00 00    sub    rsp,0x208
-48 8d 8c 24 80 01 00    lea    rcx,[rsp+0x180]
-00
-48 ba 00 00 00 00 00    movabs rdx,0x0
-00 00 00
-48 b8 00 00 00 00 00    movabs rax,0x0
-00 00 00
-ff d0                   call   rax
-49 bf 00 00 00 00 00    movabs r15,0x0
-00 00 00
-4d 8b 3f                mov    r15,QWORD PTR [r15]
-49 8b 8f d0 00 00 00    mov    rcx,QWORD PTR [r15+0xd0]
-48 8b 01                mov    rax,QWORD PTR [rcx]
-48 8d 94 24 60 01 00    lea    rdx,[rsp+0x160]
-00
-ff 90 48 01 00 00       call   QWORD PTR [rax+0x148]
-49 8b 4f 70             mov    rcx,QWORD PTR [r15+0x70]
-48 8b 49 50             mov    rcx,QWORD PTR [rcx+0x50]
-48 8d 94 24 80 01 00    lea    rdx,[rsp+0x180]
-00
-4c 8d 84 24 60 01 00    lea    r8,[rsp+0x160]
-00
-48 b8 00 00 00 00 00    movabs rax,0x0
-00 00 00
-ff d0                   call   rax
-48 81 c4 08 02 00 00    add    rsp,0x208
-c3                      ret</value>
-  </data>
   <data name="SetObjState64" xml:space="preserve">
     <value>48 83 ec 28             sub    rsp,0x28
 48 b9 00 00 00 00 00    movabs rcx,0x0
@@ -3873,5 +3844,184 @@ c6 05 00 00 00 00 01    mov    BYTE PTR ds:0x0,0x1
 002d &lt;exit&gt;:
 58                      pop    eax
 e9 fc ff ff ff          jmp    2f &lt;exit+0x2&gt;</value>
+  </data>
+  <data name="OpenMenu64" xml:space="preserve">
+    <value>48 83 ec 28             sub    rsp,0x28
+48 b9 00 00 00 00 00    movabs rcx,0x0
+00 00 00 
+48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 15 &lt;_main+0x15&gt;
+4c 8d 05 00 00 00 00    lea    r8,[rip+0x0]        # 1c &lt;_main+0x1c&gt;
+e8 00 00 00 00          call   21 &lt;_main+0x21&gt;
+48 83 c4 28             add    rsp,0x28
+c3                      ret</value>
+  </data>
+  <data name="SetMenuOpenChrState64" xml:space="preserve">
+    <value>48 83 ec 28             sub    rsp,0x28
+48 b9 00 00 00 00 00    movabs rcx,0x0
+00 00 00 
+ba 11 00 00 00          mov    edx,0x11
+41 b8 00 00 00 00       mov    r8d,0x0
+48 b8 00 00 00 00 00    movabs rax,0x0
+00 00 00 
+ff d0                   call   rax
+48 83 c4 28             add    rsp,0x28
+c3                      ret</value>
+  </data>
+  <data name="TrySetReminder64" xml:space="preserve">
+    <value>48 8b 0b                mov    rcx,QWORD PTR [rbx]
+48 8b 11                mov    rdx,QWORD PTR [rcx]
+53                      push   rbx
+48 bb 00 00 00 00 00    movabs rbx,0x0
+00 00 00 
+48 3b 5c 24 30          cmp    rbx,QWORD PTR [rsp+0x30]
+75 07                   jne    1f &lt;normal&gt;
+48 8d 05 00 00 00 00    lea    rax,[rip+0x0]        # 1f &lt;normal&gt;
+
+00000000001f &lt;normal&gt;:
+5b                      pop    rbx
+e9 00 00 00 00          jmp    25 &lt;normal+0x6&gt;</value>
+  </data>
+  <data name="TrySetReminder32" xml:space="preserve">
+    <value>8b 0e                   mov    ecx,DWORD PTR [esi]
+89 c7                   mov    edi,eax
+8b 01                   mov    eax,DWORD PTR [ecx]
+53                      push   ebx
+bb ef be ad de          mov    ebx,0xdeadbeef
+3b 5c 24 10             cmp    ebx,DWORD PTR [esp+0x10]
+75 05                   jne    17 &lt;normal&gt;
+bf ef be ad de          mov    edi,0xdeadbeef
+
+0017 &lt;normal&gt;:
+5b                      pop    ebx
+e9 fc ff ff ff          jmp    19 &lt;normal+0x2&gt;</value>
+  </data>
+  <data name="OpenMenu32" xml:space="preserve">
+    <value>68 ef be ad de          push   0xdeadbeef
+68 ef be ad de          push   0xdeadbeef
+b9 ef be ad de          mov    ecx,0xdeadbeef
+e8 ec 9e 61 00          call   619f00 &lt;_main+0x619f00&gt;
+c3                      ret</value>
+  </data>
+  <data name="SetMenuOpenChrState32" xml:space="preserve">
+    <value>6a 00                   push   0x0
+6a 11                   push   0x11
+b9 ef be ad de          mov    ecx,0xdeadbeef
+b8 ef be ad de          mov    eax,0xdeadbeef
+ff d0                   call   eax
+c3                      ret</value>
+  </data>
+  <data name="BreakWeapon64" xml:space="preserve">
+    <value>48 83 ec 28             sub    rsp,0x28
+48 b9 00 00 00 00 00    movabs rcx,0x0
+00 00 00 
+ba ef be ad de          mov    edx,0xdeadbeef
+b8 c1 bd f0 ff          mov    eax,0xfff0bdc1
+f3 0f 2a d0             cvtsi2ss xmm2,eax
+41 b1 01                mov    r9b,0x1
+48 b8 00 00 00 00 00    movabs rax,0x0
+00 00 00 
+ff d0                   call   rax
+48 83 c4 28             add    rsp,0x28
+c3                      ret</value>
+  </data>
+  <data name="GetDist64" xml:space="preserve">
+    <value>48 8b 4b 38             mov    rcx,QWORD PTR [rbx+0x38]
+48 3b 0d 00 00 00 00    cmp    rcx,QWORD PTR [rip+0x0]        # b &lt;_main+0xb&gt;
+0f 85 a2 00 00 00       jne    b3 &lt;early_exit&gt;
+48 8b 05 00 00 00 00    mov    rax,QWORD PTR [rip+0x0]        # 18 &lt;_main+0x18&gt;
+48 8b 80 d0 00 00 00    mov    rax,QWORD PTR [rax+0xd0]
+48 85 c0                test   rax,rax
+0f 84 8b 00 00 00       je     b3 &lt;early_exit&gt;
+48 83 ec 60             sub    rsp,0x60
+f3 0f 7f 74 24 20       movdqu XMMWORD PTR [rsp+0x20],xmm6
+48 89 5c 24 30          mov    QWORD PTR [rsp+0x30],rbx
+48 89 6c 24 38          mov    QWORD PTR [rsp+0x38],rbp
+4c 89 74 24 40          mov    QWORD PTR [rsp+0x40],r14
+48 89 cb                mov    rbx,rcx
+8b 80 70 02 00 00       mov    eax,DWORD PTR [rax+0x270]
+89 44 24 48             mov    DWORD PTR [rsp+0x48],eax
+c7 44 24 4c 00 00 00    mov    DWORD PTR [rsp+0x4c],0x0
+00 
+48 c7 44 24 50 00 00    mov    QWORD PTR [rsp+0x50],0x0
+00 00 
+48 c7 44 24 58 00 00    mov    QWORD PTR [rsp+0x58],0x0
+00 00 
+48 8d 4c 24 48          lea    rcx,[rsp+0x48]
+e8 00 00 00 00          call   72 &lt;_main+0x72&gt;
+48 85 c0                test   rax,rax
+74 23                   je     9a &lt;exit&gt;
+48 89 c5                mov    rbp,rax
+48 89 d9                mov    rcx,rbx
+48 8b 01                mov    rax,QWORD PTR [rcx]
+ff 90 48 01 00 00       call   QWORD PTR [rax+0x148]
+48 89 c2                mov    rdx,rax
+48 89 e9                mov    rcx,rbp
+48 8b 01                mov    rax,QWORD PTR [rcx]
+ff 50 78                call   QWORD PTR [rax+0x78]
+f3 0f 11 05 00 00 00    movss  DWORD PTR [rip+0x0],xmm0        # 9a &lt;exit&gt;
+00 
+
+00000000009a &lt;exit&gt;:
+f3 0f 6f 74 24 20       movdqu xmm6,XMMWORD PTR [rsp+0x20]
+4c 8b 74 24 40          mov    r14,QWORD PTR [rsp+0x40]
+48 8b 6c 24 38          mov    rbp,QWORD PTR [rsp+0x38]
+48 8b 5c 24 30          mov    rbx,QWORD PTR [rsp+0x30]
+48 83 c4 60             add    rsp,0x60
+
+0000000000b3 &lt;early_exit&gt;:
+48 8b 4b 60             mov    rcx,QWORD PTR [rbx+0x60]
+0f 28 ce                movaps xmm1,xmm6
+e9 00 00 00 00          jmp    bf &lt;early_exit+0xc&gt;</value>
+  </data>
+  <data name="BreakWeapon32" xml:space="preserve">
+    <value>6a 00                   push   0x0
+68 f0 23 74 c9          push   0xc97423f0
+68 ef be ad de          push   0xdeadbeef
+b9 ef be ad de          mov    ecx,0xdeadbeef
+b8 ef be ad de          mov    eax,0xdeadbeef
+ff d0                   call   eax
+c3                      ret</value>
+  </data>
+  <data name="GetDist32" xml:space="preserve">
+    <value>8b 4e 1c                mov    ecx,DWORD PTR [esi+0x1c]
+3b 0d 00 00 00 00       cmp    ecx,DWORD PTR ds:0x0
+75 4a                   jne    55 &lt;early_exit&gt;
+a1 00 00 00 00          mov    eax,ds:0x0
+85 c0                   test   eax,eax
+74 41                   je     55 &lt;early_exit&gt;
+8b 40 74                mov    eax,DWORD PTR [eax+0x74]
+85 c0                   test   eax,eax
+74 3a                   je     55 &lt;early_exit&gt;
+53                      push   ebx
+56                      push   esi
+57                      push   edi
+83 ec 40                sub    esp,0x40
+89 cb                   mov    ebx,ecx
+8b 80 dc 01 00 00       mov    eax,DWORD PTR [eax+0x1dc]
+85 c0                   test   eax,eax
+74 22                   je     4f &lt;exit&gt;
+89 c7                   mov    edi,eax
+8d 44 24 1f             lea    eax,[esp+0x1f]
+83 e0 f0                and    eax,0xfffffff0
+50                      push   eax
+89 d9                   mov    ecx,ebx
+8b 01                   mov    eax,DWORD PTR [ecx]
+ff 90 a4 00 00 00       call   DWORD PTR [eax+0xa4]
+50                      push   eax
+89 f9                   mov    ecx,edi
+8b 01                   mov    eax,DWORD PTR [ecx]
+ff 50 3c                call   DWORD PTR [eax+0x3c]
+d9 1d 00 00 00 00       fstp   DWORD PTR ds:0x0
+
+004f &lt;exit&gt;:
+83 c4 40                add    esp,0x40
+5f                      pop    edi
+5e                      pop    esi
+5b                      pop    ebx
+
+0055 &lt;early_exit&gt;:
+8b 4e 3c                mov    ecx,DWORD PTR [esi+0x3c]
+8b 11                   mov    edx,DWORD PTR [ecx]
+e9 fc ff ff ff          jmp    5b &lt;early_exit+0x6&gt;</value>
   </data>
 </root>

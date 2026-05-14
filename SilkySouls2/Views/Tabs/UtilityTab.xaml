@@ -5,8 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:converters="clr-namespace:SilkySouls2.Converters"
+             xmlns:gameIds="clr-namespace:SilkySouls2.GameIds"
+             xmlns:enums="clr-namespace:SilkySouls2.enums"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="500">
+             d:DesignHeight="700" d:DesignWidth="600">
 
     <UserControl.Resources>
         <converters:BooleanAndConverter x:Key="BooleanAndConverter" />
@@ -307,12 +309,151 @@
                 </Grid>
             </StackPanel>
         </Border>
-        <Button Grid.Row="3" Content="Attunement"
-                IsEnabled="{Binding AreOptionsEnabled}"
-                Padding="5,3"
-                Command="{Binding OpenAttunementCommand}"
-                Width="150"
-                HorizontalAlignment="Left"
-                Margin="0,15,20,0" />
+        <TabControl Grid.Row="3" Margin="0,0,0,0" Padding="5">
+            <TabItem Header="Menus">
+                <WrapPanel HorizontalAlignment="Center" Margin="5">
+                    <Button Content="Attunement" IsEnabled="{Binding AreOptionsEnabled}"
+                            Command="{Binding OpenAttunementCommand}"
+                            Width="90" Height="24" Margin="3" />
+                    <Button Content="Repair" IsEnabled="{Binding AreOptionsEnabled}"
+                            Command="{Binding NoArgsMenuCommand}"
+                            CommandParameter="{x:Static enums:NpcMenuType.Repair}"
+                            Width="90" Height="24" Margin="3" />
+                    <Button Content="Covenants" IsEnabled="{Binding AreOptionsEnabled}"
+                            Command="{Binding NoArgsMenuCommand}"
+                            CommandParameter="{x:Static enums:NpcMenuType.VowList}"
+                            Width="90" Height="24" Margin="3" />
+                    <Button Content="Incense" IsEnabled="{Binding AreOptionsEnabled}"
+                            Command="{Binding NoArgsMenuCommand}"
+                            CommandParameter="{x:Static enums:NpcMenuType.SpellDecrementState}"
+                            Width="90" Height="24" Margin="3" />
+                    <Button Content="Level Up" IsEnabled="{Binding AreOptionsEnabled}"
+                            Command="{Binding NoArgsMenuCommand}"
+                            CommandParameter="{x:Static enums:NpcMenuType.HeraldLevelUp}"
+                            Width="90" Height="24" Margin="3" />
+                    <Button Content="Reallocate Stats" IsEnabled="{Binding AreOptionsEnabled}"
+                            Command="{Binding NoArgsMenuCommand}"
+                            CommandParameter="{x:Static enums:NpcMenuType.ReallocateStats}"
+                            Width="90" Height="24" Margin="3" />
+                </WrapPanel>
+            </TabItem>
+
+            <TabItem Header="Shops">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="200">
+                    <WrapPanel HorizontalAlignment="Center" Margin="5">
+                        <Button Content="Melentia" IsEnabled="{Binding AreOptionsEnabled}"
+                                Command="{Binding OpenShopCommand}"
+                                CommandParameter="{x:Static gameIds:ShopLineup.Melentia}"
+                                Width="90" Height="24" Margin="3" />
+                        <Button Content="Gilligan" IsEnabled="{Binding AreOptionsEnabled}"
+                                Command="{Binding OpenShopCommand}"
+                                CommandParameter="{x:Static gameIds:ShopLineup.Gilligan}"
+                                Width="90" Height="24" Margin="3" />
+                        <Button Content="Wellager" IsEnabled="{Binding AreOptionsEnabled}"
+                                Command="{Binding OpenShopCommand}"
+                                CommandParameter="{x:Static gameIds:ShopLineup.Wellager}"
+                                Width="90" Height="24" Margin="3" />
+                        <Button Content="Grandahl" IsEnabled="{Binding AreOptionsEnabled}"
+                                Command="{Binding OpenShopCommand}"
+                                CommandParameter="{x:Static gameIds:ShopLineup.Grandahl}"
+                                Width="90" Height="24" Margin="3" />
+                        <Button Content="Gavlan" IsEnabled="{Binding AreOptionsEnabled}"
+                                Command="{Binding OpenShopCommand}"
+                                CommandParameter="{x:Static gameIds:ShopLineup.Gavlan}"
+                                Width="90" Height="24" Margin="3" />
+                        <Button Content="Rat King" IsEnabled="{Binding AreOptionsEnabled}"
+                                Command="{Binding OpenShopCommand}"
+                                CommandParameter="{x:Static gameIds:ShopLineup.RatKing}"
+                                Width="90" Height="24" Margin="3" />
+                        <Button Content="Maughlin" IsEnabled="{Binding AreOptionsEnabled}"
+                                Command="{Binding OpenShopCommand}"
+                                CommandParameter="{x:Static gameIds:ShopLineup.Maughlin}"
+                                Width="90" Height="24" Margin="3" />
+                        <Button Content="Chloanne" IsEnabled="{Binding AreOptionsEnabled}"
+                                Command="{Binding OpenShopCommand}"
+                                CommandParameter="{x:Static gameIds:ShopLineup.Chloanne}"
+                                Width="90" Height="24" Margin="3" />
+                        <Button Content="Rosabeth" IsEnabled="{Binding AreOptionsEnabled}"
+                                Command="{Binding OpenShopCommand}"
+                                CommandParameter="{x:Static gameIds:ShopLineup.Rosabeth}"
+                                Width="90" Height="24" Margin="3" />
+                        <Button Content="Lenigrast" IsEnabled="{Binding AreOptionsEnabled}"
+                                Command="{Binding OpenShopCommand}"
+                                CommandParameter="{x:Static gameIds:ShopLineup.Lenigrast}"
+                                Width="90" Height="24" Margin="3" />
+                        <Button Content="McDuff" IsEnabled="{Binding AreOptionsEnabled}"
+                                Command="{Binding OpenShopCommand}"
+                                CommandParameter="{x:Static gameIds:ShopLineup.McDuff}"
+                                Width="90" Height="24" Margin="3" />
+                        <Button Content="Carhillion" IsEnabled="{Binding AreOptionsEnabled}"
+                                Command="{Binding OpenShopCommand}"
+                                CommandParameter="{x:Static gameIds:ShopLineup.Carhillion}"
+                                Width="90" Height="24" Margin="3" />
+                        <Button Content="Straid" IsEnabled="{Binding AreOptionsEnabled}"
+                                Command="{Binding OpenShopCommand}"
+                                CommandParameter="{x:Static gameIds:ShopLineup.Straid}"
+                                Width="90" Height="24" Margin="3" />
+                        <Button Content="Licia" IsEnabled="{Binding AreOptionsEnabled}"
+                                Command="{Binding OpenShopCommand}"
+                                CommandParameter="{x:Static gameIds:ShopLineup.Licia}"
+                                Width="90" Height="24" Margin="3" />
+                        <Button Content="Felkin" IsEnabled="{Binding AreOptionsEnabled}"
+                                Command="{Binding OpenShopCommand}"
+                                CommandParameter="{x:Static gameIds:ShopLineup.Felkin}"
+                                Width="90" Height="24" Margin="3" />
+                        <Button Content="Navlaan" IsEnabled="{Binding AreOptionsEnabled}"
+                                Command="{Binding OpenShopCommand}"
+                                CommandParameter="{x:Static gameIds:ShopLineup.Navlaan}"
+                                Width="90" Height="24" Margin="3" />
+                        <Button Content="Magerold" IsEnabled="{Binding AreOptionsEnabled}"
+                                Command="{Binding OpenShopCommand}"
+                                CommandParameter="{x:Static gameIds:ShopLineup.Magerold}"
+                                Width="90" Height="24" Margin="3" />
+                        <Button Content="Ornifex" IsEnabled="{Binding AreOptionsEnabled}"
+                                Command="{Binding OpenShopCommand}"
+                                CommandParameter="{x:Static gameIds:ShopLineup.Ornifex}"
+                                Width="90" Height="24" Margin="3" />
+                        <Button Content="Shalquoir" IsEnabled="{Binding AreOptionsEnabled}"
+                                Command="{Binding OpenShopCommand}"
+                                CommandParameter="{x:Static gameIds:ShopLineup.Shalquoir}"
+                                Width="90" Height="24" Margin="3" />
+                        <Button Content="Titchy Gren" IsEnabled="{Binding AreOptionsEnabled}"
+                                Command="{Binding OpenShopCommand}"
+                                CommandParameter="{x:Static gameIds:ShopLineup.TitchyGren}"
+                                Width="90" Height="24" Margin="3" />
+                        <Button Content="Cromwell" IsEnabled="{Binding AreOptionsEnabled}"
+                                Command="{Binding OpenShopCommand}"
+                                CommandParameter="{x:Static gameIds:ShopLineup.Cromwell}"
+                                Width="90" Height="24" Margin="3" />
+                        <Button Content="Targray" IsEnabled="{Binding AreOptionsEnabled}"
+                                Command="{Binding OpenShopCommand}"
+                                CommandParameter="{x:Static gameIds:ShopLineup.Targray}"
+                                Width="90" Height="24" Margin="3" />
+                        <Button Content="Vengarl" IsEnabled="{Binding AreOptionsEnabled}"
+                                Command="{Binding OpenShopCommand}"
+                                CommandParameter="{x:Static gameIds:ShopLineup.Vengarl}"
+                                Width="90" Height="24" Margin="3" />
+                        <Button Content="Agdayne" IsEnabled="{Binding AreOptionsEnabled}"
+                                Command="{Binding OpenShopCommand}"
+                                CommandParameter="{x:Static gameIds:ShopLineup.Agdayne}"
+                                Width="90" Height="24" Margin="3" />
+                    </WrapPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="Trade">
+                <WrapPanel HorizontalAlignment="Center" Margin="5">
+                    <Button Content="Straid" IsEnabled="{Binding AreOptionsEnabled}"
+                            Command="{Binding OpenTradeCommand}"
+                            CommandParameter="{x:Static gameIds:TradeLineup.Straid}"
+                            Width="90" Height="24" Margin="3" />
+                    <Button Content="Ornifex" IsEnabled="{Binding AreOptionsEnabled}"
+                            Command="{Binding OpenTradeCommand}"
+                            CommandParameter="{x:Static gameIds:TradeLineup.Ornifex}"
+                            Width="90" Height="24" Margin="3" />
+                </WrapPanel>
+            </TabItem>
+        </TabControl>
+
     </Grid>
 </UserControl>

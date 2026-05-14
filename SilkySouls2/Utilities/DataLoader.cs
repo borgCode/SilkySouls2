@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using SilkySouls2.Models;
+using SilkySouls2.Properties;
 
 namespace SilkySouls2.Utilities
 {
@@ -11,7 +12,7 @@ namespace SilkySouls2.Utilities
         public static Dictionary<string, List<WarpLocation>> GetLocations()
         {
             Dictionary<string, List<WarpLocation>> warpDict = new Dictionary<string, List<WarpLocation>>();
-            string csvData = Properties.Resources.WarpLocations;
+            string csvData = Resources.WarpLocations;
 
             if (string.IsNullOrWhiteSpace(csvData))
                 return warpDict;
@@ -77,7 +78,7 @@ namespace SilkySouls2.Utilities
         public static List<NpcInfo> GetNpcs()
         {
             List<NpcInfo> npcList = new List<NpcInfo>();
-            string csvData = Properties.Resources.NPC;
+            string csvData = Resources.NPC;
 
             if (string.IsNullOrWhiteSpace(csvData))
                 return npcList;
@@ -135,7 +136,7 @@ namespace SilkySouls2.Utilities
         {
             List<Item> items = new List<Item>();
 
-            string csvData = Properties.Resources.ResourceManager.GetString(listName);
+            string csvData = Resources.ResourceManager.GetString(listName);
 
             if (string.IsNullOrEmpty(csvData)) return new List<Item>();
 
@@ -171,7 +172,7 @@ namespace SilkySouls2.Utilities
         {
             Dictionary<int, int[]> infusionsMap = new Dictionary<int, int[]>();
 
-            string csvData = Properties.Resources.ResourceManager.GetString("Infusions");
+            string csvData = Resources.ResourceManager.GetString("Infusions");
 
             if (string.IsNullOrEmpty(csvData)) return new Dictionary<int, int[]>();
 
@@ -305,7 +306,7 @@ namespace SilkySouls2.Utilities
         {
             Dictionary<int, AttunementSpell> spells = new Dictionary<int, AttunementSpell>();
 
-            string csvData = Properties.Resources.ResourceManager.GetString("AttunementSpells");
+            string csvData = Resources.ResourceManager.GetString("AttunementSpells");
 
             if (string.IsNullOrEmpty(csvData)) return spells;
 

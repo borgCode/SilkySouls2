@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using SilkySouls2.enums;
@@ -22,16 +22,16 @@ namespace SilkySouls2.Services
                 GameManagerImp.EventManagerOffsets.WarpEventEntity
             }, true);
 
-            IntPtr codeLoc;
+            nint codeLoc;
 
             if (location.EventObjId == 0)
             {
-                codeLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.BonfireWarp.WarpCode;
+                codeLoc = CustomCodeOffsets.Base + (int)CustomCodeOffsets.BonfireWarp.WarpCode;
                 WriteBonfireWarpCode(codeLoc, actualWarp, eventWarpEntity, location);
             }
             else
             {
-                codeLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.EventWarp.Code;
+                codeLoc = CustomCodeOffsets.Base + (int)CustomCodeOffsets.EventWarp.Code;
                 WriteEventWarpCode(codeLoc, actualWarp, eventWarpEntity, location);
             }
 
@@ -40,11 +40,11 @@ namespace SilkySouls2.Services
             if (location.HasCoordinates) PerformCoordWrite(location);
         }
 
-        private void WriteBonfireWarpCode(IntPtr codeLoc, long actualWarp, IntPtr eventWarpEntity,
+        private void WriteBonfireWarpCode(nint codeLoc, nint actualWarp, nint eventWarpEntity,
             WarpLocation location)
         {
-            var bonfireIdLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.BonfireWarp.BonfireId;
-            memoryService.WriteInt32(bonfireIdLoc, location.BonfireId);
+            var bonfireIdLoc = CustomCodeOffsets.Base + (int)CustomCodeOffsets.BonfireWarp.BonfireId;
+            memoryService.Write(bonfireIdLoc, location.BonfireId);
 
             if (PatchManager.IsScholar())
             {
@@ -56,50 +56,48 @@ namespace SilkySouls2.Services
             }
         }
 
-        private void WriteScholarBonfireWarpCode(long actualWarp, IntPtr eventWarpEntity, IntPtr codeLoc)
+        private void WriteScholarBonfireWarpCode(nint actualWarp, nint eventWarpEntity, nint codeLoc)
         {
             var warpPrep = Functions.WarpPrep;
-            var emptySpace = CodeCaveOffsets.Base + (int)CodeCaveOffsets.BonfireWarp.Output;
-            var bonfireIdLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.BonfireWarp.BonfireId;
+            var emptySpace = CustomCodeOffsets.Base + (int)CustomCodeOffsets.BonfireWarp.Output;
+            var bonfireIdLoc = CustomCodeOffsets.Base + (int)CustomCodeOffsets.BonfireWarp.BonfireId;
 
             var warpBytes = AsmLoader.GetAsmBytes(AsmScript.BonfireWarp64);
-            var bytes = BitConverter.GetBytes(eventWarpEntity.ToInt64());
-            Array.Copy(bytes, 0, warpBytes, 0x1D + 2, 8);
+            AsmHelper.WriteAbsoluteAddress64(warpBytes, eventWarpEntity, 0x1D + 2);
 
             AsmHelper.WriteRelativeOffsets(warpBytes, [
-                (codeLoc.ToInt64() + 0x4, emptySpace.ToInt64(), 7, 0x4 + 3),
-                (codeLoc.ToInt64() + 0xB, bonfireIdLoc.ToInt64(), 7, 0xB + 3),
-                (codeLoc.ToInt64() + 0x18, warpPrep, 5, 0x18 + 1),
-                (codeLoc.ToInt64() + 0x27, emptySpace.ToInt64(), 7, 0x27 + 3),
-                (codeLoc.ToInt64() + 0x2E, actualWarp, 5, 0x2E + 1)
+                (codeLoc + 0x4, emptySpace, 7, 0x4 + 3),
+                (codeLoc + 0xB, bonfireIdLoc, 7, 0xB + 3),
+                (codeLoc + 0x18, warpPrep, 5, 0x18 + 1),
+                (codeLoc + 0x27, emptySpace, 7, 0x27 + 3),
+                (codeLoc + 0x2E, actualWarp, 5, 0x2E + 1)
             ]);
 
             memoryService.WriteBytes(codeLoc, warpBytes);
         }
 
-        private void WriteVanillaBonfireWarpCode(long actualWarp, IntPtr eventWarpEntity, IntPtr codeLoc)
+        private void WriteVanillaBonfireWarpCode(nint actualWarp, nint eventWarpEntity, nint codeLoc)
         {
             var warpPrep = Functions.WarpPrep;
-            var emptySpace = CodeCaveOffsets.Base + (int)CodeCaveOffsets.BonfireWarp.Output;
-            var bonfireIdLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.BonfireWarp.BonfireId;
+            var emptySpace = CustomCodeOffsets.Base + (int)CustomCodeOffsets.BonfireWarp.Output;
+            var bonfireIdLoc = CustomCodeOffsets.Base + (int)CustomCodeOffsets.BonfireWarp.BonfireId;
 
             var warpBytes = AsmLoader.GetAsmBytes(AsmScript.BonfireWarp32);
-            AsmHelper.WriteAbsoluteAddresses32(warpBytes, new[]
-            {
-                (bonfireIdLoc.ToInt64(), 0x5 + 2),
-                (emptySpace.ToInt64(), 0xB + 2),
+            AsmHelper.WriteAbsoluteAddresses32(warpBytes, [
+                (bonfireIdLoc, 0x5 + 2),
+                (emptySpace, 0xB + 2),
                 (warpPrep, 0x12 + 1),
-                (emptySpace.ToInt64(), 0x1C + 2),
-                (eventWarpEntity.ToInt64(), 0x23 + 1),
+                (emptySpace, 0x1C + 2),
+                (eventWarpEntity, 0x23 + 1),
                 (actualWarp, 0x28 + 1)
-            });
+            ]);
 
             memoryService.WriteBytes(codeLoc, warpBytes);
         }
 
-        private void WriteEventWarpCode(IntPtr codeLoc, long actualWarp, IntPtr eventWarpEntity, WarpLocation location)
+        private void WriteEventWarpCode(nint codeLoc, nint actualWarp, nint eventWarpEntity, WarpLocation location)
         {
-            var paramsLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.EventWarp.Params;
+            var paramsLoc = CustomCodeOffsets.Base + (int)CustomCodeOffsets.EventWarp.Params;
             memoryService.Write(paramsLoc, 4);
             memoryService.Write(paramsLoc + 0x4, 5);
             memoryService.Write(paramsLoc + 0x8, location.BonfireId);
@@ -116,26 +114,25 @@ namespace SilkySouls2.Services
             }
         }
 
-        private void WriteScholarEventWarpCode(IntPtr codeLoc, long actualWarp, IntPtr eventWarpEntity,
-            IntPtr paramsLoc)
+        private void WriteScholarEventWarpCode(nint codeLoc, nint actualWarp, nint eventWarpEntity,
+            nint paramsLoc)
         {
             var warpBytes = AsmLoader.GetAsmBytes(AsmScript.EventWarp64);
-            var bytes = BitConverter.GetBytes(eventWarpEntity.ToInt64());
-            Array.Copy(bytes, 0, warpBytes, 0x7 + 2, 8);
+            AsmHelper.WriteAbsoluteAddress64(warpBytes, eventWarpEntity, 0x7 + 2);
             AsmHelper.WriteRelativeOffsets(warpBytes, [
-                (codeLoc.ToInt64() + 0x11, paramsLoc.ToInt64(), 7, 0x11 + 3),
-                (codeLoc.ToInt64() + 0x18, actualWarp, 5, 0x18 + 1)
+                (codeLoc + 0x11, paramsLoc, 7, 0x11 + 3),
+                (codeLoc + 0x18, actualWarp, 5, 0x18 + 1)
             ]);
             memoryService.WriteBytes(codeLoc, warpBytes);
         }
 
-        private void WriteVanillaEventWarpCode(IntPtr codeLoc, long actualWarp, IntPtr eventWarpEntity,
-            IntPtr paramsLoc)
+        private void WriteVanillaEventWarpCode(nint codeLoc, nint actualWarp, nint eventWarpEntity,
+            nint paramsLoc)
         {
             var warpBytes = AsmLoader.GetAsmBytes(AsmScript.EventWarp32);
             AsmHelper.WriteAbsoluteAddresses32(warpBytes, [
-                (eventWarpEntity.ToInt64(), 1),
-                (paramsLoc.ToInt64(), 0x5 + 2),
+                (eventWarpEntity, 1),
+                (paramsLoc, 0x5 + 2),
                 (actualWarp, 0xC + 1)
             ]);
 
@@ -145,8 +142,8 @@ namespace SilkySouls2.Services
         private void PerformCoordWrite(WarpLocation location)
         {
             var hook = Hooks.WarpCoordWrite;
-            var coordsLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.BonfireWarp.Coords;
-            var code = CodeCaveOffsets.Base + (int)CodeCaveOffsets.BonfireWarp.CoordWrite;
+            var coordsLoc = CustomCodeOffsets.Base + (int)CustomCodeOffsets.BonfireWarp.Coords;
+            var code = CustomCodeOffsets.Base + (int)CustomCodeOffsets.BonfireWarp.CoordWrite;
 
 
             byte[] allCoordinateBytes = new byte[16 * sizeof(float)];
@@ -174,7 +171,7 @@ namespace SilkySouls2.Services
                     Thread.Sleep(50);
             }
 
-            hookManager.InstallHook(code.ToInt64(), hook,
+            hookManager.InstallHook(code, hook,
                 PatchManager.IsScholar()
                     ? [0x0F, 0x5C, 0xC2, 0x0F, 0x29, 0x47, 0x50]
                     : [0x0F, 0x5C, 0xC1, 0x0F, 0x29, 0x46, 0x40]);
@@ -185,45 +182,52 @@ namespace SilkySouls2.Services
                     Thread.Sleep(50);
             }
             Task.Delay(200).Wait();
-            hookManager.UninstallHook(code.ToInt64());
+            hookManager.UninstallHook(code);
         }
 
         
-        private void WriteScholarCoordWriteCode(long hook, IntPtr coordsLoc, IntPtr code)
+        private void WriteScholarCoordWriteCode(nint hook, nint coordsLoc, nint code)
         {
             var codeBytes = AsmLoader.GetAsmBytes(AsmScript.WarpCoordWrite64);
-            var bytes = BitConverter.GetBytes(HkHardwareInfo.Base.ToInt64());
-            Array.Copy(bytes, 0, codeBytes, 0x8 + 2, 8);
+            AsmHelper.WriteAbsoluteAddress64(codeBytes, HkHardwareInfo.Base, 0x8 + 2);
 
             AsmHelper.WriteRelativeOffsets(codeBytes, [
-                (code.ToInt64() + 0x33, coordsLoc.ToInt64(), 8, 0x33 + 4),
-                (code.ToInt64() + 0x40, coordsLoc.ToInt64() + 0x10, 8, 0x40 + 4),
-                (code.ToInt64() + 0x4D, coordsLoc.ToInt64() + 0x20, 8, 0x4D + 4),
-                (code.ToInt64() + 0x5A, coordsLoc.ToInt64() + 0x30, 8, 0x5A + 4)
+                (code + 0x33, coordsLoc, 8, 0x33 + 4),
+                (code + 0x40, coordsLoc + 0x10, 8, 0x40 + 4),
+                (code + 0x4D, coordsLoc + 0x20, 8, 0x4D + 4),
+                (code + 0x5A, coordsLoc + 0x30, 8, 0x5A + 4)
             ]);
-            bytes = AsmHelper.GetJmpOriginOffsetBytes(hook, 7, code + 0x7C);
-            Array.Copy(bytes, 0, codeBytes, 0x77 + 1, 4);
+            var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(hook, 7, code + 0x7C);
+            Array.Copy(jmpBytes, 0, codeBytes, 0x77 + 1, 4);
             memoryService.WriteBytes(code, codeBytes);
         }
-        
-        private void WriteVanillaCoordWriteCode(long hook, IntPtr coordsLoc, IntPtr code)
+
+        private void WriteVanillaCoordWriteCode(nint hook, nint coordsLoc, nint code)
         {
             var codeBytes = AsmLoader.GetAsmBytes(AsmScript.WarpCoordWrite32);
             var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(hook, 7, code + 0x6C);
             Array.Copy(jmpBytes, 0, codeBytes, 0x66 + 1, 4);
             AsmHelper.WriteAbsoluteAddresses32(codeBytes, [
-                (GameManagerImp.Base.ToInt64(), 0x8 + 1),
-                (coordsLoc.ToInt64(), 0x32 + 3),
-                (coordsLoc.ToInt64() + 0x10, 0x3D + 3),
-                (coordsLoc.ToInt64() + 0x20, 0x48 + 3),
-                (coordsLoc.ToInt64() + 0x30, 0x53 + 3)
+                (GameManagerImp.Base, 0x8 + 1),
+                (coordsLoc, 0x32 + 3),
+                (coordsLoc + 0x10, 0x3D + 3),
+                (coordsLoc + 0x20, 0x48 + 3),
+                (coordsLoc + 0x30, 0x53 + 3)
             ]);
             memoryService.WriteBytes(code, codeBytes);
         }
 
-        public bool IsLoadingScreen() =>
-            memoryService.Read<byte>((IntPtr)memoryService.ReadInt64(GameManagerImp.Base) +
-                                    GameManagerImp.LoadingFlag) == 1;
+        public bool IsLoadingScreen()
+        {
+            if (PatchManager.Current.Edition == GameEdition.Scholar)
+            {
+                return memoryService.Read<byte>(
+                    memoryService.Read<nint>(GameManagerImp.Base) + GameManagerImp.LoadingFlag) == 1;
+            }
+
+            return memoryService.Read<byte>(
+                memoryService.Read<int>(GameManagerImp.Base) + GameManagerImp.LoadingFlag) == 1;
+        }
 
         public void UnlockAllBonfires()
         {
@@ -237,7 +241,7 @@ namespace SilkySouls2.Services
             {
                 var bytes = AsmLoader.GetAsmBytes(AsmScript.UnlockAllBonfires64);
                 AsmHelper.WriteAbsoluteAddresses64(bytes, [
-                    (bonfireManager.ToInt64(), 2),
+                    (bonfireManager, 2),
                     (func, 0xA + 2)
                 ]);
                 memoryService.AllocateAndExecute(bytes);
@@ -246,7 +250,7 @@ namespace SilkySouls2.Services
             {
                 var bytes = AsmLoader.GetAsmBytes(AsmScript.UnlockAllBonfires32);
                 AsmHelper.WriteAbsoluteAddresses32(bytes, [
-                    (bonfireManager.ToInt64(), 1),
+                    (bonfireManager, 1),
                     (func, 0x5 + 1)
                 ]);
                 memoryService.AllocateAndExecute(bytes);

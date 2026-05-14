@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using SilkySouls2.enums;
 using SilkySouls2.Interfaces;
 using SilkySouls2.Memory;
@@ -10,56 +10,50 @@ namespace SilkySouls2.Services
     public class SettingsService(IMemoryService memoryService, HookManager hookManager) : ISettingsService
     {
         public void Quitout() =>
-            memoryService.WriteByte((IntPtr)memoryService.ReadInt64(GameManagerImp.Base) + GameManagerImp.Quitout, 6);
+            memoryService.Write(memoryService.ReadPointer(GameManagerImp.Base) + GameManagerImp.Quitout, (byte)6);
 
         public void ToggleFastQuitout(bool isEnabled)
         {
-            var code = CodeCaveOffsets.Base + CodeCaveOffsets.FastQuitout;
-
+            memoryService.WriteBytes(Patches.MenuTransition, PatchDefinitions.MenuTransition.Get(isEnabled));
+            
+            var code = CustomCodeOffsets.Base + CustomCodeOffsets.FastQuitout;
+            
             if (!isEnabled)
             {
-                hookManager.UninstallHook(code.ToInt64());
+                hookManager.UninstallHook(code);
                 return;
             }
-
-            var origin = Hooks.FasterMenu;
-
-            if (PatchManager.IsScholar())
-            {
-                InstallScholarFasterMenu(code, origin);
-            }
-            else
-            {
-                InstallVanillaFasterMenu(code, origin);
-            }
+            
+            if (PatchManager.IsScholar()) InstallScholarFasterMenu(code);
+            else InstallVanillaFasterMenu(code);
         }
 
-        private void InstallScholarFasterMenu(IntPtr code, long origin)
+        private void InstallScholarFasterMenu(nint code)
         {
             var codeBytes = AsmLoader.GetAsmBytes(AsmScript.FasterMenu64);
-            var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 8, code + 0x1A);
+            var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(Hooks.FasterMenu, 8, code + 0x1A);
             Array.Copy(jmpBytes, 0, codeBytes, 0x15 + 1, 4);
 
             memoryService.WriteBytes(code, codeBytes);
-            hookManager.InstallHook(code.ToInt64(), origin, [0x48, 0x8B, 0x9C, 0x24, 0x78, 0x01, 0x00, 0x00]);
+            hookManager.InstallHook(code, Hooks.FasterMenu, [0x48, 0x8B, 0x9C, 0x24, 0x78, 0x01, 0x00, 0x00]);
         }
 
-        private void InstallVanillaFasterMenu(IntPtr code, long origin)
+        private void InstallVanillaFasterMenu(nint code)
         {
             var codeBytes = AsmLoader.GetAsmBytes(AsmScript.FasterMenu32);
-            var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 5, code + 0x14);
+            var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(Hooks.FasterMenu, 5, code + 0x14);
             Array.Copy(jmpBytes, 0, codeBytes, 0xF + 1, 4);
             memoryService.WriteBytes(code, codeBytes);
-            hookManager.InstallHook(code.ToInt64(), origin, [0x33, 0xC5, 0x89, 0x45, 0xFC]);
+            hookManager.InstallHook(code, Hooks.FasterMenu, [0x33, 0xC5, 0x89, 0x45, 0xFC]);
         }
 
         public void ToggleBabyJumpFix(bool isEnabled)
         {
-            var code = CodeCaveOffsets.Base + CodeCaveOffsets.BabyJump;
+            var code = CustomCodeOffsets.Base + CustomCodeOffsets.BabyJump;
 
             if (!isEnabled)
             {
-                hookManager.UninstallHook(code.ToInt64());
+                hookManager.UninstallHook(code);
                 return;
             }
             
@@ -75,27 +69,25 @@ namespace SilkySouls2.Services
             }
         }
         
-        private void InstallScholarBabyJumpFix(IntPtr code, long origin)
+        private void InstallScholarBabyJumpFix(nint code, nint origin)
         {
             var codeBytes = AsmLoader.GetAsmBytes(AsmScript.BabyJump64);
-            var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt64());
-            Array.Copy(bytes, 0, codeBytes, 0x1 + 2, 8);
-            bytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 5, code + 0x33);
-            Array.Copy(bytes, 0, codeBytes, 0x2E + 1, 4);
+            AsmHelper.WriteAbsoluteAddress64(codeBytes, GameManagerImp.Base, 0x1 + 2);
+            var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 5, code + 0x33);
+            Array.Copy(jmpBytes, 0, codeBytes, 0x2E + 1, 4);
 
             memoryService.WriteBytes(code, codeBytes);
-            hookManager.InstallHook(code.ToInt64(), origin, [0x0F, 0x29, 0x44, 0x24, 0x20]);
+            hookManager.InstallHook(code, origin, [0x0F, 0x29, 0x44, 0x24, 0x20]);
         }
-        
-        private void InstallVanillaBabyJumpFix(IntPtr code, long origin)
+
+        private void InstallVanillaBabyJumpFix(nint code, nint origin)
         {
             var codeBytes = AsmLoader.GetAsmBytes(AsmScript.BabyJump32);
-            var bytes = BitConverter.GetBytes(GameManagerImp.Base.ToInt32());
-            Array.Copy(bytes, 0, codeBytes, 0x4 + 1, 4);
-            bytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 7, code + 0x24);
-            Array.Copy(bytes, 0, codeBytes, 0x1F + 1, 4);
+            AsmHelper.WriteAbsoluteAddress32(codeBytes, GameManagerImp.Base, 0x4 + 1);
+            var jmpBytes = AsmHelper.GetJmpOriginOffsetBytes(origin, 7, code + 0x24);
+            Array.Copy(jmpBytes, 0, codeBytes, 0x1F + 1, 4);
             memoryService.WriteBytes(code, codeBytes);
-            hookManager.InstallHook(code.ToInt64(), origin, [0x0F, 0x51, 0xC0, 0x0F, 0x29, 0x45, 0xB0]);
+            hookManager.InstallHook(code, origin, [0x0F, 0x51, 0xC0, 0x0F, 0x29, 0x45, 0xB0]);
         }
 
         public void ToggleDoubleClick(bool isDisableDoubleClickEnabled)

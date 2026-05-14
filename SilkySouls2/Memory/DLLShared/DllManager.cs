@@ -1,17 +1,32 @@
 using System;
 using System.IO;
 using System.IO.MemoryMappedFiles;
+using SilkySouls2.enums;
 using SilkySouls2.Interfaces;
-using SilkySouls2.Services;
 
 namespace SilkySouls2.Memory.DLLShared
 {
-    public class DllManager(IMemoryService memoryService)
+    public class DllManager
     {
+        private readonly IMemoryService _memoryService;
+
         private readonly string _drawScholarDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "DrawScholar.dll");
         private readonly string _speedScholarDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "SilkySpeed.dll");
         private readonly string _drawVanillaDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "DrawVanilla.dll");
         private readonly string _speedVanillaDllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "DLL", "SilkySpeed32.dll");
+
+        public DllManager(IMemoryService memoryService, IStateService stateService)
+        {
+            _memoryService = memoryService;
+            stateService.Subscribe(State.Attached, OnAttached);
+            stateService.Subscribe(State.Detached, ResetState);
+        }
+
+        private void OnAttached()
+        {
+            CreateDrawSharedMem();
+            CreateSpeedSharedMem();
+        }
         
         private static readonly int NumDrawFlags = Enum.GetValues(typeof(DrawType)).Length;
         private static readonly int NumAddresses = Enum.GetValues(typeof(SharedMemAddr)).Length;
@@ -33,7 +48,7 @@ namespace SilkySouls2.Memory.DLLShared
         {
             if (_drawIsInjected) return;
             
-            SetAddress(SharedMemAddr.GameManagerImp, Offsets.GameManagerImp.Base.ToInt64());
+            SetAddress(SharedMemAddr.GameManagerImp, Offsets.GameManagerImp.Base);
             SetAddress(SharedMemAddr.ParamLookup, Offsets.Functions.ParamLookup);
             if (PatchManager.IsScholar())
             {
@@ -47,10 +62,10 @@ namespace SilkySouls2.Memory.DLLShared
             SetAddress(SharedMemAddr.CreateSoundEvent, Offsets.Functions.CreateSoundEvent);
             SetAddress(SharedMemAddr.GetEyePosition, Offsets.Functions.GetEyePosition);
             string dllPath = PatchManager.IsScholar() ? _drawScholarDllPath : _drawVanillaDllPath;
-            _drawIsInjected = memoryService.InjectDll(dllPath);
+            _drawIsInjected = _memoryService.InjectDll(dllPath);
         }
         
-        public void CreateDrawSharedMem()
+        private void CreateDrawSharedMem()
         {
             _drawSharedMemory = MemoryMappedFile.CreateOrOpen(
                 "DrawControl",
@@ -86,10 +101,10 @@ namespace SilkySouls2.Memory.DLLShared
         {
             if (_speedIsInjected) return;
             string dllPath = PatchManager.Current.Edition == GameEdition.Scholar ? _speedScholarDllPath : _speedVanillaDllPath;
-            _speedIsInjected = memoryService.InjectDll(dllPath);
+            _speedIsInjected = _memoryService.InjectDll(dllPath);
         }
 
-        public void CreateSpeedSharedMem()
+        private void CreateSpeedSharedMem()
         {
             _speedSharedMemory = MemoryMappedFile.CreateOrOpen(
                 "SpeedhackSharedMem",
@@ -131,11 +146,7 @@ namespace SilkySouls2.Memory.DLLShared
             _drawIsInjected = false;
             _speedIsInjected = false;
         }
-
-        public void TestInject32()
-        {
-            memoryService.InjectDll(_drawVanillaDllPath);
-        }
+        
 
         public bool IsSpeedInjected() => _speedIsInjected;
     }

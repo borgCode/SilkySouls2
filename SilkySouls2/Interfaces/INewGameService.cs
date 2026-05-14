@@ -8,5 +8,6 @@ public interface INewGameService
     void ReleaseNewGameDetect();
     int GetCount();
     void Reset();
-
+    bool IsAtNewGameStartCutscene();
+    bool PollNewGameStarted();
 }

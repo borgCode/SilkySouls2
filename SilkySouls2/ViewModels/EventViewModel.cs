@@ -13,21 +13,21 @@ namespace SilkySouls2.ViewModels
 {
     public class EventViewModel : BaseViewModel
     {
-        private readonly UtilityService _utilityService;
+        private readonly IUtilityService _utilityService;
         private readonly IEventService _eventService;
         private readonly IEzStateService _ezStateService;
 
-        public EventViewModel(UtilityService utilityService, IEventService eventService, IEzStateService ezStateService,
-            GameStateService gameStateService)
+        public EventViewModel(IUtilityService utilityService, IEventService eventService, IEzStateService ezStateService,
+            StateService stateService)
         {
             _utilityService = utilityService;
             _eventService = eventService;
             _ezStateService = ezStateService;
             
-            gameStateService.Subscribe(GameState.Loaded, OnGameLoaded);
-            gameStateService.Subscribe(GameState.NotLoaded, OnGameNotLoaded);
-            gameStateService.Subscribe(GameState.FirstLoaded, OnGameFirstLoaded);
-            gameStateService.Subscribe(GameState.AreaChanged, OnAreaChanged);
+            stateService.Subscribe(State.Loaded, OnGameLoaded);
+            stateService.Subscribe(State.NotLoaded, OnGameNotLoaded);
+            stateService.Subscribe(State.FirstLoaded, OnGameFirstLoaded);
+            stateService.Subscribe(State.AreaChanged, OnAreaChanged);
 
             LoadNpcs();
 
@@ -244,7 +244,7 @@ namespace SilkySouls2.ViewModels
 
             string trimmedFlagId = SetFlagId.Trim();
 
-            if (!long.TryParse(trimmedFlagId, out long flagIdValue) || flagIdValue <= 0)
+            if (!int.TryParse(trimmedFlagId, out int flagIdValue) || flagIdValue <= 0)
                 return;
 
             _eventService.SetEvent(flagIdValue, FlagStateIndex == 0);
@@ -257,7 +257,7 @@ namespace SilkySouls2.ViewModels
 
             string trimmedFlagId = GetFlagId.Trim();
 
-            if (!long.TryParse(trimmedFlagId, out long flagIdValue) || flagIdValue <= 0)
+            if (!int.TryParse(trimmedFlagId, out int flagIdValue) || flagIdValue <= 0)
                 return;
 
             if (_eventService.GetEvent(flagIdValue))

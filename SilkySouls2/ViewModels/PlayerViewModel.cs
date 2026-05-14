@@ -29,26 +29,30 @@ namespace SilkySouls2.ViewModels
         private bool _pauseUpdates = true;
         private bool _customHpHasBeenSet;
 
-        private readonly DispatcherTimer _playerTick;
-
         private readonly IPlayerService _playerService;
-        private readonly DamageControlService _damageControlService;
+
         private readonly INewGameService _newGameService;
+        private readonly IGameTickService _gameTickService;
         private readonly HotkeyManager _hotkeyManager;
+        private readonly IDamageControlService _damageControlService;
 
         public PlayerViewModel(IPlayerService playerService, HotkeyManager hotkeyManager,
-            DamageControlService damageControlService, GameStateService gameStateService, INewGameService newGameService)
+            IDamageControlService damageControlService, StateService stateService, INewGameService newGameService,
+            IGameTickService gameTickService)
         {
             _playerService = playerService;
-            _damageControlService = damageControlService;
+     
             _newGameService = newGameService;
+            _gameTickService = gameTickService;
             _hotkeyManager = hotkeyManager;
+            _damageControlService = damageControlService;
 
-            gameStateService.Subscribe(GameState.Loaded, OnGameLoaded);
-            gameStateService.Subscribe(GameState.NotLoaded, OnGameNotLoaded);
-            gameStateService.Subscribe(GameState.FirstLoaded, OnGameFirstLoaded);
-            gameStateService.Subscribe(GameState.NewGameStarted, OnNewGameStarted);
-            gameStateService.Subscribe(GameState.Attached, OnGameAttached);
+            stateService.Subscribe(State.Loaded, OnGameLoaded);
+            stateService.Subscribe(State.NotLoaded, OnGameNotLoaded);
+            stateService.Subscribe(State.FirstLoaded, OnGameFirstLoaded);
+            stateService.Subscribe(State.NewGameStarted, OnNewGameStarted);
+            stateService.Subscribe(State.Attached, OnGameAttached);
+            stateService.Subscribe(State.DelayedGameLoad, OnDelayedGameLoad);
 
             RegisterHotkeys();
 
@@ -63,15 +67,19 @@ namespace SilkySouls2.ViewModels
             RestoreSpellcastsCommand = new DelegateCommand(RestoreSpellcasts);
             RestoreHumanityCommand = new DelegateCommand(RestoreHumanity);
             RestCommand = new DelegateCommand(Rest);
+            BreakWeaponCommand = new DelegateCommand<ChrAsmSlotSelector>(BreakWeapon);
 
             GiveSoulsCommand = new DelegateCommand(GiveSouls);
+            
+            ApplyPrefs();
+        }
 
-
-            _playerTick = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromMilliseconds(100)
-            };
-            _playerTick.Tick += PlayerTick;
+        
+        private void ApplyPrefs()
+        {
+            _isRememberSpeedEnabled = SettingsManager.Default.RememberPlayerSpeed;
+            OnPropertyChanged(nameof(IsRememberSpeedEnabled));
+            if (_isRememberSpeedEnabled) _playerDesiredSpeed = SettingsManager.Default.PlayerSpeed;
         }
 
         #region Commands
@@ -87,6 +95,7 @@ namespace SilkySouls2.ViewModels
         public ICommand RestoreSpellcastsCommand { get; set; }
         public ICommand RestoreHumanityCommand { get; set; }
         public ICommand RestCommand { get; set; }
+        public ICommand BreakWeaponCommand { get; set; }
         public ICommand GiveSoulsCommand { get; set; }
 
         #endregion
@@ -338,6 +347,21 @@ namespace SilkySouls2.ViewModels
             }
         }
 
+        private bool _isNoHitEnabled;
+
+        public bool IsNoHitEnabled
+        {
+            get => _isNoHitEnabled;
+            set
+            {
+                if (SetProperty(ref _isNoHitEnabled, value))
+                {
+                    if (!PatchManager.IsInitialized) return;
+                    _playerService.ToggleNoHit(_isNoHitEnabled);
+                }
+            }
+        }
+
         private bool _isSilentEnabled;
 
         public bool IsSilentEnabled
@@ -417,6 +441,28 @@ namespace SilkySouls2.ViewModels
                 {
                     if (!PatchManager.IsInitialized) return;
                     _playerService.ToggleInfinitePoise(_isInfinitePoiseEnabled);
+                }
+            }
+        }
+
+        private bool _isRememberSpeedEnabled;
+
+        public bool IsRememberSpeedEnabled
+        {
+            get => _isRememberSpeedEnabled;
+            set
+            {
+                if (!SetProperty(ref _isRememberSpeedEnabled, value)) return;
+                if (_isRememberSpeedEnabled)
+                {
+                    SettingsManager.Default.RememberPlayerSpeed = true;
+                    if (Math.Abs(PlayerSpeed - DefaultSpeed) > Epsilon)
+                        SettingsManager.Default.PlayerSpeed = PlayerSpeed;
+                }
+                else
+                {
+                    SettingsManager.Default.PlayerSpeed = DefaultSpeed;
+                    SettingsManager.Default.RememberPlayerSpeed = false;
                 }
             }
         }
@@ -573,6 +619,10 @@ namespace SilkySouls2.ViewModels
                 if (SetProperty(ref _playerSpeed, value))
                 {
                     _playerService.SetPlayerSpeed(value);
+                    if (IsRememberSpeedEnabled && Math.Abs(value - DefaultSpeed) > Epsilon)
+                    {
+                        SettingsManager.Default.PlayerSpeed = value;
+                    }
                 }
             }
         }
@@ -592,7 +642,7 @@ namespace SilkySouls2.ViewModels
         
         public void SetStat(string statName, int value)
         {
-            var property = typeof(GameManagerImp.ChrCtrlOffsets.Stats)
+            var property = typeof(ChrCtrl.Stats)
                 .GetProperty(statName, BindingFlags.Public | BindingFlags.Static);
 
             if (property != null)
@@ -650,7 +700,7 @@ namespace SilkySouls2.ViewModels
                 () => SetSpeed(Math.Max(0, PlayerSpeed - 0.25f)));
         }
 
-        private void PlayerTick(object sender, EventArgs e)
+        private void PlayerTick()
         {
             if (IsHotEnabled) TryApplyHot();
 
@@ -684,15 +734,15 @@ namespace SilkySouls2.ViewModels
         private void LoadStats()
         {
             
-            Vigor = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Vigor);
-            Endurance = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Endurance);
-            Vitality = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Vitality);
-            Attunement = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Attunement);
-            Strength = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Strength);
-            Dexterity = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Dexterity);
-            Adp = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Adp);
-            Intelligence = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Intelligence);
-            Faith = _playerService.GetPlayerStat(GameManagerImp.ChrCtrlOffsets.Stats.Faith);
+            Vigor = _playerService.GetPlayerStat(ChrCtrl.Stats.Vigor);
+            Endurance = _playerService.GetPlayerStat(ChrCtrl.Stats.Endurance);
+            Vitality = _playerService.GetPlayerStat(ChrCtrl.Stats.Vitality);
+            Attunement = _playerService.GetPlayerStat(ChrCtrl.Stats.Attunement);
+            Strength = _playerService.GetPlayerStat(ChrCtrl.Stats.Strength);
+            Dexterity = _playerService.GetPlayerStat(ChrCtrl.Stats.Dexterity);
+            Adp = _playerService.GetPlayerStat(ChrCtrl.Stats.Adp);
+            Intelligence = _playerService.GetPlayerStat(ChrCtrl.Stats.Intelligence);
+            Faith = _playerService.GetPlayerStat(ChrCtrl.Stats.Faith);
             SoulLevel = _playerService.GetSoulLevel();
             NewGame = _playerService.GetNewGame();
             PlayerSpeed = _playerService.GetPlayerSpeed();
@@ -704,7 +754,7 @@ namespace SilkySouls2.ViewModels
 
             AreOptionsEnabled = true;
             LoadStats();
-            _playerTick.Start();
+            _gameTickService.Subscribe(PlayerTick);
         }
 
         private void OnGameFirstLoaded()
@@ -728,7 +778,12 @@ namespace SilkySouls2.ViewModels
         private void OnGameNotLoaded()
         {
             AreOptionsEnabled = false;
-            _playerTick.Stop();
+            _gameTickService.Unsubscribe(PlayerTick);
+        }
+        
+        private void OnDelayedGameLoad()
+        {
+            if (IsNoHitEnabled) _playerService.ToggleNoHit(true);
         }
 
         private void OnNewGameStarted()
@@ -736,7 +791,6 @@ namespace SilkySouls2.ViewModels
             if (!IsAutoSetNewGameSevenEnabled) return;
             _playerService.SetNewGame(9);
             NewGame = _playerService.GetNewGame();
-            // _ezStateService.ExecuteEvent(EzState.EventCommands.OpenCharacterCreationMenu);
         }
 
         private void OnGameAttached()
@@ -843,6 +897,8 @@ namespace SilkySouls2.ViewModels
         private void RestoreHumanity() => _playerService.SetSpEffect(SpEffect.RestoreHumanity);
 
         private void Rest() => _playerService.SetSpEffect(SpEffect.BonfireRest);
+
+        private void BreakWeapon(ChrAsmSlotSelector slotSelector) => _playerService.BreakWeapon(slotSelector);
 
         private void GiveSouls() => _playerService.GiveSouls(Souls);
         

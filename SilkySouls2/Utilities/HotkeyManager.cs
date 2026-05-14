@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Windows.Input;
 using H.Hooks;
 using SilkySouls2.enums;
 using SilkySouls2.Interfaces;
-using SilkySouls2.Memory;
-using SilkySouls2.Services;
 using KeyboardEventArgs = H.Hooks.KeyboardEventArgs;
 
 namespace SilkySouls2.Utilities

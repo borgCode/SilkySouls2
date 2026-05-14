@@ -18,7 +18,7 @@ namespace SilkySouls2.ViewModels
 {
     public class ItemViewModel : BaseViewModel
     {
-        private readonly ItemService _itemService;
+        private readonly IItemService _itemService;
         private readonly INewGameService _newGameService;
 
         private ILookup<string, Item> _allItems;
@@ -40,15 +40,15 @@ namespace SilkySouls2.ViewModels
         private readonly HashSet<int> _vanillaExcludedItems =
             new() { 26940101, 26940102, 26940100, 26940103, 1997000, 3080000, 42000000 };
 
-        public ItemViewModel(ItemService itemService, GameStateService gameStateService, INewGameService newGameService)
+        public ItemViewModel(IItemService itemService, StateService stateService, INewGameService newGameService)
         {
             _itemService = itemService;
             _newGameService = newGameService;
 
-            gameStateService.Subscribe(GameState.Loaded, OnGameLoaded);
-            gameStateService.Subscribe(GameState.NotLoaded, OnGameNotLoaded);
-            gameStateService.Subscribe(GameState.NewGameStarted, OnNewGameStarted);
-            gameStateService.Subscribe(GameState.Attached, OnGameAttached);
+            stateService.Subscribe(State.Loaded, OnGameLoaded);
+            stateService.Subscribe(State.NotLoaded, OnGameNotLoaded);
+            stateService.Subscribe(State.NewGameStarted, OnNewGameStarted);
+            stateService.Subscribe(State.Attached, OnGameAttached);
 
             SpawnItemCommand = new DelegateCommand(SpawnItem);
             MassSpawnCommand = new DelegateCommand(MassSpawn);

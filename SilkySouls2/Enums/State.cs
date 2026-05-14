@@ -1,6 +1,6 @@
 ﻿namespace SilkySouls2.enums
 {
-    public enum GameState
+    public enum State
     {
         Attached,
         Detached,

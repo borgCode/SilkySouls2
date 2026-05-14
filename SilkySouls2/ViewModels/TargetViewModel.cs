@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Threading;
 using SilkySouls2.enums;
+using SilkySouls2.Interfaces;
 using SilkySouls2.Services;
 using SilkySouls2.Utilities;
 using SilkySouls2.Views;
@@ -11,40 +12,36 @@ namespace SilkySouls2.ViewModels
 {
     public class TargetViewModel : BaseViewModel
     {
-        private readonly DispatcherTimer _targetOptionsTimer;
-
-        private long _currentTargetChrCtrl;
+        
+        private nint _currentTargetChrCtrl;
 
         private ResistancesWindow _resistancesWindowWindow;
 
         private DefenseWindow _defenseWindow;
 
-        private readonly TargetService _targetService;
-        private readonly DamageControlService _damageControlService;
-        private readonly HotkeyManager _hotkeyManager;
+        private readonly ITargetService _targetService;
 
-        public TargetViewModel(TargetService targetService, HotkeyManager hotkeyManager,
-            DamageControlService damageControlService, GameStateService gameStateService)
+        private readonly IReminderService _reminderService;
+        private readonly IGameTickService _gameTickService;
+        private readonly HotkeyManager _hotkeyManager;
+        private readonly IDamageControlService _damageControlService;
+
+        public TargetViewModel(ITargetService targetService, HotkeyManager hotkeyManager,
+            IDamageControlService damageControlService, StateService stateService, IReminderService reminderService,
+            IGameTickService gameTickService)
         {
             _targetService = targetService;
-            _damageControlService = damageControlService;
+   
+            _reminderService = reminderService;
+            _gameTickService = gameTickService;
             _hotkeyManager = hotkeyManager;
+            _damageControlService = damageControlService;
             RegisterHotkeys();
 
-            gameStateService.Subscribe(GameState.Loaded, OnGameLoaded);
-            gameStateService.Subscribe(GameState.NotLoaded, OnGameNotLoaded);
-
-
-            _targetOptionsTimer = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromMilliseconds(64)
-            };
-            _targetOptionsTimer.Tick += TargetOptionsTimerTick;
+            stateService.Subscribe(State.Loaded, OnGameLoaded);
+            stateService.Subscribe(State.NotLoaded, OnGameNotLoaded);
+            
         }
-
-        #region Commands
-
-        #endregion
 
         #region Properties
 
@@ -74,15 +71,18 @@ namespace SilkySouls2.ViewModels
                 if (!SetProperty(ref _isTargetOptionsEnabled, value)) return;
                 if (value)
                 {
+                    _reminderService.TrySetReminder();
                     _targetService.ToggleTargetHook(true);
-                    _targetOptionsTimer.Start();
+                    _gameTickService.Subscribe(TargetTick);
                     _targetService.ToggleCurrentActHook(true);
+                    _targetService.ToggleDistHook(true);
                     ShowAllResistances = true;
                 }
                 else
                 {
-                    _targetOptionsTimer.Stop();
+                    _gameTickService.Unsubscribe(TargetTick);
                     _targetService.ToggleCurrentActHook(false);
+                    _targetService.ToggleDistHook(false);
                     ShowAllResistances = false;
                     IsResistancesWindowOpen = false;
                     IsFreezeHealthEnabled = false;
@@ -143,6 +143,14 @@ namespace SilkySouls2.ViewModels
         {
             get => _lastAct;
             set => SetProperty(ref _lastAct, value);
+        }
+
+        private float _dist;
+
+        public float Dist
+        {
+            get => _dist;
+            set => SetProperty(ref _dist, value);
         }
 
         private int _targetCurrentHealth;
@@ -460,7 +468,9 @@ namespace SilkySouls2.ViewModels
             if (IsTargetOptionsEnabled)
             {
                 _targetService.ToggleTargetHook(true);
-                _targetOptionsTimer.Start();
+                _targetService.ToggleCurrentActHook(true);
+                _targetService.ToggleDistHook(true);
+                _gameTickService.Subscribe(TargetTick);
             }
 
             _targetService.ClearDisableEntities();
@@ -470,7 +480,7 @@ namespace SilkySouls2.ViewModels
 
         private void OnGameNotLoaded()
         {
-            _targetOptionsTimer.Stop();
+            _gameTickService.Unsubscribe(TargetTick);
             IsFreezeHealthEnabled = false;
             LastAct = 0;
             AreOptionsEnabled = false;
@@ -518,7 +528,7 @@ namespace SilkySouls2.ViewModels
             });
         }
 
-        private void TargetOptionsTimerTick(object sender, EventArgs e)
+        private void TargetTick()
         {
             if (!IsTargetValid())
             {
@@ -532,15 +542,16 @@ namespace SilkySouls2.ViewModels
                 TargetCurrentBleed = 0;
                 TargetCurrentPoison = 0;
                 TargetCurrentToxic = 0;
+                Dist = 0;
                 return;
             }
 
             IsValidTarget = true;
-            long targetChrCtrl = _targetService.GetTargetChrCtrl();
+            nint targetChrCtrl = _targetService.GetTargetChrCtrl();
             if (targetChrCtrl != _currentTargetChrCtrl)
             {
 #if DEBUG
-                Console.WriteLine($@"Locked on target chrCtrl: 0x{targetChrCtrl:X}");
+                Console.WriteLine($@"Locked on target chrCtrl: 0x{(long)targetChrCtrl:X}");
 #endif
 
                 IsDisableTargetAiEnabled = _targetService.IsAiDisabled(targetChrCtrl);
@@ -568,6 +579,7 @@ namespace SilkySouls2.ViewModels
             }
 
             LastAct = _targetService.GetLastAct();
+            Dist = _targetService.GetDist();
 
             var targetState = _targetService.GetTargetState();
 
@@ -586,16 +598,16 @@ namespace SilkySouls2.ViewModels
 
         private void UpdateDefenses()
         {
-            MagicResist = _targetService.GetChrParam(GameManagerImp.ChrCtrlOffsets.ChrParamOffsets.MagicResist);
-            LightningResist = _targetService.GetChrParam(GameManagerImp.ChrCtrlOffsets.ChrParamOffsets.LightningResist);
-            FireResist = _targetService.GetChrParam(GameManagerImp.ChrCtrlOffsets.ChrParamOffsets.FireResist);
-            DarkResist = _targetService.GetChrParam(GameManagerImp.ChrCtrlOffsets.ChrParamOffsets.DarkResist);
+            MagicResist = _targetService.GetChrParam(ChrCtrl.ChrParamOffsets.MagicResist);
+            LightningResist = _targetService.GetChrParam(ChrCtrl.ChrParamOffsets.LightningResist);
+            FireResist = _targetService.GetChrParam(ChrCtrl.ChrParamOffsets.FireResist);
+            DarkResist = _targetService.GetChrParam(ChrCtrl.ChrParamOffsets.DarkResist);
             PoisonToxicResist =
-                _targetService.GetChrParam(GameManagerImp.ChrCtrlOffsets.ChrParamOffsets.PoisonToxicResist);
-            BleedResist = _targetService.GetChrParam(GameManagerImp.ChrCtrlOffsets.ChrParamOffsets.BleedResist);
-            SlashDefense = _targetService.GetChrCommonParam(GameManagerImp.ChrCtrlOffsets.ChrCommonOffsets.Slash);
-            ThrustDefense = _targetService.GetChrCommonParam(GameManagerImp.ChrCtrlOffsets.ChrCommonOffsets.Thrust);
-            StrikeDefense = _targetService.GetChrCommonParam(GameManagerImp.ChrCtrlOffsets.ChrCommonOffsets.Strike);
+                _targetService.GetChrParam(ChrCtrl.ChrParamOffsets.PoisonToxicResist);
+            BleedResist = _targetService.GetChrParam(ChrCtrl.ChrParamOffsets.BleedResist);
+            SlashDefense = _targetService.GetChrCommonParam(ChrCtrl.ChrCommonOffsets.Slash);
+            ThrustDefense = _targetService.GetChrCommonParam(ChrCtrl.ChrCommonOffsets.Thrust);
+            StrikeDefense = _targetService.GetChrCommonParam(ChrCtrl.ChrCommonOffsets.Strike);
         }
 
         private bool IsTargetValid()
@@ -612,7 +624,7 @@ namespace SilkySouls2.ViewModels
             if (health > maxHealth * 1.5) return false;
 
             var position = _targetService.GetTargetPos();
-
+            
             if (float.IsNaN(position.X) || float.IsNaN(position.Y) || float.IsNaN(position.Z))
                 return false;
 

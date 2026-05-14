@@ -51,6 +51,11 @@ public enum AsmScript
     NoShadedFogClose64,
     NoShadedFogFar64,
     NoShadedFogCam64,
+    OpenMenu64,
+    SetMenuOpenChrState64,
+    TrySetReminder64,
+    BreakWeapon64,
+    GetDist64,
     
     DamageControl32,
     ElanaSummon32,
@@ -95,4 +100,9 @@ public enum AsmScript
     NoShadedFogFar32,
     NoShadedFogCam32,
     NewGameDetect32,
+    TrySetReminder32,
+    OpenMenu32,
+    SetMenuOpenChrState32,
+    BreakWeapon32,
+    GetDist32
 }

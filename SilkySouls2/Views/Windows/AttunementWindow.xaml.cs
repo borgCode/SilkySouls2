@@ -1,10 +1,10 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using SilkySouls2.Models;
 using SilkySouls2.Utilities;
 using SilkySouls2.ViewModels;
-
 
 namespace SilkySouls2.Views
 {
@@ -47,13 +47,13 @@ namespace SilkySouls2.Views
 
             if (textBlock?.DataContext is EquippedSpell spell)
             {
-                var viewModel = this.DataContext as UtilityViewModel;
+                var viewModel = DataContext as UtilityViewModel;
                 int index = viewModel.EquippedSpells.IndexOf(spell);
                 viewModel.HandleUnAttune(index);
             }
         }
         
-        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
 

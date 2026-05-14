@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
@@ -139,7 +140,7 @@ namespace SilkySouls2.Utilities
                     SettingsManager.Default.Save();
                 }
                 
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                Process.Start(new ProcessStartInfo
                 {
                     FileName = "https://github.com/borgCode/SilkySouls2/releases/latest",
                     UseShellExecute = true

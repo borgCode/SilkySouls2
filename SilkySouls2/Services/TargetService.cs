@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Numerics;
 using SilkySouls2.enums;
 using SilkySouls2.Interfaces;
@@ -7,27 +6,27 @@ using SilkySouls2.Memory;
 using SilkySouls2.Models.Target;
 using SilkySouls2.Utilities;
 using static SilkySouls2.Memory.Offsets;
-using static SilkySouls2.Memory.Offsets.GameManagerImp;
 
 namespace SilkySouls2.Services
 {
     public class TargetService(IMemoryService memoryService, HookManager hookManager, IChrCtrlService chrCtrlService)
+        : ITargetService
     {
-        private readonly List<long> _disabledEntities = new();
+        private readonly List<nint> _disabledEntities = new();
         private bool _disableTargetHookInstalled;
 
         public void ToggleTargetHook(bool isEnabled)
         {
-            var saveTargetPtrCode = CodeCaveOffsets.Base + CodeCaveOffsets.SaveLockedTarget;
+            var saveTargetPtrCode = CustomCodeOffsets.Base + CustomCodeOffsets.SaveLockedTarget;
 
             if (!isEnabled)
             {
-                hookManager.UninstallHook(saveTargetPtrCode.ToInt64());
+                hookManager.UninstallHook(saveTargetPtrCode);
                 return;
             }
 
             var saveTargetHook = Hooks.LockedTarget;
-            var savedTargetPtr = CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr;
+            var savedTargetPtr = CustomCodeOffsets.Base + CustomCodeOffsets.LockedTargetPtr;
             if (PatchManager.IsScholar())
             {
                 InstallScholarTargetHook(saveTargetPtrCode, saveTargetHook, savedTargetPtr);
@@ -38,38 +37,29 @@ namespace SilkySouls2.Services
             }
         }
 
-        private void InstallScholarTargetHook(IntPtr saveTargetPtrCode, long saveTargetHook, IntPtr savedTargetPtr)
+        private void InstallScholarTargetHook(nint saveTargetPtrCode, nint saveTargetHook, nint savedTargetPtr)
         {
-            byte[] saveTargetPtrBytes = AsmLoader.GetAsmBytes(AsmScript.SaveTargetPtr64);
-            byte[] bytes =
-                AsmHelper.GetRelOffsetBytes(saveTargetPtrCode.ToInt64(), savedTargetPtr.ToInt64(), 7);
-            Array.Copy(bytes, 0, saveTargetPtrBytes, 0x3, 4);
-            bytes = AsmHelper.GetRelOffsetBytes(saveTargetPtrCode.ToInt64() + 0xE, saveTargetHook + 0x7, 5);
-            Array.Copy(bytes, 0, saveTargetPtrBytes, 0xE + 1, 4);
+            var saveTargetPtrBytes = AsmLoader.GetAsmBytes(AsmScript.SaveTargetPtr64);
+            AsmHelper.WriteRelativeOffset(saveTargetPtrBytes, saveTargetPtrCode, savedTargetPtr, 7, 0x3);
+            AsmHelper.WriteRelativeOffset(saveTargetPtrBytes, saveTargetPtrCode + 0xE, saveTargetHook + 0x7, 5, 0xE + 1);
 
             memoryService.WriteBytes(saveTargetPtrCode, saveTargetPtrBytes);
-            hookManager.InstallHook(saveTargetPtrCode.ToInt64(), saveTargetHook,
+            hookManager.InstallHook(saveTargetPtrCode, saveTargetHook,
                 [0x48, 0x89, 0xBB, 0xC0, 0x00, 0x00, 0x00]);
         }
 
-        private void InstallVanillaTargetHook(IntPtr saveTargetPtrCode, long saveTargetHook, IntPtr savedTargetPtr)
+        private void InstallVanillaTargetHook(nint saveTargetPtrCode, nint saveTargetHook, nint savedTargetPtr)
         {
-            byte[] saveTargetPtrBytes = AsmLoader.GetAsmBytes(AsmScript.SaveTargetPtr32);
-            var bytes = BitConverter.GetBytes(savedTargetPtr.ToInt32());
-            Array.Copy(bytes, 0, saveTargetPtrBytes, 0x6 + 2, 4);
-            bytes = AsmHelper.GetRelOffsetBytes(saveTargetPtrCode.ToInt64() + 0xC, saveTargetHook + 0x6, 5);
-            Array.Copy(bytes, 0, saveTargetPtrBytes, 0xC + 1, 4);
+            var saveTargetPtrBytes = AsmLoader.GetAsmBytes(AsmScript.SaveTargetPtr32);
+            AsmHelper.WriteAbsoluteAddress32(saveTargetPtrBytes, savedTargetPtr, 0x6 + 2);
+            AsmHelper.WriteRelativeOffset(saveTargetPtrBytes, saveTargetPtrCode + 0xC, saveTargetHook + 0x6, 5, 0xC + 1);
             memoryService.WriteBytes(saveTargetPtrCode, saveTargetPtrBytes);
-            hookManager.InstallHook(saveTargetPtrCode.ToInt64(), saveTargetHook,
+            hookManager.InstallHook(saveTargetPtrCode, saveTargetHook,
                 [0x89, 0xB7, 0xB8, 0x00, 0x00, 0x00]);
         }
 
-        public nint GetTargetChrCtrl()
-        {
-            return PatchManager.IsScholar()
-                ? memoryService.Read<nint>(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr)
-                : memoryService.Read<int>(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr);
-        }
+        public nint GetTargetChrCtrl() =>
+            memoryService.ReadPointer(CustomCodeOffsets.Base + CustomCodeOffsets.LockedTargetPtr);
 
         public int GetTargetHp() => chrCtrlService.GetHp(GetTargetChrCtrl());
         public int GetTargetMaxHp() => chrCtrlService.GetMaxHp(GetTargetChrCtrl());
@@ -80,142 +70,128 @@ namespace SilkySouls2.Services
         
         
         public int GetLastAct() =>
-            memoryService.Read<int>(CodeCaveOffsets.Base + (int)CodeCaveOffsets.RepeatAct.AttackId);
+            memoryService.Read<int>(CustomCodeOffsets.Base + (int)CustomCodeOffsets.RepeatAct.AttackId);
 
         public (bool PoisonToxic, bool Bleed) GetImmunities()
         {
-            var chrParamPtr = PatchManager.IsScholar()
-                ? (IntPtr)memoryService.ReadInt64(
-                    (IntPtr)memoryService.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
-                    ChrCtrlOffsets.ChrParam)
-                : (IntPtr)memoryService.ReadInt32(
-                    (IntPtr)memoryService.ReadInt32(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr) +
-                    ChrCtrlOffsets.ChrParam);
+            var targetPtr = memoryService.ReadPointer(CustomCodeOffsets.Base + CustomCodeOffsets.LockedTargetPtr);
+            var chrParamPtr = memoryService.ReadPointer(targetPtr + ChrCtrl.ChrParam);
 
             return (
-                memoryService.Read<int>(chrParamPtr + ChrCtrlOffsets.ChrParamOffsets.PoisonToxicResist) == 100,
-                memoryService.Read<int>(chrParamPtr + ChrCtrlOffsets.ChrParamOffsets.BleedResist) == 100
+                memoryService.Read<int>(chrParamPtr + ChrCtrl.ChrParamOffsets.PoisonToxicResist) == 100,
+                memoryService.Read<int>(chrParamPtr + ChrCtrl.ChrParamOffsets.BleedResist) == 100
             );
         }
 
         
         public void ToggleCurrentActHook(bool isEnabled)
         {
-            var code = CodeCaveOffsets.Base + (int)CodeCaveOffsets.RepeatAct.Code;
+            var code = CustomCodeOffsets.Base + (int)CustomCodeOffsets.RepeatAct.Code;
 
             if (!isEnabled)
             {
-                hookManager.UninstallHook(code.ToInt64());
+                hookManager.UninstallHook(code);
                 return;
             }
-            
-            var repeatFlagLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.RepeatAct.RepeatFlag;
-            var attackId = CodeCaveOffsets.Base + (int)CodeCaveOffsets.RepeatAct.AttackId;
-            var lockedTargetPtr = CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr;
-            var currectActOrigin = Hooks.SetCurrentAct;
+
+            var repeatFlagLoc = CustomCodeOffsets.Base + (int)CustomCodeOffsets.RepeatAct.RepeatFlag;
+            var attackId = CustomCodeOffsets.Base + (int)CustomCodeOffsets.RepeatAct.AttackId;
+            var lockedTargetPtr = CustomCodeOffsets.Base + CustomCodeOffsets.LockedTargetPtr;
+            var currentActOrigin = Hooks.SetCurrentAct;
 
             if (PatchManager.IsScholar())
             {
-                InstallScholarRepeatActHook(code, repeatFlagLoc, attackId, lockedTargetPtr, currectActOrigin);
+                InstallScholarRepeatActHook(code, repeatFlagLoc, attackId, lockedTargetPtr, currentActOrigin);
             }
             else
             {
-                InstallVanillaRepeatActHook(code, repeatFlagLoc, attackId, lockedTargetPtr, currectActOrigin);
+                InstallVanillaRepeatActHook(code, repeatFlagLoc, attackId, lockedTargetPtr, currentActOrigin);
             }
         }
         
-        private void InstallScholarRepeatActHook(IntPtr code, IntPtr repeatFlagLoc, IntPtr attackId, IntPtr lockedTargetPtr, long currectActOrigin)
+        private void InstallScholarRepeatActHook(nint code, nint repeatFlagLoc, nint attackId, nint lockedTargetPtr, nint currentActOrigin)
         {
             var codeBytes = AsmLoader.GetAsmBytes(AsmScript.RepeatAct64);
 
             AsmHelper.WriteRelativeOffsets(codeBytes, [
-                (code.ToInt64() + 0x8, lockedTargetPtr.ToInt64(), 7, 0x8 + 3),
-                (code.ToInt64() + 0x28, repeatFlagLoc.ToInt64(), 7, 0x28 + 2),
-                (code.ToInt64() + 0x31, attackId.ToInt64(), 6, 0x31 + 2),
-                (code.ToInt64() + 0x3F, attackId.ToInt64(), 6, 0x3F + 2)
+                (code + 0x8, lockedTargetPtr, 7, 0x8 + 3),
+                (code + 0x28, repeatFlagLoc, 7, 0x28 + 2),
+                (code + 0x31, attackId, 6, 0x31 + 2),
+                (code + 0x3F, attackId, 6, 0x3F + 2)
             ]);
 
             memoryService.WriteBytes(code, codeBytes);
 
-            hookManager.InstallHook(code.ToInt64(), currectActOrigin, [0x83, 0x89, 0x50, 0x03, 0x00, 0x00, 0x01]);
+            hookManager.InstallHook(code, currentActOrigin, [0x83, 0x89, 0x50, 0x03, 0x00, 0x00, 0x01]);
         }
-        
-        private void InstallVanillaRepeatActHook(IntPtr code, IntPtr repeatFlagLoc, IntPtr attackId, IntPtr lockedTargetPtr, long currectActOrigin)
+
+        private void InstallVanillaRepeatActHook(nint code, nint repeatFlagLoc, nint attackId, nint lockedTargetPtr, nint currentActOrigin)
         {
             var codeBytes = AsmLoader.GetAsmBytes(AsmScript.RepeatAct32);
             AsmHelper.WriteAbsoluteAddresses32(codeBytes, [
-                (lockedTargetPtr.ToInt64(), 0x1 + 2),
-                (repeatFlagLoc.ToInt64(), 0x1B + 2),
-                (attackId.ToInt64(), 0x24 + 1),
-                (attackId.ToInt64(), 0x35 + 1)
+                (lockedTargetPtr, 0x1 + 2),
+                (repeatFlagLoc, 0x1B + 2),
+                (attackId, 0x24 + 1),
+                (attackId, 0x35 + 1)
             ]);
             AsmHelper.WriteJumpOffsets(codeBytes, [
-                (currectActOrigin, 6, code + 0x30, 0x30 + 1),
-                (currectActOrigin, 6, code + 0x41, 0x41 + 1)
+                (currentActOrigin, 6, code + 0x30, 0x30 + 1),
+                (currentActOrigin, 6, code + 0x41, 0x41 + 1)
             ]);
             memoryService.WriteBytes(code, codeBytes);
 
-            hookManager.InstallHook(code.ToInt64(), currectActOrigin, [0x89, 0x81, 0x5C, 0x02, 0x00, 0x00]);
+            hookManager.InstallHook(code, currentActOrigin, [0x89, 0x81, 0x5C, 0x02, 0x00, 0x00]);
         }
 
         public void ToggleRepeatAct(bool isRepeatActEnabled) =>
-            memoryService.Write(CodeCaveOffsets.Base + (int)CodeCaveOffsets.RepeatAct.RepeatFlag, isRepeatActEnabled);
+            memoryService.Write(CustomCodeOffsets.Base + (int)CustomCodeOffsets.RepeatAct.RepeatFlag, isRepeatActEnabled);
 
         
         public void ClearLockedTarget()
         {
-            if (PatchManager.IsScholar())
-            {
-                memoryService.WriteBytes(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr, new byte[]
-                    { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });
-            }
-            else
-            {
-                memoryService.WriteBytes(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr, new byte[]
-                    { 0x00, 0x00, 0x00, 0x00 });
-            }
+            var size = PatchManager.IsScholar() ? 8 : 4;
+            memoryService.WriteBytes(CustomCodeOffsets.Base + CustomCodeOffsets.LockedTargetPtr, new byte[size]);
         }
 
         public void ToggleTargetAi(bool isDisableTargetAiEnabled)
         {
             var chrAi = GetChrAi(GetTargetChrCtrl());
-            var arrayLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DisableTargetAi.Array;
-            var countLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DisableTargetAi.Count;
-            var codeLoc = CodeCaveOffsets.Base + (int)CodeCaveOffsets.DisableTargetAi.Code;
+            var arrayLoc = CustomCodeOffsets.Base + (int)CustomCodeOffsets.DisableTargetAi.Array;
+            var countLoc = CustomCodeOffsets.Base + (int)CustomCodeOffsets.DisableTargetAi.Count;
+            var codeLoc = CustomCodeOffsets.Base + (int)CustomCodeOffsets.DisableTargetAi.Code;
             if (PatchManager.IsScholar())
                 Process64BitDisable(isDisableTargetAiEnabled, chrAi, arrayLoc, countLoc, codeLoc);
             else
                 Process32BitDisable(isDisableTargetAiEnabled, chrAi, arrayLoc, countLoc, codeLoc);
         }
 
-        private void Process64BitDisable(bool isDisableTargetAiEnabled, long chrAi, IntPtr arrayLoc, IntPtr countLoc,
-            IntPtr codeLoc)
+        private void Process64BitDisable(bool isDisableTargetAiEnabled, nint chrAi, nint arrayLoc, nint countLoc,
+            nint codeLoc)
         {
             if (isDisableTargetAiEnabled)
             {
                 if (_disabledEntities.Count >= 20) ClearDisableEntities();
 
                 _disabledEntities.Add(chrAi);
-                memoryService.WriteInt64(arrayLoc + (_disabledEntities.Count - 1) * 8, chrAi);
-                memoryService.WriteInt32(countLoc, _disabledEntities.Count);
+                memoryService.Write(arrayLoc + (_disabledEntities.Count - 1) * 8, (long)chrAi);
+                memoryService.Write(countLoc, _disabledEntities.Count);
                 if (_disableTargetHookInstalled) return;
                 var origin = Hooks.DisableTargetAi;
 
                 var bytes = AsmLoader.GetAsmBytes(AsmScript.DisableTargetAi64);
 
                 AsmHelper.WriteRelativeOffsets(bytes, [
-                    (codeLoc.ToInt64() + 0x6, countLoc.ToInt64(), 7, 0x6 + 2),
-                    (codeLoc.ToInt64() + 0xD, origin + 6, 6, 0xD + 2),
-                    (codeLoc.ToInt64() + 0x15, countLoc.ToInt64(), 6, 0x15 + 2),
-                    (codeLoc.ToInt64() + 0x39, origin + 6, 5, 0x39 + 1),
-                    (codeLoc.ToInt64() + 0x40, origin + 9, 5, 0x40 + 1)
+                    (codeLoc + 0x6, countLoc, 7, 0x6 + 2),
+                    (codeLoc + 0xD, origin + 6, 6, 0xD + 2),
+                    (codeLoc + 0x15, countLoc, 6, 0x15 + 2),
+                    (codeLoc + 0x39, origin + 6, 5, 0x39 + 1),
+                    (codeLoc + 0x40, origin + 9, 5, 0x40 + 1)
                 ]);
 
-                var arrayLocBytes = BitConverter.GetBytes(arrayLoc.ToInt64());
-                Array.Copy(arrayLocBytes, 0, bytes, 0x1B + 2, 8);
+                AsmHelper.WriteAbsoluteAddress64(bytes, arrayLoc, 0x1B + 2);
 
                 memoryService.WriteBytes(codeLoc, bytes);
-                hookManager.InstallHook(codeLoc.ToInt64(), origin, [0x48, 0x89, 0xFA, 0x48, 0x89, 0xD9]);
+                hookManager.InstallHook(codeLoc, origin, [0x48, 0x89, 0xFA, 0x48, 0x89, 0xD9]);
                 _disableTargetHookInstalled = true;
             }
             else
@@ -223,43 +199,43 @@ namespace SilkySouls2.Services
                 _disabledEntities.Remove(chrAi);
                 for (int i = 0; i < _disabledEntities.Count; i++)
                 {
-                    memoryService.WriteInt64(arrayLoc + i * 8, _disabledEntities[i]);
+                    memoryService.Write(arrayLoc + i * 8, (long)_disabledEntities[i]);
                 }
 
-                memoryService.WriteInt32(countLoc, _disabledEntities.Count);
+                memoryService.Write(countLoc, _disabledEntities.Count);
                 if (_disabledEntities.Count != 0) return;
-                hookManager.UninstallHook(codeLoc.ToInt64());
+                hookManager.UninstallHook(codeLoc);
                 ClearDisableEntities();
                 _disableTargetHookInstalled = false;
             }
         }
 
-        private void Process32BitDisable(bool isDisableTargetAiEnabled, long chrAi, IntPtr arrayLoc, IntPtr countLoc,
-            IntPtr codeLoc)
+        private void Process32BitDisable(bool isDisableTargetAiEnabled, nint chrAi, nint arrayLoc, nint countLoc,
+            nint codeLoc)
         {
             if (isDisableTargetAiEnabled)
             {
                 if (_disabledEntities.Count >= 20) ClearDisableEntities();
                 _disabledEntities.Add(chrAi);
-                memoryService.WriteInt32(arrayLoc + (_disabledEntities.Count - 1) * 4, (int)chrAi);
-                memoryService.WriteInt32(countLoc, _disabledEntities.Count);
+                memoryService.Write(arrayLoc + (_disabledEntities.Count - 1) * 4, (int)chrAi);
+                memoryService.Write(countLoc, _disabledEntities.Count);
                 if (_disableTargetHookInstalled) return;
                 var origin = Hooks.DisableTargetAi;
                 var bytes = AsmLoader.GetAsmBytes(AsmScript.DisableTargetAi32);
                 AsmHelper.WriteAbsoluteAddresses32(bytes, [
-                    (countLoc.ToInt64(), 0x5 + 2),
-                    (countLoc.ToInt64(), 0x14 + 2),
-                    (arrayLoc.ToInt64(), 0x1A + 1)
+                    (countLoc, 0x5 + 2),
+                    (countLoc, 0x14 + 2),
+                    (arrayLoc, 0x1A + 1)
                 ]);
 
                 AsmHelper.WriteRelativeOffsets(bytes, [
-                    (codeLoc.ToInt64() + 0xC, origin + 5, 6, 0xC + 2),
-                    (codeLoc.ToInt64() + 0x30, origin + 5, 5, 0x30 + 1),
-                    (codeLoc.ToInt64() + 0x37, origin + 0xA, 5, 0x37 + 1)
+                    (codeLoc + 0xC, origin + 5, 6, 0xC + 2),
+                    (codeLoc + 0x30, origin + 5, 5, 0x30 + 1),
+                    (codeLoc + 0x37, origin + 0xA, 5, 0x37 + 1)
                 ]);
 
                 memoryService.WriteBytes(codeLoc, bytes);
-                hookManager.InstallHook(codeLoc.ToInt64(), origin, [0x8B, 0x06, 0x8B, 0x50, 0x1C]);
+                hookManager.InstallHook(codeLoc, origin, [0x8B, 0x06, 0x8B, 0x50, 0x1C]);
                 _disableTargetHookInstalled = true;
             }
             else
@@ -267,119 +243,144 @@ namespace SilkySouls2.Services
                 _disabledEntities.Remove(chrAi);
                 for (int i = 0; i < _disabledEntities.Count; i++)
                 {
-                    memoryService.WriteInt32(arrayLoc + i * 4, (int)_disabledEntities[i]);
+                    memoryService.Write(arrayLoc + i * 4, (int)_disabledEntities[i]);
                 }
 
-                memoryService.WriteInt32(countLoc, _disabledEntities.Count);
+                memoryService.Write(countLoc, _disabledEntities.Count);
                 if (_disabledEntities.Count != 0) return;
-                hookManager.UninstallHook(codeLoc.ToInt64());
+                hookManager.UninstallHook(codeLoc);
                 ClearDisableEntities();
                 _disableTargetHookInstalled = false;
             }
         }
 
-        public bool IsAiDisabled(long targetId) => _disabledEntities.Contains(GetChrAi(targetId));
+        public bool IsAiDisabled(nint targetId) => _disabledEntities.Contains(GetChrAi(targetId));
 
-        private long GetChrAi(long targetId)
+        private nint GetChrAi(nint targetId)
         {
-            if (PatchManager.IsScholar())
-            {
-                var operatorPtr = memoryService.Read<nint>((IntPtr)(targetId + ChrCtrlOffsets.Operator));
-                var chrAiManPtr = memoryService.Read<nint>(operatorPtr + ChrCtrlOffsets.OperatorOffsets.ChrAiManipulator);
-                var chrAi = memoryService.Read<nint>(chrAiManPtr + ChrCtrlOffsets.ChrAiManipulatorOffsets.ChrAi);
-                return chrAi;
-            }
-            else
-            {
-                var operatorPtr = memoryService.Read<int>((IntPtr)(targetId + ChrCtrlOffsets.Operator));
-                var chrAiManPtr = memoryService.Read<int>((IntPtr)(operatorPtr + ChrCtrlOffsets.OperatorOffsets.ChrAiManipulator));
-                var chrAi = memoryService.Read<int>((IntPtr)(chrAiManPtr + ChrCtrlOffsets.ChrAiManipulatorOffsets.ChrAi));
-                return chrAi;
-            }
+            var operatorPtr = memoryService.ReadPointer(targetId + ChrCtrl.Operator);
+            var chrAiManPtr = memoryService.ReadPointer(operatorPtr + ChrCtrl.OperatorOffsets.ChrAiManipulator);
+            return memoryService.ReadPointer(chrAiManPtr + ChrCtrl.ChrAiManipulatorOffsets.ChrAi);
         }
 
         public void ClearDisableEntities()
         {
-            memoryService.WriteBytes(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DisableTargetAi.Array,
+            memoryService.WriteBytes(CustomCodeOffsets.Base + (int)CustomCodeOffsets.DisableTargetAi.Array,
                 new byte[0x100]);
-            memoryService.Write(CodeCaveOffsets.Base + (int)CodeCaveOffsets.DisableTargetAi.Count, 0);
+            memoryService.Write(CustomCodeOffsets.Base + (int)CustomCodeOffsets.DisableTargetAi.Count, 0);
             _disabledEntities.Clear();
         }
 
         public bool IsLightPoiseImmune()
         {
-            var targetPtr = PatchManager.IsScholar()
-                ? memoryService.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr)
-                : memoryService.ReadInt32(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr);
+            var targetPtr = memoryService.ReadPointer(CustomCodeOffsets.Base + CustomCodeOffsets.LockedTargetPtr);
+            var poiseStruct = memoryService.ReadPointer(targetPtr + ChrCtrl.PoiseImmunityPtr);
 
-            var poiseStruct = PatchManager.IsScholar()
-                ? memoryService.ReadInt64((IntPtr)targetPtr + ChrCtrlOffsets.PoiseImmunityPtr)
-                : memoryService.ReadInt32((IntPtr)targetPtr + ChrCtrlOffsets.PoiseImmunityPtr);
-
-            return memoryService.Read<byte>((IntPtr)poiseStruct + ChrCtrlOffsets.PoiseStuff.LightStaggerImmuneFlag) == 1;
+            return memoryService.Read<byte>(poiseStruct + ChrCtrl.PoiseStuff.LightStaggerImmuneFlag) == 1;
         }
 
         public int GetChrParam(int chrParamOffset)
         {
-            var targetPtr = PatchManager.IsScholar()
-                ? memoryService.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr)
-                : memoryService.ReadInt32(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr);
+            var targetPtr = memoryService.ReadPointer(CustomCodeOffsets.Base + CustomCodeOffsets.LockedTargetPtr);
+            var chrParamBase = memoryService.ReadPointer(targetPtr + ChrCtrl.ChrParam);
 
-            var chrParamBase = PatchManager.IsScholar()
-                ? memoryService.ReadInt64((IntPtr)targetPtr + ChrCtrlOffsets.ChrParam)
-                : memoryService.ReadInt32((IntPtr)targetPtr + ChrCtrlOffsets.ChrParam);
-
-            return memoryService.Read<int>((IntPtr)chrParamBase + chrParamOffset);
+            return memoryService.Read<int>(chrParamBase + chrParamOffset);
         }
 
         public float GetChrCommonParam(int chrCommonOffset)
         {
-            var targetPtr = PatchManager.IsScholar()
-                ? memoryService.ReadInt64(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr)
-                : memoryService.ReadInt32(CodeCaveOffsets.Base + CodeCaveOffsets.LockedTargetPtr);
+            var targetPtr = memoryService.ReadPointer(CustomCodeOffsets.Base + CustomCodeOffsets.LockedTargetPtr);
+            var chrParamBase = memoryService.ReadPointer(targetPtr + ChrCtrl.ChrCommon);
 
-            var chrParamBase = PatchManager.IsScholar()
-                ? memoryService.ReadInt64((IntPtr)targetPtr + ChrCtrlOffsets.ChrCommon)
-                : memoryService.ReadInt32((IntPtr)targetPtr + ChrCtrlOffsets.ChrCommon);
-
-            return memoryService.Read<float>((IntPtr)chrParamBase + chrCommonOffset);
+            return memoryService.Read<float>(chrParamBase + chrCommonOffset);
         }
 
         public TargetState GetTargetState()
         {
-            int memStart = ChrCtrlOffsets.Hp;
-            int blockSize = (ChrCtrlOffsets.Speed + 4) - ChrCtrlOffsets.Hp;
+            int memStart = ChrCtrl.Hp;
+            int blockSize = (ChrCtrl.Speed + 4) - ChrCtrl.Hp;
             var ptr = GetTargetChrCtrl() + memStart;
             var block = new MemoryBlock(memoryService.ReadBytes(ptr, blockSize));
 
             return new TargetState
             {
-                CurrentHp = block.Get<int>(ChrCtrlOffsets.Hp - memStart),
-                MaxHp = block.Get<int>(ChrCtrlOffsets.MaxHp - memStart),
-                CurrentHeavyPoise = block.Get<float>(ChrCtrlOffsets.HeavyPoiseCurrent - memStart),
-                CurrentLightPoise = block.Get<float>(ChrCtrlOffsets.LightPoiseCurrent - memStart),
-                CurrentPoison = block.Get<float>(ChrCtrlOffsets.PoisonCurrent - memStart),
-                CurrentToxic = block.Get<float>(ChrCtrlOffsets.ToxicCurrent - memStart),
-                CurrentBleed = block.Get<float>(ChrCtrlOffsets.BleedCurrent - memStart),
-                Speed = block.Get<float>(ChrCtrlOffsets.Speed - memStart),
+                CurrentHp = block.Get<int>(ChrCtrl.Hp - memStart),
+                MaxHp = block.Get<int>(ChrCtrl.MaxHp - memStart),
+                CurrentHeavyPoise = block.Get<float>(ChrCtrl.HeavyPoiseCurrent - memStart),
+                CurrentLightPoise = block.Get<float>(ChrCtrl.LightPoiseCurrent - memStart),
+                CurrentPoison = block.Get<float>(ChrCtrl.PoisonCurrent - memStart),
+                CurrentToxic = block.Get<float>(ChrCtrl.ToxicCurrent - memStart),
+                CurrentBleed = block.Get<float>(ChrCtrl.BleedCurrent - memStart),
+                Speed = block.Get<float>(ChrCtrl.Speed - memStart),
             };
         }
 
         public TargetMaxValues GetMaxValues()
         {
-            int memStart = ChrCtrlOffsets.HeavyPoiseMax;
-            int blockSize = (ChrCtrlOffsets.LightPoiseMax + 4) - ChrCtrlOffsets.HeavyPoiseMax;
+            int memStart = ChrCtrl.HeavyPoiseMax;
+            int blockSize = (ChrCtrl.LightPoiseMax + 4) - ChrCtrl.HeavyPoiseMax;
             var ptr = GetTargetChrCtrl() + memStart;
             var block = new MemoryBlock(memoryService.ReadBytes(ptr, blockSize));
 
             return new TargetMaxValues
             {
-                MaxHeavyPoise = block.Get<float>(ChrCtrlOffsets.HeavyPoiseMax - memStart),
-                MaxLightPoise = block.Get<float>(ChrCtrlOffsets.LightPoiseMax - memStart),
-                PoisonMax = block.Get<float>(ChrCtrlOffsets.PoisonMax - memStart),
-                ToxicMax = block.Get<float>(ChrCtrlOffsets.ToxicMax - memStart),
-                BleedMax = block.Get<float>(ChrCtrlOffsets.BleedMax - memStart),
+                MaxHeavyPoise = block.Get<float>(ChrCtrl.HeavyPoiseMax - memStart),
+                MaxLightPoise = block.Get<float>(ChrCtrl.LightPoiseMax - memStart),
+                PoisonMax = block.Get<float>(ChrCtrl.PoisonMax - memStart),
+                ToxicMax = block.Get<float>(ChrCtrl.ToxicMax - memStart),
+                BleedMax = block.Get<float>(ChrCtrl.BleedMax - memStart),
             };
         }
+
+        public void ToggleDistHook(bool isEnabled)
+        {
+            var code = CustomCodeOffsets.Base + CustomCodeOffsets.GetDistCode;
+            if (isEnabled)
+            {
+                if (PatchManager.IsScholar()) InstallScholarGetDist(code);
+                else InstallVanillaGetDist(code);
+            }
+            else
+            {
+                hookManager.UninstallHook(code);
+            }
+        }
+
+        private void InstallScholarGetDist(nint code)
+        {
+            var bytes = AsmLoader.GetAsmBytes(AsmScript.GetDist64);
+            var savedDist = CustomCodeOffsets.Base + CustomCodeOffsets.TargetDist;
+            var lockedTarget = CustomCodeOffsets.Base + CustomCodeOffsets.LockedTargetPtr;
+            AsmHelper.WriteRelativeOffsets(bytes, [
+            (code + 0x4, lockedTarget, 7, 0x4 + 3),
+            (code + 0x11, GameManagerImp.Base, 7, 0x11 + 3),
+            (code + 0x6D, Functions.ResolveTargetCtrlFromHandle, 5, 0x6D + 1),
+            (code + 0x92, savedDist, 8, 0x92 + 4),
+            (code + 0xBA, Hooks.PreAiEzState + 7, 5, 0xBA + 1)
+            ]);
+            
+            memoryService.WriteBytes(code, bytes);
+            hookManager.InstallHook(code, Hooks.PreAiEzState, [0x48, 0x8B, 0x4B, 0x60, 0x0F, 0x28, 0xCE]);
+        }
+
+        private void InstallVanillaGetDist(nint code)
+        {
+            var bytes = AsmLoader.GetAsmBytes(AsmScript.GetDist32);
+            var savedDist = CustomCodeOffsets.Base + CustomCodeOffsets.TargetDist;
+            var lockedTarget = CustomCodeOffsets.Base + CustomCodeOffsets.LockedTargetPtr;
+            
+            AsmHelper.WriteAbsoluteAddresses32(bytes, [
+            (lockedTarget, 0x3 + 2),
+            (GameManagerImp.Base, 0xB + 1),
+            (savedDist, 0x49 + 2)
+            ]);
+            
+            AsmHelper.WriteRelativeOffset(bytes, code + 0x5A, Hooks.PreAiEzState + 5, 5, 0x5A + 1);
+            
+            memoryService.WriteBytes(code, bytes);
+            hookManager.InstallHook(code, Hooks.PreAiEzState, [0x8B, 0x4E, 0x3C, 0x8B, 0x11]);
+        }
+
+        public float GetDist() => memoryService.Read<float>(CustomCodeOffsets.Base + CustomCodeOffsets.TargetDist);
     }
 }

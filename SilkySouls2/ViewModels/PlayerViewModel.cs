@@ -52,7 +52,6 @@ namespace SilkySouls2.ViewModels
             stateService.Subscribe(State.FirstLoaded, OnGameFirstLoaded);
             stateService.Subscribe(State.NewGameStarted, OnNewGameStarted);
             stateService.Subscribe(State.Attached, OnGameAttached);
-            stateService.Subscribe(State.DelayedGameLoad, OnDelayedGameLoad);
 
             RegisterHotkeys();
 
@@ -751,7 +750,7 @@ namespace SilkySouls2.ViewModels
         private void OnGameLoaded()
         {
             if (IsNoDeathEnabled) _playerService.ToggleNoDeath(true);
-
+            if (IsNoHitEnabled) _playerService.ToggleNoHit(true);
             AreOptionsEnabled = true;
             LoadStats();
             _gameTickService.Subscribe(PlayerTick);
@@ -781,10 +780,6 @@ namespace SilkySouls2.ViewModels
             _gameTickService.Unsubscribe(PlayerTick);
         }
         
-        private void OnDelayedGameLoad()
-        {
-            if (IsNoHitEnabled) _playerService.ToggleNoHit(true);
-        }
 
         private void OnNewGameStarted()
         {

@@ -136,7 +136,6 @@ namespace SilkySouls2
         }
 
         private bool _loaded;
-        private bool _hasAppliedDelayedFeatures;
         private bool _appliedOneTimeFeatures;
         private int _storedArea;
         private int _currentArea;
@@ -172,15 +171,6 @@ namespace SilkySouls2
 
             if (_stateService.IsGameLoaded())
             {
-                if (!_hasAppliedDelayedFeatures)
-                {
-                    if (!_stateService.IsLoadingScreen())
-                    {
-                        _hasAppliedDelayedFeatures = true;
-                        _stateService.Publish(State.DelayedGameLoad);
-                    }
-                }
-
                 if (_loaded) return;
                 _loaded = true;
 
@@ -199,7 +189,6 @@ namespace SilkySouls2
             {
                 _stateService.Publish(State.NotLoaded);
                 _loaded = false;
-                _hasAppliedDelayedFeatures = false;
             }
         }
 
@@ -219,7 +208,6 @@ namespace SilkySouls2
             _attachCts?.Cancel();
             _isReady = false;
             _loaded = false;
-            _hasAppliedDelayedFeatures = false;
             _appliedOneTimeFeatures = false;
             _stateService.Publish(State.NotLoaded);
             _stateService.Publish(State.Detached);

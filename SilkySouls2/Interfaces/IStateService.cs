@@ -11,5 +11,4 @@ public interface IStateService
     void Subscribe(State eventType, Action handler);
     void Unsubscribe(State eventType, Action handler);
     bool IsGameLoaded();
-    bool IsLoadingScreen();
 }

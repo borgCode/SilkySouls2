@@ -67,6 +67,13 @@ namespace SilkySouls2.Memory
                 Scholar1_0_2 or Scholar1_0_3 => [DLBackAllocator, 0x110, 0x10, 0x38, 0x30, 0x30, 0x1E],
                 _ => []
             };
+            
+            public static int Step => PatchManager.Current.PatchVersion switch
+            {
+                Vanilla1_0_11 or Vanilla1_0_12 => 0xDEC,
+                Scholar1_0_2 or Scholar1_0_3 => 0x24AC,
+                _ => 0x0
+            };
 
             public static int Quitout => PatchManager.Current.PatchVersion switch
             {

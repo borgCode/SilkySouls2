@@ -33,7 +33,6 @@ namespace SilkySouls2.ViewModels
 
             stateService.Subscribe(State.Loaded, OnGameLoaded);
             stateService.Subscribe(State.NotLoaded, OnGameNotLoaded);
-            stateService.Subscribe(State.DelayedGameLoad, OnDelayedGameLoad);
             stateService.Subscribe(State.FirstLoaded, OnGameFirstLoaded);
 
             RegisterHotkeys();
@@ -311,17 +310,12 @@ namespace SilkySouls2.ViewModels
             if (IsPigSummonsEnabled) _enemyService.ToggleElanaSummons(IsPigSummonsEnabled);
             if (IsSkellySummonsEnabled) _enemyService.ToggleElanaSummons(_isSkellySummonsEnabled, 0x5);
             if (IsVelstadtSummonEnabled) _enemyService.ToggleElanaSummons(_isVelstadtSummonEnabled, 0x62);
+            if (IsMadWarriorSpawnEnabled) UpdateMadWarriorStatus();
         }
-
-
+        
         private void OnGameNotLoaded()
         {
             AreOptionsEnabled = false;
-        }
-        
-        private void OnDelayedGameLoad()
-        {
-            if (IsMadWarriorSpawnEnabled) UpdateMadWarriorStatus();
         }
     }
 }

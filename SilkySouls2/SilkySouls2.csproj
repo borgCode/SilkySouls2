@@ -147,6 +147,7 @@
         <Compile Include="Models\Loadout.cs" />
         <Compile Include="Models\NpcInfo.cs" />
         <Compile Include="Models\InventorySpell.cs" />
+        <Compile Include="Models\Position.cs" />
         <Compile Include="Models\Target\TargetMaxValues.cs" />
         <Compile Include="Models\Target\TargetState.cs" />
         <Compile Include="Models\WarpLocation.cs" />

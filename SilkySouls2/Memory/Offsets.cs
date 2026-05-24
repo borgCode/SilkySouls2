@@ -300,6 +300,13 @@ namespace SilkySouls2.Memory
                 Scholar1_0_2 or Scholar1_0_3 => 0x40,
                 _ => 0x0
             };
+            
+            public static int Orientation => PatchManager.Current.PatchVersion switch
+            {
+                // Vanilla1_0_11 or Vanilla1_0_12 => 0x80,
+                Scholar1_0_2 or Scholar1_0_3 => 0x80,
+                _ => 0x0
+            };
 
             public static int Coords => PatchManager.Current.PatchVersion switch
             {
@@ -314,6 +321,37 @@ namespace SilkySouls2.Memory
                 Scholar1_0_2 or Scholar1_0_3 => 0xB8,
                 _ => 0x0
             };
+
+            public static int PositionCtrl => PatchManager.Current.PatchVersion switch
+            {
+                // Vanilla1_0_11 or Vanilla1_0_12 => 0x94,
+                Scholar1_0_2 or Scholar1_0_3 => 0xC8,
+                _ => 0x0
+            };
+
+            public static class PositionCtrlOffsets
+            {
+                public static int Position => PatchManager.Current.PatchVersion switch
+                {
+                    // Vanilla1_0_11 or Vanilla1_0_12 => 0x94,
+                    Scholar1_0_2 or Scholar1_0_3 => 0x0,
+                    _ => 0x0
+                };
+                
+                public static int Orientation => PatchManager.Current.PatchVersion switch
+                {
+                    // Vanilla1_0_11 or Vanilla1_0_12 => 0x94,
+                    Scholar1_0_2 or Scholar1_0_3 => 0x10,
+                    _ => 0x0
+                };
+                
+                public static int Flags => PatchManager.Current.PatchVersion switch
+                {
+                    // Vanilla1_0_11 or Vanilla1_0_12 => 0x94,
+                    Scholar1_0_2 or Scholar1_0_3 => 0xFC,
+                    _ => 0x0
+                };
+            }
 
             public static int ChrFlags => PatchManager.Current.PatchVersion switch
             {

@@ -4,6 +4,7 @@ using SilkySouls2.enums;
 using SilkySouls2.GameIds;
 using SilkySouls2.Interfaces;
 using SilkySouls2.Memory;
+using SilkySouls2.Models;
 using SilkySouls2.Utilities;
 using static SilkySouls2.Memory.Offsets;
 
@@ -16,6 +17,13 @@ namespace SilkySouls2.Services
         IReminderService reminderService)
         : IPlayerService
     {
+        
+        private readonly Position[] _positions =
+        [
+            new(Vector4.Zero, Vector4.Zero),
+            new(Vector4.Zero, Vector4.Zero)
+        ];
+        
         public int GetHp() =>
             memoryService.Read<int>(GetPlayerCtrlField(ChrCtrl.Hp));
 
@@ -216,25 +224,30 @@ namespace SilkySouls2.Services
 
         public void ToggleInfiniteDurability(bool enabled) =>
             memoryService.WriteBytes(Patches.InfiniteDurability, PatchDefinitions.InfiniteDurability.Get(enabled));
-
-        private byte[] _savedPos1Bytes;
-        private byte[] _savedPos2Bytes;
-
+        
         public void SavePos(int index)
         {
-            byte[] positionBytes = memoryService.ReadBytes(GetPositionPtr(), 0x40);
-            if (index == 0) _savedPos1Bytes = positionBytes;
-            else _savedPos2Bytes = positionBytes;
+            var bytes = memoryService.ReadBytes(GetPlayerCtrl() + ChrCtrl.Orientation, 0x20);
+            var block = new MemoryBlock(bytes);
+
+            var pos = _positions[index];
+            pos.Orientation = block.Get<Vector4>(0x00);
+            pos.Coords      = block.Get<Vector4>(0x10);
         }
 
         public void RestorePos(int index)
         {
-            byte[] positionBytes;
-            if (index == 0) positionBytes = _savedPos1Bytes;
-            else positionBytes = _savedPos2Bytes;
-            memoryService.WriteBytes(GetPositionPtr(), positionBytes);
+            var positionCtrl = memoryService.FollowPointers(GameManagerImp.Base,
+                [GameManagerImp.PlayerCtrl, ChrCtrl.PositionCtrl], true);
+            
+            var pos = _positions[index];
+            
+            memoryService.Write(positionCtrl + ChrCtrl.PositionCtrlOffsets.Position, pos.Coords);
+            memoryService.Write(positionCtrl + ChrCtrl.PositionCtrlOffsets.Orientation, pos.Orientation);
+            
+            memoryService.SetBitValue(positionCtrl + ChrCtrl.PositionCtrlOffsets.Flags, 0b00000011, true);
         }
-
+        
         public Vector3 GetCoords() => chrCtrlService.GetPos(GetPlayerCtrl());
 
         public void SetNewGame(int value) => memoryService.Write(GetNewGamePtr(), (byte)value);

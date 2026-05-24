@@ -160,6 +160,7 @@ namespace SilkySouls2
             _currentArea = _memoryService.Read<int>(MapId);
             if (_currentArea != _storedArea)
             {
+                Console.WriteLine(_currentArea);
                 _stateService.Publish(State.AreaChanged, _currentArea);
                 _storedArea = _currentArea;
             }

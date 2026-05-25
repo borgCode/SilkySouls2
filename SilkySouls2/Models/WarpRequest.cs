@@ -53,16 +53,9 @@ namespace SilkySouls2.Models
             SpawnAnim = DefaultSpawnAnim,
             PayloadId = eventPointId
         };
-
-        // Kinds 0 and 1 share the same payload layout: pos at +0x18..+0x24, quat at +0x28..+0x34.
-        // Kind 1 adds the map-area-owner offset to position if one exists, otherwise behaves like Kind 0.
+        
         public static WarpRequest ForDirect(WarpKind kind, uint mapId, float[] pos, float[] quat)
         {
-            if (kind != WarpKind.Direct && kind != WarpKind.DirectWithOffset)
-                throw new System.ArgumentException($"ForDirect requires Direct or DirectWithOffset, got {kind}.");
-            if (pos == null || pos.Length != 4) throw new System.ArgumentException("pos must be float[4]");
-            if (quat == null || quat.Length != 4) throw new System.ArgumentException("quat must be float[4]");
-
             return new WarpRequest
             {
                 Kind = (uint)kind,

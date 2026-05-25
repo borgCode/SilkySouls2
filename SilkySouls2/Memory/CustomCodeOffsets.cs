@@ -20,23 +20,11 @@
             DamageControlCode = 0x80
         }
 
-        public enum BonfireWarp
-        {
-            Output = 0x110,
-            BonfireId = 0x190,
-            WarpCode = 0x1A0,
-            Coords = 0x200,
-            CoordWrite = 0x240,
-        }
-
+        
         public const int LockedTargetPtr = 0x300;
         public const int SaveLockedTarget = 0x310;
 
-        public enum EventWarp
-        {
-            Params = 0x320,
-            Code = 0x360
-        }
+
 
         public enum CreditSkip
         {
@@ -149,7 +137,7 @@
         public const int TargetDist = 0x2E00;
         public const int GetDistCode = 0x2E10;
 
-        public enum WarpV2
+        public enum Warp
         {
             Request = 0x3000,
             Stub = 0x3050

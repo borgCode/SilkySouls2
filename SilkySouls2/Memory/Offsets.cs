@@ -81,14 +81,7 @@ namespace SilkySouls2.Memory
                 Scholar1_0_2 or Scholar1_0_3 => 0x24B1,
                 _ => 0x0
             };
-
-            public static int LoadingFlag => PatchManager.Current.PatchVersion switch
-            {
-                Vanilla1_0_11 or Vanilla1_0_12 => 0xDFC,
-                Scholar1_0_2 or Scholar1_0_3 => 0x24BC,
-                _ => 0x0
-            };
-
+            
             public static int PendingCutsceneId => PatchManager.Current.PatchVersion switch
             {
                 Vanilla1_0_11 or Vanilla1_0_12 => 0xE18,

@@ -16,7 +16,7 @@ namespace SilkySouls2.Services
             if (entry == null) return;
 
             var request = BuildRequest(entry);
-            var requestLoc = CustomCodeOffsets.Base + (int)CustomCodeOffsets.WarpV2.Request;
+            var requestLoc = CustomCodeOffsets.Base + (int)CustomCodeOffsets.Warp.Request;
             memoryService.Write(requestLoc, request);
 
             var warpManager = memoryService.FollowPointers(GameManagerImp.Base, [
@@ -24,7 +24,7 @@ namespace SilkySouls2.Services
                 GameManagerImp.EventManagerOffsets.EventWarpManager
             ], true);
 
-            var code = CustomCodeOffsets.Base + (int)CustomCodeOffsets.WarpV2.Stub;
+            var code = CustomCodeOffsets.Base + (int)CustomCodeOffsets.Warp.Stub;
             if (PatchManager.IsScholar()) WriteScholarWarpCode(code, warpManager, requestLoc, Functions.RequestWarp);
             else WriteVanillaWarpCode(code, warpManager, requestLoc, Functions.RequestWarp);
             

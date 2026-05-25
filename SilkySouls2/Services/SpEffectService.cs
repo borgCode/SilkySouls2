@@ -14,7 +14,7 @@ namespace SilkySouls2.Services
             var spEffectParams = CustomCodeOffsets.Base + CustomCodeOffsets.SpEffectParams;
             var code = CustomCodeOffsets.Base + CustomCodeOffsets.SpEffectCode;
 
-            var chrSpEffectCtrl = memoryService.Read<nint>(chrCtrl + ChrCtrl.ChrSpEffectCtrl);
+            var chrSpEffectCtrl = memoryService.ReadPointer(chrCtrl + ChrCtrl.ChrSpEffectCtrl);
 
             memoryService.WriteBytes(spEffectParams, spEffect.ToBytes());
 

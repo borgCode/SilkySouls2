@@ -118,11 +118,11 @@ namespace SilkySouls2.Views.Windows
                 Area = category,
                 Name = name,
                 MapId = currentPos.MapId,
-                Pos = [currentPos.Coords.X, currentPos.Coords.Y, currentPos.Coords.Z, currentPos.Coords.W],
+                Pos = [currentPos.WarpCoords.X, currentPos.WarpCoords.Y, currentPos.WarpCoords.Z, currentPos.WarpCoords.W],
                 Quat =
                 [
-                    currentPos.Orientation.X, currentPos.Orientation.Y, currentPos.Orientation.Z,
-                    currentPos.Orientation.W
+                    currentPos.WarpQuaternion.X, currentPos.WarpQuaternion.Y, currentPos.WarpQuaternion.Z,
+                    currentPos.WarpQuaternion.W
                 ]
             };
 

@@ -44,7 +44,7 @@ public class NewGameService : INewGameService
 
     public bool IsAtNewGameStartCutscene()
     {
-        var gameMan = _memoryService.Read<nint>(GameManagerImp.Base);
+        var gameMan = _memoryService.ReadPointer(GameManagerImp.Base);
         return _memoryService.Read<int>(gameMan + GameManagerImp.PendingCutsceneId) == StartingCutsceneId;
     }
 

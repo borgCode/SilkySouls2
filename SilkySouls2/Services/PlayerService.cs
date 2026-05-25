@@ -4,7 +4,6 @@ using SilkySouls2.enums;
 using SilkySouls2.Interfaces;
 using SilkySouls2.Memory;
 using SilkySouls2.Models;
-using SilkySouls2.Models.V2;
 using SilkySouls2.Utilities;
 using static SilkySouls2.Memory.Offsets;
 
@@ -235,7 +234,6 @@ namespace SilkySouls2.Services
             pos.WarpCoords = current.WarpCoords;
             pos.WarpQuaternion = current.WarpQuaternion;
             pos.MapId = current.MapId;
-            
         }
 
         
@@ -248,17 +246,17 @@ namespace SilkySouls2.Services
             var orientation = inArea.Get<Vector4>(0x00);
             var coords = inArea.Get<Vector4>(0x10);
             
-            var matrixBytes = memoryService.ReadBytes(playerCtrl + 0x60, 0x30);
+            var matrixBytes = memoryService.ReadBytes(playerCtrl + ChrCtrl.Rot, 0x30);
             var m = new MemoryBlock(matrixBytes);
             float m00 = m.Get<float>(0x00), m01 = m.Get<float>(0x04), m02 = m.Get<float>(0x08);
             float m10 = m.Get<float>(0x10), m11 = m.Get<float>(0x14), m12 = m.Get<float>(0x18);
             float m20 = m.Get<float>(0x20), m21 = m.Get<float>(0x24), m22 = m.Get<float>(0x28);
             var warpQuat = MatrixMath.MatrixToQuaternion(m00, m01, m02, m10, m11, m12, m20, m21, m22);
-            var warpPos = memoryService.Read<Vector4>(playerCtrl + 0xA0);
+            var rawPos = memoryService.Read<Vector4>(playerCtrl + ChrCtrl.RawPos);
 
             return new Position(coords, orientation, memoryService.Read<uint>(MapId))
             {
-                WarpCoords = warpPos,
+                WarpCoords = rawPos,
                 WarpQuaternion = warpQuat
             };
         }

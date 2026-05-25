@@ -1,4 +1,4 @@
-using SilkySouls2.ViewModels.V2;
+using SilkySouls2.ViewModels;
 
 namespace SilkySouls2.Views.Tabs
 {

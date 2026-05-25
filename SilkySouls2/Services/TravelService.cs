@@ -1,13 +1,12 @@
 using System.Diagnostics.CodeAnalysis;
 using SilkySouls2.enums;
-using SilkySouls2.GameIds;
 using SilkySouls2.Interfaces;
 using SilkySouls2.Memory;
-using SilkySouls2.Models.V2;
+using SilkySouls2.Models;
 using SilkySouls2.Utilities;
 using static SilkySouls2.Memory.Offsets;
 
-namespace SilkySouls2.Services.V2
+namespace SilkySouls2.Services
 {
 
     public class TravelService(IMemoryService memoryService) : ITravelService

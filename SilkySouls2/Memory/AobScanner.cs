@@ -68,10 +68,7 @@ namespace SilkySouls2.Memory
                     addr => Offsets.Hooks.InfinitePoise = addr, saved);
                 TryPatternWithFallback("DamageControl", Patterns32.DamageControl,
                     addr => Offsets.Hooks.DamageControl = addr, saved);
-                // TryPatternWithFallback("PlayerNoDamage", Patterns32.PlayerNoDamage,
-                //     addr => Offsets.Hooks.PlayerNoDamage = addr, saved);
-                TryPatternWithFallback("WarpCoordWrite", Patterns32.WarpCoordWrite,
-                    addr => Offsets.Hooks.WarpCoordWrite = addr, saved);
+
                 TryPatternWithFallback("SetSharedFlag", Patterns32.SetSharedFlag,
                     addr => Offsets.Hooks.SetSharedFlag = addr, saved);
                 TryPatternWithFallback("TriggersAndSpace", Patterns32.TriggersAndSpace,
@@ -167,12 +164,7 @@ namespace SilkySouls2.Memory
                     { addr => Offsets.Functions.ConvertMapEntityToGameId = (nint)addr, 0x17 },
                 });
 
-                FindMultipleCallsInFunction(Patterns32.BonfireWarp, new Dictionary<Action<long>, int>
-                {
-                    { addr => Offsets.Functions.WarpPrep = (nint)addr, 0x7 },
-                    { addr => Offsets.Functions.BonfireWarp = (nint)addr, 0x1F },
-                });
-
+                
                 FindMultipleCallsInFunction(Patterns32.DisableNavimesh, new Dictionary<Action<long>, int>
                 {
                     { addr => Offsets.Functions.GetNavimeshLoc = (nint)addr, -0xE },

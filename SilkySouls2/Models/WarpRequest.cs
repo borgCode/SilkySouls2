@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace SilkySouls2.Models.V2
+namespace SilkySouls2.Models
 {
     
     [StructLayout(LayoutKind.Explicit, Size = 0x40)]

@@ -1,4 +1,5 @@
-using SilkySouls2.Models.V2;
+
+using SilkySouls2.Models;
 
 namespace SilkySouls2.Interfaces
 {

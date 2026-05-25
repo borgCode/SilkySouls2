@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace SilkySouls2.Models.V2
+namespace SilkySouls2.Models
 {
     public class WarpEntry
     {

@@ -1,4 +1,4 @@
-namespace SilkySouls2.Models.V2
+namespace SilkySouls2.Models
 {
     public enum WarpKind
     {

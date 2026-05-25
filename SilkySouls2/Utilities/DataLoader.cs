@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using SilkySouls2.Models;
 using SilkySouls2.Properties;
 
@@ -9,71 +12,60 @@ namespace SilkySouls2.Utilities
 {
     public static class DataLoader
     {
-        public static Dictionary<string, List<WarpLocation>> GetLocations()
+        
+        private static readonly JsonSerializerOptions ReadOptions = new()
         {
-            Dictionary<string, List<WarpLocation>> warpDict = new Dictionary<string, List<WarpLocation>>();
-            string csvData = Resources.WarpLocations;
+            PropertyNameCaseInsensitive = true,
+            ReadCommentHandling = JsonCommentHandling.Skip,
+            AllowTrailingCommas = true,
+            Converters = { new JsonStringEnumConverter() }
+        };
 
-            if (string.IsNullOrWhiteSpace(csvData))
-                return warpDict;
+        private static readonly JsonSerializerOptions WriteOptions = new()
+        {
+            WriteIndented = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            Converters = { new JsonStringEnumConverter() }
+        };
 
-            using (StringReader reader = new StringReader(csvData))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#")) continue;
-
-                    string[] parts = line.Split(',');
-                    if (parts.Length < 3) continue;
-
-                    int bonfireId = int.Parse(parts[0], NumberStyles.Integer, CultureInfo.InvariantCulture);
-                    string mainAreaName = parts[1].Trim();
-                    string bonfireName = parts[2].Trim();
-
-                    WarpLocation location = new WarpLocation
-                    {
-                        BonfireId = bonfireId,
-                        MainArea = mainAreaName,
-                        LocationName = bonfireName
-                    };
-
-                    if (parts[3].Contains("|"))
-                    {
-                        string[] coordParts = parts[3].Split('|');
-
-                        location.Coordinates = new float[coordParts.Length];
-
-                        for (int i = 0; i < coordParts.Length; i++)
-                        {
-                            if (!string.IsNullOrWhiteSpace(coordParts[i]))
-                            {
-                                location.Coordinates[i] = float.Parse(coordParts[i], CultureInfo.InvariantCulture);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        location.EventObjId = int.Parse(parts[3], NumberStyles.Integer, CultureInfo.InvariantCulture);
-                    }
-
-
-                    if (parts.Length > 4 && !string.IsNullOrWhiteSpace(parts[4]))
-                    {
-                        location.EventObjId = int.Parse(parts[4], NumberStyles.Integer, CultureInfo.InvariantCulture);
-                    }
-
-                    if (!warpDict.ContainsKey(mainAreaName))
-                    {
-                        warpDict[mainAreaName] = new List<WarpLocation>();
-                    }
-
-                    warpDict[mainAreaName].Add(location);
-                }
-            }
-
-            return warpDict;
+        public static List<WarpEntry> GetWarpEntries()
+        {
+            var json = Resources.ResourceManager.GetString("WarpLocations");
+            if (string.IsNullOrWhiteSpace(json)) return new List<WarpEntry>();
+            return JsonSerializer.Deserialize<List<WarpEntry>>(json, ReadOptions) ?? new List<WarpEntry>();
         }
+
+        public static List<WarpEntry> LoadCustomWarps()
+        {
+            var path = CustomWarpsPath;
+            if (!File.Exists(path)) return new List<WarpEntry>();
+            try
+            {
+                var json = File.ReadAllText(path);
+                return JsonSerializer.Deserialize<List<WarpEntry>>(json, ReadOptions) ?? new List<WarpEntry>();
+            }
+            catch
+            {
+                return new List<WarpEntry>();
+            }
+        }
+
+        public static void SaveCustomWarps(IEnumerable<WarpEntry> entries)
+        {
+            var dir = Path.GetDirectoryName(CustomWarpsPath);
+            if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
+
+            var json = JsonSerializer.Serialize(entries.ToList(), WriteOptions);
+            File.WriteAllText(CustomWarpsPath, json);
+        }
+
+        public static Dictionary<string, List<WarpEntry>> GroupByArea(IEnumerable<WarpEntry> entries) =>
+            entries.GroupBy(e => e.Area).ToDictionary(g => g.Key, g => g.ToList());
+
+        private static string CustomWarpsPath => Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "SilkySouls2",
+            "CustomWarps.json");
 
         public static List<NpcInfo> GetNpcs()
         {

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using SilkySouls2.Interfaces;
-using SilkySouls2.Models.V2;
+using SilkySouls2.Models;
 using SilkySouls2.Utilities;
 
 namespace SilkySouls2.Views.Windows

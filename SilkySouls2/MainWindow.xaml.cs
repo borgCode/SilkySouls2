@@ -12,10 +12,8 @@ using SilkySouls2.Interfaces;
 using SilkySouls2.Memory;
 using SilkySouls2.Memory.DLLShared;
 using SilkySouls2.Services;
-using SilkySouls2.Services.V2;
 using SilkySouls2.Utilities;
 using SilkySouls2.ViewModels;
-using SilkySouls2.ViewModels.V2;
 using SilkySouls2.Views.Tabs;
 using static SilkySouls2.Memory.Offsets;
 

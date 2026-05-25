@@ -5,12 +5,12 @@ using SilkySouls2.Core;
 using SilkySouls2.enums;
 using SilkySouls2.GameIds;
 using SilkySouls2.Interfaces;
-using SilkySouls2.Models.V2;
+using SilkySouls2.Models;
 using SilkySouls2.Services;
 using SilkySouls2.Utilities;
 using SilkySouls2.Views.Windows;
 
-namespace SilkySouls2.ViewModels.V2
+namespace SilkySouls2.ViewModels
 {
     public class TravelViewModel : BaseViewModel
     {
@@ -36,20 +36,23 @@ namespace SilkySouls2.ViewModels.V2
             stateService.Subscribe(State.Loaded, () => AreOptionsEnabled = true);
             stateService.Subscribe(State.NotLoaded, () => AreOptionsEnabled = false);
 
-            var shipping = DataLoaderV2.GetShippingEntries();
-            var areaEntries = shipping.Where(e => e.Kind is WarpKind.Bonfire or WarpKind.EventPoint);
-            var bossEntries = shipping.Where(e => e.Kind is WarpKind.Direct or WarpKind.DirectWithOffset);
+            var shipping = DataLoader.GetWarpEntries();
+            
+            var bossEntries = shipping.Where(e =>
+                e.Kind is WarpKind.Direct or WarpKind.DirectWithOffset || e.Name == "Darklurker");
+            var areaEntries = shipping.Where(e =>
+                e.Kind is WarpKind.Bonfire or WarpKind.EventPoint && e.Name != "Darklurker");
 
             Areas = new SearchableGroupedCollection<string, WarpEntry>(
-                DataLoaderV2.GroupByArea(areaEntries),
+                DataLoader.GroupByArea(areaEntries),
                 MatchesSearch);
 
             Bosses = new SearchableGroupedCollection<string, WarpEntry>(
-                DataLoaderV2.GroupByArea(bossEntries),
+                DataLoader.GroupByArea(bossEntries),
                 MatchesSearch);
 
             CustomWarps = new SearchableGroupedCollection<string, WarpEntry>(
-                DataLoaderV2.GroupByArea(DataLoaderV2.LoadCustomWarps()),
+                DataLoader.GroupByArea(DataLoader.LoadCustomWarps()),
                 MatchesSearch);
 
             AreaWarpCommand = new DelegateCommand(() => WarpFrom(Areas));
@@ -152,7 +155,7 @@ namespace SilkySouls2.ViewModels.V2
                     break;
             }
 
-            DataLoaderV2.SaveCustomWarps(CustomWarps.AllItems);
+            DataLoader.SaveCustomWarps(CustomWarps.AllItems);
         }
     }
 }

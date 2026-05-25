@@ -2049,28 +2049,15 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 10655,Boss,Last Giant,92.18|-40.43|-147.47|0.00|92.18|-40.43|-147.47|55.84|92.18|-40.43|-147.47|0.00|0.00|0.00|0.00|1.00,0
-        ///10655,Boss,Pursuer,139.12|10.05|-217.90|0.00|139.12|10.05|-217.90|58.79|139.12|10.05|-217.90|0.00|0.00|0.00|0.00|1.00,0
-        ///31650,Boss,Dragonrider,-6.91|-14.66|283.71|0.00|-6.91|-14.66|283.71|36.76|-6.91|-14.66|283.71|0.00|0.00|0.00|0.00|1.00,0
-        ///31660,Boss,Ornstein,-144.09|8.03|170.72|0.00|-144.09|8.03|170.72|45.42|-144.09|8.03|170.72|0.00|0.00|0.00|0.00|1.00,0
-        ///18650,Boss,Flexile,2.91|-6 [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string WarpLocations {
-            get {
-                return ResourceManager.GetString("WarpLocations", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to [
         ///{ &quot;kind&quot;: &quot;Bonfire&quot;, &quot;area&quot;: &quot;Things Betwixt&quot;,            &quot;name&quot;: &quot;Fire Keeper&apos;s Dwelling&quot;,   &quot;bonfireId&quot;: 2650,  &quot;mapId&quot;: 167903232 },
         ///{ &quot;kind&quot;: &quot;Bonfire&quot;, &quot;area&quot;: &quot;Majula&quot;,                    &quot;name&quot;: &quot;Far Fire&quot;,                 &quot;bonfireId&quot;: 4650,  &quot;mapId&quot;: 168034304 },
         ///{ &quot;kind&quot;: &quot;Bonfire&quot;, &quot;area&quot;: &quot;Forest of Fallen Giants&quot;,   &quot;name&quot;: &quot;Crestfallen&apos;s Retreat&quot;,    &quot;bonfireId&quot;: 10670, &quot;mapId&quot;: 168427520 },
         ///{ &quot;kind&quot;: &quot;Bonfire&quot;, &quot;area&quot;: &quot;Forest of Fallen Giants&quot;,   &quot;name&quot;: &quot;Cardinal Tower&quot;,           &quot;bon [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string WarpLocationsV2 {
+        internal static string WarpLocations {
             get {
-                return ResourceManager.GetString("WarpLocationsV2", resourceCulture);
+                return ResourceManager.GetString("WarpLocations", resourceCulture);
             }
         }
         

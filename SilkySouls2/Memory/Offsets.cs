@@ -303,22 +303,29 @@ namespace SilkySouls2.Memory
             
             public static int Rot => PatchManager.Current.PatchVersion switch
             {
-                // Vanilla1_0_11 or Vanilla1_0_12 => 0x80,
+                Vanilla1_0_11 or Vanilla1_0_12 => 0x40,
                 Scholar1_0_2 or Scholar1_0_3 => 0x60,
                 _ => 0x0
             };
             
             public static int Orientation => PatchManager.Current.PatchVersion switch
             {
-                // Vanilla1_0_11 or Vanilla1_0_12 => 0x80,
+                Vanilla1_0_11 or Vanilla1_0_12 => 0x60,
                 Scholar1_0_2 or Scholar1_0_3 => 0x80,
                 _ => 0x0
             };
 
             public static int Coords => PatchManager.Current.PatchVersion switch
             {
-                Vanilla1_0_11 or Vanilla1_0_12 => 0x80,
+                Vanilla1_0_11 or Vanilla1_0_12 => 0x70,
                 Scholar1_0_2 or Scholar1_0_3 => 0x90,
+                _ => 0x0
+            };
+
+            public static int RawPos => PatchManager.Current.PatchVersion switch
+            {
+                Vanilla1_0_11 or Vanilla1_0_12 => 0x80,
+                Scholar1_0_2 or Scholar1_0_3 => 0xA0,
                 _ => 0x0
             };
 
@@ -331,7 +338,7 @@ namespace SilkySouls2.Memory
 
             public static int PositionCtrl => PatchManager.Current.PatchVersion switch
             {
-                // Vanilla1_0_11 or Vanilla1_0_12 => 0x94,
+                Vanilla1_0_11 or Vanilla1_0_12 => 0x9C,
                 Scholar1_0_2 or Scholar1_0_3 => 0xC8,
                 _ => 0x0
             };
@@ -340,21 +347,21 @@ namespace SilkySouls2.Memory
             {
                 public static int Position => PatchManager.Current.PatchVersion switch
                 {
-                    // Vanilla1_0_11 or Vanilla1_0_12 => 0x94,
+                    Vanilla1_0_11 or Vanilla1_0_12 => 0x0,
                     Scholar1_0_2 or Scholar1_0_3 => 0x0,
                     _ => 0x0
                 };
                 
                 public static int Orientation => PatchManager.Current.PatchVersion switch
                 {
-                    // Vanilla1_0_11 or Vanilla1_0_12 => 0x94,
+                    Vanilla1_0_11 or Vanilla1_0_12 => 0x10,
                     Scholar1_0_2 or Scholar1_0_3 => 0x10,
                     _ => 0x0
                 };
                 
                 public static int Flags => PatchManager.Current.PatchVersion switch
                 {
-                    // Vanilla1_0_11 or Vanilla1_0_12 => 0x94,
+                    Vanilla1_0_11 or Vanilla1_0_12 => 0xDC,
                     Scholar1_0_2 or Scholar1_0_3 => 0xFC,
                     _ => 0x0
                 };
@@ -741,7 +748,6 @@ namespace SilkySouls2.Memory
             public static nint CompareEventRandValueForlorn;
             public static nint CompareEventRandValueElana;
             public static nint PlayerNoDamage;
-            public static nint WarpCoordWrite;
             public static nint LockedTarget;
             public static nint CreditSkip;
             public static nint NumOfDrops;
@@ -772,8 +778,6 @@ namespace SilkySouls2.Memory
 
         public static class Functions
         {
-            public static nint WarpPrep;
-            public static nint BonfireWarp;
             public static nint RequestWarp;
             public static nint SetEvent;
             public static nint GiveSouls;
@@ -1095,14 +1099,6 @@ namespace SilkySouls2.Memory
                 _ => 0
             };
 
-            Functions.BonfireWarp = baseAddr + PatchManager.Current.PatchVersion switch
-            {
-                Vanilla1_0_11 => 0x20AE10,
-                Vanilla1_0_12 => 0x20D5E0,
-                Scholar1_0_2 => 0x181650,
-                Scholar1_0_3 => 0x184830,
-                _ => 0
-            };
             
             Functions.RequestWarp = baseAddr + PatchManager.Current.PatchVersion switch
             {
@@ -1425,15 +1421,6 @@ namespace SilkySouls2.Memory
                 _ => 0
             };
 
-            Hooks.WarpCoordWrite = baseAddr + PatchManager.Current.PatchVersion switch
-            {
-                Vanilla1_0_11 => 0x7F9FB0,
-                Vanilla1_0_12 => 0x8015B0,
-                Scholar1_0_2 => 0x711939,
-                Scholar1_0_3 => 0x718E99,
-                _ => 0
-            };
-
             Hooks.SetSharedFlag = baseAddr + PatchManager.Current.PatchVersion switch
             {
                 Vanilla1_0_11 => 0x43120B,
@@ -1615,14 +1602,6 @@ namespace SilkySouls2.Memory
             };
 
 
-            Functions.WarpPrep = baseAddr + PatchManager.Current.PatchVersion switch
-            {
-                Vanilla1_0_11 => 0x20A670,
-                Vanilla1_0_12 => 0x20CE40,
-                Scholar1_0_2 => 0x1811D0,
-                Scholar1_0_3 => 0x1843B0,
-                _ => 0
-            };
 
 
             Functions.SetRenderTargets = baseAddr + PatchManager.Current.PatchVersion switch
@@ -1714,7 +1693,6 @@ namespace SilkySouls2.Memory
             PrintOffset("CompareEventRandValueForlorn", Hooks.CompareEventRandValueForlorn);
             PrintOffset("CompareEventRandValueElana", Hooks.CompareEventRandValueElana);
             PrintOffset("PlayerNoDamage", Hooks.PlayerNoDamage);
-            PrintOffset("WarpCoordWrite", Hooks.WarpCoordWrite);
             PrintOffset("LockedTarget", Hooks.LockedTarget);
             PrintOffset("CreditSkip", Hooks.CreditSkip);
             PrintOffset("NumOfDrops", Hooks.NumOfDrops);
@@ -1743,8 +1721,7 @@ namespace SilkySouls2.Memory
             PrintOffset("PreAiEzState", Hooks.PreAiEzState);
 
             Console.WriteLine("\n--- Functions ---");
-            PrintOffset("WarpPrep", Functions.WarpPrep);
-            PrintOffset("BonfireWarp", Functions.BonfireWarp);
+            PrintOffset("RequestWarp", Functions.RequestWarp);
             PrintOffset("SetEvent", Functions.SetEvent);
             PrintOffset("GetEvent", Functions.GetEvent);
             PrintOffset("GiveSouls", Functions.GiveSouls);

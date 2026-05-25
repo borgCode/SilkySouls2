@@ -46,5 +46,6 @@ namespace SilkySouls2.Interfaces
         void ToggleNoHit(bool isEnabled);
         void BreakWeapon(ChrAsmSlotSelector slotSelector);
         nint GetPlayerCtrl();
+        void ToggleDisableRoll(bool isEnabled);
     }
 }

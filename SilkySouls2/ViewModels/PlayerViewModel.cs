@@ -445,6 +445,22 @@ namespace SilkySouls2.ViewModels
             }
         }
 
+
+        private bool _isDisableRollEnabled;
+
+        public bool IsDisableRollEnabled
+        {
+            get => _isDisableRollEnabled;
+            set
+            {
+                if (SetProperty(ref _isDisableRollEnabled, value))
+                {
+                    if (!PatchManager.IsInitialized) return;
+                    _playerService.ToggleDisableRoll(_isDisableRollEnabled);
+                }
+            }
+        }
+        
         private bool _isRememberSpeedEnabled;
 
         public bool IsRememberSpeedEnabled
@@ -770,6 +786,7 @@ namespace SilkySouls2.ViewModels
             if (IsNoSoulGainEnabled) _playerService.ToggleNoSoulGain(true);
             if (IsNoSoulLossEnabled) _playerService.ToggleNoSoulLoss(true);
             if (IsNoHollowingEnabled) _playerService.ToggleNoHollowing(true);
+            if (IsDisableRollEnabled) _playerService.ToggleDisableRoll(true);
             _pauseUpdates = false;
         }
 

@@ -733,6 +733,7 @@ namespace SilkySouls2.Memory
             public static nint SoulMemWrite2;
             public static nint NoHitPatch;
             public static nint MenuTransition;
+            public static nint DisableRoll;
         }
 
         public static class Hooks
@@ -1019,6 +1020,16 @@ namespace SilkySouls2.Memory
                 Scholar1_0_3 => 0xEF614,
                 _ => 0
             };
+            
+            Patches.DisableRoll = baseAddr + PatchManager.Current.PatchVersion switch
+            {
+                Vanilla1_0_11 => 0x3B0077,
+                Vanilla1_0_12 => 0x3B6A17,
+                Scholar1_0_2 => 0x38802E,
+                Scholar1_0_3 => 0x38E98E,
+                _ => 0
+            };
+
 
             Functions.GetEvent = baseAddr + PatchManager.Current.PatchVersion switch
             {
@@ -1680,6 +1691,7 @@ namespace SilkySouls2.Memory
             PrintOffset("SoulMemWrite2", Patches.SoulMemWrite2);
             PrintOffset("NoHitPatch", Patches.NoHitPatch);
             PrintOffset("MenuTransition", Patches.MenuTransition);
+            PrintOffset("DisableRoll", Patches.DisableRoll);
 
             Console.WriteLine("\n--- Hooks ---");
             PrintOffset("SetAreaVariable", Hooks.SetAreaVariable);

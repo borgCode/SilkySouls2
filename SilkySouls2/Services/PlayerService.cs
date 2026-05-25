@@ -514,5 +514,8 @@ namespace SilkySouls2.Services
 
         public nint GetPlayerCtrl() => memoryService.FollowPointers(GameManagerImp.Base,
             [GameManagerImp.PlayerCtrl], true);
+
+        public void ToggleDisableRoll(bool isEnabled) =>
+            memoryService.WriteBytes(Patches.DisableRoll, isEnabled ? [0x30, 0xC0] : [0xB0, 0x01]);
     }
 }

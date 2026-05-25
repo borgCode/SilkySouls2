@@ -269,6 +269,9 @@
                                        FontSize="10" />
                         </Border>
                     </StackPanel>
+                    <CheckBox Content="Disable Roll"
+                              IsChecked="{Binding IsDisableRollEnabled}"
+                              Margin="0,2" />
                 </StackPanel>
             </Grid>
 

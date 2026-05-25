@@ -1,12 +1,10 @@
-﻿// 
-
-using SilkySouls2.Models;
+using SilkySouls2.Models.V2;
 
 namespace SilkySouls2.Interfaces
 {
     public interface ITravelService
     {
-        void Warp(WarpLocation location, bool isRestOnWarpEnabled);
+        void Warp(WarpEntry entry);
         void UnlockAllBonfires();
     }
 }

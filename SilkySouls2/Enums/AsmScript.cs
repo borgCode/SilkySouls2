@@ -56,6 +56,7 @@ public enum AsmScript
     TrySetReminder64,
     BreakWeapon64,
     GetDist64,
+    WarpRequest64,
     
     DamageControl32,
     ElanaSummon32,
@@ -104,5 +105,6 @@ public enum AsmScript
     OpenMenu32,
     SetMenuOpenChrState32,
     BreakWeapon32,
-    GetDist32
+    GetDist32,
+    WarpRequest32,
 }

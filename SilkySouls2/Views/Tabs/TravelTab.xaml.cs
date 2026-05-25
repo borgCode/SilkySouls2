@@ -1,4 +1,4 @@
-﻿using SilkySouls2.ViewModels;
+using SilkySouls2.ViewModels.V2;
 
 namespace SilkySouls2.Views.Tabs
 {
@@ -9,6 +9,5 @@ namespace SilkySouls2.Views.Tabs
             InitializeComponent();
             DataContext = travelViewModel;
         }
-        
     }
 }

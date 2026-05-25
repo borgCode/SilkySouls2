@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using System.Windows.Input;
-using System.Windows.Threading;
 using SilkySouls2.Core;
 using SilkySouls2.enums;
 using SilkySouls2.GameIds;
@@ -30,18 +29,21 @@ namespace SilkySouls2.ViewModels
         private bool _customHpHasBeenSet;
 
         private readonly IPlayerService _playerService;
+        private readonly ISpEffectService _spEffectService;
 
         private readonly INewGameService _newGameService;
         private readonly IGameTickService _gameTickService;
         private readonly HotkeyManager _hotkeyManager;
         private readonly IDamageControlService _damageControlService;
 
-        public PlayerViewModel(IPlayerService playerService, HotkeyManager hotkeyManager,
+        public PlayerViewModel(IPlayerService playerService, ISpEffectService spEffectService,
+            HotkeyManager hotkeyManager,
             IDamageControlService damageControlService, StateService stateService, INewGameService newGameService,
             IGameTickService gameTickService)
         {
             _playerService = playerService;
-     
+            _spEffectService = spEffectService;
+
             _newGameService = newGameService;
             _gameTickService = gameTickService;
             _hotkeyManager = hotkeyManager;
@@ -69,11 +71,10 @@ namespace SilkySouls2.ViewModels
             BreakWeaponCommand = new DelegateCommand<ChrAsmSlotSelector>(BreakWeapon);
 
             GiveSoulsCommand = new DelegateCommand(GiveSouls);
-            
+
             ApplyPrefs();
         }
 
-        
         private void ApplyPrefs()
         {
             _isRememberSpeedEnabled = SettingsManager.Default.RememberPlayerSpeed;
@@ -638,7 +639,7 @@ namespace SilkySouls2.ViewModels
             _playerService.SetHp(hp);
             CurrentHp = hp;
         }
-        
+
         public void SetStat(string statName, int value)
         {
             var property = typeof(ChrCtrl.Stats)
@@ -657,7 +658,6 @@ namespace SilkySouls2.ViewModels
             }
         }
 
-        
         #endregion
 
         #region Private Methods
@@ -685,12 +685,12 @@ namespace SilkySouls2.ViewModels
             _hotkeyManager.RegisterAction(HotkeyActions.RestoreHumanity, () =>
             {
                 if (!AreOptionsEnabled) return;
-                _playerService.SetSpEffect(SpEffect.RestoreHumanity);
+                _spEffectService.ApplySpEffect(_playerService.GetPlayerCtrl(), SpEffect.RestoreHumanity);
             });
             _hotkeyManager.RegisterAction(HotkeyActions.RestCharacter, () =>
             {
                 if (!AreOptionsEnabled) return;
-                _playerService.SetSpEffect(SpEffect.BonfireRest);
+                _spEffectService.ApplySpEffect(_playerService.GetPlayerCtrl(), SpEffect.BonfireRest);
             });
             _hotkeyManager.RegisterAction(HotkeyActions.TogglePlayerSpeed, ToggleSpeed);
             _hotkeyManager.RegisterAction(HotkeyActions.IncreasePlayerSpeed,
@@ -732,7 +732,6 @@ namespace SilkySouls2.ViewModels
 
         private void LoadStats()
         {
-            
             Vigor = _playerService.GetPlayerStat(ChrCtrl.Stats.Vigor);
             Endurance = _playerService.GetPlayerStat(ChrCtrl.Stats.Endurance);
             Vitality = _playerService.GetPlayerStat(ChrCtrl.Stats.Vitality);
@@ -779,7 +778,6 @@ namespace SilkySouls2.ViewModels
             AreOptionsEnabled = false;
             _gameTickService.Unsubscribe(PlayerTick);
         }
-        
 
         private void OnNewGameStarted()
         {
@@ -847,7 +845,7 @@ namespace SilkySouls2.ViewModels
         {
             return Math.Abs(a - b) < Epsilon;
         }
-        
+
         private void SetRtsr() => _playerService.SetRtsr();
         private void SetMaxHp() => _playerService.SetFullHp();
         private void Die() => _playerService.SetHp(0);
@@ -886,17 +884,17 @@ namespace SilkySouls2.ViewModels
 
             return (null, "Enter a number or percentage (e.g. 545 or 40%)");
         }
-        
+
         private void RestoreSpellcasts() => _playerService.RestoreSpellcasts();
 
-        private void RestoreHumanity() => _playerService.SetSpEffect(SpEffect.RestoreHumanity);
+        private void RestoreHumanity() => _spEffectService.ApplySpEffect(_playerService.GetPlayerCtrl(), SpEffect.RestoreHumanity);
 
-        private void Rest() => _playerService.SetSpEffect(SpEffect.BonfireRest);
+        private void Rest() => _spEffectService.ApplySpEffect(_playerService.GetPlayerCtrl(), SpEffect.BonfireRest);
 
         private void BreakWeapon(ChrAsmSlotSelector slotSelector) => _playerService.BreakWeapon(slotSelector);
 
         private void GiveSouls() => _playerService.GiveSouls(Souls);
-        
+
         private void SetSpeed(float value) => PlayerSpeed = value;
 
         #endregion

@@ -2,7 +2,7 @@
 
 using System.Numerics;
 using SilkySouls2.enums;
-using SilkySouls2.GameIds;
+using SilkySouls2.Models;
 
 namespace SilkySouls2.Interfaces
 {
@@ -28,6 +28,7 @@ namespace SilkySouls2.Interfaces
         void ToggleInfiniteDurability(bool isInfiniteDuraEnabled);
         void SavePos(int index);
         void RestorePos(int index);
+        Position GetCurrentPosition();
         Vector3 GetCoords();
         void SetNewGame(int value);
         int GetNewGame();
@@ -37,14 +38,13 @@ namespace SilkySouls2.Interfaces
         void ToggleSilent(bool isSilentEnabled);
         void ToggleHidden(bool isHiddenEnabled);
         void ToggleInfinitePoise(bool isInfinitePoiseEnabled);
-        void SetSpEffect(SpEffect spEffect);
+
         void ToggleNoSoulGain(bool isEnabled);
         void ToggleNoHollowing(bool isEnabled);
         void ToggleNoSoulLoss(bool isEnabled);
         void ToggleSoulMemWrite(bool isEnabled);
         void ToggleNoHit(bool isEnabled);
         void BreakWeapon(ChrAsmSlotSelector slotSelector);
-
-
+        nint GetPlayerCtrl();
     }
 }

@@ -126,7 +126,7 @@ namespace SilkySouls2.Memory
                     _ => 0x0
                 };
 
-                public static int WarpEventEntity => PatchManager.Current.PatchVersion switch
+                public static int EventWarpManager => PatchManager.Current.PatchVersion switch
                 {
                     Vanilla1_0_11 or Vanilla1_0_12 => 0x38,
                     Scholar1_0_2 or Scholar1_0_3 => 0x70,
@@ -298,6 +298,13 @@ namespace SilkySouls2.Memory
             {
                 Vanilla1_0_11 or Vanilla1_0_12 => 0x24,
                 Scholar1_0_2 or Scholar1_0_3 => 0x40,
+                _ => 0x0
+            };
+            
+            public static int Rot => PatchManager.Current.PatchVersion switch
+            {
+                // Vanilla1_0_11 or Vanilla1_0_12 => 0x80,
+                Scholar1_0_2 or Scholar1_0_3 => 0x60,
                 _ => 0x0
             };
             
@@ -767,6 +774,7 @@ namespace SilkySouls2.Memory
         {
             public static nint WarpPrep;
             public static nint BonfireWarp;
+            public static nint RequestWarp;
             public static nint SetEvent;
             public static nint GiveSouls;
             public static nint RestoreSpellcasts;
@@ -1088,6 +1096,15 @@ namespace SilkySouls2.Memory
             };
 
             Functions.BonfireWarp = baseAddr + PatchManager.Current.PatchVersion switch
+            {
+                Vanilla1_0_11 => 0x20AE10,
+                Vanilla1_0_12 => 0x20D5E0,
+                Scholar1_0_2 => 0x181650,
+                Scholar1_0_3 => 0x184830,
+                _ => 0
+            };
+            
+            Functions.RequestWarp = baseAddr + PatchManager.Current.PatchVersion switch
             {
                 Vanilla1_0_11 => 0x20AE10,
                 Vanilla1_0_12 => 0x20D5E0,

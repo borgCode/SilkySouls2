@@ -1,36 +1,48 @@
-﻿// 
+﻿//
 
+using System;
+using System.Collections.Generic;
+using System.Windows;
 using SilkySouls2.Views.Windows;
 
 namespace SilkySouls2.Utilities
 {
-    /// <summary>
-    /// Static helper class to show custom message boxes from anywhere in the application.
-    /// </summary>
     public static class MsgBox
     {
-        /// <summary>
-        /// Shows a message box with only an OK button.
-        /// </summary>
-        /// <param name="message">The message to display.</param>
-        /// <param name="title"></param>
-        public static void Show(string message, string title = "Message")
+        private static T OnUiThread<T>(Func<T> func)
+        {
+            var dispatcher = Application.Current?.Dispatcher;
+            if (dispatcher == null || dispatcher.CheckAccess()) return func();
+            return dispatcher.Invoke(func);
+        }
+
+        private static void OnUiThread(Action action) => OnUiThread<object>(() => { action(); return null; });
+
+        public static void Show(string message, string title = "Message") => OnUiThread(() =>
         {
             var box = new CustomMessageBox(message, showCancel: false, title);
             box.ShowDialog();
-        }
+        });
 
-        /// <summary>
-        /// Shows a message box with OK and Cancel buttons.
-        /// </summary>
-        /// <param name="message">The message to display.</param>
-        /// <param name="title"></param>
-        /// <returns>True if OK was clicked, false if Cancel was clicked.</returns>
-        public static bool ShowOkCancel(string message, string title = "Message")
+        public static bool ShowOkCancel(string message, string title = "Message") => OnUiThread(() =>
         {
             var box = new CustomMessageBox(message, showCancel: true, title);
             box.ShowDialog();
             return box.Result;
-        }
+        });
+
+        public static string ShowInput(string prompt, string defaultValue = "", string title = "Input") => OnUiThread(() =>
+        {
+            var box = new InputBox(prompt, defaultValue, title);
+            box.ShowDialog();
+            return box.Result ? box.InputValue : string.Empty;
+        });
+
+        public static Dictionary<string, string> ShowInputs(InputField[] fields, string title = "Input") => OnUiThread(() =>
+        {
+            var box = new InputBox(fields, title);
+            box.ShowDialog();
+            return box.Result ? box.GetValues() : null;
+        });
     }
 }

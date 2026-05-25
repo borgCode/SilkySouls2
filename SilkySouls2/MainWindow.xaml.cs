@@ -12,8 +12,10 @@ using SilkySouls2.Interfaces;
 using SilkySouls2.Memory;
 using SilkySouls2.Memory.DLLShared;
 using SilkySouls2.Services;
+using SilkySouls2.Services.V2;
 using SilkySouls2.Utilities;
 using SilkySouls2.ViewModels;
+using SilkySouls2.ViewModels.V2;
 using SilkySouls2.Views.Tabs;
 using static SilkySouls2.Memory.Offsets;
 
@@ -64,10 +66,12 @@ namespace SilkySouls2
             IReminderService reminderService = new ReminderService(_memoryService, hookManager, _stateService);
             IDamageControlService damageControlService = new DamageControlService(_memoryService, hookManager, _stateService);
             IChrCtrlService chrCtrlService = new ChrCtrlService(_memoryService);
-            IPlayerService playerService =
-                new PlayerService(_memoryService, hookManager, chrCtrlService, reminderService);
+            ISpEffectService spEffectService = new SpEffectService(_memoryService);
             IUtilityService utilityService = new UtilityService(_memoryService, hookManager, dllManager);
-            ITravelService travelService = new TravelService(_memoryService, hookManager, playerService);
+            ITravelService travelService = new TravelService(_memoryService);
+            IPlayerService playerService =
+                new PlayerService(_memoryService, hookManager, chrCtrlService, reminderService, travelService);
+
             ITargetService targetService = new TargetService(_memoryService, hookManager, chrCtrlService);
             IEnemyService enemyService = new EnemyService(_memoryService, hookManager);
             IEventService eventService = new EventService(_memoryService);
@@ -76,10 +80,10 @@ namespace SilkySouls2
             _newGameService = new NewGameService(_memoryService, hookManager, _stateService);
             ISettingsService settingsService = new SettingsService(_memoryService, hookManager);
 
-            var playerViewModel = new PlayerViewModel(playerService, hotkeyManager, damageControlService,
+            var playerViewModel = new PlayerViewModel(playerService, spEffectService, hotkeyManager, damageControlService,
                 _stateService, _newGameService, gameTickService);
-
-            var travelViewModel = new TravelViewModel(travelService, hotkeyManager, _stateService);
+            
+            var travelViewModel = new TravelViewModel(travelService, playerService, hotkeyManager, _stateService, spEffectService);
 
             var eventViewModel = new EventViewModel(utilityService, eventService, ezStateService, _stateService);
 

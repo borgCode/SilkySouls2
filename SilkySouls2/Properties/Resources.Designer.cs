@@ -639,35 +639,6 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to b9 00 00 00 00          mov    ecx,0x0
-        ///8d 05 00 00 00 00       lea    eax,ds:0x0
-        ///50                      push   eax
-        ///b8 00 00 00 00          mov    eax,0x0
-        ///ff d0                   call   eax
-        ///c3                      ret.
-        /// </summary>
-        internal static string EventWarp32 {
-            get {
-                return ResourceManager.GetString("EventWarp32", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 48 81 ec 18 01 00 00    sub    rsp,0x118
-        ///48 b9 00 00 00 00 00    movabs rcx,0x0
-        ///00 00 00
-        ///48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 18 &lt;_main+0x18&gt;
-        ///e8 00 00 00 00          call   1d &lt;_main+0x1d&gt;
-        ///48 81 c4 18 01 00 00    add    rsp,0x118
-        ///c3                      ret.
-        /// </summary>
-        internal static string EventWarp64 {
-            get {
-                return ResourceManager.GetString("EventWarp64", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to 80 3d 00 00 00 00 01    cmp    BYTE PTR [rip+0x0],0x1        # 7 &lt;_main+0x7&gt;
         ///0f 85 1e 01 00 00       jne    12b &lt;normal&gt;
         ///c6 05 00 00 00 00 00    mov    BYTE PTR [rip+0x0],0x0        # 14 &lt;_main+0x14&gt;
@@ -2078,45 +2049,6 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 0f 5c c1                subps  xmm0,xmm1
-        ///0f 29 46 40             movaps XMMWORD PTR [esi+0x40],xmm0
-        ///50                      push   eax
-        ///a1 00 00 00 00          mov    eax,ds:0x0
-        ///8b 80 80 02 00 00       mov    eax,DWORD PTR [eax+0x280]
-        ///8b 40 0c                mov    eax,DWORD PTR [eax+0xc]
-        ///8b 80 68 01 00 00       mov    eax,DWORD PTR [eax+0x168]
-        ///8b 40 0c                mov    eax,DWORD PTR [eax+0xc]
-        ///8b 40 04                mov    eax,DWORD PTR [eax+0x4]
-        ///05 e0 00 00 00          add    eax,0xe0
-        ///39 f0  [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string WarpCoordWrite32 {
-            get {
-                return ResourceManager.GetString("WarpCoordWrite32", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 0f 5c c2                subps  xmm0,xmm2
-        ///0f 29 47 50             movaps XMMWORD PTR [rdi+0x50],xmm0
-        ///50                      push   rax
-        ///48 b8 00 00 00 00 00    movabs rax,0x0
-        ///00 00 00
-        ///48 8b 00                mov    rax,QWORD PTR [rax]
-        ///48 8b 40 58             mov    rax,QWORD PTR [rax+0x58]
-        ///48 8b 80 f8 01 00 00    mov    rax,QWORD PTR [rax+0x1f8]
-        ///48 8b 40 18             mov    rax,QWORD PTR [rax+0x18]
-        ///48 8b 40 08             mov    rax,QWORD PTR [rax+0x8]
-        ///48 05 50 01 00 00       add    rax,0x150
-        ///48 [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string WarpCoordWrite64 {
-            get {
-                return ResourceManager.GetString("WarpCoordWrite64", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to 10655,Boss,Last Giant,92.18|-40.43|-147.47|0.00|92.18|-40.43|-147.47|55.84|92.18|-40.43|-147.47|0.00|0.00|0.00|0.00|1.00,0
         ///10655,Boss,Pursuer,139.12|10.05|-217.90|0.00|139.12|10.05|-217.90|58.79|139.12|10.05|-217.90|0.00|0.00|0.00|0.00|1.00,0
         ///31650,Boss,Dragonrider,-6.91|-14.66|283.71|0.00|-6.91|-14.66|283.71|36.76|-6.91|-14.66|283.71|0.00|0.00|0.00|0.00|1.00,0
@@ -2126,6 +2058,51 @@ namespace SilkySouls2.Properties {
         internal static string WarpLocations {
             get {
                 return ResourceManager.GetString("WarpLocations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [
+        ///{ &quot;kind&quot;: &quot;Bonfire&quot;, &quot;area&quot;: &quot;Things Betwixt&quot;,            &quot;name&quot;: &quot;Fire Keeper&apos;s Dwelling&quot;,   &quot;bonfireId&quot;: 2650,  &quot;mapId&quot;: 167903232 },
+        ///{ &quot;kind&quot;: &quot;Bonfire&quot;, &quot;area&quot;: &quot;Majula&quot;,                    &quot;name&quot;: &quot;Far Fire&quot;,                 &quot;bonfireId&quot;: 4650,  &quot;mapId&quot;: 168034304 },
+        ///{ &quot;kind&quot;: &quot;Bonfire&quot;, &quot;area&quot;: &quot;Forest of Fallen Giants&quot;,   &quot;name&quot;: &quot;Crestfallen&apos;s Retreat&quot;,    &quot;bonfireId&quot;: 10670, &quot;mapId&quot;: 168427520 },
+        ///{ &quot;kind&quot;: &quot;Bonfire&quot;, &quot;area&quot;: &quot;Forest of Fallen Giants&quot;,   &quot;name&quot;: &quot;Cardinal Tower&quot;,           &quot;bon [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string WarpLocationsV2 {
+            get {
+                return ResourceManager.GetString("WarpLocationsV2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to b9 00 00 00 00          mov    ecx,0x0
+        ///8d 05 00 00 00 00       lea    eax,ds:0x0
+        ///50                      push   eax
+        ///b8 00 00 00 00          mov    eax,0x0
+        ///ff d0                   call   eax
+        ///c3                      ret.
+        /// </summary>
+        internal static string WarpRequest32 {
+            get {
+                return ResourceManager.GetString("WarpRequest32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 48 83 ec 28             sub    rsp,0x28
+        ///48 b9 00 00 00 00 00    movabs rcx,0x0
+        ///00 00 00
+        ///48 ba 00 00 00 00 00    movabs rdx,0x0
+        ///00 00 00
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00
+        ///ff d0                   call   rax
+        ///48 83 c4 28             add    rsp,0x28
+        ///c3                      ret.
+        /// </summary>
+        internal static string WarpRequest64 {
+            get {
+                return ResourceManager.GetString("WarpRequest64", resourceCulture);
             }
         }
         

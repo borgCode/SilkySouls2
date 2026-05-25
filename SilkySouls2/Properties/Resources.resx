@@ -280,40 +280,6 @@ e8 00 00 00 00          call   33 &lt;_main+0x33&gt;
 48 83 c4 60             add    rsp,0x60
 c3                      ret</value>
   </data>
-  <data name="WarpCoordWrite64" xml:space="preserve">
-    <value>0f 5c c2                subps  xmm0,xmm2
-0f 29 47 50             movaps XMMWORD PTR [rdi+0x50],xmm0
-50                      push   rax
-48 b8 00 00 00 00 00    movabs rax,0x0
-00 00 00
-48 8b 00                mov    rax,QWORD PTR [rax]
-48 8b 40 58             mov    rax,QWORD PTR [rax+0x58]
-48 8b 80 f8 01 00 00    mov    rax,QWORD PTR [rax+0x1f8]
-48 8b 40 18             mov    rax,QWORD PTR [rax+0x18]
-48 8b 40 08             mov    rax,QWORD PTR [rax+0x8]
-48 05 50 01 00 00       add    rax,0x150
-48 39 f8                cmp    rax,rdi
-75 43                   jne    76 &lt;exit&gt;
-44 0f 10 35 00 00 00    movups xmm14,XMMWORD PTR [rip+0x0]        # 3b &lt;_main+0x3b&gt;
-00
-44 0f 11 77 50          movups XMMWORD PTR [rdi+0x50],xmm14
-44 0f 10 35 00 00 00    movups xmm14,XMMWORD PTR [rip+0x0]        # 48 &lt;_main+0x48&gt;
-00
-44 0f 11 77 60          movups XMMWORD PTR [rdi+0x60],xmm14
-44 0f 10 35 00 00 00    movups xmm14,XMMWORD PTR [rip+0x0]        # 55 &lt;_main+0x55&gt;
-00
-44 0f 11 77 70          movups XMMWORD PTR [rdi+0x70],xmm14
-44 0f 10 35 00 00 00    movups xmm14,XMMWORD PTR [rip+0x0]        # 62 &lt;_main+0x62&gt;
-00
-44 0f 11 b7 80 00 00    movups XMMWORD PTR [rdi+0x80],xmm14
-00
-44 0f 10 35 00 00 00    movups xmm14,XMMWORD PTR [rip+0x0]        # 72 &lt;_main+0x72&gt;
-00
-45 0f 57 f6             xorps  xmm14,xmm14
-000000000076 &lt;exit&gt;:
-58                      pop    rax
-e9 00 00 00 00          jmp    7c &lt;exit+0x6&gt;</value>
-  </data>
   <data name="SetEvent64" xml:space="preserve">
     <value>48 b9 00 00 00 00 00    movabs rcx,0x0
 00 00 00
@@ -366,15 +332,6 @@ eb 11                   jmp    69 &lt;exit&gt;
 59                      pop    rcx
 00000000006a &lt;skip&gt;:
 e9 00 00 00 00          jmp    6f &lt;skip+0x5&gt;</value>
-  </data>
-  <data name="EventWarp64" xml:space="preserve">
-    <value>48 81 ec 18 01 00 00    sub    rsp,0x118
-48 b9 00 00 00 00 00    movabs rcx,0x0
-00 00 00
-48 8d 15 00 00 00 00    lea    rdx,[rip+0x0]        # 18 &lt;_main+0x18&gt;
-e8 00 00 00 00          call   1d &lt;_main+0x1d&gt;
-48 81 c4 18 01 00 00    add    rsp,0x118
-c3                      ret</value>
   </data>
   <data name="CreditSkip64" xml:space="preserve">
     <value>48 81 ec 20 02 00 00    sub    rsp,0x220
@@ -2866,42 +2823,13 @@ ff d0                   call   eax
 83 c4 48                add    esp,0x48
 c3                      ret</value>
   </data>
-  <data name="EventWarp32" xml:space="preserve">
+  <data name="WarpRequest32" xml:space="preserve">
     <value>b9 00 00 00 00          mov    ecx,0x0
 8d 05 00 00 00 00       lea    eax,ds:0x0
 50                      push   eax
 b8 00 00 00 00          mov    eax,0x0
 ff d0                   call   eax
 c3                      ret</value>
-  </data>
-  <data name="WarpCoordWrite32" xml:space="preserve">
-    <value>0f 5c c1                subps  xmm0,xmm1
-0f 29 46 40             movaps XMMWORD PTR [esi+0x40],xmm0
-50                      push   eax
-a1 00 00 00 00          mov    eax,ds:0x0
-8b 80 80 02 00 00       mov    eax,DWORD PTR [eax+0x280]
-8b 40 0c                mov    eax,DWORD PTR [eax+0xc]
-8b 80 68 01 00 00       mov    eax,DWORD PTR [eax+0x168]
-8b 40 0c                mov    eax,DWORD PTR [eax+0xc]
-8b 40 04                mov    eax,DWORD PTR [eax+0x4]
-05 e0 00 00 00          add    eax,0xe0
-39 f0                   cmp    eax,esi
-75 3a                   jne    65 &lt;exit&gt;
-83 ec 10                sub    esp,0x10
-0f 11 34 24             movups XMMWORD PTR [esp],xmm6
-0f 10 35 00 00 00 00    movups xmm6,XMMWORD PTR ds:0x0
-0f 11 76 40             movups XMMWORD PTR [esi+0x40],xmm6
-0f 10 35 00 00 00 00    movups xmm6,XMMWORD PTR ds:0x0
-0f 11 76 50             movups XMMWORD PTR [esi+0x50],xmm6
-0f 10 35 00 00 00 00    movups xmm6,XMMWORD PTR ds:0x0
-0f 11 76 60             movups XMMWORD PTR [esi+0x60],xmm6
-0f 10 35 00 00 00 00    movups xmm6,XMMWORD PTR ds:0x0
-0f 11 76 70             movups XMMWORD PTR [esi+0x70],xmm6
-0f 10 34 24             movups xmm6,XMMWORD PTR [esp]
-83 c4 10                add    esp,0x10
-0065 &lt;exit&gt;:
-58                      pop    eax
-e9 fc ff ff ff          jmp    67 &lt;exit+0x2&gt;</value>
   </data>
   <data name="UnlockAllBonfires32" xml:space="preserve">
     <value>bb 00 00 00 00          mov    ebx,0x0
@@ -3980,6 +3908,148 @@ e9 00 00 00 00          jmp    bf &lt;early_exit+0xc&gt;</value>
 b9 ef be ad de          mov    ecx,0xdeadbeef
 b8 ef be ad de          mov    eax,0xdeadbeef
 ff d0                   call   eax
+c3                      ret</value>
+  </data>
+  <data name="WarpLocationsV2" xml:space="preserve">
+    <value>[
+{ "kind": "Bonfire", "area": "Things Betwixt",            "name": "Fire Keeper's Dwelling",   "bonfireId": 2650,  "mapId": 167903232 },
+{ "kind": "Bonfire", "area": "Majula",                    "name": "Far Fire",                 "bonfireId": 4650,  "mapId": 168034304 },
+{ "kind": "Bonfire", "area": "Forest of Fallen Giants",   "name": "Crestfallen's Retreat",    "bonfireId": 10670, "mapId": 168427520 },
+{ "kind": "Bonfire", "area": "Forest of Fallen Giants",   "name": "Cardinal Tower",           "bonfireId": 10655, "mapId": 168427520 },
+{ "kind": "Bonfire", "area": "Forest of Fallen Giants",   "name": "Soldier's Rest",           "bonfireId": 10660, "mapId": 168427520 },
+{ "kind": "Bonfire", "area": "Forest of Fallen Giants",   "name": "The Place Unbeknownst",    "bonfireId": 10675, "mapId": 168427520 },
+{ "kind": "Bonfire", "area": "Heide's Tower of Flame",    "name": "Heide's Ruin",             "bonfireId": 31655, "mapId": 169803776 },
+{ "kind": "Bonfire", "area": "Heide's Tower of Flame",    "name": "Tower of Flame",           "bonfireId": 31650, "mapId": 169803776 },
+{ "kind": "Bonfire", "area": "Heide's Tower of Flame",    "name": "Cathedral of Blue",        "bonfireId": 31660, "mapId": 169803776 },
+{ "kind": "Bonfire", "area": "No-man's Wharf",            "name": "Unseen Path to Heide's",   "bonfireId": 18650, "mapId": 168951808 },
+{ "kind": "Bonfire", "area": "The Lost Bastille",         "name": "Exile Holding Cells",      "bonfireId": 16655, "mapId": 168820736 },
+{ "kind": "Bonfire", "area": "The Lost Bastille",         "name": "McDuff's Workshop",        "bonfireId": 16670, "mapId": 168820736 },
+{ "kind": "Bonfire", "area": "The Lost Bastille",         "name": "Servant's Quarters",       "bonfireId": 16675, "mapId": 168820736 },
+{ "kind": "Bonfire", "area": "The Lost Bastille",         "name": "Straid's Cell",            "bonfireId": 16650, "mapId": 168820736 },
+{ "kind": "Bonfire", "area": "The Lost Bastille",         "name": "The Tower Apart",          "bonfireId": 16660, "mapId": 168820736 },
+{ "kind": "Bonfire", "area": "Sinners' Rise",             "name": "The Saltfort",             "bonfireId": 16685, "mapId": 168820736 },
+{ "kind": "Bonfire", "area": "Belfry Luna",               "name": "Upper Ramparts",           "bonfireId": 16665, "mapId": 168820736 },
+{ "kind": "Bonfire", "area": "Huntsman's Copse",          "name": "Undead Refuge",            "bonfireId": 23650, "mapId": 169279488 },
+{ "kind": "Bonfire", "area": "Huntsman's Copse",          "name": "Bridge Approach",          "bonfireId": 23655, "mapId": 169279488 },
+{ "kind": "Bonfire", "area": "Huntsman's Copse",          "name": "Undead Lockaway",          "bonfireId": 23660, "mapId": 169279488 },
+{ "kind": "Bonfire", "area": "Undead Purgatory",          "name": "Undead Purgatory",         "bonfireId": 23665, "mapId": 169279488 },
+{ "kind": "Bonfire", "area": "Harvest Valley",            "name": "Poison Pool",              "bonfireId": 17665, "mapId": 168886272 },
+{ "kind": "Bonfire", "area": "Harvest Valley",            "name": "The Mines",                "bonfireId": 17650, "mapId": 168886272 },
+{ "kind": "Bonfire", "area": "Earthen Peak",              "name": "Lower Earthen Peak",       "bonfireId": 17655, "mapId": 168886272 },
+{ "kind": "Bonfire", "area": "Earthen Peak",              "name": "Central Earthen Peak",     "bonfireId": 17670, "mapId": 168886272 },
+{ "kind": "Bonfire", "area": "Earthen Peak",              "name": "Upper Earthen Peak",       "bonfireId": 17675, "mapId": 168886272 },
+{ "kind": "Bonfire", "area": "Iron Keep",                 "name": "Threshold Bridge",         "bonfireId": 19655, "mapId": 169017344 },
+{ "kind": "Bonfire", "area": "Iron Keep",                 "name": "Ironhearth Hall",          "bonfireId": 19650, "mapId": 169017344 },
+{ "kind": "Bonfire", "area": "Iron Keep",                 "name": "Eygil's Idol",             "bonfireId": 19660, "mapId": 169017344 },
+{ "kind": "Bonfire", "area": "Belfry Sol",                "name": "Belfry Sol Approach",      "bonfireId": 19665, "mapId": 169017344 },
+{ "kind": "Bonfire", "area": "Shaded Woods",              "name": "Old Akelarre",             "bonfireId": 29650, "mapId": 169672704 },
+{ "kind": "Bonfire", "area": "Shaded Woods",              "name": "Ruined Fork Road",         "bonfireId": 32655, "mapId": 169869312 },
+{ "kind": "Bonfire", "area": "Shaded Woods",              "name": "Shaded Ruins",             "bonfireId": 32660, "mapId": 169869312 },
+{ "kind": "Bonfire", "area": "Doors of Pharros",          "name": "Gyrm's Respite",           "bonfireId": 33655, "mapId": 169934848 },
+{ "kind": "Bonfire", "area": "Doors of Pharros",          "name": "Ordeal's End",             "bonfireId": 33660, "mapId": 169934848 },
+{ "kind": "Bonfire", "area": "Brightstone Cove Tseldora", "name": "Royal Army Campsite",      "bonfireId": 14655, "mapId": 168689664 },
+{ "kind": "Bonfire", "area": "Brightstone Cove Tseldora", "name": "Chapel Threshold",         "bonfireId": 14660, "mapId": 168689664 },
+{ "kind": "Bonfire", "area": "Brightstone Cove Tseldora", "name": "Lower Brightstone Cove",   "bonfireId": 14650, "mapId": 168689664 },
+{ "kind": "Bonfire", "area": "Grave of Saints",           "name": "Harvel's Resting Place",   "bonfireId": 34655, "mapId": 170000384 },
+{ "kind": "Bonfire", "area": "Grave of Saints",           "name": "Grave Entrance",           "bonfireId": 34650, "mapId": 170000384 },
+{ "kind": "Bonfire", "area": "The Gutter",                "name": "Upper Gutter",             "bonfireId": 25665, "mapId": 169410560 },
+{ "kind": "Bonfire", "area": "The Gutter",                "name": "Central Gutter",           "bonfireId": 25655, "mapId": 169410560 },
+{ "kind": "Bonfire", "area": "Black Gulch",               "name": "Black Gulch Mouth",        "bonfireId": 25650, "mapId": 169410560 },
+{ "kind": "Bonfire", "area": "Black Gulch",               "name": "Hidden Chamber",           "bonfireId": 25660, "mapId": 169410560 },
+{ "kind": "Bonfire", "area": "Drangleic Castle",          "name": "King's Gate",              "bonfireId": 21650, "mapId": 336920576 },
+{ "kind": "Bonfire", "area": "Drangleic Castle",          "name": "Forgotten Chamber",        "bonfireId": 21660, "mapId": 336920576 },
+{ "kind": "Bonfire", "area": "Drangleic Castle",          "name": "Under Castle Drangleic",   "bonfireId": 21665, "mapId": 336920576 },
+{ "kind": "Bonfire", "area": "Drangleic Castle",          "name": "Central Castle Drangleic", "bonfireId": 21655, "mapId": 336920576 },
+{ "kind": "Bonfire", "area": "Shrine of Amana",           "name": "Tower of Prayer",          "bonfireId": 11650, "mapId": 336265216 },
+{ "kind": "Bonfire", "area": "Shrine of Amana",           "name": "Crumbled Ruins",           "bonfireId": 11655, "mapId": 336265216 },
+{ "kind": "Bonfire", "area": "Shrine of Amana",           "name": "Rhoy's Resting Place",     "bonfireId": 11660, "mapId": 336265216 },
+{ "kind": "Bonfire", "area": "Shrine of Amana",           "name": "Rise of the Dead",         "bonfireId": 11670, "mapId": 336265216 },
+{ "kind": "Bonfire", "area": "Undead Crypt",              "name": "Undead Crypt Entrance",    "bonfireId": 24655, "mapId": 337117184 },
+{ "kind": "Bonfire", "area": "Undead Crypt",              "name": "Undead Ditch",             "bonfireId": 24650, "mapId": 337117184 },
+{ "kind": "Bonfire", "area": "Aldia's Keep",              "name": "Foregarden",               "bonfireId": 15650, "mapId": 168755200 },
+{ "kind": "Bonfire", "area": "Aldia's Keep",              "name": "Ritual Site",              "bonfireId": 15655, "mapId": 168755200 },
+{ "kind": "Bonfire", "area": "Dragon Aerie",              "name": "Dragon Aerie",             "bonfireId": 27650, "mapId": 169541632 },
+{ "kind": "Bonfire", "area": "Dragon Shrine",             "name": "Shrine Entrance",          "bonfireId": 27655, "mapId": 169541632 },
+{ "kind": "Bonfire", "area": "Shulva - Sanctum City",     "name": "Sanctum Walk",             "bonfireId": 35650, "mapId": 841154560 },
+{ "kind": "Bonfire", "area": "Shulva - Sanctum City",     "name": "Tower of Prayer",          "bonfireId": 35685, "mapId": 841154560 },
+{ "kind": "Bonfire", "area": "Shulva - Sanctum City",     "name": "Priestess's Chamber",      "bonfireId": 35655, "mapId": 841154560 },
+{ "kind": "Bonfire", "area": "Dragon's Sanctum",          "name": "Hidden Sanctum Chamber",   "bonfireId": 35670, "mapId": 841154560 },
+{ "kind": "Bonfire", "area": "Dragon's Sanctum",          "name": "Lair of the Imperfect",    "bonfireId": 35675, "mapId": 841154560 },
+{ "kind": "Bonfire", "area": "Dragon's Sanctum",          "name": "Sanctum Interior",         "bonfireId": 35680, "mapId": 841154560 },
+{ "kind": "Bonfire", "area": "Dragon's Rest",             "name": "Sanctum Nadir",            "bonfireId": 35665, "mapId": 841154560 },
+{ "kind": "Bonfire", "area": "Brume Tower",               "name": "Throne Floor",             "bonfireId": 36650, "mapId": 841220096 },
+{ "kind": "Bonfire", "area": "Brume Tower",               "name": "Upper Floor",              "bonfireId": 36660, "mapId": 841220096 },
+{ "kind": "Bonfire", "area": "Brume Tower",               "name": "Foyer",                    "bonfireId": 36655, "mapId": 841220096 },
+{ "kind": "Bonfire", "area": "Brume Tower",               "name": "Lowermost Floor",          "bonfireId": 36670, "mapId": 841220096 },
+{ "kind": "Bonfire", "area": "Brume Tower",               "name": "The Smelter Throne",       "bonfireId": 36675, "mapId": 841220096 },
+{ "kind": "Bonfire", "area": "Iron Passage",              "name": "Iron Passage",             "bonfireId": 36665, "mapId": 841220096 },
+{ "kind": "Bonfire", "area": "Frozen Eleum Loyce",        "name": "Outer Wall",               "bonfireId": 37650, "mapId": 841285632 },
+{ "kind": "Bonfire", "area": "Frozen Eleum Loyce",        "name": "Abandoned Dwelling",       "bonfireId": 37660, "mapId": 841285632 },
+{ "kind": "Bonfire", "area": "Frozen Eleum Loyce",        "name": "Inner Wall",               "bonfireId": 37685, "mapId": 841285632 },
+{ "kind": "Bonfire", "area": "Frozen Eleum Loyce",        "name": "Lower Garrison",           "bonfireId": 37665, "mapId": 841285632 },
+{ "kind": "Bonfire", "area": "Frozen Eleum Loyce",        "name": "Expulsion Chamber",        "bonfireId": 37675, "mapId": 841285632 },
+{ "kind": "Bonfire", "area": "Grand Cathedral",           "name": "Grand Cathedral",          "bonfireId": 37670, "mapId": 841285632 },
+
+{ "kind": "EventPoint", "area": "Dark Chasm of Old",      "name": "Shaded Woods Entry",          "eventPointId": 400010, "mapId": 671285248 },
+{ "kind": "EventPoint", "area": "Dark Chasm of Old",      "name": "Black Gulch Entry",           "eventPointId": 400030, "mapId": 671285248 },
+{ "kind": "EventPoint", "area": "Dark Chasm of Old",      "name": "Drangleic Entry",             "eventPointId": 400020, "mapId": 671285248 },
+{ "kind": "EventPoint", "area": "Dark Chasm of Old",      "name": "Darklurker",                  "eventPointId": 400004, "mapId": 671285248 },
+
+{ "kind": "EventPoint", "area": "Memories",               "name": "Memory of Orro",              "eventPointId": 3702000, "mapId": 336199680 },
+{ "kind": "EventPoint", "area": "Memories",               "name": "Memory of Vammar",            "eventPointId": 3701000, "mapId": 336199680 },
+
+{ "kind": "EventPoint", "area": "Brume Tower",            "name": "Memory of the Old Iron King", "eventPointId": 5300000, "mapId": 841220096 },
+{ "kind": "EventPoint", "area": "Frozen Eleum Loyce",     "name": "Frigid Outskirts",            "eventPointId": 400000, "mapId": 841285632 },
+
+{ "kind": "Direct", "area": "Forest of Fallen Giants",   "name": "Last Giant",         "mapId": 168427520, "pos": [92.49934, -40.50428, -146.6326, 1],   "quat": [0.09472515, 3.610785E-12, 0.9955035, 0] },
+{ "kind": "Direct", "area": "Forest of Fallen Giants",   "name": "Pursuer",            "mapId": 168427520, "pos": [139.2079, 10, -218.0509, 0], "quat": [-2.125631E-08, -0.07622451, 3.016394E-07, 0.9970907] },
+{ "kind": "Direct", "area": "Heide's Tower of Flame",    "name": "Dragonrider",        "mapId": 169803776, "pos": [-5.174424, -14.77153, 283.6577, 0], "quat": [9.195249E-08, 0.6886829, 9.660315E-08, 0.7250627] },
+{ "kind": "Direct", "area": "Heide's Tower of Flame",    "name": "Ornstein",           "mapId": 169803776, "pos": [-137.6053, 8.975951, 172.7886, 0], "quat": [-4.084441E-13, -0.8013421, 5.703133E-14, 0.5982064] },
+{ "kind": "Direct", "area": "No-man's Wharf",            "name": "Flexile",            "mapId": 168951808, "pos": [3.326248, -65.40179, 516.1199, 0], "quat": [3.405263E-08, 0.1110714, 3.177299E-07, 0.9938124] },
+{ "kind": "Direct", "area": "The Lost Bastille",         "name": "Ruin Sentinels",     "mapId": 168820736, "pos": [-141.623, 11.36, 538.9388, 0], "quat": [-1.556249E-07, -0.7181683, 1.510334E-07, 0.6958694] },
+{ "kind": "Direct", "area": "Sinners' Rise",             "name": "Sinner",             "mapId": 168820736, "pos": [-123.0416, -77.06114, 556.1663, 0], "quat": [8.875907E-14, 0.9999752, 1.221455E-13, 0.007051271] },
+{ "kind": "Direct", "area": "Belfry Luna",               "name": "Belfry Gargoyles",   "mapId": 168820736, "pos": [-186.0176, 14.88002, 518.3411, 0], "quat": [-1.586647E-07, -0.6707485, 1.750365E-07, 0.7416849] },
+{ "kind": "Direct", "area": "Huntsman's Copse",          "name": "Chariot",            "mapId": 169279488, "pos": [-247.8552, 47.66156, -41.33353, 0], "quat": [3.813147E-13, 0.9864758, 2.256764E-13, -0.1639068] },
+{ "kind": "Direct", "area": "Huntsman's Copse",          "name": "Skeleton Lords",     "mapId": 169279488, "pos": [-406.4293, 36.92918, 230.698, 0], "quat": [-6.397597E-08, -0.1945304, 5.578453E-07, 0.9808965] },
+{ "kind": "Direct", "area": "Harvest Valley",            "name": "Covetous",           "mapId": 168886272, "pos": [-537.2511, 52.56001, 527.1793, 1],    "quat": [0.05189739, 0, 0.9986524, 0] },
+{ "kind": "Direct", "area": "Earthen Peak",              "name": "Mytha",              "mapId": 168886272, "pos": [-562.1631, 86.00723, 530.9814, 1],    "quat": [0.08212297, 0, 0.9966222, 0] },
+{ "kind": "Direct", "area": "Iron Keep",                 "name": "Red Smelter Demon",  "mapId": 169017344, "pos": [-706.3668, 176.3118, 650.0124, 0], "quat": [-3.013346E-13, -0.4800705, 2.380285E-14, 0.8772299] },
+{ "kind": "Direct", "area": "Iron Keep",                 "name": "Old Iron King",      "mapId": 169017344, "pos": [-650.498, 166.5, 721.6614, 0], "quat": [1.240102E-07, 0.274053, 4.216293E-07, 0.9617146] },
+{ "kind": "Direct", "area": "Shaded Woods",              "name": "Najka",              "mapId": 169869312, "pos": [-458.621, 85.16579, -288.0486, 0], "quat": [2.492328E-13, 0.9905483, 7.723173E-14, 0.1371647] },
+{ "kind": "Direct", "area": "Doors of Pharros",          "name": "Rat Authority",          "mapId": 169934848, "pos": [-541.18, 107.577, -175.6808, 0], "quat": [2.981434E-14, 0.9342905, 1.234907E-13, 0.3565125] },
+{ "kind": "Direct", "area": "Brightstone Cove Tseldora", "name": "Congregation",       "mapId": 168689664, "pos": [-626.6732, 116.1789, -53.96265, 0], "quat": [-1.467879E-07, -0.3277924, 4.129637E-07, 0.9447498] },
+{ "kind": "Direct", "area": "Brightstone Cove Tseldora", "name": "Freja",       "mapId": 168689664, "pos": [-594.3105, 76.28223, -129.0364, 0], "quat": [0, 0.7805061, 0, 0.6251481] },
+{ "kind": "Direct", "area": "Grave of Saints", "name": "Rat Vanguard",       "mapId": 170000384, "pos": [-122.9801, -30.00863, 35.4612, 0], "quat": [0, 0.9997452, 0, 0.02257376] },
+{ "kind": "Direct", "area": "Black Gulch", "name": "The Rotten",       "mapId": 169410560, "pos": [-242.4844, -226.5812, -97.69352, 0], "quat": [0, 0.9092721, 0, -0.4162022] },
+{ "kind": "Direct", "area": "Drangleic Castle", "name": "Dragonriders",       "mapId": 336920576, "pos": [-463.845, 108.8224, -363.2841, 0], "quat": [0, -0.6750802, 0, 0.7377444] },
+{ "kind": "Direct", "area": "Drangleic Castle", "name": "Throne Duo, Nashandra, Aldia",       "mapId": 336920576, "pos": [-699.6346, -5.948746, -259.2122, 0], "quat": [0, -0.5157539, 0, 0.8567368] },
+{ "kind": "Direct", "area": "Drangleic Castle", "name": "Mirror Knight",       "mapId": 336920576, "pos": [-632.5679, 103.1528, -342.1651, 0], "quat": [0, -0.7071071, 0, 0.7071065] },
+{ "kind": "Direct", "area": "Shrine of Amana", "name": "Demon of Song",       "mapId": 336265216, "pos": [-1068.173, -31.31084, -170.1712, 0], "quat": [0, -0.5665308, 0, 0.8240407] },
+{ "kind": "Direct", "area": "Undead Crypt", "name": "Velstadt",       "mapId": 337117184, "pos": [-1003.825, -132.3387, -70.60686, 0], "quat": [-2.786082E-13, 0.2286012, 1.145354E-13, 0.9735202] },
+{ "kind": "Direct", "area": "Undead Crypt", "name": "Vendrick",       "mapId": 337117184, "pos": [-979.8854, -134.3691, -31.96432, 0], "quat": [0, 0.2717144, 0, 0.9623779] },
+{ "kind": "Direct", "area": "Aldia's Keep", "name": "Guardian Dragon",       "mapId": 168755200, "pos": [-748.837, 80.3735, -249.3292, 0], "quat": [0, -0.7295391, 0, 0.6839391] },
+{ "kind": "Direct", "area": "Dragon Shrine", "name": "Ancient Dragon",       "mapId": 169541632, "pos": [-862.9245, 336.104, -670.2103, 0], "quat": [0, 0.9936377, 0, 0.1126237] },
+{ "kind": "Direct", "area": "Shulva - Sanctum City", "name": "Gank Squad",       "mapId": 841154560, "pos": [-9.142711, 18.61285, 113.2183, 0], "quat": [0, 0.9984828, 0, -0.0550644] },
+{ "kind": "Direct", "area": "Dragon's Sanctum", "name": "Elana",       "mapId": 841154560, "pos": [-94.13391, -71.63896, -32.99385, 0], "quat": [0, -0.5675219, 0, 0.8233583] },
+{ "kind": "Direct", "area": "Dragon's Sanctum", "name": "Sinh",       "mapId": 841154560, "pos": [-173.7288, -79.55954, -3.470793, 0], "quat": [0, -0.6054901, 0, 0.7958528] },
+{ "kind": "Direct", "area": "Brume Tower", "name": "Fume Knight",       "mapId": 841220096, "pos": [-166.4987, -59.36973, 386.0812, 0], "quat": [0, 0.4570096, 0, 0.8894618] },
+{ "kind": "Direct", "area": "Brume Tower", "name": "Blue Smelter Demon",       "mapId": 841220096, "pos": [-253.5444, -26.84869, 460.5741, 0], "quat": [0, 0.9505077, 0, 0.3107011] },
+{ "kind": "Direct", "area": "Brume Tower", "name": "Alonne",       "mapId": 841220096, "pos": [-100.1087, 52.56057, 693.9839, 0], "quat": [8.640389E-14, -0.007271121, 2.208277E-13, 0.9999736] },
+{ "kind": "Direct", "area": "Frozen Eleum Loyce", "name": "Aava",       "mapId": 841285632, "pos": [-87.26904, -22.83714, -29.24185, 0], "quat": [0, 0.4023017, 0, 0.9155072] },
+{ "kind": "Direct", "area": "Frozen Eleum Loyce", "name": "Lud &amp; Zallen",       "mapId": 841285632, "pos": [-380.376, -69.59082, 357.8966, 0], "quat": [1.774713E-12, -0.05099387, -9.388971E-12, 0.998699] },
+{ "kind": "Direct", "area": "Grand Cathedral", "name": "Ivory King",       "mapId": 841285632, "pos": [207.3915, -6.130406, -53.71415, 0], "quat": [0, 0.7050926, 0, 0.7091153] }
+]</value>
+  </data>
+  <data name="WarpRequest64" xml:space="preserve">
+    <value>48 83 ec 28             sub    rsp,0x28
+48 b9 00 00 00 00 00    movabs rcx,0x0
+00 00 00
+48 ba 00 00 00 00 00    movabs rdx,0x0
+00 00 00
+48 b8 00 00 00 00 00    movabs rax,0x0
+00 00 00
+ff d0                   call   rax
+48 83 c4 28             add    rsp,0x28
 c3                      ret</value>
   </data>
   <data name="GetDist32" xml:space="preserve">

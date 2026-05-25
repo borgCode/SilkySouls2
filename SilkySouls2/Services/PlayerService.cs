@@ -1,10 +1,10 @@
 using System;
 using System.Numerics;
 using SilkySouls2.enums;
-using SilkySouls2.GameIds;
 using SilkySouls2.Interfaces;
 using SilkySouls2.Memory;
 using SilkySouls2.Models;
+using SilkySouls2.Models.V2;
 using SilkySouls2.Utilities;
 using static SilkySouls2.Memory.Offsets;
 
@@ -14,7 +14,8 @@ namespace SilkySouls2.Services
         IMemoryService memoryService,
         HookManager hookManager,
         IChrCtrlService chrCtrlService,
-        IReminderService reminderService)
+        IReminderService reminderService,
+        ITravelService travelService)
         : IPlayerService
     {
         
@@ -227,24 +228,65 @@ namespace SilkySouls2.Services
         
         public void SavePos(int index)
         {
-            var bytes = memoryService.ReadBytes(GetPlayerCtrl() + ChrCtrl.Orientation, 0x20);
-            var block = new MemoryBlock(bytes);
-
             var pos = _positions[index];
-            pos.Orientation = block.Get<Vector4>(0x00);
-            pos.Coords      = block.Get<Vector4>(0x10);
+            var current = GetCurrentPosition();
+            pos.Coords = current.Coords;
+            pos.Orientation = current.Orientation;
+            pos.WarpCoords = current.WarpCoords;
+            pos.WarpQuaternion = current.WarpQuaternion;
+            pos.MapId = current.MapId;
+            
+        }
+
+        
+        public Position GetCurrentPosition()
+        {
+            var playerCtrl = GetPlayerCtrl();
+            
+            var inAreaBytes = memoryService.ReadBytes(playerCtrl + ChrCtrl.Orientation, 0x20);
+            var inArea = new MemoryBlock(inAreaBytes);
+            var orientation = inArea.Get<Vector4>(0x00);
+            var coords = inArea.Get<Vector4>(0x10);
+            
+            var matrixBytes = memoryService.ReadBytes(playerCtrl + 0x60, 0x30);
+            var m = new MemoryBlock(matrixBytes);
+            float m00 = m.Get<float>(0x00), m01 = m.Get<float>(0x04), m02 = m.Get<float>(0x08);
+            float m10 = m.Get<float>(0x10), m11 = m.Get<float>(0x14), m12 = m.Get<float>(0x18);
+            float m20 = m.Get<float>(0x20), m21 = m.Get<float>(0x24), m22 = m.Get<float>(0x28);
+            var warpQuat = MatrixMath.MatrixToQuaternion(m00, m01, m02, m10, m11, m12, m20, m21, m22);
+            var warpPos = memoryService.Read<Vector4>(playerCtrl + 0xA0);
+
+            return new Position(coords, orientation, memoryService.Read<uint>(MapId))
+            {
+                WarpCoords = warpPos,
+                WarpQuaternion = warpQuat
+            };
         }
 
         public void RestorePos(int index)
         {
+            var pos = _positions[index];
+            var currentMapId = memoryService.Read<uint>(MapId);
+
+            if (pos.MapId != 0 && pos.MapId != currentMapId)
+            {
+                var entry = new WarpEntry
+                {
+                    Kind = WarpKind.Direct,
+                    MapId = pos.MapId,
+                    Pos = [pos.WarpCoords.X, pos.WarpCoords.Y, pos.WarpCoords.Z, pos.WarpCoords.W],
+                    Quat = [pos.WarpQuaternion.X, pos.WarpQuaternion.Y, pos.WarpQuaternion.Z, pos.WarpQuaternion.W]
+                };
+                travelService.Warp(entry);
+                return;
+            }
+
             var positionCtrl = memoryService.FollowPointers(GameManagerImp.Base,
                 [GameManagerImp.PlayerCtrl, ChrCtrl.PositionCtrl], true);
-            
-            var pos = _positions[index];
-            
+
             memoryService.Write(positionCtrl + ChrCtrl.PositionCtrlOffsets.Position, pos.Coords);
             memoryService.Write(positionCtrl + ChrCtrl.PositionCtrlOffsets.Orientation, pos.Orientation);
-            
+
             memoryService.SetBitValue(positionCtrl + ChrCtrl.PositionCtrlOffsets.Flags, 0b00000011, true);
         }
         
@@ -397,48 +439,6 @@ namespace SilkySouls2.Services
             hookManager.InstallHook(code, Hooks.InfinitePoise, [0x83, 0xBB, 0xEC, 0x05, 0x00, 0x00, 0x00]);
         }
 
-        public void SetSpEffect(SpEffect spEffect)
-        {
-            var spEffectParams = CustomCodeOffsets.Base + CustomCodeOffsets.SpEffectParams;
-            var code = CustomCodeOffsets.Base + CustomCodeOffsets.SpEffectCode;
-
-            var chrSpEffectCtrl = memoryService.FollowPointers(GameManagerImp.Base, [
-                GameManagerImp.PlayerCtrl,
-                ChrCtrl.ChrSpEffectCtrl
-            ], true);
-            
-            memoryService.WriteBytes(spEffectParams, spEffect.ToBytes());
-
-            if (PatchManager.IsScholar()) ScholarSetSpEffect(code, chrSpEffectCtrl, spEffectParams);
-            else VanillaSetSpEffect(code, chrSpEffectCtrl, spEffectParams);
-
-            memoryService.RunThread(code);
-        }
-
-        private void ScholarSetSpEffect(nint code, nint chrSpEffectCtrl, nint spEffectParams)
-        {
-            var codeBytes = AsmLoader.GetAsmBytes(AsmScript.SetSpEffect64);
-            AsmHelper.WriteAbsoluteAddress64(codeBytes, chrSpEffectCtrl, 0x7 + 2);
-            AsmHelper.WriteRelativeOffsets(codeBytes, [
-                (code, spEffectParams, 7, 0x0 + 3),
-                (code + 0x15, Functions.SetSpEffect, 5, 0x15 + 1)
-            ]);
-
-            memoryService.WriteBytes(code, codeBytes);
-        }
-
-        private void VanillaSetSpEffect(nint code, nint chrSpEffectCtrl, nint spEffectParams)
-        {
-            var codeBytes = AsmLoader.GetAsmBytes(AsmScript.SetSpEffect32);
-            AsmHelper.WriteAbsoluteAddress32(codeBytes, spEffectParams, 0x3 + 2);
-            AsmHelper.WriteAbsoluteAddress32(codeBytes, chrSpEffectCtrl, 0xA + 1);
-            AsmHelper.WriteRelativeOffsets(codeBytes, [
-                (code + 0xF, Functions.SetSpEffect, 5, 0xF + 1)
-            ]);
-
-            memoryService.WriteBytes(code, codeBytes);
-        }
-
         public void ToggleNoSoulGain(bool isEnabled)
         {
             var bytes = isEnabled
@@ -514,13 +514,7 @@ namespace SilkySouls2.Services
             
         }
 
-        private nint GetPositionPtr() =>
-            memoryService.FollowPointers(GameManagerImp.Base,
-            [
-                GameManagerImp.PxWorld, ..GameManagerImp.PxWorldOffsets.PlayerCoordsChain
-            ], false);
-
-        private nint GetPlayerCtrl() => memoryService.FollowPointers(GameManagerImp.Base,
+        public nint GetPlayerCtrl() => memoryService.FollowPointers(GameManagerImp.Base,
             [GameManagerImp.PlayerCtrl], true);
     }
 }

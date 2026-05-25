@@ -148,5 +148,11 @@
 
         public const int TargetDist = 0x2E00;
         public const int GetDistCode = 0x2E10;
+
+        public enum WarpV2
+        {
+            Request = 0x3000,
+            Stub = 0x3050
+        }
     }
 }

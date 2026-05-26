@@ -194,8 +194,10 @@
         <Compile Include="Utilities\AsmHelper.cs" />
         <Compile Include="Utilities\AsmLoader.cs" />
         <Compile Include="Utilities\DataLoader.cs" />
+        <Compile Include="Utilities\DebugLog.cs" />
         <Compile Include="Utilities\GameLauncher.cs" />
         <Compile Include="Utilities\HotkeyManager.cs" />
+        <Compile Include="Utilities\MapNames.cs" />
         <Compile Include="Utilities\MsgBox.cs" />
         <Compile Include="Utilities\MatrixMath.cs" />
         <Compile Include="Utilities\UpDownHelper.cs" />

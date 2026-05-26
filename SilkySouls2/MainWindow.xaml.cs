@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -162,7 +163,7 @@ namespace SilkySouls2
             _currentArea = _memoryService.Read<int>(MapId);
             if (_currentArea != _storedArea)
             {
-                Console.WriteLine(_currentArea);
+                DebugLog.Log($"Area changed: {MapNames.ToMapName((uint)_currentArea)} (0x{_currentArea:X8})");
                 _stateService.Publish(State.AreaChanged, _currentArea);
                 _storedArea = _currentArea;
             }

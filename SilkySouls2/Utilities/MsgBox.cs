@@ -18,19 +18,20 @@ namespace SilkySouls2.Utilities
 
         private static void OnUiThread(Action action) => OnUiThread<object>(() => { action(); return null; });
 
-        public static void Show(string message, string title = "Message") => OnUiThread(() =>
+        public static string ShowChoice(string message, string title, params string[] buttons) => OnUiThread(() =>
         {
-            var box = new CustomMessageBox(message, showCancel: false, title);
+            var box = new CustomMessageBox(message, title, buttons);
             box.ShowDialog();
+            return box.SelectedButton;
         });
 
-        public static bool ShowOkCancel(string message, string title = "Message") => OnUiThread(() =>
-        {
-            var box = new CustomMessageBox(message, showCancel: true, title);
-            box.ShowDialog();
-            return box.Result;
-        });
+        public static void Show(string message, string title = "Message") =>
+            ShowChoice(message, title, "OK");
 
+        public static bool ShowOkCancel(string message, string title = "Message") =>
+            ShowChoice(message, title, "OK", "Cancel") == "OK";
+        
+        
         public static string ShowInput(string prompt, string defaultValue = "", string title = "Input") => OnUiThread(() =>
         {
             var box = new InputBox(prompt, defaultValue, title);

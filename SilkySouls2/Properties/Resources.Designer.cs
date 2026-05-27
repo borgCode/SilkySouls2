@@ -659,23 +659,22 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 48 89 e5                mov    rbp,rsp
-        ///48 81 ec 78 04 00 00    sub    rsp,0x478
-        ///48 8d 8d 08 fc ff ff    lea    rcx,[rbp-0x3f8]
-        ///ba 00 00 00 00          mov    edx,0x0
-        ///48 b8 00 00 00 00 00    movabs rax,0x0
-        ///00 00 00 
-        ///ff d0                   call   rax
-        ///48 8d 8d 18 fe ff ff    lea    rcx,[rbp-0x1e8]
-        ///48 8d 95 d8 fe ff ff    lea    rdx,[rbp-0x128]
-        ///4c 8d 85 e8 fe ff ff    lea    r8,[rbp-0x118]
-        ///41 c7 40 18 00 00 00    mov    DWORD PTR [r8+0x18],0x0
-        ///00 
-        ///41 c7 40 1c 00 00 00    mov    DWORD PTR [r8+0x1c], [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to 89 e5                   mov    ebp,esp
+        ///81 ec 20 02 00 00       sub    esp,0x220
+        ///8d 8d f0 fe ff ff       lea    ecx,[ebp-0x110]
+        ///68 ef be ad de          push   0xdeadbeef
+        ///b8 00 00 00 00          mov    eax,0x0
+        ///ff d0                   call   eax
+        ///8d 8d 70 fe ff ff       lea    ecx,[ebp-0x190]
+        ///8d 95 40 fe ff ff       lea    edx,[ebp-0x1c0]
+        ///89 51 70                mov    DWORD PTR [ecx+0x70],edx
+        ///8d 85 20 fe ff ff       lea    eax,[ebp-0x1e0]
+        ///89 42 04                mov    DWORD PTR [edx+0x4],eax
+        ///c7 40  [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string EzStateExecuteEvent64 {
+        internal static string EzStateExecuteEvent32 {
             get {
-                return ResourceManager.GetString("EzStateExecuteEvent64", resourceCulture);
+                return ResourceManager.GetString("EzStateExecuteEvent32", resourceCulture);
             }
         }
         
@@ -694,9 +693,9 @@ namespace SilkySouls2.Properties {
         ///00 
         ///41 c7 40 1c 00 00 00    mov    DWORD PTR [r8+0x1c], [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string EzStateExecuteObjEvent64 {
+        internal static string EzStateExecuteEvent64 {
             get {
-                return ResourceManager.GetString("EzStateExecuteObjEvent64", resourceCulture);
+                return ResourceManager.GetString("EzStateExecuteEvent64", resourceCulture);
             }
         }
         

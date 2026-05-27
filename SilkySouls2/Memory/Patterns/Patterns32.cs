@@ -628,7 +628,9 @@
             [0xE8, 0x00, 0x00, 0x00, 0x00, 0x83, 0xC4, 0x08, 0x85, 0xC0, 0x0F, 0x84, 0x91],
             "x????xxxxxxxx",
             0,
-            AddressingMode.Absolute,
+            AddressingMode.Relative,
+            1,
+            5,
             anchorOffset: 11
         );
 

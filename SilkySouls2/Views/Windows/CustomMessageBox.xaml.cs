@@ -2,6 +2,7 @@
 
 using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using SilkySouls2.Utilities;
@@ -10,17 +11,34 @@ namespace SilkySouls2.Views.Windows
 {
     public partial class CustomMessageBox : Window
     {
-        public bool Result { get; private set; }
+        public string SelectedButton { get; private set; } = string.Empty;
 
-        public CustomMessageBox(string message, bool showCancel, string title = "Message")
+        public CustomMessageBox(string message, string title = "Message", params string[] buttons)
         {
             InitializeComponent();
             MessageText.Text = message;
             TitleText.Text = title;
-            
-            if (showCancel)
+
+            if (buttons.Length == 0)
+                buttons = ["OK"];
+
+            foreach (var label in buttons)
             {
-                CancelButton.Visibility = Visibility.Visible;
+                var button = new Button
+                {
+                    Content = label,
+                    Width = 75,
+                    Height = 26,
+                    Margin = new Thickness(0, 0, 8, 0)
+                };
+
+                button.Click += (_, _) =>
+                {
+                    SelectedButton = label;
+                    Close();
+                };
+
+                ButtonPanel.Children.Add(button);
             }
         
             Loaded += (s, e) =>
@@ -35,19 +53,7 @@ namespace SilkySouls2.Views.Windows
             
             };
         }
-
-        private void OkButton_Click(object sender, RoutedEventArgs e)
-        {
-            Result = true;
-            Close();
-        }
-
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
-        {
-            Result = false;
-            Close();
-        }
-
+        
         private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             DragMove();

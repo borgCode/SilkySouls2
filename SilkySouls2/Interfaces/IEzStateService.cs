@@ -9,6 +9,6 @@ namespace SilkySouls2.Interfaces
     {
         void ExecuteEventFromGameThread(EzState.EventCommand command, int areaId = 0, int areaIndex = 0);
         void ExecuteEvent(EzState.EventCommand command, int areaId = 0, int areaIndex = 0);
-        void Run(IEnumerable<ScriptStep> steps);
+        void RunScript(IEnumerable<ScriptStep> steps);
     }
 }

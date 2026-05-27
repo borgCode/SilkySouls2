@@ -61,7 +61,7 @@ namespace SilkySouls2.Memory
 
                 if (!VersionMap.TryGetValue(fileSize, out var version))
                 {
-                    AssumeLatestPatchForUnknownVersion(fileSize);
+                    ShowSelectGameVersionDialog();
                     return false;
                 }
         
@@ -81,16 +81,16 @@ namespace SilkySouls2.Memory
             }
         }
 
-        private static void AssumeLatestPatchForUnknownVersion(long fileSize)
+        private static void ShowSelectGameVersionDialog()
         {
-            var useScholar = MsgBox.ShowOkCancel(
+            var choice = MsgBox.ShowChoice(
                 "This Dark Souls II version was not recognized.\n\n" +
-                $"File size: {fileSize}\n\n" +
-                "Click OK for Scholar of the First Sin.\n" +
-                "Click Cancel for vanilla Dark Souls II.",
-                "Unknown Game Version");
+                "Select the game edition:",
+                "Unknown Game Version",
+                "Scholar",
+                "Vanilla");
 
-            Current = useScholar
+            Current = choice == "Scholar"
                 ? new GameVersionInfo { Edition = GameEdition.Scholar, PatchVersion = Patch.Scholar1_0_3 }
                 : new GameVersionInfo { Edition = GameEdition.Vanilla, PatchVersion = Patch.Vanilla1_0_12 };
 

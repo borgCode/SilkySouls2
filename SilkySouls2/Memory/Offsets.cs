@@ -1609,6 +1609,8 @@ namespace SilkySouls2.Memory
 
             Functions.EzStateExternalEventCtor = baseAddr + PatchManager.Current.PatchVersion switch
             {
+                Vanilla1_0_11 => 0x620720,
+                Vanilla1_0_12 => 0x627CD0,
                 Scholar1_0_2 => 0x98DC60,
                 Scholar1_0_3 => 0x9951B0,
                 _ => 0
@@ -1616,6 +1618,8 @@ namespace SilkySouls2.Memory
 
             Functions.EzStateEventExecuteCommand = baseAddr + PatchManager.Current.PatchVersion switch
             {
+                Vanilla1_0_11 => 0x468860,
+                Vanilla1_0_12 => 0x46FB50,
                 Scholar1_0_2 => 0x45ACD0,
                 Scholar1_0_3 => 0x461F20,
                 _ => 0

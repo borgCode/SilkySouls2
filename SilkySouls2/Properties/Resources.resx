@@ -3979,56 +3979,57 @@ d9 1d 00 00 00 00       fstp   DWORD PTR ds:0x0
 8b 11                   mov    edx,DWORD PTR [ecx]
 e9 fc ff ff ff          jmp    5b &lt;early_exit+0x6&gt;</value>
   </data>
-  <data name="EzStateExecuteObjEvent64" xml:space="preserve">
-    <value>48 89 e5                mov    rbp,rsp
-48 81 ec 78 04 00 00    sub    rsp,0x478
-48 8d 8d 08 fc ff ff    lea    rcx,[rbp-0x3f8]
-ba 00 00 00 00          mov    edx,0x0
-48 b8 00 00 00 00 00    movabs rax,0x0
-00 00 00 
-ff d0                   call   rax
-48 8d 8d 18 fe ff ff    lea    rcx,[rbp-0x1e8]
-48 8d 95 d8 fe ff ff    lea    rdx,[rbp-0x128]
-4c 8d 85 e8 fe ff ff    lea    r8,[rbp-0x118]
-41 c7 40 18 00 00 00    mov    DWORD PTR [r8+0x18],0x0
-00 
-41 c7 40 1c 00 00 00    mov    DWORD PTR [r8+0x1c],0x0
-00 
-4c 89 42 08             mov    QWORD PTR [rdx+0x8],r8
-48 89 91 b0 00 00 00    mov    QWORD PTR [rcx+0xb0],rdx
-4c 8d 85 18 ff ff ff    lea    r8,[rbp-0xe8]
-41 c7 40 04 00 00 00    mov    DWORD PTR [r8+0x4],0x0
-00 
-41 c6 40 0c 00          mov    BYTE PTR [r8+0xc],0x0
-4c 89 42 20             mov    QWORD PTR [rdx+0x20],r8
-4c 8d 85 e8 fb ff ff    lea    r8,[rbp-0x418]
+  <data name="EzStateExecuteEvent32" xml:space="preserve">
+    <value>89 e5                   mov    ebp,esp
+81 ec 20 02 00 00       sub    esp,0x220
+8d 8d f0 fe ff ff       lea    ecx,[ebp-0x110]
+68 ef be ad de          push   0xdeadbeef
+b8 00 00 00 00          mov    eax,0x0
+ff d0                   call   eax
+8d 8d 70 fe ff ff       lea    ecx,[ebp-0x190]
+8d 95 40 fe ff ff       lea    edx,[ebp-0x1c0]
+89 51 70                mov    DWORD PTR [ecx+0x70],edx
+8d 85 20 fe ff ff       lea    eax,[ebp-0x1e0]
+89 42 04                mov    DWORD PTR [edx+0x4],eax
+c7 40 0c 00 00 00 00    mov    DWORD PTR [eax+0xc],0x0
+c7 40 10 00 00 00 00    mov    DWORD PTR [eax+0x10],0x0
+8d 85 00 fe ff ff       lea    eax,[ebp-0x200]
+89 42 10                mov    DWORD PTR [edx+0x10],eax
+31 c0                   xor    eax,eax
+8b 51 70                mov    edx,DWORD PTR [ecx+0x70]
+8b 4a 10                mov    ecx,DWORD PTR [edx+0x10]
+89 01                   mov    DWORD PTR [ecx],eax
+89 41 04                mov    DWORD PTR [ecx+0x4],eax
+89 41 08                mov    DWORD PTR [ecx+0x8],eax
+89 41 0c                mov    DWORD PTR [ecx+0xc],eax
 bb 00 00 00 00          mov    ebx,0x0
-89 9d 08 fe ff ff       mov    DWORD PTR [rbp-0x1f8],ebx
+89 5d ec                mov    DWORD PTR [ebp-0x14],ebx
 31 ff                   xor    edi,edi
-48 b8 00 00 00 00 00    movabs rax,0x0
-00 00 00 
-48 8d 30                lea    rsi,[rax]
+be 00 00 00 00          mov    esi,0x0
 
-00000000008b &lt;param_loop&gt;:
-8b 04 be                mov    eax,DWORD PTR [rsi+rdi*4]
-4c 8d 85 08 ff ff ff    lea    r8,[rbp-0xf8]
-41 89 00                mov    DWORD PTR [r8],eax
-41 c7 40 08 02 00 00    mov    DWORD PTR [r8+0x8],0x2
-00 
-8d 57 01                lea    edx,[rdi+0x1]
-48 8d 8d 08 fc ff ff    lea    rcx,[rbp-0x3f8]
-48 8b 01                mov    rax,QWORD PTR [rcx]
-ff 50 08                call   QWORD PTR [rax+0x8]
-ff c7                   inc    edi
+006b &lt;param_loop&gt;:
 39 df                   cmp    edi,ebx
-7c d5                   jl     8b &lt;param_loop&gt;
-48 8d 8d 18 fe ff ff    lea    rcx,[rbp-0x1e8]
-48 8d 95 08 fc ff ff    lea    rdx,[rbp-0x3f8]
-45 31 c0                xor    r8d,r8d
-48 b8 00 00 00 00 00    movabs rax,0x0
-00 00 00 
-ff d0                   call   rax
-48 81 c4 78 04 00 00    add    rsp,0x478
+7d 1a                   jge    89 &lt;params_done&gt;
+8b 04 be                mov    eax,DWORD PTR [esi+edi*4]
+8d 8d f0 fe ff ff       lea    ecx,[ebp-0x110]
+8b 11                   mov    edx,DWORD PTR [ecx]
+8b 52 04                mov    edx,DWORD PTR [edx+0x4]
+6a 02                   push   0x2
+50                      push   eax
+8d 47 01                lea    eax,[edi+0x1]
+50                      push   eax
+ff d2                   call   edx
+47                      inc    edi
+eb e2                   jmp    6b &lt;param_loop&gt;
+
+0089 &lt;params_done&gt;:
+8d 8d 70 fe ff ff       lea    ecx,[ebp-0x190]
+6a 00                   push   0x0
+8d 85 f0 fe ff ff       lea    eax,[ebp-0x110]
+50                      push   eax
+b8 00 00 00 00          mov    eax,0x0
+ff d0                   call   eax
+89 ec                   mov    esp,ebp
 c3                      ret</value>
   </data>
 </root>

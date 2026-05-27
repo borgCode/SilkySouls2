@@ -53,22 +53,6 @@ namespace SilkySouls2.Services
 
         public void ExecuteEvent(EventCommand command, int areaId = 0, int areaIndex = 0)
         {
-            if (PatchManager.IsScholar())
-            {
-                ExecuteEvent64(command, areaId, areaIndex);
-            }
-
-        }
-
-        public void Run(IEnumerable<ScriptStep> steps)
-        {
-            foreach (var step in steps)
-                ExecuteEvent(step.Command, step.Area);
-        }
-
-        private void ExecuteEvent64(EventCommand command, int areaId, int areaIndex)
-        {
-
             var paramsLocation = CustomCodeOffsets.Base + CustomCodeOffsets.EzStateEventParams;
 
             for (int i = 0; i < command.Params.Length; i++)
@@ -76,12 +60,27 @@ namespace SilkySouls2.Services
                 memoryService.Write(paramsLocation + i * 4, command.Params[i]);
             }
 
+            var bytes = PatchManager.IsScholar()
+                ? WriteScholarExecuteEvent(paramsLocation, command, areaId, areaIndex)
+                : WriteVanillaExecuteEvent(paramsLocation, command, areaId, areaIndex);
+
+            memoryService.AllocateAndExecute(bytes);
+        }
+
+        public void RunScript(IEnumerable<ScriptStep> steps)
+        {
+            foreach (var step in steps)
+                ExecuteEvent(step.Command, step.Area);
+        }
+
+        private byte[] WriteScholarExecuteEvent(nint paramsLocation, EventCommand command, int areaId, int areaIndex)
+        {
             var bytes = AsmLoader.GetAsmBytes(AsmScript.EzStateExecuteEvent64);
 
             AsmHelper.WriteAbsoluteAddresses64(bytes, [
-            (Functions.EzStateExternalEventCtor, 0x16 + 2),
-            (paramsLocation, 0x82 + 2),
-            (Functions.EzStateEventExecuteCommand, 0xCB + 2)
+                (Functions.EzStateExternalEventCtor, 0x16 + 2),
+                (paramsLocation, 0x82 + 2),
+                (Functions.EzStateEventExecuteCommand, 0xCB + 2)
             ]);
 
             AsmHelper.WriteImmediateDwords(bytes, [
@@ -91,7 +90,27 @@ namespace SilkySouls2.Services
                 (command.Params.Length, 0x75 + 1)
             ]);
 
-            memoryService.AllocateAndExecute(bytes);
+            return bytes;
+        }
+
+        private byte[] WriteVanillaExecuteEvent(nint paramsLocation, EventCommand command, int areaId, int areaIndex)
+        {
+            var bytes = AsmLoader.GetAsmBytes(AsmScript.EzStateExecuteEvent32);
+
+            AsmHelper.WriteAbsoluteAddresses32(bytes, [
+                (Functions.EzStateExternalEventCtor, 0x13 + 1),
+                (paramsLocation, 0x66 + 1),
+                (Functions.EzStateEventExecuteCommand, 0x98 + 1)
+            ]);
+
+            AsmHelper.WriteImmediateDwords(bytes, [
+                (command.CommandId, 0xE + 1),
+                (areaId, 0x32 + 3),
+                (areaIndex, 0x39 + 3),
+                (command.Params.Length, 0x5C + 1)
+            ]);
+
+            return bytes;
         }
     }
 }

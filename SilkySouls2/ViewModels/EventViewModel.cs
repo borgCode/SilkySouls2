@@ -324,9 +324,9 @@ namespace SilkySouls2.ViewModels
         private void KingsRingAcquired() => _eventService.SetEvent(EventFlag.KingsRingAcquired, true);
         private void ActivateBrume() => _eventService.SetMultipleEventOn(EventFlag.Scepter);
 
-        private void OpenGargsDoor() => _ezStateService.Run(EventScripts.OpenGargsDoor());
-        private void LightSinner() => _ezStateService.Run(EventScripts.LightSinner());
-        private void MoveFlexileShip() => _ezStateService.Run(EventScripts.MoveFlexileShip());
+        private void OpenGargsDoor() => _ezStateService.RunScript(EventScripts.OpenGargsDoor());
+        private void LightSinner() => _ezStateService.RunScript(EventScripts.LightSinner());
+        private void MoveFlexileShip() => _ezStateService.RunScript(EventScripts.MoveFlexileShip());
 
         #endregion
     }

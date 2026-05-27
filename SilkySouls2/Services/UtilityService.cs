@@ -686,7 +686,7 @@ namespace SilkySouls2.Services
             hookManager.InstallHook(knightsCode, setSharedFlag, [0x88, 0x94, 0x08, 0xA1, 0x02, 0x00, 0x00]);
         }
 
-        public void SetObjState(long areaId, Obj obj)
+        public void SetObjState(long areaId, ObjectMapEntity objectMapEntity)
         {
             var getMapEntity = Functions.GetMapEntityWithAreaIdAndObjId;
             var getComponent = Functions.GetMapObjStateActComponent;
@@ -696,10 +696,10 @@ namespace SilkySouls2.Services
                 var bytes = AsmLoader.GetAsmBytes(AsmScript.SetObjState64);
                 AsmHelper.WriteAbsoluteAddresses64(bytes, [
                     ((nint)areaId, 0x4 + 2),
-                    (obj.Id, 0xE + 2),
+                    (objectMapEntity.Id, 0xE + 2),
                     (getMapEntity, 0x18 + 2),
                     (getComponent, 0x2E + 2),
-                    (obj.State, 0x41 + 2)
+                    (objectMapEntity.State, 0x41 + 2)
                 ]);
 
                 memoryService.AllocateAndExecute(bytes);
@@ -710,9 +710,9 @@ namespace SilkySouls2.Services
                 AsmHelper.WriteAbsoluteAddresses32(bytes, [
                     (getMapEntity, 1),
                     (getComponent, 0x5 + 1),
-                    (obj.Id, 0xA + 1),
+                    (objectMapEntity.Id, 0xA + 1),
                     ((nint)areaId, 0xF + 1),
-                    (obj.State, 0x34 + 1)
+                    (objectMapEntity.State, 0x34 + 1)
                 ]);
                 memoryService.AllocateAndExecute(bytes);
             }

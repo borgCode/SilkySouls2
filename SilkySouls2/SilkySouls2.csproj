@@ -127,7 +127,7 @@
         <Compile Include="GameIds\EventFlag.cs" />
         <Compile Include="GameIds\EzState.cs" />
         <Compile Include="GameIds\Navimesh.cs" />
-        <Compile Include="GameIds\Obj.cs" />
+        <Compile Include="GameIds\ObjectMapEntity.cs" />
         <Compile Include="GameIds\ShopLineup.cs" />
         <Compile Include="GameIds\SpEffect.cs" />
         <Compile Include="GameIds\WhiteDoor.cs" />

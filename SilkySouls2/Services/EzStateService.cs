@@ -10,7 +10,7 @@ namespace SilkySouls2.Services
 {
     public class EzStateService(IMemoryService memoryService, HookManager hookManager) : IEzStateService
     {
-        public void ExecuteEventFromGameThread(EventCommand command, int areaId = 0, int areaIndex = 0)
+        public void ExecuteEventFromGameThread(ChrCommand command, int areaId = 0, int areaIndex = 0)
         {
             var code = CustomCodeOffsets.Base + CustomCodeOffsets.EzStateEventCode;
             var hookLoc = Hooks.GameManUpdate;

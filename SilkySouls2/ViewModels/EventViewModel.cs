@@ -326,17 +326,18 @@ namespace SilkySouls2.ViewModels
 
         private void OpenGargsDoor()
         {
-            _utilityService.SetObjState(Area.Bastille, Obj.GargoylesDoor);
+            _utilityService.SetObjState(Area.Bastille, ObjectMapEntity.GargoylesDoor);
             _utilityService.DisableNavimesh(Area.Bastille, Navimesh.GargoylesDoor);
             _utilityService.DisableWhiteDoor(Area.Bastille, WhiteDoor.GargoylesDoor);
         }
 
         private void LightSinner()
         {
-            _utilityService.SetObjState(Area.Bastille, Obj.SinnerLighting1);
-            _utilityService.SetObjState(Area.Bastille, Obj.SinnerLighting2);
-            _utilityService.SetObjState(Area.Bastille, Obj.SinnerLighting3);
-            _utilityService.SetObjState(Area.Bastille, Obj.SinnerLighting4);
+            _ezStateService.ExecuteEvent(EzState.EventCommands.ChangeObjState(ObjectMapEntity.SinnerLighting1.Id, ObjectMapEntity.SinnerLighting1.State), Area.Bastille);
+            _utilityService.SetObjState(Area.Bastille, ObjectMapEntity.SinnerLighting1);
+            _utilityService.SetObjState(Area.Bastille, ObjectMapEntity.SinnerLighting2);
+            _utilityService.SetObjState(Area.Bastille, ObjectMapEntity.SinnerLighting3);
+            _utilityService.SetObjState(Area.Bastille, ObjectMapEntity.SinnerLighting4);
         }
 
         #endregion

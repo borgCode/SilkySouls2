@@ -31,7 +31,7 @@ namespace SilkySouls2.Interfaces
         void ToggleSnowstormHook(bool isSnowstormDisabled);
         void ToggleMemoryTimer(bool isMemoryTimerDisabled);
         void ToggleIvorySkip(bool isIvorySkipEnabled);
-        void SetObjState(long areaId, Obj obj);
+        void SetObjState(long areaId, ObjectMapEntity objectMapEntity);
         void DisableNavimesh(long areaId, Navimesh naviData);
         void DisableWhiteDoor(long areaId, WhiteDoor whiteDoorData);
         List<InventorySpell> GetInventorySpells();

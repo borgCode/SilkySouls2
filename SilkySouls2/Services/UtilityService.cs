@@ -718,7 +718,7 @@ namespace SilkySouls2.Services
             }
         }
 
-        public void DisableNavimesh(long areaId, Navimesh naviData)
+        public void DisableNavimesh(long areaId, MapGeneralLocation naviData)
         {
             var eventPointMan = memoryService.FollowPointers(GameManagerImp.Base, [
                 GameManagerImp.EventManager,
@@ -734,9 +734,9 @@ namespace SilkySouls2.Services
                 AsmHelper.WriteAbsoluteAddresses64(bytes, [
                     (eventPointMan, 2),
                     ((nint)areaId, 0xA + 2),
-                    (naviData.EventId, 0x14 + 2),
+                    (naviData.EventPointId, 0x14 + 2),
                     (getNaviLoc, 0x25 + 2),
-                    (naviData.State, 0x34 + 2),
+                    (naviData.Attribute, 0x34 + 2),
                     (disableNavi, 0x3E + 2)
                 ]);
 
@@ -747,10 +747,10 @@ namespace SilkySouls2.Services
                 var bytes = AsmLoader.GetAsmBytes(AsmScript.DisableNavimesh32);
                 AsmHelper.WriteAbsoluteAddresses32(bytes, [
                     (eventPointMan, 1),
-                    (naviData.EventId, 0x5 + 1),
+                    (naviData.EventPointId, 0x5 + 1),
                     ((nint)areaId, 0xA + 1),
                     (getNaviLoc, 0xF + 1),
-                    (naviData.State, 0x18 + 1),
+                    (naviData.Attribute, 0x18 + 1),
                     (disableNavi, 0x1D + 1)
                 ]);
                 memoryService.AllocateAndExecute(bytes);

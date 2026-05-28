@@ -32,7 +32,7 @@ namespace SilkySouls2.Interfaces
         void ToggleMemoryTimer(bool isMemoryTimerDisabled);
         void ToggleIvorySkip(bool isIvorySkipEnabled);
         void SetObjState(long areaId, ObjectMapEntity objectMapEntity);
-        void DisableNavimesh(long areaId, Navimesh naviData);
+        void DisableNavimesh(long areaId, MapGeneralLocation naviData);
         void DisableWhiteDoor(long areaId, WhiteDoor whiteDoorData);
         List<InventorySpell> GetInventorySpells();
         List<EquippedSpell> GetEquippedSpells();

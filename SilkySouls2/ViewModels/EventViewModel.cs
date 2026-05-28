@@ -17,13 +17,14 @@ namespace SilkySouls2.ViewModels
         private readonly IEventService _eventService;
         private readonly IEzStateService _ezStateService;
 
-        public EventViewModel(IUtilityService utilityService, IEventService eventService, IEzStateService ezStateService,
+        public EventViewModel(IUtilityService utilityService, IEventService eventService,
+            IEzStateService ezStateService,
             StateService stateService)
         {
             _utilityService = utilityService;
             _eventService = eventService;
             _ezStateService = ezStateService;
-            
+
             stateService.Subscribe(State.Loaded, OnGameLoaded);
             stateService.Subscribe(State.NotLoaded, OnGameNotLoaded);
             stateService.Subscribe(State.FirstLoaded, OnGameFirstLoaded);
@@ -46,11 +47,10 @@ namespace SilkySouls2.ViewModels
             BreakIceCommand = new DelegateCommand(BreakIce);
             RescueKnightsCommand = new DelegateCommand(RescueKnights);
             KingsRingCommand = new DelegateCommand(KingsRingAcquired);
-            ActivateBrumeCommand = new DelegateCommand(ActivateBrume);
+            ActivateBrumeCommand = new DelegateCommand(MoveFlexileShip);
             OpenGargsDoorCommand = new DelegateCommand(OpenGargsDoor);
             LightSinnerFiresCommand = new DelegateCommand(LightSinner);
         }
-        
 
         #region Commands
 
@@ -209,7 +209,7 @@ namespace SilkySouls2.ViewModels
         #endregion
 
         #region Private Methods
-        
+
         private void OnGameLoaded()
         {
             AreOptionsEnabled = true;
@@ -219,7 +219,7 @@ namespace SilkySouls2.ViewModels
         {
             AreOptionsEnabled = false;
         }
-        
+
         private void OnGameFirstLoaded()
         {
             if (IsSnowstormDisabled)
@@ -234,7 +234,7 @@ namespace SilkySouls2.ViewModels
 
         private void OnAreaChanged(object[] objects)
         {
-            IsAreaBastille = (int) objects[0] == Area.Bastille;
+            IsAreaBastille = (int)objects[0] == Area.Bastille;
         }
 
         private void SetEvent()
@@ -324,23 +324,10 @@ namespace SilkySouls2.ViewModels
         private void KingsRingAcquired() => _eventService.SetEvent(EventFlag.KingsRingAcquired, true);
         private void ActivateBrume() => _eventService.SetMultipleEventOn(EventFlag.Scepter);
 
-        private void OpenGargsDoor()
-        {
-            _utilityService.SetObjState(Area.Bastille, ObjectMapEntity.GargoylesDoor);
-            _utilityService.DisableNavimesh(Area.Bastille, Navimesh.GargoylesDoor);
-            _utilityService.DisableWhiteDoor(Area.Bastille, WhiteDoor.GargoylesDoor);
-        }
-
-        private void LightSinner()
-        {
-            _ezStateService.ExecuteEvent(EzState.EventCommands.ChangeObjState(ObjectMapEntity.SinnerLighting1.Id, ObjectMapEntity.SinnerLighting1.State), Area.Bastille);
-            _utilityService.SetObjState(Area.Bastille, ObjectMapEntity.SinnerLighting1);
-            _utilityService.SetObjState(Area.Bastille, ObjectMapEntity.SinnerLighting2);
-            _utilityService.SetObjState(Area.Bastille, ObjectMapEntity.SinnerLighting3);
-            _utilityService.SetObjState(Area.Bastille, ObjectMapEntity.SinnerLighting4);
-        }
+        private void OpenGargsDoor() => _ezStateService.Run(EventScripts.OpenGargsDoor());
+        private void LightSinner() => _ezStateService.Run(EventScripts.LightSinner());
+        private void MoveFlexileShip() => _ezStateService.Run(EventScripts.MoveFlexileShip());
 
         #endregion
-        
     }
 }

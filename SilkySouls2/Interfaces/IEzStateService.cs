@@ -1,12 +1,14 @@
-﻿// 
+//
 
+using System.Collections.Generic;
 using SilkySouls2.GameIds;
 
 namespace SilkySouls2.Interfaces
 {
     public interface IEzStateService
     {
-        void ExecuteEventFromGameThread(EzState.ChrCommand command, int areaId = 0, int areaIndex = 0);
+        void ExecuteEventFromGameThread(EzState.EventCommand command, int areaId = 0, int areaIndex = 0);
         void ExecuteEvent(EzState.EventCommand command, int areaId = 0, int areaIndex = 0);
+        void Run(IEnumerable<ScriptStep> steps);
     }
 }

@@ -125,8 +125,9 @@
         <Compile Include="Enums\HotkeyActions.cs" />
         <Compile Include="GameIds\Area.cs" />
         <Compile Include="GameIds\EventFlag.cs" />
+        <Compile Include="GameIds\EventScripts.cs" />
         <Compile Include="GameIds\EzState.cs" />
-        <Compile Include="GameIds\Navimesh.cs" />
+        <Compile Include="GameIds\MapGeneralLocation.cs" />
         <Compile Include="GameIds\ObjectMapEntity.cs" />
         <Compile Include="GameIds\ShopLineup.cs" />
         <Compile Include="GameIds\SpEffect.cs" />

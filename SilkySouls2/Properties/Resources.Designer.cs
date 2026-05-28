@@ -664,18 +664,39 @@ namespace SilkySouls2.Properties {
         ///48 8d 8d 08 fc ff ff    lea    rcx,[rbp-0x3f8]
         ///ba 00 00 00 00          mov    edx,0x0
         ///48 b8 00 00 00 00 00    movabs rax,0x0
-        ///00 00 00
+        ///00 00 00 
         ///ff d0                   call   rax
         ///48 8d 8d 18 fe ff ff    lea    rcx,[rbp-0x1e8]
         ///48 8d 95 d8 fe ff ff    lea    rdx,[rbp-0x128]
         ///4c 8d 85 e8 fe ff ff    lea    r8,[rbp-0x118]
         ///41 c7 40 18 00 00 00    mov    DWORD PTR [r8+0x18],0x0
-        ///00
-        ///41 c7 40 1c 00 00 00    mov    DWORD PTR [r8+0x1c],0x [rest of string was truncated]&quot;;.
+        ///00 
+        ///41 c7 40 1c 00 00 00    mov    DWORD PTR [r8+0x1c], [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string EzStateExecuteEvent64 {
             get {
                 return ResourceManager.GetString("EzStateExecuteEvent64", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 48 89 e5                mov    rbp,rsp
+        ///48 81 ec 78 04 00 00    sub    rsp,0x478
+        ///48 8d 8d 08 fc ff ff    lea    rcx,[rbp-0x3f8]
+        ///ba 00 00 00 00          mov    edx,0x0
+        ///48 b8 00 00 00 00 00    movabs rax,0x0
+        ///00 00 00 
+        ///ff d0                   call   rax
+        ///48 8d 8d 18 fe ff ff    lea    rcx,[rbp-0x1e8]
+        ///48 8d 95 d8 fe ff ff    lea    rdx,[rbp-0x128]
+        ///4c 8d 85 e8 fe ff ff    lea    r8,[rbp-0x118]
+        ///41 c7 40 18 00 00 00    mov    DWORD PTR [r8+0x18],0x0
+        ///00 
+        ///41 c7 40 1c 00 00 00    mov    DWORD PTR [r8+0x1c], [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string EzStateExecuteObjEvent64 {
+            get {
+                return ResourceManager.GetString("EzStateExecuteObjEvent64", resourceCulture);
             }
         }
         

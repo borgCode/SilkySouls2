@@ -55,6 +55,7 @@ public enum AsmScript
     BreakWeapon64,
     GetDist64,
     WarpRequest64,
+    EzStateExecuteObjEvent64,
     
     DamageControl32,
     ElanaSummon32,

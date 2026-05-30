@@ -6,6 +6,7 @@ using SilkySouls2.Memory;
 using SilkySouls2.Models;
 using SilkySouls2.Utilities;
 using static SilkySouls2.Memory.Offsets;
+using static SilkySouls2.Memory.Patch;
 
 namespace SilkySouls2.Services
 {
@@ -379,13 +380,18 @@ namespace SilkySouls2.Services
         public void ToggleSilent(bool isSilentEnabled)
         {
             var scholar = PatchManager.IsScholar();
-            var length = scholar ? 5 : 16;
-
+            var is1_0_12 = PatchManager.Current.PatchVersion == Vanilla1_0_12;
+            var length = scholar ? 5 : 15;
+            var vanilla_push_op_offset = is1_0_12 ? -4 : -1;
             byte[] bytes;
             if (isSilentEnabled)
             {
                 bytes = new byte[length];
                 for (var i = 0; i < length; i++) bytes[i] = 0x90;
+                if (!scholar)
+                {
+                    memoryService.Write<byte>(Patches.Silent + vanilla_push_op_offset, 0x90);
+                }
             }
             else if (scholar)
             {
@@ -393,9 +399,12 @@ namespace SilkySouls2.Services
             }
             else
             {
-                byte[] prefix = [0x51, 0xF3, 0x0F, 0x11, 0x04, 0x24, 0x52, 0x50, 0x53, 0x8B, 0xCF];
-                var call = AsmHelper.BuildNearCall(Patches.Silent + 0xB, Functions.OriginalMakeSound);
+                byte[] prefix = is1_0_12
+                    ? [0xF3, 0x0F, 0x11, 0x04, 0x24, 0x51, 0x52, 0x53, 0x8B, 0xCF]
+                    : [0xF3, 0x0F, 0x11, 0x04, 0x24, 0x52, 0x50, 0x53, 0x8B, 0xCF];
+                var call = AsmHelper.BuildNearCall(Patches.Silent + 0xA, Functions.OriginalMakeSound);
                 bytes = [..prefix, ..call];
+                memoryService.Write<byte>(Patches.Silent + vanilla_push_op_offset, 0x51);
             }
             memoryService.WriteBytes(Patches.Silent, bytes);
         }

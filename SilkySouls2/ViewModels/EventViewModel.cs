@@ -47,7 +47,7 @@ namespace SilkySouls2.ViewModels
             BreakIceCommand = new DelegateCommand(BreakIce);
             RescueKnightsCommand = new DelegateCommand(RescueKnights);
             KingsRingCommand = new DelegateCommand(KingsRingAcquired);
-            ActivateBrumeCommand = new DelegateCommand(MoveFlexileShip);
+            ActivateBrumeCommand = new DelegateCommand(ActivateBrume);
             OpenGargsDoorCommand = new DelegateCommand(OpenGargsDoor);
             LightSinnerFiresCommand = new DelegateCommand(LightSinner);
         }

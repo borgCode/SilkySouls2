@@ -978,8 +978,8 @@ namespace SilkySouls2.Memory
 
             Patches.Silent = baseAddr + PatchManager.Current.PatchVersion switch
             {
-                Vanilla1_0_11 => 0x1A1731,
-                Vanilla1_0_12 => 0x1A1970,
+                Vanilla1_0_11 => 0x1A1732,
+                Vanilla1_0_12 => 0x1A1971,
                 Scholar1_0_2 => 0x10E232,
                 Scholar1_0_3 => 0x10E306,
                 _ => 0

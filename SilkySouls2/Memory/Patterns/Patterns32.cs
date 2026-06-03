@@ -152,7 +152,7 @@
         public static readonly Pattern Silent = new Pattern(
             new byte[] { 0xE8, 0x00, 0x00, 0x00, 0x00, 0x84, 0xC0, 0x74, 0x3F, 0x8B, 0x86 },
             "x????xxxxxx",
-            -0xB,
+            -0xA,
             AddressingMode.Absolute
         );
 

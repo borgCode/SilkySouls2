@@ -25,8 +25,8 @@ namespace SilkySouls2.ViewModels
 
         private readonly IUtilityService _utilityService;
         private readonly PlayerViewModel _playerViewModel;
-        private readonly IEzStateService _ezStateService;
         private readonly IMenuService _menuService;
+        private readonly IAttunementService _attunementService;
 
         private float _desiredSpeed = -1f;
         private const float DefaultSpeed = 1f;
@@ -42,14 +42,14 @@ namespace SilkySouls2.ViewModels
         private readonly Dictionary<int, AttunementSpell> _spellLookup;
 
         public UtilityViewModel(IUtilityService utilityService, HotkeyManager hotkeyManager,
-            PlayerViewModel playerViewModel, StateService stateService, IEzStateService ezStateService,
-            IMenuService menuService)
+            PlayerViewModel playerViewModel, StateService stateService,
+            IMenuService menuService, IAttunementService attunementService)
         {
             _utilityService = utilityService;
             _playerViewModel = playerViewModel;
-            _ezStateService = ezStateService;
             _menuService = menuService;
-        
+            _attunementService = attunementService;
+
             _hotkeyManager = hotkeyManager;
 
             _spellLookup = DataLoader.GetAttunementSpells();
@@ -73,7 +73,7 @@ namespace SilkySouls2.ViewModels
             OpenTradeCommand = new DelegateCommand<TradeRange>(OpenTrade);
         }
 
-        
+
         #region Commands
 
         public ICommand ForceSaveCommand { get; set; }
@@ -81,7 +81,7 @@ namespace SilkySouls2.ViewModels
         public ICommand OpenShopCommand { get; set; }
         public ICommand NoArgsMenuCommand { get; set; }
         public ICommand OpenTradeCommand { get; set; }
-        
+
         #endregion
 
         #region Properties
@@ -482,7 +482,7 @@ namespace SilkySouls2.ViewModels
             int slotIndex = GetFirstAvailableSlot();
             if (slotIndex != -1)
             {
-                _utilityService.AttuneSpell(slotIndex, spell.EntryAddress);
+                _attunementService.AttuneSpell(slotIndex, spell.EntryAddress);
                 await Task.Delay(50);
                 RefreshSpells();
             }
@@ -491,7 +491,7 @@ namespace SilkySouls2.ViewModels
         public async void HandleUnAttune(int slotIndex)
         {
             if (!AreOptionsEnabled) return;
-            _utilityService.AttuneSpell(slotIndex, IntPtr.Zero);
+            _attunementService.AttuneSpell(slotIndex, IntPtr.Zero);
             await Task.Delay(50);
             RefreshSpells();
         }
@@ -633,7 +633,7 @@ namespace SilkySouls2.ViewModels
                 return;
             }
 
-            NumOfSlots = _utilityService.GetTotalAvailableSlots();
+            NumOfSlots = _attunementService.GetTotalAvailableSlots();
             RefreshSpells();
             _attunementWindow = new AttunementWindow
             {
@@ -660,9 +660,9 @@ namespace SilkySouls2.ViewModels
 
         private void RefreshSpells()
         {
-            NumOfSlots = _utilityService.GetTotalAvailableSlots();
-            var inventorySpells = _utilityService.GetInventorySpells();
-            var equippedSpells = _utilityService.GetEquippedSpells();
+            NumOfSlots = _attunementService.GetTotalAvailableSlots();
+            var inventorySpells = _attunementService.GetInventorySpells();
+            var equippedSpells = _attunementService.GetEquippedSpells();
 
             var actualEquipped = equippedSpells.Take(NumOfSlots).ToList();
 

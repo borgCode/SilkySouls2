@@ -1,29 +1,29 @@
 ﻿namespace SilkySouls2.Memory.Patterns
 {
-    public class Pattern
+    public class Pattern(
+        byte[] bytes,
+        string mask,
+        int instructionOffset,
+        AddressingMode addressingMode,
+        int offsetLocation = 0,
+        int instructionLength = 0,
+        int anchorOffset = -1,
+        int occurrenceIndex = 0)
     {
-        public byte[] Bytes { get; }
-        public string Mask { get; }
-        public int InstructionOffset { get; }
-        public AddressingMode AddressingMode { get; }
-        public int OffsetLocation { get; }
-        public int InstructionLength { get; }
-
-        public Pattern(byte[] bytes, string mask, int instructionOffset, AddressingMode addressingMode, int offsetLocation = 0, int instructionLength = 0)
-        {
-            Bytes = bytes;
-            Mask = mask;
-            InstructionOffset = instructionOffset;
-            AddressingMode = addressingMode;
-            OffsetLocation = offsetLocation;
-            InstructionLength = instructionLength;
-        }
+        public byte[] Bytes { get; } = bytes;
+        public string Mask { get; } = mask;
+        public int InstructionOffset { get; } = instructionOffset;
+        public AddressingMode AddressingMode { get; } = addressingMode;
+        public int OffsetLocation { get; } = offsetLocation;
+        public int InstructionLength { get; } = instructionLength;
+        public int AnchorOffset { get; } = anchorOffset;
+        public int OccurrenceIndex { get; } = occurrenceIndex;
     }
 
     public enum AddressingMode
     {
         Absolute,
         Relative,
-        Direct32 
+        Direct32
     }
 }

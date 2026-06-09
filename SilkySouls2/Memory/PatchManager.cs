@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using SilkySouls2.Interfaces;
+using SilkySouls2.Utilities;
 
 namespace SilkySouls2.Memory
 {
@@ -32,7 +33,7 @@ namespace SilkySouls2.Memory
     {
         public static GameVersionInfo Current { get; private set; }
 
-        private static readonly Dictionary<long, GameVersionInfo> VersionMap = new Dictionary<long, GameVersionInfo>
+        private static readonly Dictionary<long, GameVersionInfo> VersionMap = new()
         {
             { 32340760, new GameVersionInfo { Edition = GameEdition.Vanilla, PatchVersion = Patch.Vanilla1_0_11 } },
             { 29588960, new GameVersionInfo { Edition = GameEdition.Vanilla, PatchVersion = Patch.Vanilla1_0_12 } },
@@ -40,7 +41,7 @@ namespace SilkySouls2.Memory
             { 28200992, new GameVersionInfo { Edition = GameEdition.Scholar, PatchVersion = Patch.Scholar1_0_3 } }
         };
         
-        public static bool IsScholar() => Current.Edition == GameEdition.Scholar;
+        public static bool IsScholar() => Current?.Edition == GameEdition.Scholar;
 
         public static bool IsInitialized { get; set; }
 
@@ -48,6 +49,7 @@ namespace SilkySouls2.Memory
         {
             try
             {
+                
                 var module = memoryService.TargetProcess.MainModule;
                 if (module == null) return false;
         
@@ -57,7 +59,11 @@ namespace SilkySouls2.Memory
                 Console.WriteLine($"FileVersion: {module.FileVersionInfo.FileVersion}");
                 Console.WriteLine($"FileSize: {fileSize}");
 
-                if (!VersionMap.TryGetValue(fileSize, out var version)) return false;
+                if (!VersionMap.TryGetValue(fileSize, out var version))
+                {
+                    AssumeLatestPatchForUnknownVersion(fileSize);
+                    return false;
+                }
         
                 Current = version;
         
@@ -73,6 +79,22 @@ namespace SilkySouls2.Memory
                 // Process has exited
                 return false;
             }
+        }
+
+        private static void AssumeLatestPatchForUnknownVersion(long fileSize)
+        {
+            var useScholar = MsgBox.ShowOkCancel(
+                "This Dark Souls II version was not recognized.\n\n" +
+                $"File size: {fileSize}\n\n" +
+                "Click OK for Scholar of the First Sin.\n" +
+                "Click Cancel for vanilla Dark Souls II.",
+                "Unknown Game Version");
+
+            Current = useScholar
+                ? new GameVersionInfo { Edition = GameEdition.Scholar, PatchVersion = Patch.Scholar1_0_3 }
+                : new GameVersionInfo { Edition = GameEdition.Vanilla, PatchVersion = Patch.Vanilla1_0_12 };
+
+            IsInitialized = true;
         }
     }
     

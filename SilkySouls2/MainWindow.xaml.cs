@@ -63,7 +63,8 @@ namespace SilkySouls2
             IGameTickService gameTickService = new GameTickService(_stateService);
             IMenuService menuService = new MenuService(_memoryService, gameTickService);
             IReminderService reminderService = new ReminderService(_memoryService, hookManager, _stateService);
-            IDamageControlService damageControlService = new DamageControlService(_memoryService, hookManager, _stateService);
+            IDamageControlService damageControlService =
+                new DamageControlService(_memoryService, hookManager, _stateService);
             IChrCtrlService chrCtrlService = new ChrCtrlService(_memoryService);
             ISpEffectService spEffectService = new SpEffectService(_memoryService);
             IUtilityService utilityService = new UtilityService(_memoryService, hookManager, dllManager);
@@ -78,16 +79,19 @@ namespace SilkySouls2
             IItemService itemService = new ItemService(_memoryService, _stateService);
             _newGameService = new NewGameService(_memoryService, hookManager, _stateService);
             ISettingsService settingsService = new SettingsService(_memoryService, hookManager);
+            IAttunementService attunementService = new AttunementService(_memoryService);
 
-            var playerViewModel = new PlayerViewModel(playerService, spEffectService, hotkeyManager, damageControlService,
+            var playerViewModel = new PlayerViewModel(playerService, spEffectService, hotkeyManager,
+                damageControlService,
                 _stateService, _newGameService, gameTickService);
-            
-            var travelViewModel = new TravelViewModel(travelService, playerService, hotkeyManager, _stateService, spEffectService);
+
+            var travelViewModel = new TravelViewModel(travelService, playerService, hotkeyManager, _stateService,
+                spEffectService);
 
             var eventViewModel = new EventViewModel(utilityService, eventService, ezStateService, _stateService);
 
             var utilityViewModel = new UtilityViewModel(utilityService, hotkeyManager, playerViewModel,
-                _stateService, ezStateService, menuService);
+                _stateService, menuService, attunementService);
 
             var targetViewModel =
                 new TargetViewModel(targetService, hotkeyManager, damageControlService, _stateService, reminderService,
@@ -229,17 +233,18 @@ namespace SilkySouls2
 
                 if (!PatchManager.TryDetectVersion(_memoryService))
                 {
-                    _aobScanner.FallBackScan();
+                    var aobScanner = new AoBScanner(_memoryService);
+                    aobScanner.QueueFallbackPatterns();
+                    aobScanner.Run();
                 }
 
-#if DEBUG
-                Console.WriteLine($@"Base: 0x{(long)_memoryService.BaseAddress:X}");
-#endif
+                DebugLog.Log($@"Base: 0x{(long)_memoryService.BaseAddress:X}");
 
                 ct.ThrowIfCancellationRequested();
                 _memoryService.AllocCodeCave();
 
 #if DEBUG
+                Print(_memoryService.BaseAddress);
                 Console.WriteLine($"Code cave: 0x{(long)CustomCodeOffsets.Base:X}");
 #endif
 

@@ -30,7 +30,7 @@ namespace SilkySouls2.Services
             AsmHelper.WriteAbsoluteAddress64(codeBytes, chrSpEffectCtrl, 0x7 + 2);
             AsmHelper.WriteRelativeOffsets(codeBytes, [
                 (code, spEffectParams, 7, 0x0 + 3),
-                (code + 0x15, Functions.SetSpEffect, 5, 0x15 + 1)
+                (code + 0x15, Functions.ApplySpEffect, 5, 0x15 + 1)
             ]);
 
             memoryService.WriteBytes(code, codeBytes);
@@ -42,7 +42,7 @@ namespace SilkySouls2.Services
             AsmHelper.WriteAbsoluteAddress32(codeBytes, spEffectParams, 0x3 + 2);
             AsmHelper.WriteAbsoluteAddress32(codeBytes, chrSpEffectCtrl, 0xA + 1);
             AsmHelper.WriteRelativeOffsets(codeBytes, [
-                (code + 0xF, Functions.SetSpEffect, 5, 0xF + 1)
+                (code + 0xF, Functions.ApplySpEffect, 5, 0xF + 1)
             ]);
 
             memoryService.WriteBytes(code, codeBytes);

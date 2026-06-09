@@ -5,9 +5,6 @@ using System.Linq;
 
 namespace SilkySouls2.ViewModels
 {
-    // Generic search + grouped-list helper. Ports the TT pattern so each travel sub-tab
-    // (Areas / Bosses / Custom) gets its own independent grouping + search + selection
-    // without duplicating the boilerplate.
     public class SearchableGroupedCollection<TGroup, TItem> : BaseViewModel
     {
         public enum SearchScopes

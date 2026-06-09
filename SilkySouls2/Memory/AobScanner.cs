@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using SilkySouls2.Interfaces;
 using SilkySouls2.Memory.Patterns;
 
@@ -8,297 +12,475 @@ namespace SilkySouls2.Memory
 {
     public class AoBScanner(IMemoryService memoryService)
     {
-        public void FallBackScan()
-        {
-                string appData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                    "SilkySouls2");
-                Directory.CreateDirectory(appData);
-                string savePath = Path.Combine(appData, "backup_addresses_vanilla.txt");
+        
+        private const int HistogramSampleStep = 16;
 
-                Dictionary<string, long> saved = new Dictionary<string, long>();
-                if (File.Exists(savePath))
+        private byte[]? _module;
+        private nint _moduleBase;
+
+        private readonly List<Request> _requests = new();
+
+        private readonly byte[] _bitmap = new byte[65536 / 8];
+        private readonly List<Request>?[] _pairBuckets = new List<Request>[65536];
+
+        private readonly List<Request>?[] _singleBuckets = new List<Request>[256];
+        private bool _hasSingleFallback;
+
+        private readonly Dictionary<string, nint> _savedAddresses = new();
+        private readonly long[] _pairHistogram = new long[65536];
+        private long _histogramSamples;
+        private bool _histogramBuilt;
+        
+        private static readonly string ScholarBackupPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "SilkySouls2",
+            "backup_addresses_scholar.txt"); 
+        
+        private static readonly string VanillaBackupPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "SilkySouls2",
+            "backup_addresses_vanilla.txt");
+
+        private static string BackupPath => PatchManager.IsScholar() ? ScholarBackupPath : VanillaBackupPath;
+        
+        private sealed class Request(int id, string? name, Pattern pattern, Action<nint> setter)
+        {
+            public int Id { get; } = id;
+            public string? Name { get; } = name;
+            public Pattern Pattern { get; } = pattern;
+            public Action<nint> Setter { get; } = setter;
+            public int[] NonWildcardIndices { get; } = BuildNonWildcardIndices(pattern);
+            public int AnchorOffset;
+            public long AnchorFrequency = -1;
+            public bool IsSingle;
+
+            private static int[] BuildNonWildcardIndices(Pattern p)
+            {
+                var len = p.Bytes.Length;
+                var list = new List<int>(len);
+                for (var j = 0; j < len; j++)
+                    if (IsConcrete(p.Mask, j, len))
+                        list.Add(j);
+                return list.ToArray();
+            }
+        }
+        
+        #region Public Methods
+        
+        public void QueueFallbackPatterns()
+        {
+            if (PatchManager.IsScholar())
+            {
+                QueueScholarFallbackPatterns();
+                return;
+            }
+
+            QueueVanillaFallbackPatterns();
+        }
+
+        private void QueueScholarFallbackPatterns()
+        {
+            Queue(nameof(Patterns64.GameManagerImp), Patterns64.GameManagerImp, addr => Offsets.GameManagerImp.Base = addr);
+            Queue(nameof(Patterns64.KatanaMainApp), Patterns64.KatanaMainApp, addr => Offsets.KatanaMainApp.Base = addr);
+            Queue(nameof(Patterns64.HkHardwareInfo), Patterns64.HkHardwareInfo, addr => Offsets.HkHardwareInfo.Base = addr);
+            Queue(nameof(Patterns64.MapId), Patterns64.MapId, addr => Offsets.MapId = addr);
+            Queue(nameof(Patterns64.BuildTextFieldRetAddr), Patterns64.BuildTextFieldRetAddr, addr => Offsets.BuildTextFieldRetAddr = addr);
+            
+            
+            Queue(nameof(Patterns64.InfiniteStam), Patterns64.InfiniteStam, addr => Offsets.Patches.InfiniteStam = addr);
+            Queue(nameof(Patterns64.InfiniteGoods), Patterns64.InfiniteGoods, addr => Offsets.Patches.InfiniteGoods = addr);
+            Queue(nameof(Patterns64.InfiniteCasts), Patterns64.InfiniteCasts, addr => Offsets.Patches.InfiniteCasts = addr);
+            Queue(nameof(Patterns64.InfiniteDurability), Patterns64.InfiniteDurability, addr => Offsets.Patches.InfiniteDurability = addr);
+            Queue(nameof(Patterns64.HideChrModels), Patterns64.HideChrModels, addr => Offsets.Patches.HideChrModels = addr);
+            Queue(nameof(Patterns64.HideMap), Patterns64.HideMap, addr => Offsets.Patches.HideMap = addr);
+            Queue(nameof(Patterns64.DropRate), Patterns64.DropRate, addr => Offsets.Patches.DropRate = addr);
+            Queue(nameof(Patterns64.DisableAi), Patterns64.DisableAi, addr => Offsets.Patches.DisableAi = addr);
+            Queue(nameof(Patterns64.Silent), Patterns64.Silent, addr => Offsets.Patches.Silent = addr);
+            Queue(nameof(Patterns64.Hidden), Patterns64.Hidden, addr => Offsets.Patches.Hidden = addr);
+            Queue(nameof(Patterns64.NegativeLevel), Patterns64.NegativeLevel, addr => Offsets.Patches.NegativeLevel = addr);
+            Queue(nameof(Patterns64.NoSoulGain), Patterns64.NoSoulGain, addr => Offsets.Patches.NoSoulGain = addr);
+            Queue(nameof(Patterns64.NoHollowing), Patterns64.NoHollowing, addr => Offsets.Patches.NoHollowing = addr);
+            Queue(nameof(Patterns64.NoSoulLoss), Patterns64.NoSoulLoss, addr => Offsets.Patches.NoSoulLoss = addr);
+            Queue(nameof(Patterns64.SoulMemWrite1), Patterns64.SoulMemWrite1, addr => Offsets.Patches.SoulMemWrite1 = addr);
+            Queue(nameof(Patterns64.SoulMemWrite2), Patterns64.SoulMemWrite2, addr => Offsets.Patches.SoulMemWrite2 = addr);
+            Queue(nameof(Patterns64.NoHitPatch), Patterns64.NoHitPatch, addr => Offsets.Patches.NoHitPatch = addr);
+            Queue(nameof(Patterns64.MenuTransition), Patterns64.MenuTransition, addr => Offsets.Patches.MenuTransition = addr);
+            Queue(nameof(Patterns64.DisableRoll), Patterns64.DisableRoll, addr => Offsets.Patches.DisableRoll = addr);
+            
+            
+            Queue(nameof(Patterns64.SetAreaVariable), Patterns64.SetAreaVariable, addr => Offsets.Hooks.SetAreaVariable = addr);
+            Queue(nameof(Patterns64.CompareEventRandValueForlorn), Patterns64.CompareEventRandValueForlorn, addr => Offsets.Hooks.CompareEventRandValueForlorn = addr);
+            Queue(nameof(Patterns64.CompareEventRandValueElana), Patterns64.CompareEventRandValueElana, addr => Offsets.Hooks.CompareEventRandValueElana = addr);
+            Queue(nameof(Patterns64.PlayerNoDamage), Patterns64.PlayerNoDamage, addr => Offsets.Hooks.PlayerNoDamage = addr);
+            Queue(nameof(Patterns64.LockedTarget), Patterns64.LockedTarget, addr => Offsets.Hooks.LockedTarget = addr);
+            Queue(nameof(Patterns64.CreditSkip), Patterns64.CreditSkip, addr => Offsets.Hooks.CreditSkip = addr);
+            Queue(nameof(Patterns64.NumOfDrops), Patterns64.NumOfDrops, addr => Offsets.Hooks.NumOfDrops = addr);
+            Queue(nameof(Patterns64.DamageControl), Patterns64.DamageControl, addr => Offsets.Hooks.DamageControl = addr);
+            Queue(nameof(Patterns64.TriggersAndSpace), Patterns64.TriggersAndSpace, addr => Offsets.Hooks.TriggersAndSpace = addr);
+            Queue(nameof(Patterns64.Ctrl), Patterns64.Ctrl, addr => Offsets.Hooks.Ctrl = addr);
+            Queue(nameof(Patterns64.NoClipUpdateCoords), Patterns64.NoClipUpdateCoords, addr => Offsets.Hooks.NoClipUpdateCoords = addr);
+            Queue(nameof(Patterns64.KillboxFlagSet), Patterns64.KillboxFlagSet, addr => Offsets.Hooks.KillboxFlagSet = addr);
+            Queue(nameof(Patterns64.SetCurrentAct), Patterns64.SetCurrentAct, addr => Offsets.Hooks.SetCurrentAct = addr);
+            Queue(nameof(Patterns64.FasterMenu), Patterns64.FasterMenu, addr => Offsets.Hooks.FasterMenu = addr);
+            Queue(nameof(Patterns64.InfinitePoise), Patterns64.InfinitePoise, addr => Offsets.Hooks.InfinitePoise = addr);
+            Queue(nameof(Patterns64.SetEventWrapper), Patterns64.SetEventWrapper, addr => Offsets.Hooks.SetEventWrapper = addr);
+            Queue(nameof(Patterns64.ProcessPhysics), Patterns64.ProcessPhysics, addr => Offsets.Hooks.ProcessPhysics = addr);
+            Queue(nameof(Patterns64.DisableTargetAi), Patterns64.DisableTargetAi, addr => Offsets.Hooks.DisableTargetAi = addr);
+            Queue(nameof(Patterns64.SetSharedFlag), Patterns64.SetSharedFlag, addr => Offsets.Hooks.SetSharedFlag = addr);
+            Queue(nameof(Patterns64.BabyJump), Patterns64.BabyJump, addr => Offsets.Hooks.BabyJump = addr);
+            Queue(nameof(Patterns64.EzStateCompareTimer), Patterns64.EzStateCompareTimer, addr => Offsets.Hooks.EzStateCompareTimer = addr);
+            Queue(nameof(Patterns64.NoShadedFogClose), Patterns64.NoShadedFogClose, addr => Offsets.Hooks.NoShadedFogClose = addr);
+            Queue(nameof(Patterns64.ReduceGameSpeed), Patterns64.ReduceGameSpeed, addr => Offsets.Hooks.ReduceGameSpeed = addr);
+            Queue(nameof(Patterns64.LightGutter), Patterns64.LightGutter, addr => Offsets.Hooks.LightGutter = addr);
+            Queue(nameof(Patterns64.NoShadedFogFar), Patterns64.NoShadedFogFar, addr => Offsets.Hooks.NoShadedFogFar = addr);
+            Queue(nameof(Patterns64.NoShadedFogCam), Patterns64.NoShadedFogCam, addr => Offsets.Hooks.NoShadedFogCam = addr);
+            Queue(nameof(Patterns64.GameManUpdate), Patterns64.GameManUpdate, addr => Offsets.Hooks.GameManUpdate = addr);
+            Queue(nameof(Patterns64.NewGameDetect), Patterns64.NewGameDetect, addr => Offsets.Hooks.NewGameDetect = addr);
+            Queue(nameof(Patterns64.LoadingItemName), Patterns64.LoadingItemName, addr => Offsets.Hooks.LoadingItemName = addr);
+            Queue(nameof(Patterns64.PreAiEzState), Patterns64.PreAiEzState, addr => Offsets.Hooks.PreAiEzState = addr);
+            
+            
+            Queue(nameof(Patterns64.RequestWarp), Patterns64.RequestWarp, addr => Offsets.Functions.RequestWarp = addr);
+            Queue(nameof(Patterns64.SetEvent), Patterns64.SetEvent, addr => Offsets.Functions.SetEvent = addr);
+            Queue(nameof(Patterns64.GetEvent), Patterns64.GetEvent, addr => Offsets.Functions.GetEvent = addr);
+            Queue(nameof(Patterns64.GiveSouls), Patterns64.GiveSouls, addr => Offsets.Functions.GiveSouls = addr);
+            Queue(nameof(Patterns64.RestoreSpellcasts), Patterns64.RestoreSpellcasts, addr => Offsets.Functions.RestoreSpellcasts = addr);
+            Queue(nameof(Patterns64.ParamLookup), Patterns64.ParamLookup, addr => Offsets.Functions.ParamLookup = addr);
+            Queue(nameof(Patterns64.SetRenderTargets), Patterns64.SetRenderTargets, addr => Offsets.Functions.SetRenderTargets = addr);
+            Queue(nameof(Patterns64.CreateSoundEvent), Patterns64.CreateSoundEvent, addr => Offsets.Functions.CreateSoundEvent = addr);
+            Queue(nameof(Patterns64.LevelLookup), Patterns64.LevelLookup, addr => Offsets.Functions.LevelLookup = addr);
+            Queue(nameof(Patterns64.LevelUp), Patterns64.LevelUp, addr => Offsets.Functions.LevelUp = addr);
+            Queue(nameof(Patterns64.CurrentItemQuantityCheck), Patterns64.CurrentItemQuantityCheck, addr => Offsets.Functions.CurrentItemQuantityCheck = addr);
+            Queue(nameof(Patterns64.ItemGive), Patterns64.ItemGive, addr => Offsets.Functions.ItemGive = addr);
+            Queue(nameof(Patterns64.BuildItemDialog), Patterns64.BuildItemDialog, addr => Offsets.Functions.BuildItemDialog = addr);
+            Queue(nameof(Patterns64.ShowItemDialog), Patterns64.ShowItemDialog, addr => Offsets.Functions.ShowItemDialog = addr);
+            Queue(nameof(Patterns64.GetEyePosition), Patterns64.GetEyePosition, addr => Offsets.Functions.GetEyePosition = addr);
+            Queue(nameof(Patterns64.ApplySpEffect), Patterns64.ApplySpEffect, addr => Offsets.Functions.ApplySpEffect = addr);
+            Queue(nameof(Patterns64.HavokRayCast), Patterns64.HavokRayCast, addr => Offsets.Functions.HavokRayCast = addr);
+            Queue(nameof(Patterns64.ConvertPxRigidToMapEntity), Patterns64.ConvertPxRigidToMapEntity, addr => Offsets.Functions.ConvertPxRigidToMapEntity = addr);
+            Queue(nameof(Patterns64.PackGameEntityHandle), Patterns64.PackGameEntityHandle, addr => Offsets.Functions.PackGameEntityHandle = addr);
+            Queue(nameof(Patterns64.UnlockBonfire), Patterns64.UnlockBonfire, addr => Offsets.Functions.UnlockBonfire = addr);
+            Queue(nameof(Patterns64.GetMapObjStateActComponent), Patterns64.GetMapObjStateActComponent, addr => Offsets.Functions.GetMapObjStateActComponent = addr);
+            Queue(nameof(Patterns64.GetMapEntityWithAreaIdAndObjId), Patterns64.GetMapEntityWithAreaIdAndObjId, addr => Offsets.Functions.GetMapEntityWithAreaIdAndObjId = addr);
+            Queue(nameof(Patterns64.AttuneSpell), Patterns64.AttuneSpell, addr => Offsets.Functions.AttuneSpell = addr);
+            Queue(nameof(Patterns64.GetNumOfSpellSlots1), Patterns64.GetNumOfSpellSlots1, addr => Offsets.Functions.GetNumOfSpellSlots1 = addr);
+            Queue(nameof(Patterns64.GetNumOfSpellSlots2), Patterns64.GetNumOfSpellSlots2, addr => Offsets.Functions.GetNumOfSpellSlots2 = addr);
+            Queue(nameof(Patterns64.UpdateSpellSlots), Patterns64.UpdateSpellSlots, addr => Offsets.Functions.UpdateSpellSlots = addr);
+            Queue(nameof(Patterns64.EzStateExternalEventCtor), Patterns64.EzStateExternalEventCtor, addr => Offsets.Functions.EzStateExternalEventCtor = addr);
+            Queue(nameof(Patterns64.EzStateEventExecuteCommand), Patterns64.EzStateEventExecuteCommand, addr => Offsets.Functions.EzStateEventExecuteCommand = addr);
+            Queue(nameof(Patterns64.OriginalMakeSound), Patterns64.OriginalMakeSound, addr => Offsets.Functions.OriginalMakeSound = addr);
+            Queue(nameof(Patterns64.OriginalSoulGain), Patterns64.OriginalSoulGain, addr => Offsets.Functions.OriginalSoulGain = addr);
+            Queue(nameof(Patterns64.OpenNpcMenu), Patterns64.OpenNpcMenu, addr => Offsets.Functions.OpenNpcMenu = addr);
+            Queue(nameof(Patterns64.SetMenuOpenChrState), Patterns64.SetMenuOpenChrState, addr => Offsets.Functions.SetMenuOpenChrState = addr);
+            Queue(nameof(Patterns64.ApplyDurabilityDamage), Patterns64.ApplyDurabilityDamage, addr => Offsets.Functions.ApplyDurabilityDamage = addr);
+            Queue(nameof(Patterns64.ResolveTargetCtrlFromHandle), Patterns64.ResolveTargetCtrlFromHandle, addr => Offsets.Functions.ResolveTargetCtrlFromHandle = addr);
+          
+   
+        }
+
+        private void QueueVanillaFallbackPatterns()
+        {
+        }
+        
+        public void Run()
+        {
+            if (_module is null) LoadModule();
+            LoadSavedAddresses();
+            AssignAnchors();
+
+#if DEBUG
+            LogAnchors();
+            var scan = Stopwatch.StartNew();
+#endif
+            var buf = _module!;
+            var bufLen = buf.Length;
+            var end = bufLen - 1; 
+            ref var bufRef = ref buf[0];
+
+            var found = new bool[_requests.Count];
+            var matchCounts = new int[_requests.Count];
+            var remaining = _requests.Count;
+
+            for (var i = 0; i < end && remaining > 0; i++)
+            {
+                var b0 = Unsafe.Add(ref bufRef, i);
+                var key = b0 | (Unsafe.Add(ref bufRef, i + 1) << 8);
+
+                if ((_bitmap[key >> 3] & (1 << (key & 7))) != 0)
                 {
-                    foreach (string line in File.ReadAllLines(savePath))
+                    var bucket = _pairBuckets[key];
+                    if (bucket != null)
                     {
-                        string[] parts = line.Split('=');
-                        saved[parts[0]] = Convert.ToInt64(parts[1], 16);
+                        foreach (var req in bucket)
+                        {
+                            if (found[req.Id]) continue;
+                            var start = i - req.AnchorOffset;
+                            if (start < 0) continue;
+                            if (!Matches(ref bufRef, bufLen, start, req)) continue;
+                            if (!AcceptOccurrence(req, matchCounts)) continue;
+                            ResolveAndInvoke(req, start);
+                            found[req.Id] = true;
+                            remaining--;
+                        }
                     }
                 }
-                
-                
-                Offsets.GameManagerImp.Base = FindAddressByPattern(Patterns32.GameManagerImp);
-                Offsets.MapId = FindAddressByPattern(Patterns32.MapId);
-                Offsets.LoadLibraryW = FindAddressByPattern(Patterns32.LoadLibraryW);
-                Offsets.KatanaMainApp.Base = FindAddressByPattern(Patterns32.KatanaMainApp);
-                
-                
-                
-                TryPatternWithFallback("InfiniteStam", Patterns32.InfiniteStam,
-                    addr => Offsets.Patches.InfiniteStam = addr, saved);
-                TryPatternWithFallback("InfiniteGoods", Patterns32.InfiniteGoods,
-                    addr => Offsets.Patches.InfiniteGoods = addr, saved);
-                TryPatternWithFallback("InfiniteDurability", Patterns32.InfiniteDurability,
-                    addr => Offsets.Patches.InfiniteDurability = addr, saved);
-                TryPatternWithFallback("InfiniteCasts", Patterns32.InfiniteCasts,
-                    addr => Offsets.Patches.InfiniteCasts = addr, saved);
-                TryPatternWithFallback("NoSoulGain", Patterns32.NoSoulGain,
-                    addr => Offsets.Patches.NoSoulGain = addr, saved);
-                TryPatternWithFallback("NoHollowing", Patterns32.NoHollowing,
-                    addr => Offsets.Patches.NoHollowing = addr, saved);
-                TryPatternWithFallback("NoSoulLoss", Patterns32.NoSoulLoss,
-                    addr => Offsets.Patches.NoSoulLoss = addr, saved);
-                TryPatternWithFallback("Hidden", Patterns32.Hidden,
-                    addr => Offsets.Patches.Hidden = addr, saved);
-                TryPatternWithFallback("DisableAi", Patterns32.DisableAi,
-                    addr => Offsets.Patches.DisableAi = addr, saved);
-                TryPatternWithFallback("Silent", Patterns32.Silent,
-                    addr => Offsets.Patches.Silent = addr, saved);
-                TryPatternWithFallback("Ng7", Patterns32.Ng7Patch,
-                    addr => Offsets.Patches.Ng7 = addr, saved);
-                TryPatternWithFallback("DropRate", Patterns32.DropRate,
-                    addr => Offsets.Patches.DropRate = addr, saved);
-                TryPatternWithFallback("HideMap", Patterns32.HideMap,
-                    addr => Offsets.Patches.HideMap = addr, saved);
-                TryPatternWithFallback("HideChrModels", Patterns32.HideChrModels,
-                    addr => Offsets.Patches.HideChrModels = addr, saved);
-                
-                TryPatternWithFallback("LockedTarget", Patterns32.LockedTarget,
-                    addr => Offsets.Hooks.LockedTarget = addr, saved);
-                TryPatternWithFallback("InfinitePoise", Patterns32.InfinitePoise,
-                    addr => Offsets.Hooks.InfinitePoise = addr, saved);
-                TryPatternWithFallback("DamageControl", Patterns32.DamageControl,
-                    addr => Offsets.Hooks.DamageControl = addr, saved);
 
-                TryPatternWithFallback("SetSharedFlag", Patterns32.SetSharedFlag,
-                    addr => Offsets.Hooks.SetSharedFlag = addr, saved);
-                TryPatternWithFallback("TriggersAndSpace", Patterns32.TriggersAndSpace,
-                    addr => Offsets.Hooks.TriggersAndSpace = addr, saved);
-                TryPatternWithFallback("Ctrl", Patterns32.Ctrl,
-                    addr => Offsets.Hooks.Ctrl = addr, saved);
-                TryPatternWithFallback("NoClipUpdateCoords", Patterns32.NoClipUpdateCoords,
-                    addr => Offsets.Hooks.NoClipUpdateCoords = addr, saved);
-                TryPatternWithFallback("ProcessPhysics", Patterns32.ProcessPhysics,
-                    addr => Offsets.Hooks.ProcessPhysics = addr, saved);
-                TryPatternWithFallback("KillboxFlagSet", Patterns32.KillboxFlagSet,
-                    addr => Offsets.Hooks.KillboxFlagSet = addr, saved);
-                TryPatternWithFallback("CreditSkip", Patterns32.CreditSkip,
-                    addr => Offsets.Hooks.CreditSkip = addr, saved);
-                TryPatternWithFallback("NumOfDrops", Patterns32.NumOfDrops,
-                    addr => Offsets.Hooks.NumOfDrops = addr, saved);
-                TryPatternWithFallback("SetEventWrapper", Patterns32.SetEventWrapper,
-                    addr => Offsets.Hooks.SetEventWrapper = addr, saved);
-                TryPatternWithFallback("EzStateCompareTimer", Patterns32.EzStateCompareTimer,
-                    addr => Offsets.Hooks.EzStateCompareTimer = addr, saved);
-                TryPatternWithFallback("FasterMenu", Patterns32.FasterMenu,
-                    addr => Offsets.Hooks.FasterMenu = addr, saved);
-                TryPatternWithFallback("BabyJump", Patterns32.BabyJump,
-                    addr => Offsets.Hooks.BabyJump = addr, saved);
-                TryPatternWithFallback("DisableTargetAi", Patterns32.DisableTargetAi,
-                    addr => Offsets.Hooks.DisableTargetAi = addr, saved);
-                TryPatternWithFallback("ReduceGameSpeed", Patterns32.ReduceGameSpeed,
-                    addr => Offsets.Hooks.ReduceGameSpeed = addr, saved);
-                TryPatternWithFallback("LightGutter", Patterns32.LightGutter,
-                    addr => Offsets.Hooks.LightGutter = addr, saved);
-                TryPatternWithFallback("NoShadedFogClose", Patterns32.NoShadedFogClose,
-                    addr => Offsets.Hooks.NoShadedFogClose = addr, saved);
-                TryPatternWithFallback("NoShadedFogFar", Patterns32.NoShadedFogFar,
-                    addr => Offsets.Hooks.NoShadedFogFar = addr, saved);
-                TryPatternWithFallback("NoShadedFogCam", Patterns32.NoShadedFogCam,
-                    addr => Offsets.Hooks.NoShadedFogCam = addr, saved);
-                TryPatternWithFallback("CompareEventRandValueElana", Patterns32.CompareEventRandValueElana,
-                    addr => Offsets.Hooks.CompareEventRandValueElana = addr, saved);
-                
-                var setCurrectActLocs = FindAddressesByPattern(Patterns32.SetCurrentAct, 2);
-                if (setCurrectActLocs.Count < 2 || setCurrectActLocs[0] == IntPtr.Zero)
+                if (!_hasSingleFallback) continue;
                 {
-                    if (saved.TryGetValue("SetCurrectAct", out var value))
+                    var sb = _singleBuckets[b0];
+                    if (sb == null) continue;
+                    foreach (var req in sb)
                     {
-                        Offsets.Hooks.SetCurrentAct = (nint)value;
+                        if (found[req.Id]) continue;
+                        var start = i - req.AnchorOffset;
+                        if (start < 0) continue;
+                        if (!Matches(ref bufRef, bufLen, start, req)) continue;
+                        if (!AcceptOccurrence(req, matchCounts)) continue;
+                        ResolveAndInvoke(req, start);
+                        found[req.Id] = true;
+                        remaining--;
                     }
+                }
+            }
+
+            for (var i = 0; i < _requests.Count; i++)
+            {
+                if (found[i]) continue;
+                var req = _requests[i];
+                if (req.Name != null && _savedAddresses.TryGetValue(req.Name, out var saved))
+                {
+                    req.Setter(saved);
+#if DEBUG
+                    Console.WriteLine($"[AobScanner] MISS (using saved): {req.Name}");
+#endif
                 }
                 else
                 {
-                    byte[] bytes0 = memoryService.ReadBytes(setCurrectActLocs[0] - 10, 3);
-
-                    bool isReturnInstruction = bytes0[0] == 0xC2 && bytes0[1] == 0x04 && bytes0[2] == 0x00;
-
-                    IntPtr validAddress = !isReturnInstruction ? setCurrectActLocs[0] : setCurrectActLocs[1];
-
-                    Offsets.Hooks.SetCurrentAct = validAddress;
-                    saved["SetCurrectAct"] = validAddress.ToInt32();
-                }
-                
-                
-                Offsets.Functions.SetSpEffect = FindAddressByPattern(Patterns32.SetSpEffect).ToInt32();
-                Offsets.Functions.GiveSouls = FindAddressByPattern(Patterns32.GiveSouls).ToInt32();
-                Offsets.Functions.LevelUp = FindAddressByPattern(Patterns32.LevelUp).ToInt32();
-                Offsets.Functions.LevelLookup = FindAddressByPattern(Patterns32.LevelLookup).ToInt32();
-                Offsets.Functions.RestoreSpellcasts = FindAddressByPattern(Patterns32.RestoreSpellcasts).ToInt32();
-                Offsets.Functions.CreateSoundEvent = FindAddressByPattern(Patterns32.CreateSoundEvent).ToInt32();
-                Offsets.Functions.UnlockBonfire = FindAddressByPattern(Patterns32.UnlockBonfire).ToInt32();
-                Offsets.Functions.SetEvent = FindAddressByPattern(Patterns32.SetEvent).ToInt32();
-                Offsets.Functions.GetMapEntityWithAreaIdAndObjId = FindAddressByPattern(Patterns32.GetMapEntityWithAreaIdAndObjId).ToInt32();
-                Offsets.Functions.GetMapObjStateActComponent = FindAddressByPattern(Patterns32.GetStateActComp).ToInt32();
-                Offsets.Functions.GetWhiteDoorComponent = FindAddressByPattern(Patterns32.GetWhiteDoorComponent).ToInt32();
-                Offsets.Functions.HavokRayCast = FindAddressByPattern(Patterns32.HavokRayCast).ToInt32();
-                Offsets.Functions.ItemGive = FindAddressByPattern(Patterns32.ItemGive).ToInt32();
-                Offsets.Functions.BuildItemDialog = FindAddressByPattern(Patterns32.BuildItemDialog).ToInt32();
-                Offsets.Functions.ShowItemDialog = FindAddressByPattern(Patterns32.ShowItemDialog).ToInt32();
-                Offsets.Functions.CurrentItemQuantityCheck = FindAddressByPattern(Patterns32.CurrentItemQuantityCheck).ToInt32();
-                Offsets.Functions.Sleep = FindAddressByPattern(Patterns32.Sleep).ToInt32();
-                Offsets.Functions.UpdateSpellSlots = FindAddressByPattern(Patterns32.UpdateSpellSlots).ToInt32();
-                Offsets.Functions.AttuneSpell = FindAddressByPattern(Patterns32.AttuneSpell).ToInt32();
-                Offsets.Functions.ParamLookup = FindAddressByPattern(Patterns32.ParamLookup).ToInt32();
-                Offsets.Functions.GetEyePosition = FindAddressByPattern(Patterns32.GetEyePosition).ToInt32();
-                Offsets.Functions.GetEvent = FindAddressByPattern(Patterns32.GetEvent).ToInt32();
-                
-                FindMultipleCallsInFunction(Patterns32.GetNumOfSpellSlots, new Dictionary<Action<long>, int>
-                {
-                    { addr => Offsets.Functions.GetNumOfSpellSlots1 = (nint)addr, -0xE },
-                    { addr => Offsets.Functions.GetNumOfSpellSlots2 = (nint)addr, -0x5 },
-                });
-
-                FindMultipleCallsInFunction(Patterns32.ConvertPxRigidToMapEntity, new Dictionary<Action<long>, int>
-                {
-                    { addr => Offsets.Functions.ConvertPxRigidToMapEntity = (nint)addr, 0 },
-                    { addr => Offsets.Functions.ConvertMapEntityToGameId = (nint)addr, 0x17 },
-                });
-
-                
-                FindMultipleCallsInFunction(Patterns32.DisableNavimesh, new Dictionary<Action<long>, int>
-                {
-                    { addr => Offsets.Functions.GetNavimeshLoc = (nint)addr, -0xE },
-                    { addr => Offsets.Functions.DisableNavimesh = (nint)addr, 0xB },
-                });
-                
-                Offsets.Patches.NegativeLevel = (IntPtr)Offsets.Functions.LevelUp + 0x31;
-                Offsets.Patches.SoulMemWrite1 = FindAddressByPattern(Patterns32.SoulMemWrite);
-                Offsets.Patches.SoulMemWrite2 = Offsets.Patches.SoulMemWrite1 + 0x4A;
-                
-                
-                TryPatternWithFallback("SetDepthStencilSurface",
-                    Patterns32.SetDepthStencilSurface,
-                    addr => Offsets.Functions.SetDepthStencilSurface = addr, saved);
-                
-                using (var writer = new StreamWriter(savePath))
-                {
-                    foreach (var pair in saved)
-                        writer.WriteLine($"{pair.Key}={pair.Value:X}");
-                }
-            
-        }
-
-        private void TryPatternWithFallback(string name, Pattern pattern, Action<IntPtr> setter,
-            Dictionary<string, long> saved)
-        {
-            var addr = FindAddressByPattern(pattern);
-
-            if (addr == IntPtr.Zero && saved.TryGetValue(name, out var value))
-                addr = new IntPtr(value);
-            else if (addr != IntPtr.Zero)
-                saved[name] = addr.ToInt64();
-
-            setter(addr);
-        }
-
-
-        public IntPtr FindAddressByPattern(Pattern pattern)
-        {
-            var results = FindAddressesByPattern(pattern, 1);
-            return results.Count > 0 ? results[0] : IntPtr.Zero;
-        }
-
-        public List<IntPtr> FindAddressesByPattern(Pattern pattern, int size)
-        {
-            List<IntPtr> addresses = PatternScanMultiple(pattern.Bytes, pattern.Mask, size);
-
-            for (int i = 0; i < addresses.Count; i++)
-            {
-                IntPtr instructionAddress = IntPtr.Add(addresses[i], pattern.InstructionOffset);
-
-                switch (pattern.AddressingMode)
-                {
-                    case AddressingMode.Absolute:
-                        addresses[i] = instructionAddress;
-                        break;
-                    case AddressingMode.Direct32:
-                    {
-                        uint absoluteAddr = memoryService.Read<uint>(IntPtr.Add(instructionAddress, pattern.OffsetLocation));
-                        addresses[i] = (IntPtr)absoluteAddr;
-                        break;
-                    }
-                    default:
-                    {
-                        int offset = memoryService.Read<int>(IntPtr.Add(instructionAddress, pattern.OffsetLocation));
-                        addresses[i] = IntPtr.Add(instructionAddress, offset + pattern.InstructionLength);
-                        break;
-                    }
+                    req.Setter(0);
+#if DEBUG
+                    Console.WriteLine($"[AobScanner] MISS (no saved): {req.Name}");
+#endif
                 }
             }
 
-            return addresses;
+            WriteSavedAddresses();
+
+#if DEBUG
+            scan.Stop();
+            var foundCount = _requests.Count - remaining;
+            Console.WriteLine(
+                $"[AobScanner] scan done in {scan.ElapsedMilliseconds} ms ({foundCount}/{_requests.Count} found)");
+#endif
+        }
+        
+        #endregion
+        
+        #region Private Methods
+
+        private static bool IsConcrete(string mask, int j, int len)
+            => j < len && (j >= mask.Length || mask[j] != '?');
+        
+        private void LoadModule()
+        {
+            _moduleBase = memoryService.BaseAddress;
+            _module = memoryService.ReadBytes(_moduleBase, memoryService.ModuleMemorySize);
+        }
+        
+        private void Queue(string? name, Pattern pattern, Action<nint> setter) =>
+            _requests.Add(new Request(_requests.Count, name, pattern, setter));
+        
+        private void LoadSavedAddresses()
+        {
+            _savedAddresses.Clear();
+            if (!File.Exists(BackupPath)) return;
+            foreach (var line in File.ReadAllLines(BackupPath))
+            {
+                var parts = line.Split('=');
+                if (parts.Length != 2) continue;
+                if (long.TryParse(parts[1], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var val))
+                    _savedAddresses[parts[0]] = (nint)val;
+            }
         }
 
-        private List<IntPtr> PatternScanMultiple(byte[] pattern, string mask, int size)
+        private void WriteSavedAddresses()
         {
-            const int chunkSize = 4096 * 16;
-            byte[] buffer = new byte[chunkSize];
+            Directory.CreateDirectory(Path.GetDirectoryName(BackupPath)!);
+            using var writer = new StreamWriter(BackupPath);
+            foreach (var kvp in _savedAddresses)
+                writer.WriteLine($"{kvp.Key}={(long)kvp.Value:X}");
+        }
 
-            IntPtr currentAddress = memoryService.BaseAddress;
-            IntPtr endAddress = IntPtr.Add(currentAddress, 0x3200000);
-
-            List<IntPtr> addresses = new List<IntPtr>();
-
-            while (currentAddress.ToInt64() < endAddress.ToInt64())
+        private void BuildHistogram()
+        {
+            Array.Clear(_pairHistogram, 0, _pairHistogram.Length);
+            var buf = _module!;
+            var end = buf.Length - 1;
+            long samples = 0;
+            for (var i = 0; i < end; i += HistogramSampleStep)
             {
-                int bytesRemaining = (int)(endAddress.ToInt64() - currentAddress.ToInt64());
-                int bytesToRead = Math.Min(bytesRemaining, buffer.Length);
+                var key = buf[i] | (buf[i + 1] << 8);
+                _pairHistogram[key]++;
+                samples++;
+            }
 
-                if (bytesToRead < pattern.Length)
-                    break;
+            _histogramSamples = samples;
+            _histogramBuilt = true;
+        }
+        
+        private void AssignAnchors()
+        {
+            var needHistogram = _requests.Any(r => r.Pattern.AnchorOffset < 0);
+#if DEBUG
+            needHistogram = true;
+#endif
+            if (needHistogram) BuildHistogram();
 
-                buffer = memoryService.ReadBytes(currentAddress, bytesToRead);
+            long[]? singleMarginal = null; 
 
-                for (int i = 0; i <= bytesToRead - pattern.Length; i++)
+            foreach (var req in _requests)
+            {
+                var bytes = req.Pattern.Bytes;
+                var hardOffset = req.Pattern.AnchorOffset;
+
+                if (hardOffset >= 0 && hardOffset + 1 < bytes.Length)
                 {
-                    bool found = true;
-
-                    for (int j = 0; j < pattern.Length; j++)
+                    AssignPair(req, hardOffset);
+                    continue;
+                }
+                
+                var mask = req.Pattern.Mask;
+                var len = bytes.Length;
+                var bestOffset = -1;
+                var bestFreq = long.MaxValue;
+                for (var j = 0; j + 1 < len; j++)
+                {
+                    if (!IsConcrete(mask, j, len) || !IsConcrete(mask, j + 1, len)) continue;
+                    var freq = _pairHistogram[bytes[j] | (bytes[j + 1] << 8)];
+                    if (freq < bestFreq)
                     {
-                        if (j < mask.Length && mask[j] == '?')
-                            continue;
+                        bestFreq = freq;
+                        bestOffset = j;
+                    }
+                }
 
-                        if (buffer[i + j] != pattern[j])
+                if (bestOffset >= 0)
+                {
+                    AssignPair(req, bestOffset);
+                }
+                else
+                {
+                    singleMarginal ??= BuildSingleByteMarginal();
+                    var bestByteOffset = req.NonWildcardIndices.Length > 0 ? req.NonWildcardIndices[0] : 0;
+                    var bestByteFreq = long.MaxValue;
+                    foreach (var j in req.NonWildcardIndices)
+                    {
+                        var freq = singleMarginal[bytes[j]];
+                        if (freq < bestByteFreq)
                         {
-                            found = false;
-                            break;
+                            bestByteFreq = freq;
+                            bestByteOffset = j;
                         }
                     }
 
-                    if (found)
-                        addresses.Add(IntPtr.Add(currentAddress, i));
-                    if (addresses.Count == size) break;
+                    req.IsSingle = true;
+                    req.AnchorOffset = bestByteOffset;
+                    req.AnchorFrequency = bestByteFreq;
+                    _hasSingleFallback = true;
+                    (_singleBuckets[bytes[bestByteOffset]] ??= new List<Request>()).Add(req);
                 }
-
-                currentAddress = IntPtr.Add(currentAddress, bytesToRead - pattern.Length + 1);
             }
+        }
 
-            return addresses;
+        private void AssignPair(Request req, int offset)
+        {
+            var bytes = req.Pattern.Bytes;
+            var key = bytes[offset] | (bytes[offset + 1] << 8);
+            req.AnchorOffset = offset;
+            req.IsSingle = false;
+            req.AnchorFrequency = _histogramBuilt ? _pairHistogram[key] : -1;
+            _bitmap[key >> 3] |= (byte)(1 << (key & 7));
+            (_pairBuckets[key] ??= new List<Request>()).Add(req);
         }
         
-        private void FindMultipleCallsInFunction(Pattern basePattern, Dictionary<Action<long>, int> callMappings)
+        private long[] BuildSingleByteMarginal()
         {
-            var baseInstructionAddr = FindAddressByPattern(basePattern);
-    
-            foreach (var mapping in callMappings)
+            var marginal = new long[256];
+            for (var key = 0; key < _pairHistogram.Length; key++)
+                marginal[key & 0xFF] += _pairHistogram[key];
+            return marginal;
+        }
+        
+        private static bool Matches(ref byte bufRef, int bufLen, int start, Request req)
+        {
+            var bytes = req.Pattern.Bytes;
+            var indices = req.NonWildcardIndices;
+            if (start + bytes.Length > bufLen) return false;
+
+            foreach (var j in indices)
             {
-                var callInstructionAddr = IntPtr.Add(baseInstructionAddr, mapping.Value);
+                if (Unsafe.Add(ref bufRef, start + j) != bytes[j]) return false;
+            }
+
+            return true;
+        }
+
+        private static bool AcceptOccurrence(Request req, int[] matchCounts)
+            => matchCounts[req.Id]++ >= req.Pattern.OccurrenceIndex;
+
+        private void ResolveAndInvoke(Request req, int startIndex)
+        {
+            var p = req.Pattern;
+            var instructionAddress = _moduleBase + startIndex + p.InstructionOffset;
+
+            var final = p.AddressingMode switch
+            {
+                AddressingMode.Absolute => instructionAddress,
+                AddressingMode.Direct32 => (nint)(uint)ReadInt32(instructionAddress + p.OffsetLocation),
+                _ => instructionAddress + ReadInt32(instructionAddress + p.OffsetLocation) + p.InstructionLength
+            };
+
+            if (req.Name != null) _savedAddresses[req.Name] = final;
+            req.Setter(final);
+        }
+
+        private int ReadInt32(nint address)
+        {
+            var idx = (int)(address - _moduleBase);
+            return Unsafe.ReadUnaligned<int>(ref _module![idx]);
+        }
         
-                int callOffset = memoryService.Read<int>(IntPtr.Add(callInstructionAddr, 1));
-                var callTarget = IntPtr.Add(callInstructionAddr, callOffset + 5);
-        
-                mapping.Key(callTarget.ToInt64());
+        #endregion
+
+#if DEBUG
+        private void LogAnchors()
+        {
+            double scale = HistogramSampleStep;
+            long totalCandidateEst = 0;
+
+            Console.WriteLine($"[AobScanner] --- anchor report ({_requests.Count} patterns, " +
+                              $"{_requests.Count(r => r.IsSingle)} single-fallback) ---");
+            Console.WriteLine("[AobScanner]   freq(ppm)  count~   combo      off  name");
+
+            foreach (var req in _requests.OrderByDescending(r => r.AnchorFrequency))
+            {
+                var estCount = (long)(req.AnchorFrequency * scale);
+                var ppm = _histogramSamples > 0 ? req.AnchorFrequency / (double)_histogramSamples * 1_000_000 : 0;
+                if (req.AnchorFrequency >= 0) totalCandidateEst += estCount;
+
+                if (req.IsSingle)
+                {
+                    var b = req.Pattern.Bytes[req.AnchorOffset];
+                    Console.WriteLine(
+                        $"[AobScanner]   {ppm,8:F1}  {estCount,8}  0x{b:X2}(1byte) {req.AnchorOffset,3}   {req.Name}  <-- SINGLE-BYTE FALLBACK");
+                    continue;
+                }
+
+                var b0 = req.Pattern.Bytes[req.AnchorOffset];
+                var b1 = req.Pattern.Bytes[req.AnchorOffset + 1];
+                Console.WriteLine(
+                    $"[AobScanner]   {ppm,8:F1}  {estCount,8}  0x{b0:X2} 0x{b1:X2}  {req.AnchorOffset,3}   {req.Name}");
             }
         }
     }
+#endif
 }

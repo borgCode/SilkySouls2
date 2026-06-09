@@ -39,7 +39,7 @@ namespace SilkySouls2.Services
             var lockedTarget = CustomCodeOffsets.Base + CustomCodeOffsets.LockedTargetPtr;
             var hookLoc = Hooks.DamageControl;
 
-            if (PatchManager.Current.Edition == GameEdition.Scholar)
+            if (PatchManager.IsScholar())
             {
                 var codeBytes = AsmLoader.GetAsmBytes(AsmScript.DamageControl64);
 

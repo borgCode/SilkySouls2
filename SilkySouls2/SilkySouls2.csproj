@@ -132,6 +132,7 @@
         <Compile Include="GameIds\ShopLineup.cs" />
         <Compile Include="GameIds\SpEffect.cs" />
         <Compile Include="GameIds\WhiteDoor.cs" />
+        <Compile Include="Interfaces\IAttunementService.cs" />
         <Compile Include="Interfaces\IChrCtrlService.cs" />
         <Compile Include="Interfaces\IDamageControlService.cs" />
         <Compile Include="Interfaces\IEnemyService.cs" />
@@ -159,6 +160,7 @@
         <Compile Include="Memory\PatchManager.cs" />
         <Compile Include="Memory\Patterns\Pattern.cs" />
         <Compile Include="Memory\Patterns\Patterns32.cs" />
+        <Compile Include="Memory\Patterns\Patterns64.cs" />
         <Compile Include="Models\AttunementSpell.cs" />
         <Compile Include="Models\EquippedSpell.cs" />
         <Compile Include="Models\Item.cs" />
@@ -174,6 +176,7 @@
         <Compile Include="Models\CharacterState.cs" />
         <Compile Include="Models\Forlorn.cs" />
         <Compile Include="Models\WarpRequest.cs" />
+        <Compile Include="Services\AttunementService.cs" />
         <Compile Include="Services\ChrCtrlService.cs" />
         <Compile Include="Services\DamageControlService.cs" />
         <Compile Include="Services\EnemyService.cs" />

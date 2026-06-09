@@ -272,7 +272,7 @@ namespace SilkySouls2.Services
 
         public void AllocCodeCave()
         {
-            if (PatchManager.Current.Edition == GameEdition.Scholar)
+            if (PatchManager.IsScholar())
             {
                 IntPtr searchRangeStart = BaseAddress - 0x40000000;
                 IntPtr searchRangeEnd = BaseAddress - 0x30000;

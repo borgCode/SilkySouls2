@@ -67,7 +67,7 @@ namespace SilkySouls2.Memory
                 Scholar1_0_2 or Scholar1_0_3 => [DLBackAllocator, 0x110, 0x10, 0x38, 0x30, 0x30, 0x1E],
                 _ => []
             };
-            
+
             public static int Step => PatchManager.Current.PatchVersion switch
             {
                 Vanilla1_0_11 or Vanilla1_0_12 => 0xDEC,
@@ -81,7 +81,7 @@ namespace SilkySouls2.Memory
                 Scholar1_0_2 or Scholar1_0_3 => 0x24B1,
                 _ => 0x0
             };
-            
+
             public static int PendingCutsceneId => PatchManager.Current.PatchVersion switch
             {
                 Vanilla1_0_11 or Vanilla1_0_12 => 0xE18,
@@ -260,7 +260,7 @@ namespace SilkySouls2.Memory
                 };
             }
         }
-        
+
         public static class DLBackAllocator
         {
             public static int UnkFlag => PatchManager.Current.PatchVersion switch
@@ -269,7 +269,7 @@ namespace SilkySouls2.Memory
                 Scholar1_0_2 or Scholar1_0_3 => 0x30F,
                 _ => 0x0
             };
-            
+
             public static int RefCount => PatchManager.Current.PatchVersion switch
             {
                 Vanilla1_0_11 or Vanilla1_0_12 => 0x1B0,
@@ -293,14 +293,14 @@ namespace SilkySouls2.Memory
                 Scholar1_0_2 or Scholar1_0_3 => 0x40,
                 _ => 0x0
             };
-            
+
             public static int Rot => PatchManager.Current.PatchVersion switch
             {
                 Vanilla1_0_11 or Vanilla1_0_12 => 0x40,
                 Scholar1_0_2 or Scholar1_0_3 => 0x60,
                 _ => 0x0
             };
-            
+
             public static int Orientation => PatchManager.Current.PatchVersion switch
             {
                 Vanilla1_0_11 or Vanilla1_0_12 => 0x60,
@@ -344,14 +344,14 @@ namespace SilkySouls2.Memory
                     Scholar1_0_2 or Scholar1_0_3 => 0x0,
                     _ => 0x0
                 };
-                
+
                 public static int Orientation => PatchManager.Current.PatchVersion switch
                 {
                     Vanilla1_0_11 or Vanilla1_0_12 => 0x10,
                     Scholar1_0_2 or Scholar1_0_3 => 0x10,
                     _ => 0x0
                 };
-                
+
                 public static int Flags => PatchManager.Current.PatchVersion switch
                 {
                     Vanilla1_0_11 or Vanilla1_0_12 => 0xDC,
@@ -725,7 +725,6 @@ namespace SilkySouls2.Memory
             public static nint Silent;
             public static nint Hidden;
             public static nint NegativeLevel;
-            public static nint Ng7;
             public static nint NoSoulGain;
             public static nint NoHollowing;
             public static nint NoSoulLoss;
@@ -786,16 +785,13 @@ namespace SilkySouls2.Memory
             public static nint BuildItemDialog;
             public static nint ShowItemDialog;
             public static nint GetEyePosition;
-            public static nint SetSpEffect;
+            public static nint ApplySpEffect;
             public static nint HavokRayCast;
             public static nint ConvertPxRigidToMapEntity;
-            public static nint ConvertMapEntityToGameId;
+            public static nint PackGameEntityHandle;
             public static nint UnlockBonfire;
             public static nint GetMapObjStateActComponent;
             public static nint GetMapEntityWithAreaIdAndObjId;
-            public static nint GetNavimeshLoc;
-            public static nint DisableNavimesh;
-            public static nint GetWhiteDoorComponent;
             public static nint AttuneSpell;
             public static nint GetNumOfSpellSlots1;
             public static nint GetNumOfSpellSlots2;
@@ -984,16 +980,7 @@ namespace SilkySouls2.Memory
                 Scholar1_0_3 => 0x10E306,
                 _ => 0
             };
-
-            Patches.Ng7 = baseAddr + PatchManager.Current.PatchVersion switch
-            {
-                Vanilla1_0_11 => 0x194DA0,
-                Vanilla1_0_12 => 0x194FB0,
-                Scholar1_0_2 => 0xFE97D,
-                Scholar1_0_3 => 0xFEA3D,
-                _ => 0
-            };
-
+            
             Patches.DropRate = baseAddr + PatchManager.Current.PatchVersion switch
             {
                 Vanilla1_0_11 => 0x257DC3,
@@ -1020,7 +1007,7 @@ namespace SilkySouls2.Memory
                 Scholar1_0_3 => 0xEF614,
                 _ => 0
             };
-            
+
             Patches.DisableRoll = baseAddr + PatchManager.Current.PatchVersion switch
             {
                 Vanilla1_0_11 => 0x3B0077,
@@ -1040,7 +1027,7 @@ namespace SilkySouls2.Memory
                 _ => 0
             };
 
-            Functions.SetSpEffect = baseAddr + PatchManager.Current.PatchVersion switch
+            Functions.ApplySpEffect = baseAddr + PatchManager.Current.PatchVersion switch
             {
                 Vanilla1_0_11 => 0x1DB3E0,
                 Vanilla1_0_12 => 0x1DC980,
@@ -1103,7 +1090,7 @@ namespace SilkySouls2.Memory
                 _ => 0
             };
 
-            
+
             Functions.RequestWarp = baseAddr + PatchManager.Current.PatchVersion switch
             {
                 Vanilla1_0_11 => 0x20AE10,
@@ -1148,33 +1135,7 @@ namespace SilkySouls2.Memory
                 Scholar1_0_3 => 0x1CA790,
                 _ => 0
             };
-
-            Functions.GetNavimeshLoc = baseAddr + PatchManager.Current.PatchVersion switch
-            {
-                Vanilla1_0_11 => 0x218950,
-                Vanilla1_0_12 => 0x21B700,
-                Scholar1_0_2 => 0x472800,
-                Scholar1_0_3 => 0x4799F0,
-                _ => 0
-            };
-
-            Functions.DisableNavimesh = baseAddr + PatchManager.Current.PatchVersion switch
-            {
-                Vanilla1_0_11 => 0x260030,
-                Vanilla1_0_12 => 0x262E70,
-                Scholar1_0_2 => 0x1EA9C0,
-                Scholar1_0_3 => 0x1EE140,
-                _ => 0
-            };
-
-            Functions.GetWhiteDoorComponent = baseAddr + PatchManager.Current.PatchVersion switch
-            {
-                Vanilla1_0_11 => 0x458060,
-                Vanilla1_0_12 => 0x45F340,
-                Scholar1_0_2 => 0x449480,
-                Scholar1_0_3 => 0x4506C0,
-                _ => 0
-            };
+            
 
             Functions.HavokRayCast = baseAddr + PatchManager.Current.PatchVersion switch
             {
@@ -1194,7 +1155,7 @@ namespace SilkySouls2.Memory
                 _ => 0
             };
 
-            Functions.ConvertMapEntityToGameId = baseAddr + PatchManager.Current.PatchVersion switch
+            Functions.PackGameEntityHandle = baseAddr + PatchManager.Current.PatchVersion switch
             {
                 Vanilla1_0_11 => 0x2039E0,
                 Vanilla1_0_12 => 0x206180,
@@ -1326,7 +1287,7 @@ namespace SilkySouls2.Memory
                 Vanilla1_0_12 => 0x9FB740,
                 _ => 0
             };
-            
+
             Functions.ApplyDurabilityDamage = baseAddr + PatchManager.Current.PatchVersion switch
             {
                 Vanilla1_0_11 => 0x268D80,
@@ -1335,7 +1296,6 @@ namespace SilkySouls2.Memory
                 Scholar1_0_3 => 0x1F8710,
                 _ => 0
             };
-
 
 
             Hooks.LightGutter = baseAddr + PatchManager.Current.PatchVersion switch
@@ -1595,7 +1555,7 @@ namespace SilkySouls2.Memory
                 Scholar1_0_3 => 0x29855,
                 _ => 0
             };
-            
+
             Hooks.PreAiEzState = baseAddr + PatchManager.Current.PatchVersion switch
             {
                 Vanilla1_0_11 => 0x4326F8,
@@ -1604,8 +1564,6 @@ namespace SilkySouls2.Memory
                 Scholar1_0_3 => 0x4269FB,
                 _ => 0
             };
-
-
 
 
             Functions.SetRenderTargets = baseAddr + PatchManager.Current.PatchVersion switch
@@ -1646,7 +1604,7 @@ namespace SilkySouls2.Memory
                 Scholar1_0_3 => 0x10E190,
                 _ => 0
             };
-            
+
             Functions.ResolveTargetCtrlFromHandle = baseAddr + PatchManager.Current.PatchVersion switch
             {
                 Vanilla1_0_11 => 0x2A9EE0,
@@ -1656,11 +1614,16 @@ namespace SilkySouls2.Memory
                 _ => 0
             };
 
+            return true;
+        }
 
 
-#if DEBUG
+        private static long _printBaseAddr;
 
-            _baseAddr = baseAddr;
+        public static void Print(IntPtr moduleBase)
+        {
+            _printBaseAddr = moduleBase.ToInt64();
+
             Console.WriteLine("\n========== OFFSETS DEBUG ==========\n");
 
             Console.WriteLine("--- Base Pointers ---");
@@ -1683,7 +1646,6 @@ namespace SilkySouls2.Memory
             PrintOffset("Silent", Patches.Silent);
             PrintOffset("Hidden", Patches.Hidden);
             PrintOffset("NegativeLevel", Patches.NegativeLevel);
-            PrintOffset("Ng7", Patches.Ng7);
             PrintOffset("NoSoulGain", Patches.NoSoulGain);
             PrintOffset("NoHollowing", Patches.NoHollowing);
             PrintOffset("NoSoulLoss", Patches.NoSoulLoss);
@@ -1741,16 +1703,13 @@ namespace SilkySouls2.Memory
             PrintOffset("BuildItemDialog", Functions.BuildItemDialog);
             PrintOffset("ShowItemDialog", Functions.ShowItemDialog);
             PrintOffset("GetEyePosition", Functions.GetEyePosition);
-            PrintOffset("SetSpEffect", Functions.SetSpEffect);
+            PrintOffset("ApplySpEffect", Functions.ApplySpEffect);
             PrintOffset("HavokRayCast", Functions.HavokRayCast);
             PrintOffset("ConvertPxRigidToMapEntity", Functions.ConvertPxRigidToMapEntity);
-            PrintOffset("ConvertMapEntityToGameId", Functions.ConvertMapEntityToGameId);
+            PrintOffset("PackGameEntityHandle", Functions.PackGameEntityHandle);
             PrintOffset("UnlockBonfire", Functions.UnlockBonfire);
             PrintOffset("GetMapObjStateActComponent", Functions.GetMapObjStateActComponent);
             PrintOffset("GetMapEntityWithAreaIdAndObjId", Functions.GetMapEntityWithAreaIdAndObjId);
-            PrintOffset("GetNavimeshLoc", Functions.GetNavimeshLoc);
-            PrintOffset("DisableNavimesh", Functions.DisableNavimesh);
-            PrintOffset("GetWhiteDoorComponent", Functions.GetWhiteDoorComponent);
             PrintOffset("AttuneSpell", Functions.AttuneSpell);
             PrintOffset("GetNumOfSpellSlots1", Functions.GetNumOfSpellSlots1);
             PrintOffset("GetNumOfSpellSlots2", Functions.GetNumOfSpellSlots2);
@@ -1762,24 +1721,19 @@ namespace SilkySouls2.Memory
             PrintOffset("OriginalMakeSound", Functions.OriginalMakeSound);
             PrintOffset("OriginalSoulGain", Functions.OriginalSoulGain);
             PrintOffset("OpenNpcMenu", Functions.OpenNpcMenu);
+            PrintOffset("SetMenuOpenChrState", Functions.SetMenuOpenChrState);
             PrintOffset("ApplyDurabilityDamage", Functions.ApplyDurabilityDamage);
             PrintOffset("ResolveTargetCtrlFromHandle", Functions.ResolveTargetCtrlFromHandle);
 
             Console.WriteLine("\n====================================\n");
-#endif
-            return true;
         }
 
-#if DEBUG
-
-        private static nint _baseAddr;
         private static void PrintOffset(string name, long value)
         {
-            var rel = value - _baseAddr;
+            var rel = value - _printBaseAddr;
             Console.WriteLine(rel <= 0
                 ? $"  {name,-40} *** NOT SET ***"
                 : $"  {name,-40} 0x{value:X}  (0x{rel:X})");
         }
-#endif
     }
 }

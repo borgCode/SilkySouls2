@@ -431,6 +431,12 @@
                                 Margin="130,0,0,0"
                               Click="OpenDefenseWindow"
                         />
+                        <Button Content="Kill all"
+                                IsEnabled="{Binding AreOptionsEnabled}"
+                                HorizontalAlignment="Right"
+                                Margin="10,0,0,0"
+                                Command="{Binding KillAllExceptTargetCommand}"
+                        />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                         <TextBlock Text="Dist: " Margin="10,0,0,0" VerticalAlignment="Center"

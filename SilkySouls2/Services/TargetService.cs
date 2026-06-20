@@ -382,5 +382,18 @@ namespace SilkySouls2.Services
         }
 
         public float GetDist() => memoryService.Read<float>(CustomCodeOffsets.Base + CustomCodeOffsets.TargetDist);
+        
+        public void KillAllExceptTarget()
+        {
+            var head = memoryService.FollowPointers(GameManagerImp.Base,
+                [GameManagerImp.AiManager, GameManagerImp.AiManagerOffsets.ChrAiHead], true);
+
+            while (head != 0)
+            {
+                var chrCtrl = memoryService.ReadPointer(head + GameManagerImp.AiManagerOffsets.ChrAi.CharacterCtrl);
+                if (chrCtrl != GetTargetChrCtrl()) chrCtrlService.SetHp(chrCtrl, 0);
+                head = memoryService.ReadPointer(head + GameManagerImp.AiManagerOffsets.ChrAi.Next);
+            }
+        }
     }
 }

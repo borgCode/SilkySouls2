@@ -180,6 +180,98 @@ namespace SilkySouls2.Memory
 
         private void QueueVanillaFallbackPatterns()
         {
+            Queue(nameof(Patterns32.GameManagerImp), Patterns32.GameManagerImp, addr => Offsets.GameManagerImp.Base = addr);
+            Queue(nameof(Patterns32.KatanaMainApp), Patterns32.KatanaMainApp, addr => Offsets.KatanaMainApp.Base = addr);
+            Queue(nameof(Patterns32.MapId), Patterns32.MapId, addr => Offsets.MapId = addr);
+            Queue(nameof(Patterns32.LoadLibraryW), Patterns32.LoadLibraryW, addr => Offsets.LoadLibraryW = addr);
+            Queue(nameof(Patterns32.BuildTextFieldRetAddr), Patterns32.BuildTextFieldRetAddr, addr => Offsets.BuildTextFieldRetAddr = addr);
+
+            
+            Queue(nameof(Patterns32.InfiniteStam), Patterns32.InfiniteStam, addr => Offsets.Patches.InfiniteStam = addr);
+            Queue(nameof(Patterns32.InfiniteGoods), Patterns32.InfiniteGoods, addr => Offsets.Patches.InfiniteGoods = addr);
+            Queue(nameof(Patterns32.InfiniteCasts), Patterns32.InfiniteCasts, addr => Offsets.Patches.InfiniteCasts = addr);
+            Queue(nameof(Patterns32.InfiniteDurability), Patterns32.InfiniteDurability, addr => Offsets.Patches.InfiniteDurability = addr);
+            Queue(nameof(Patterns32.HideChrModels), Patterns32.HideChrModels, addr => Offsets.Patches.HideChrModels = addr);
+            Queue(nameof(Patterns32.HideMap), Patterns32.HideMap, addr => Offsets.Patches.HideMap = addr);
+            Queue(nameof(Patterns32.DropRate), Patterns32.DropRate, addr => Offsets.Patches.DropRate = addr);
+            Queue(nameof(Patterns32.DisableAi), Patterns32.DisableAi, addr => Offsets.Patches.DisableAi = addr);
+            Queue(nameof(Patterns32.Silent), Patterns32.Silent, addr => Offsets.Patches.Silent = addr);
+            Queue(nameof(Patterns32.Hidden), Patterns32.Hidden, addr => Offsets.Patches.Hidden = addr);
+            Queue(nameof(Patterns32.NegativeLevel), Patterns32.NegativeLevel, addr => Offsets.Patches.NegativeLevel = addr);
+            Queue(nameof(Patterns32.NoSoulGain), Patterns32.NoSoulGain, addr => Offsets.Patches.NoSoulGain = addr);
+            Queue(nameof(Patterns32.NoHollowing), Patterns32.NoHollowing, addr => Offsets.Patches.NoHollowing = addr);
+            Queue(nameof(Patterns32.NoSoulLoss), Patterns32.NoSoulLoss, addr => Offsets.Patches.NoSoulLoss = addr);
+            Queue(nameof(Patterns32.SoulMemWrite1), Patterns32.SoulMemWrite1, addr => Offsets.Patches.SoulMemWrite1 = addr);
+            Queue(nameof(Patterns32.SoulMemWrite2), Patterns32.SoulMemWrite2, addr => Offsets.Patches.SoulMemWrite2 = addr);
+            Queue(nameof(Patterns32.NoHitPatch), Patterns32.NoHitPatch, addr => Offsets.Patches.NoHitPatch = addr);
+            Queue(nameof(Patterns32.MenuTransition), Patterns32.MenuTransition, addr => Offsets.Patches.MenuTransition = addr);
+            Queue(nameof(Patterns32.DisableRoll), Patterns32.DisableRoll, addr => Offsets.Patches.DisableRoll = addr);
+            
+
+            Queue(nameof(Patterns32.CompareEventRandValueElana), Patterns32.CompareEventRandValueElana, addr => Offsets.Hooks.CompareEventRandValueElana = addr);
+            Queue(nameof(Patterns32.PlayerNoDamage), Patterns32.PlayerNoDamage, addr => Offsets.Hooks.PlayerNoDamage = addr);
+            Queue(nameof(Patterns32.LockedTarget), Patterns32.LockedTarget, addr => Offsets.Hooks.LockedTarget = addr);
+            Queue(nameof(Patterns32.CreditSkip), Patterns32.CreditSkip, addr => Offsets.Hooks.CreditSkip = addr);
+            Queue(nameof(Patterns32.NumOfDrops), Patterns32.NumOfDrops, addr => Offsets.Hooks.NumOfDrops = addr);
+            Queue(nameof(Patterns32.DamageControl), Patterns32.DamageControl, addr => Offsets.Hooks.DamageControl = addr);
+            Queue(nameof(Patterns32.TriggersAndSpace), Patterns32.TriggersAndSpace, addr => Offsets.Hooks.TriggersAndSpace = addr);
+            Queue(nameof(Patterns32.Ctrl), Patterns32.Ctrl, addr => Offsets.Hooks.Ctrl = addr);
+            Queue(nameof(Patterns32.NoClipUpdateCoords), Patterns32.NoClipUpdateCoords, addr => Offsets.Hooks.NoClipUpdateCoords = addr);
+            Queue(nameof(Patterns32.KillboxFlagSet), Patterns32.KillboxFlagSet, addr => Offsets.Hooks.KillboxFlagSet = addr);
+            Queue(nameof(Patterns32.SetCurrentAct), Patterns32.SetCurrentAct, addr => Offsets.Hooks.SetCurrentAct = addr);
+            Queue(nameof(Patterns32.FasterMenu), Patterns32.FasterMenu, addr => Offsets.Hooks.FasterMenu = addr);
+            Queue(nameof(Patterns32.InfinitePoise), Patterns32.InfinitePoise, addr => Offsets.Hooks.InfinitePoise = addr);
+            Queue(nameof(Patterns32.SetEventWrapper), Patterns32.SetEventWrapper, addr => Offsets.Hooks.SetEventWrapper = addr);
+            Queue(nameof(Patterns32.ProcessPhysics), Patterns32.ProcessPhysics, addr => Offsets.Hooks.ProcessPhysics = addr);
+            Queue(nameof(Patterns32.DisableTargetAi), Patterns32.DisableTargetAi, addr => Offsets.Hooks.DisableTargetAi = addr);
+            Queue(nameof(Patterns32.SetSharedFlag), Patterns32.SetSharedFlag, addr => Offsets.Hooks.SetSharedFlag = addr);
+            Queue(nameof(Patterns32.BabyJump), Patterns32.BabyJump, addr => Offsets.Hooks.BabyJump = addr);
+            Queue(nameof(Patterns32.EzStateCompareTimer), Patterns32.EzStateCompareTimer, addr => Offsets.Hooks.EzStateCompareTimer = addr);
+            Queue(nameof(Patterns32.NoShadedFogClose), Patterns32.NoShadedFogClose, addr => Offsets.Hooks.NoShadedFogClose = addr);
+            Queue(nameof(Patterns32.ReduceGameSpeed), Patterns32.ReduceGameSpeed, addr => Offsets.Hooks.ReduceGameSpeed = addr);
+            Queue(nameof(Patterns32.LightGutter), Patterns32.LightGutter, addr => Offsets.Hooks.LightGutter = addr);
+            Queue(nameof(Patterns32.NoShadedFogFar), Patterns32.NoShadedFogFar, addr => Offsets.Hooks.NoShadedFogFar = addr);
+            Queue(nameof(Patterns32.NoShadedFogCam), Patterns32.NoShadedFogCam, addr => Offsets.Hooks.NoShadedFogCam = addr);
+            Queue(nameof(Patterns32.NewGameDetect), Patterns32.NewGameDetect, addr => Offsets.Hooks.NewGameDetect = addr);
+            Queue(nameof(Patterns32.LoadingItemName), Patterns32.LoadingItemName, addr => Offsets.Hooks.LoadingItemName = addr);
+            Queue(nameof(Patterns32.PreAiEzState), Patterns32.PreAiEzState, addr => Offsets.Hooks.PreAiEzState = addr);
+            
+            
+            Queue(nameof(Patterns32.RequestWarp), Patterns32.RequestWarp, addr => Offsets.Functions.RequestWarp = addr);
+            Queue(nameof(Patterns32.SetEvent), Patterns32.SetEvent, addr => Offsets.Functions.SetEvent = addr);
+            Queue(nameof(Patterns32.GetEvent), Patterns32.GetEvent, addr => Offsets.Functions.GetEvent = addr);
+            Queue(nameof(Patterns32.GiveSouls), Patterns32.GiveSouls, addr => Offsets.Functions.GiveSouls = addr);
+            Queue(nameof(Patterns32.RestoreSpellcasts), Patterns32.RestoreSpellcasts, addr => Offsets.Functions.RestoreSpellcasts = addr);
+            Queue(nameof(Patterns32.ParamLookup), Patterns32.ParamLookup, addr => Offsets.Functions.ParamLookup = addr);
+            Queue(nameof(Patterns32.CreateSoundEvent), Patterns32.CreateSoundEvent, addr => Offsets.Functions.CreateSoundEvent = addr);
+            Queue(nameof(Patterns32.LevelLookup), Patterns32.LevelLookup, addr => Offsets.Functions.LevelLookup = addr);
+            Queue(nameof(Patterns32.LevelUp), Patterns32.LevelUp, addr => Offsets.Functions.LevelUp = addr);
+            Queue(nameof(Patterns32.CurrentItemQuantityCheck), Patterns32.CurrentItemQuantityCheck, addr => Offsets.Functions.CurrentItemQuantityCheck = addr);
+            Queue(nameof(Patterns32.ItemGive), Patterns32.ItemGive, addr => Offsets.Functions.ItemGive = addr);
+            Queue(nameof(Patterns32.BuildItemDialog), Patterns32.BuildItemDialog, addr => Offsets.Functions.BuildItemDialog = addr);
+            Queue(nameof(Patterns32.ShowItemDialog), Patterns32.ShowItemDialog, addr => Offsets.Functions.ShowItemDialog = addr);
+            Queue(nameof(Patterns32.GetEyePosition), Patterns32.GetEyePosition, addr => Offsets.Functions.GetEyePosition = addr);
+            Queue(nameof(Patterns32.ApplySpEffect), Patterns32.ApplySpEffect, addr => Offsets.Functions.ApplySpEffect = addr);
+            Queue(nameof(Patterns32.HavokRayCast), Patterns32.HavokRayCast, addr => Offsets.Functions.HavokRayCast = addr);
+            Queue(nameof(Patterns32.ConvertPxRigidToMapEntity), Patterns32.ConvertPxRigidToMapEntity, addr => Offsets.Functions.ConvertPxRigidToMapEntity = addr);
+            Queue(nameof(Patterns32.PackGameEntityHandle), Patterns32.PackGameEntityHandle, addr => Offsets.Functions.PackGameEntityHandle = addr);
+            Queue(nameof(Patterns32.UnlockBonfire), Patterns32.UnlockBonfire, addr => Offsets.Functions.UnlockBonfire = addr);
+            Queue(nameof(Patterns32.GetMapObjStateActComponent), Patterns32.GetMapObjStateActComponent, addr => Offsets.Functions.GetMapObjStateActComponent = addr);
+            Queue(nameof(Patterns32.GetMapEntityWithAreaIdAndObjId), Patterns32.GetMapEntityWithAreaIdAndObjId, addr => Offsets.Functions.GetMapEntityWithAreaIdAndObjId = addr);
+            Queue(nameof(Patterns32.AttuneSpell), Patterns32.AttuneSpell, addr => Offsets.Functions.AttuneSpell = addr);
+            Queue(nameof(Patterns32.GetNumOfSpellSlots1), Patterns32.GetNumOfSpellSlots1, addr => Offsets.Functions.GetNumOfSpellSlots1 = addr);
+            Queue(nameof(Patterns32.GetNumOfSpellSlots2), Patterns32.GetNumOfSpellSlots2, addr => Offsets.Functions.GetNumOfSpellSlots2 = addr);
+            Queue(nameof(Patterns32.UpdateSpellSlots), Patterns32.UpdateSpellSlots, addr => Offsets.Functions.UpdateSpellSlots = addr);
+            Queue(nameof(Patterns32.Sleep), Patterns32.Sleep, addr => Offsets.Functions.Sleep = addr);
+            Queue(nameof(Patterns32.SetDepthStencilSurface), Patterns32.SetDepthStencilSurface, addr => Offsets.Functions.SetDepthStencilSurface = addr);
+            Queue(nameof(Patterns32.EzStateExternalEventCtor), Patterns32.EzStateExternalEventCtor, addr => Offsets.Functions.EzStateExternalEventCtor = addr);
+            Queue(nameof(Patterns32.EzStateEventExecuteCommand), Patterns32.EzStateEventExecuteCommand, addr => Offsets.Functions.EzStateEventExecuteCommand = addr);
+            Queue(nameof(Patterns32.OriginalMakeSound), Patterns32.OriginalMakeSound, addr => Offsets.Functions.OriginalMakeSound = addr);
+            Queue(nameof(Patterns32.OriginalSoulGain), Patterns32.OriginalSoulGain, addr => Offsets.Functions.OriginalSoulGain = addr);
+            Queue(nameof(Patterns32.OpenNpcMenu), Patterns32.OpenNpcMenu, addr => Offsets.Functions.OpenNpcMenu = addr);
+            Queue(nameof(Patterns32.SetMenuOpenChrState), Patterns32.SetMenuOpenChrState, addr => Offsets.Functions.SetMenuOpenChrState = addr);
+            Queue(nameof(Patterns32.ApplyDurabilityDamage), Patterns32.ApplyDurabilityDamage, addr => Offsets.Functions.ApplyDurabilityDamage = addr);
+            Queue(nameof(Patterns32.ResolveTargetCtrlFromHandle), Patterns32.ResolveTargetCtrlFromHandle, addr => Offsets.Functions.ResolveTargetCtrlFromHandle = addr);
         }
         
         public void Run()

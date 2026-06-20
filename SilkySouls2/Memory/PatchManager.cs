@@ -35,8 +35,8 @@ namespace SilkySouls2.Memory
 
         private static readonly Dictionary<long, GameVersionInfo> VersionMap = new()
         {
-            { 32340760, new GameVersionInfo { Edition = GameEdition.Vanilla, PatchVersion = Patch.Vanilla1_0_11 } },
-            { 29588960, new GameVersionInfo { Edition = GameEdition.Vanilla, PatchVersion = Patch.Vanilla1_0_12 } },
+            // { 32340760, new GameVersionInfo { Edition = GameEdition.Vanilla, PatchVersion = Patch.Vanilla1_0_11 } },
+            // { 29588960, new GameVersionInfo { Edition = GameEdition.Vanilla, PatchVersion = Patch.Vanilla1_0_12 } },
             { 31605096, new GameVersionInfo { Edition = GameEdition.Scholar, PatchVersion = Patch.Scholar1_0_2 } },
             { 28200992, new GameVersionInfo { Edition = GameEdition.Scholar, PatchVersion = Patch.Scholar1_0_3 } }
         };

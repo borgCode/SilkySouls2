@@ -30,5 +30,6 @@ namespace SilkySouls2.Interfaces
         TargetMaxValues GetMaxValues();
         void ToggleDistHook(bool isEnabled);
         float GetDist();
+        void KillAllExceptTarget();
     }
 }

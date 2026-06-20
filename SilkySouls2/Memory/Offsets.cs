@@ -9,6 +9,13 @@ namespace SilkySouls2.Memory
         {
             public static nint Base;
 
+            public static int AiManager => PatchManager.Current.PatchVersion switch
+            {
+                // Vanilla1_0_11 or Vanilla1_0_12 => 0x44,
+                Scholar1_0_2 or Scholar1_0_3 => 0x28,
+                _ => 0x0
+            };
+
             public static int EventManager => PatchManager.Current.PatchVersion switch
             {
                 Vanilla1_0_11 or Vanilla1_0_12 => 0x44,
@@ -31,7 +38,7 @@ namespace SilkySouls2.Memory
             };
 
             public static int PlayerCtrl => PatchManager.Current.PatchVersion switch
-            {
+            {     
                 Vanilla1_0_11 or Vanilla1_0_12 => 0x74,
                 Scholar1_0_2 or Scholar1_0_3 => 0xD0,
                 _ => 0x0
@@ -88,6 +95,33 @@ namespace SilkySouls2.Memory
                 Scholar1_0_2 or Scholar1_0_3 => 0x24D8,
                 _ => 0x0
             };
+
+            public static class AiManagerOffsets
+            {
+                public static int ChrAiHead => PatchManager.Current.PatchVersion switch
+                {
+                    // Vanilla1_0_11 or Vanilla1_0_12 => 0x10,
+                    Scholar1_0_2 or Scholar1_0_3 => 0x10,
+                    _ => 0x0
+                };
+
+                public static class ChrAi
+                {
+                    public static int Next => PatchManager.Current.PatchVersion switch
+                    {
+                        // Vanilla1_0_11 or Vanilla1_0_12 => 0x10,
+                        Scholar1_0_2 or Scholar1_0_3 => 0x10,
+                        _ => 0x0
+                    };
+                    
+                    public static int CharacterCtrl => PatchManager.Current.PatchVersion switch
+                    {
+                        // Vanilla1_0_11 or Vanilla1_0_12 => 0x10,
+                        Scholar1_0_2 or Scholar1_0_3 => 0x38,
+                        _ => 0x0
+                    };
+                }
+            }
 
             public static class EventManagerOffsets
             {
@@ -980,7 +1014,7 @@ namespace SilkySouls2.Memory
                 Scholar1_0_3 => 0x10E306,
                 _ => 0
             };
-            
+
             Patches.DropRate = baseAddr + PatchManager.Current.PatchVersion switch
             {
                 Vanilla1_0_11 => 0x257DC3,
@@ -1135,7 +1169,7 @@ namespace SilkySouls2.Memory
                 Scholar1_0_3 => 0x1CA790,
                 _ => 0
             };
-            
+
 
             Functions.HavokRayCast = baseAddr + PatchManager.Current.PatchVersion switch
             {

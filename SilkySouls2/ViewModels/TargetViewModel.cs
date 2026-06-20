@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Windows.Input;
 using System.Windows.Threading;
+using SilkySouls2.Core;
 using SilkySouls2.enums;
 using SilkySouls2.Interfaces;
 using SilkySouls2.Services;
@@ -40,8 +42,16 @@ namespace SilkySouls2.ViewModels
 
             stateService.Subscribe(State.Loaded, OnGameLoaded);
             stateService.Subscribe(State.NotLoaded, OnGameNotLoaded);
-            
+
+            KillAllExceptTargetCommand = new DelegateCommand(_targetService.KillAllExceptTarget);
+
         }
+        
+        #region Commands
+
+        public ICommand KillAllExceptTargetCommand { get; set; }
+
+        #endregion
 
         #region Properties
 
@@ -692,7 +702,6 @@ namespace SilkySouls2.ViewModels
 
         
         
-
         public void OpenDefenseWindow()
         {
             if (_defenseWindow != null && _defenseWindow.IsVisible)

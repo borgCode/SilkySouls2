@@ -51,6 +51,7 @@ public enum AsmScript
     BreakWeapon64,
     GetDist64,
     WarpRequest64,
+    NoShadedFogCamFilter64,
     
     DamageControl32,
     ElanaSummon32,

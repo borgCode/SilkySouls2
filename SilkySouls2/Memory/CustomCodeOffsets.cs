@@ -142,5 +142,7 @@
             Request = 0x3000,
             Stub = 0x3050
         }
+
+        public const int NoFogCamFilter = 0x3400;
     }
 }

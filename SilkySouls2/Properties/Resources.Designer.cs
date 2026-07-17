@@ -1441,6 +1441,27 @@ namespace SilkySouls2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 50                      push   rax
+        ///48 8b 44 24 60          mov    rax,QWORD PTR [rsp+0x60]
+        ///81 78 10 00 00 20 0a    cmp    DWORD PTR [rax+0x10],0xa200000
+        ///75 17                   jne    26 &lt;normal&gt;
+        ///83 7c 24 78 09          cmp    DWORD PTR [rsp+0x78],0x9
+        ///75 10                   jne    26 &lt;normal&gt;
+        ///83 bc 24 80 00 00 00    cmp    DWORD PTR [rsp+0x80],0x1
+        ///01 
+        ///75 06                   jne    26 &lt;normal&gt;
+        ///58                      pop    rax
+        ///e9 00 00 00 00          jmp    26 &lt;normal&gt;
+        ///
+        ///000000000026 &lt;normal&gt;:        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string NoShadedFogCamFilter64 {
+            get {
+                return ResourceManager.GetString("NoShadedFogCamFilter64", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 0f b6 46 07             movzx  eax,BYTE PTR [esi+0x7]
         ///81 3d 00 00 00 00 00    cmp    DWORD PTR ds:0x0,0xa200000
         ///00 20 0a

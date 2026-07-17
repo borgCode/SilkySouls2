@@ -518,6 +518,16 @@
             AddressingMode.Absolute,
             anchorOffset: 4
         );
+        
+        public static readonly Pattern NoShadedFogCamFilter = new Pattern(
+            [
+                0x84, 0xC0, 0x74, 0x15, 0x44, 0x8B, 0x44, 0x24, 0x78, 0x8B, 0x54, 0x24, 0x70, 0x48, 0x8B, 0x4E, 0x08, 0x0F,
+                0x28, 0xDE
+            ],
+            "xxxxxxxxxxxxxxxxxxxx",
+            4,
+            AddressingMode.Absolute
+            );
 
         #endregion
 

@@ -15,6 +15,13 @@ namespace SilkySouls2.Memory
                 Scholar1_0_2 or Scholar1_0_3 => 0x28,
                 _ => 0x0
             };
+            
+            public static int MapManager => PatchManager.Current.PatchVersion switch
+            {
+                // Vanilla1_0_11 or Vanilla1_0_12 => 0x44,
+                Scholar1_0_2 or Scholar1_0_3 => 0x38,
+                _ => 0x0
+            };
 
             public static int EventManager => PatchManager.Current.PatchVersion switch
             {
@@ -134,6 +141,12 @@ namespace SilkySouls2.Memory
                     public const int ActionId = 0x50;
                     public const int ComboActionId = 0x54;
                 }
+            }
+
+            public static class MapManagerOffsets
+            {
+                public static readonly int[] MapAreaCtrlOwnerBase = [0x8, 0x38];
+                public static readonly int[] FilterControllerFilterRequests = [0x1C0, 0xB0, 0x10];
             }
 
             public static class EventManagerOffsets
@@ -857,6 +870,7 @@ namespace SilkySouls2.Memory
             public static nint NewGameDetect;
             public static nint LoadingItemName;
             public static nint PreAiEzState;
+            public static nint NoShadedFogCamFilter;
         }
 
         public static class Functions
@@ -1654,6 +1668,14 @@ namespace SilkySouls2.Memory
                 Scholar1_0_3 => 0x4269FB,
                 _ => 0
             };
+            
+            Hooks.NoShadedFogCamFilter = baseAddr + PatchManager.Current.PatchVersion switch
+            {
+                Scholar1_0_2 => 0x18181,
+                Scholar1_0_3 => 0x181B1,
+                _ => 0
+            };
+
 
 
             Functions.SetRenderTargets = baseAddr + PatchManager.Current.PatchVersion switch
@@ -1780,6 +1802,7 @@ namespace SilkySouls2.Memory
             PrintOffset("NewGameDetect", Hooks.NewGameDetect);
             PrintOffset("LoadingItemName", Hooks.LoadingItemName);
             PrintOffset("PreAiEzState", Hooks.PreAiEzState);
+            PrintOffset("NoShadedFogCamFilter", Hooks.NoShadedFogCamFilter);
 
             Console.WriteLine("\n--- Functions ---");
             PrintOffset("RequestWarp", Functions.RequestWarp);

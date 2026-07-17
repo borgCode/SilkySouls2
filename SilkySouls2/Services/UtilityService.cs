@@ -1,5 +1,6 @@
 using System;
 using SilkySouls2.enums;
+using SilkySouls2.GameIds;
 using SilkySouls2.Interfaces;
 using SilkySouls2.Memory;
 using SilkySouls2.Memory.DLLShared;
@@ -731,25 +732,38 @@ namespace SilkySouls2.Services
             var closeFogCode = CustomCodeOffsets.Base + CustomCodeOffsets.NoFogClose;
             var farFogCode = CustomCodeOffsets.Base + CustomCodeOffsets.NoFogFar;
             var fogCamCode = CustomCodeOffsets.Base + CustomCodeOffsets.NoFogCam;
+            var fogCamFilterCode = CustomCodeOffsets.Base + CustomCodeOffsets.NoFogCamFilter;
             if (!isNoFogEnabled)
             {
                 hookManager.UninstallHook(closeFogCode);
                 hookManager.UninstallHook(farFogCode);
                 hookManager.UninstallHook(fogCamCode);
+                hookManager.UninstallHook(fogCamFilterCode);
                 return;
             }
 
-            if (PatchManager.IsScholar())
+            if (PatchManager.IsScholar()) InstallNoFog64(closeFogCode, farFogCode, fogCamCode, fogCamFilterCode);
+            else InstallNoFog32(closeFogCode, farFogCode, fogCamCode);
+
+            if (memoryService.Read<int>(MapId) == Area.ShadedWoods.MapId)
             {
-                InstallNoFog64(closeFogCode, farFogCode, fogCamCode);
-            }
-            else
-            {
-                InstallNoFog32(closeFogCode, farFogCode, fogCamCode);
+                SetFilter(FilterType.LensStimulation, 0);
             }
         }
 
-        private void InstallNoFog64(nint closeFogCode, nint farFogCode, nint fogCamCode)
+        private void SetFilter(FilterType filterType, int rowId)
+        {
+            const int filterRequestsStride = 0x28;
+            
+            var filterControllerRequests = memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base),
+                [GameManagerImp.MapManager, ..GameManagerImp.MapManagerOffsets.FilterControllerFilterRequests], true);
+
+            var request = filterControllerRequests + filterRequestsStride * (int)filterType;
+            memoryService.Write(request + 0x4, rowId);
+            memoryService.Write(request + 0x26, true);
+        }
+
+        private void InstallNoFog64(nint closeFogCode, nint farFogCode, nint fogCamCode, nint fogCamFilterCode)
         {
             var hookLoc = Hooks.NoShadedFogClose;
             var bytes = AsmLoader.GetAsmBytes(AsmScript.NoShadedFogClose64);
@@ -781,6 +795,17 @@ namespace SilkySouls2.Services
 
             memoryService.WriteBytes(fogCamCode, bytes);
             hookManager.InstallHook(fogCamCode, hookLoc, [0x89, 0x44, 0x24, 0x58, 0x8B, 0x41, 0x38]);
+            
+            
+            hookLoc = Hooks.NoShadedFogCamFilter;
+            bytes = AsmLoader.GetAsmBytes(AsmScript.NoShadedFogCamFilter64);
+            AsmHelper.WriteRelativeOffsets(bytes, [
+                (fogCamFilterCode + 0x21, hookLoc + 21, 5, 0x21 + 1),
+                (fogCamFilterCode + 0x2C, hookLoc + 5, 5, 0x2C + 1)
+            ]);
+
+            memoryService.WriteBytes(fogCamFilterCode, bytes);
+            hookManager.InstallHook(fogCamFilterCode, hookLoc, [0x44, 0x8B, 0x44, 0x24, 0x78]);
         }
 
         private void InstallNoFog32(nint closeFogCode, nint farFogCode, nint fogCamCode)

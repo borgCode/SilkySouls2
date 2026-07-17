@@ -138,6 +138,7 @@ namespace SilkySouls2.Memory
             Queue(nameof(Patterns64.NewGameDetect), Patterns64.NewGameDetect, addr => Offsets.Hooks.NewGameDetect = addr);
             Queue(nameof(Patterns64.LoadingItemName), Patterns64.LoadingItemName, addr => Offsets.Hooks.LoadingItemName = addr);
             Queue(nameof(Patterns64.PreAiEzState), Patterns64.PreAiEzState, addr => Offsets.Hooks.PreAiEzState = addr);
+            Queue(nameof(Patterns64.NoShadedFogCamFilter), Patterns64.NoShadedFogCamFilter, addr => Offsets.Hooks.NoShadedFogCamFilter = addr);
             
             
             Queue(nameof(Patterns64.RequestWarp), Patterns64.RequestWarp, addr => Offsets.Functions.RequestWarp = addr);

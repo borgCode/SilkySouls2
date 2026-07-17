@@ -234,7 +234,7 @@ namespace SilkySouls2.ViewModels
 
         private void OnAreaChanged(object[] objects)
         {
-            IsAreaBastille = (int)objects[0] == Area.Bastille;
+            IsAreaBastille = (int)objects[0] == Area.Bastille.MapId;
         }
 
         private void SetEvent()

@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Generic;
 using SilkySouls2.enums;
-using SilkySouls2.GameIds;
 using SilkySouls2.Interfaces;
 using SilkySouls2.Memory;
 using SilkySouls2.Memory.DLLShared;
-using SilkySouls2.Models;
 using SilkySouls2.Utilities;
 using static SilkySouls2.Memory.Offsets;
 
@@ -361,7 +358,7 @@ namespace SilkySouls2.Services
             }
         }
 
-        private nint GetGravityPtr() => memoryService.FollowPointers(GameManagerImp.Base, [
+        private nint GetGravityPtr() => memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base), [
             GameManagerImp.PlayerCtrl,
             ChrCtrl.ChrPhysicsCtrlPtr,
             ChrCtrl.ChrPhysicsCtrl.Gravity

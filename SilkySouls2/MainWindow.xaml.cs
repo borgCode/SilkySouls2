@@ -26,7 +26,6 @@ namespace SilkySouls2
     public partial class MainWindow
     {
         private readonly IMemoryService _memoryService;
-        private readonly AoBScanner _aobScanner;
         private readonly DispatcherTimer _gameLoadedTimer;
         private readonly StateService _stateService;
 
@@ -55,7 +54,6 @@ namespace SilkySouls2
             _stateService = new StateService(_memoryService);
 
             var hookManager = new HookManager(_memoryService, _stateService);
-            _aobScanner = new AoBScanner(_memoryService);
             var dllManager = new DllManager(_memoryService, _stateService);
             var hotkeyManager = new HotkeyManager(_memoryService);
 

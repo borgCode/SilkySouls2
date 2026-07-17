@@ -3,13 +3,17 @@ using System.Numerics;
 using SilkySouls2.enums;
 using SilkySouls2.Interfaces;
 using SilkySouls2.Memory;
+using SilkySouls2.Models;
 using SilkySouls2.Models.Target;
 using SilkySouls2.Utilities;
 using static SilkySouls2.Memory.Offsets;
 
 namespace SilkySouls2.Services
 {
-    public class TargetService(IMemoryService memoryService, HookManager hookManager, IChrCtrlService chrCtrlService)
+    public class TargetService(
+        IMemoryService memoryService,
+        HookManager hookManager,
+        IChrCtrlService chrCtrlService)
         : ITargetService
     {
         private readonly List<nint> _disabledEntities = new();
@@ -41,7 +45,8 @@ namespace SilkySouls2.Services
         {
             var saveTargetPtrBytes = AsmLoader.GetAsmBytes(AsmScript.SaveTargetPtr64);
             AsmHelper.WriteRelativeOffset(saveTargetPtrBytes, saveTargetPtrCode, savedTargetPtr, 7, 0x3);
-            AsmHelper.WriteRelativeOffset(saveTargetPtrBytes, saveTargetPtrCode + 0xE, saveTargetHook + 0x7, 5, 0xE + 1);
+            AsmHelper.WriteRelativeOffset(saveTargetPtrBytes, saveTargetPtrCode + 0xE, saveTargetHook + 0x7, 5,
+                0xE + 1);
 
             memoryService.WriteBytes(saveTargetPtrCode, saveTargetPtrBytes);
             hookManager.InstallHook(saveTargetPtrCode, saveTargetHook,
@@ -52,7 +57,8 @@ namespace SilkySouls2.Services
         {
             var saveTargetPtrBytes = AsmLoader.GetAsmBytes(AsmScript.SaveTargetPtr32);
             AsmHelper.WriteAbsoluteAddress32(saveTargetPtrBytes, savedTargetPtr, 0x6 + 2);
-            AsmHelper.WriteRelativeOffset(saveTargetPtrBytes, saveTargetPtrCode + 0xC, saveTargetHook + 0x6, 5, 0xC + 1);
+            AsmHelper.WriteRelativeOffset(saveTargetPtrBytes, saveTargetPtrCode + 0xC, saveTargetHook + 0x6, 5,
+                0xC + 1);
             memoryService.WriteBytes(saveTargetPtrCode, saveTargetPtrBytes);
             hookManager.InstallHook(saveTargetPtrCode, saveTargetHook,
                 [0x89, 0xB7, 0xB8, 0x00, 0x00, 0x00]);
@@ -67,8 +73,7 @@ namespace SilkySouls2.Services
         public Vector3 GetTargetPos() => chrCtrlService.GetPos(GetTargetChrCtrl());
         public void SetTargetSpeed(float value) => chrCtrlService.SetSpeed(GetTargetChrCtrl(), value);
         public float GetTargetSpeed() => chrCtrlService.GetSpeed(GetTargetChrCtrl());
-        
-        
+
         public int GetLastAct() =>
             memoryService.Read<int>(CustomCodeOffsets.Base + (int)CustomCodeOffsets.RepeatAct.AttackId);
 
@@ -83,7 +88,6 @@ namespace SilkySouls2.Services
             );
         }
 
-        
         public void ToggleCurrentActHook(bool isEnabled)
         {
             var code = CustomCodeOffsets.Base + (int)CustomCodeOffsets.RepeatAct.Code;
@@ -108,8 +112,9 @@ namespace SilkySouls2.Services
                 InstallVanillaRepeatActHook(code, repeatFlagLoc, attackId, lockedTargetPtr, currentActOrigin);
             }
         }
-        
-        private void InstallScholarRepeatActHook(nint code, nint repeatFlagLoc, nint attackId, nint lockedTargetPtr, nint currentActOrigin)
+
+        private void InstallScholarRepeatActHook(nint code, nint repeatFlagLoc, nint attackId, nint lockedTargetPtr,
+            nint currentActOrigin)
         {
             var codeBytes = AsmLoader.GetAsmBytes(AsmScript.RepeatAct64);
 
@@ -125,7 +130,8 @@ namespace SilkySouls2.Services
             hookManager.InstallHook(code, currentActOrigin, [0x83, 0x89, 0x50, 0x03, 0x00, 0x00, 0x01]);
         }
 
-        private void InstallVanillaRepeatActHook(nint code, nint repeatFlagLoc, nint attackId, nint lockedTargetPtr, nint currentActOrigin)
+        private void InstallVanillaRepeatActHook(nint code, nint repeatFlagLoc, nint attackId, nint lockedTargetPtr,
+            nint currentActOrigin)
         {
             var codeBytes = AsmLoader.GetAsmBytes(AsmScript.RepeatAct32);
             AsmHelper.WriteAbsoluteAddresses32(codeBytes, [
@@ -144,9 +150,9 @@ namespace SilkySouls2.Services
         }
 
         public void ToggleRepeatAct(bool isRepeatActEnabled) =>
-            memoryService.Write(CustomCodeOffsets.Base + (int)CustomCodeOffsets.RepeatAct.RepeatFlag, isRepeatActEnabled);
+            memoryService.Write(CustomCodeOffsets.Base + (int)CustomCodeOffsets.RepeatAct.RepeatFlag,
+                isRepeatActEnabled);
 
-        
         public void ClearLockedTarget()
         {
             var size = PatchManager.IsScholar() ? 8 : 4;
@@ -274,9 +280,9 @@ namespace SilkySouls2.Services
         public bool IsLightPoiseImmune()
         {
             var targetPtr = memoryService.ReadPointer(CustomCodeOffsets.Base + CustomCodeOffsets.LockedTargetPtr);
-            var poiseStruct = memoryService.ReadPointer(targetPtr + ChrCtrl.PoiseImmunityPtr);
+            var poiseStruct = memoryService.ReadPointer(targetPtr + ChrCtrl.ChrActionFlags);
 
-            return memoryService.Read<byte>(poiseStruct + ChrCtrl.PoiseStuff.LightStaggerImmuneFlag) == 1;
+            return memoryService.Read<byte>(poiseStruct + ChrCtrl.ChrActionFlagsOffsets.LightStaggerImmuneFlag) == 1;
         }
 
         public int GetChrParam(int chrParamOffset)
@@ -352,13 +358,13 @@ namespace SilkySouls2.Services
             var savedDist = CustomCodeOffsets.Base + CustomCodeOffsets.TargetDist;
             var lockedTarget = CustomCodeOffsets.Base + CustomCodeOffsets.LockedTargetPtr;
             AsmHelper.WriteRelativeOffsets(bytes, [
-            (code + 0x4, lockedTarget, 7, 0x4 + 3),
-            (code + 0x11, GameManagerImp.Base, 7, 0x11 + 3),
-            (code + 0x6D, Functions.ResolveTargetCtrlFromHandle, 5, 0x6D + 1),
-            (code + 0x92, savedDist, 8, 0x92 + 4),
-            (code + 0xBA, Hooks.PreAiEzState + 7, 5, 0xBA + 1)
+                (code + 0x4, lockedTarget, 7, 0x4 + 3),
+                (code + 0x11, GameManagerImp.Base, 7, 0x11 + 3),
+                (code + 0x6D, Functions.ResolveTargetCtrlFromHandle, 5, 0x6D + 1),
+                (code + 0x92, savedDist, 8, 0x92 + 4),
+                (code + 0xBA, Hooks.PreAiEzState + 7, 5, 0xBA + 1)
             ]);
-            
+
             memoryService.WriteBytes(code, bytes);
             hookManager.InstallHook(code, Hooks.PreAiEzState, [0x48, 0x8B, 0x4B, 0x60, 0x0F, 0x28, 0xCE]);
         }
@@ -368,24 +374,24 @@ namespace SilkySouls2.Services
             var bytes = AsmLoader.GetAsmBytes(AsmScript.GetDist32);
             var savedDist = CustomCodeOffsets.Base + CustomCodeOffsets.TargetDist;
             var lockedTarget = CustomCodeOffsets.Base + CustomCodeOffsets.LockedTargetPtr;
-            
+
             AsmHelper.WriteAbsoluteAddresses32(bytes, [
-            (lockedTarget, 0x3 + 2),
-            (GameManagerImp.Base, 0xB + 1),
-            (savedDist, 0x49 + 2)
+                (lockedTarget, 0x3 + 2),
+                (GameManagerImp.Base, 0xB + 1),
+                (savedDist, 0x49 + 2)
             ]);
-            
+
             AsmHelper.WriteRelativeOffset(bytes, code + 0x5A, Hooks.PreAiEzState + 5, 5, 0x5A + 1);
-            
+
             memoryService.WriteBytes(code, bytes);
             hookManager.InstallHook(code, Hooks.PreAiEzState, [0x8B, 0x4E, 0x3C, 0x8B, 0x11]);
         }
 
         public float GetDist() => memoryService.Read<float>(CustomCodeOffsets.Base + CustomCodeOffsets.TargetDist);
-        
+
         public void KillAllExceptTarget()
         {
-            var head = memoryService.FollowPointers(GameManagerImp.Base,
+            var head = memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base),
                 [GameManagerImp.AiManager, GameManagerImp.AiManagerOffsets.ChrAiHead], true);
 
             while (head != 0)
@@ -393,6 +399,21 @@ namespace SilkySouls2.Services
                 var chrCtrl = memoryService.ReadPointer(head + GameManagerImp.AiManagerOffsets.ChrAi.CharacterCtrl);
                 if (chrCtrl != GetTargetChrCtrl()) chrCtrlService.SetHp(chrCtrl, 0);
                 head = memoryService.ReadPointer(head + GameManagerImp.AiManagerOffsets.ChrAi.Next);
+            }
+        }
+
+        public ChrAttackState GetAttackState()
+        {
+            var act = memoryService.Read<int>(CustomCodeOffsets.Base + (int)CustomCodeOffsets.RepeatAct.AttackId);
+            
+            switch (act)
+            {
+                case >= 0x32 and <= 0x38:
+                    return new ChrAttackState(act - 0x32, ChrAttackActionType.ComboAttack);
+                case 30 or 31:
+                    return new ChrAttackState(act, ChrAttackActionType.LadderAttack);
+                default:
+                    return new ChrAttackState(act, ChrAttackActionType.Attack);
             }
         }
     }

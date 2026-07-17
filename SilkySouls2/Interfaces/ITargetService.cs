@@ -1,6 +1,7 @@
 //
 
 using System.Numerics;
+using SilkySouls2.Models;
 using SilkySouls2.Models.Target;
 
 namespace SilkySouls2.Interfaces
@@ -31,5 +32,6 @@ namespace SilkySouls2.Interfaces
         void ToggleDistHook(bool isEnabled);
         float GetDist();
         void KillAllExceptTarget();
+        ChrAttackState GetAttackState();
     }
 }

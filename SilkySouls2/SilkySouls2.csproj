@@ -120,6 +120,7 @@
         <Compile Include="Core\DelegateCommand.cs" />
         <Compile Include="Enums\AsmScript.cs" />
         <Compile Include="Enums\ChrAsmSlotSelector.cs" />
+        <Compile Include="Enums\ChrAttackActionType.cs" />
         <Compile Include="Enums\NpcMenuType.cs" />
         <Compile Include="Enums\State.cs" />
         <Compile Include="Enums\HotkeyActions.cs" />
@@ -162,6 +163,7 @@
         <Compile Include="Memory\Patterns\Patterns32.cs" />
         <Compile Include="Memory\Patterns\Patterns64.cs" />
         <Compile Include="Models\AttunementSpell.cs" />
+        <Compile Include="Models\ChrAttackState.cs" />
         <Compile Include="Models\EquippedSpell.cs" />
         <Compile Include="Models\Item.cs" />
         <Compile Include="Models\Loadout.cs" />

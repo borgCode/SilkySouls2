@@ -19,7 +19,7 @@ namespace SilkySouls2.Services
             var requestLoc = CustomCodeOffsets.Base + (int)CustomCodeOffsets.Warp.Request;
             memoryService.Write(requestLoc, request);
 
-            var warpManager = memoryService.FollowPointers(GameManagerImp.Base, [
+            var warpManager = memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base), [
                 GameManagerImp.EventManager,
                 GameManagerImp.EventManagerOffsets.EventWarpManager
             ], true);
@@ -71,7 +71,7 @@ namespace SilkySouls2.Services
         public void UnlockAllBonfires()
         {
             var func = Functions.UnlockBonfire;
-            var bonfireManager = memoryService.FollowPointers(GameManagerImp.Base, [
+            var bonfireManager = memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base), [
                 GameManagerImp.EventManager,
                 GameManagerImp.EventManagerOffsets.EventBonfireManager
             ], true);

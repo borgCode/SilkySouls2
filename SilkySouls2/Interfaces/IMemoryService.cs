@@ -15,6 +15,7 @@ namespace SilkySouls2.Interfaces
         public int ModuleMemorySize { get; }
 
         T Read<T>(nint addr) where T : unmanaged;
+        T[] ReadArray<T>(nint addr, int count) where T : unmanaged;
         
         void Write<T>(IntPtr addr, T value) where T : unmanaged;
         void Write(IntPtr addr, bool value);

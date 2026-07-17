@@ -4,6 +4,7 @@ using SilkySouls2.Interfaces;
 using SilkySouls2.Memory;
 using SilkySouls2.Models;
 using SilkySouls2.Utilities;
+using static SilkySouls2.Memory.Offsets;
 
 namespace SilkySouls2.Services;
 
@@ -11,16 +12,16 @@ public class AttunementService(IMemoryService memoryService) : IAttunementServic
 {
     public List<InventorySpell> GetInventorySpells()
         {
-            var spellBase = memoryService.FollowPointers(Offsets.GameManagerImp.Base, [
-                Offsets.GameManagerImp.GameDataManager,
-                Offsets.GameManagerImp.GameDataManagerOffsets.InventoryPtr,
-                Offsets.GameManagerImp.GameDataManagerOffsets.Inventory.InventoryLists,
-                Offsets.GameManagerImp.GameDataManagerOffsets.Inventory.ItemInventory2BagListPtr,
-                Offsets.GameManagerImp.GameDataManagerOffsets.Inventory.ItemInventory2BagList.ItemInvetory2SpellListPtr
+            var spellBase = memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base), [
+                GameManagerImp.GameDataManager,
+                GameManagerImp.GameDataManagerOffsets.InventoryPtr,
+                GameManagerImp.GameDataManagerOffsets.Inventory.InventoryLists,
+                GameManagerImp.GameDataManagerOffsets.Inventory.ItemInventory2BagListPtr,
+                GameManagerImp.GameDataManagerOffsets.Inventory.ItemInventory2BagList.ItemInvetory2SpellListPtr
             ], true);
 
             var count = memoryService.Read<byte>(
-                spellBase + Offsets.GameManagerImp.GameDataManagerOffsets.Inventory.ItemInvetory2SpellList.Count
+                spellBase + GameManagerImp.GameDataManagerOffsets.Inventory.ItemInvetory2SpellList.Count
             );
             return count == 0 ? [] : ReadSpellList(spellBase, count);
         }
@@ -29,21 +30,21 @@ public class AttunementService(IMemoryService memoryService) : IAttunementServic
         {
             List<InventorySpell> currentSpells = [];
             var current = memoryService.ReadPointer(
-                spellBase + Offsets.GameManagerImp.GameDataManagerOffsets.Inventory.ItemInvetory2SpellList.ListStart);
+                spellBase + GameManagerImp.GameDataManagerOffsets.Inventory.ItemInvetory2SpellList.ListStart);
 
             for (int i = 0; i < count && current != 0; i++)
             {
                 var spellId = memoryService.Read<int>(
-                    current + Offsets.GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.SpellId);
+                    current + GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.SpellId);
                 var isEquipped = memoryService.Read<byte>(
-                    current + Offsets.GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.IsEquipped);
+                    current + GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.IsEquipped);
                 var slotReq = memoryService.Read<byte>(
-                    current + Offsets.GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.SlotReq);
+                    current + GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.SlotReq);
 
                 currentSpells.Add(new InventorySpell(spellId, isEquipped == 2, current, slotReq));
 
                 current = memoryService.ReadPointer(
-                    current + Offsets.GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.NextPtr);
+                    current + GameManagerImp.GameDataManagerOffsets.Inventory.SpellEntry.NextPtr);
             }
 
             return currentSpells;
@@ -67,10 +68,10 @@ public class AttunementService(IMemoryService memoryService) : IAttunementServic
 
         private nint GetCurrentSpellPtr()
         {
-            return memoryService.FollowPointers(Offsets.GameManagerImp.Base, [
-                Offsets.GameManagerImp.PlayerCtrl,
-                Offsets.ChrCtrl.ChrAsmCtrl,
-                Offsets.ChrCtrl.EquippedSpellsStart
+            return memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base), [
+                GameManagerImp.PlayerCtrl,
+                ChrCtrl.ChrAsmCtrl,
+                ChrCtrl.EquippedSpellsStart
             ], false);
         }
 
@@ -78,12 +79,12 @@ public class AttunementService(IMemoryService memoryService) : IAttunementServic
         {
             RefreshSpellSlots();
 
-            var inventory = memoryService.FollowPointers(Offsets.GameManagerImp.Base, [
-                Offsets.GameManagerImp.GameDataManager,
-                Offsets.GameManagerImp.GameDataManagerOffsets.InventoryPtr
+            var inventory = memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base), [
+                GameManagerImp.GameDataManager,
+                GameManagerImp.GameDataManagerOffsets.InventoryPtr
             ], true);
-            var getNumOfSlots1 = Offsets.Functions.GetNumOfSpellSlots1;
-            var getNumOfSlots2 = Offsets.Functions.GetNumOfSpellSlots2;
+            var getNumOfSlots1 = Functions.GetNumOfSpellSlots1;
+            var getNumOfSlots2 = Functions.GetNumOfSpellSlots2;
             var slotsLoc = CustomCodeOffsets.Base + CustomCodeOffsets.NumOfSpellSlots;
 
 
@@ -119,14 +120,14 @@ public class AttunementService(IMemoryService memoryService) : IAttunementServic
 
         private void RefreshSpellSlots()
         {
-            var bagList = memoryService.FollowPointers(Offsets.GameManagerImp.Base, [
-                Offsets.GameManagerImp.GameDataManager,
-                Offsets.GameManagerImp.GameDataManagerOffsets.InventoryPtr,
-                Offsets.GameManagerImp.GameDataManagerOffsets.Inventory.InventoryLists,
-                Offsets.GameManagerImp.GameDataManagerOffsets.Inventory.ItemInventory2BagListPtr
+            var bagList = memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base), [
+                GameManagerImp.GameDataManager,
+                GameManagerImp.GameDataManagerOffsets.InventoryPtr,
+                GameManagerImp.GameDataManagerOffsets.Inventory.InventoryLists,
+                GameManagerImp.GameDataManagerOffsets.Inventory.ItemInventory2BagListPtr
             ], true);
 
-            var refreshFunc = Offsets.Functions.UpdateSpellSlots;
+            var refreshFunc = Functions.UpdateSpellSlots;
             if (PatchManager.Current.Edition == GameEdition.Scholar)
             {
                 var bytes = AsmLoader.GetAsmBytes(AsmScript.UpdateSpellSlots64);
@@ -150,13 +151,13 @@ public class AttunementService(IMemoryService memoryService) : IAttunementServic
 
         public void AttuneSpell(int slotIndex, nint entryAddr)
         {
-            var inventoryLists = memoryService.FollowPointers(Offsets.GameManagerImp.Base, [
-                Offsets.GameManagerImp.GameDataManager,
-                Offsets.GameManagerImp.GameDataManagerOffsets.InventoryPtr,
-                Offsets.GameManagerImp.GameDataManagerOffsets.Inventory.InventoryLists
+            var inventoryLists = memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base), [
+                GameManagerImp.GameDataManager,
+                GameManagerImp.GameDataManagerOffsets.InventoryPtr,
+                GameManagerImp.GameDataManagerOffsets.Inventory.InventoryLists
             ], true);
 
-            var attuneFunc = Offsets.Functions.AttuneSpell;
+            var attuneFunc = Functions.AttuneSpell;
 
             if (PatchManager.IsScholar())
             {

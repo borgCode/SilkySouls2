@@ -92,7 +92,7 @@ namespace SilkySouls2.Services
 
         public void ToggleDoubleClick(bool isDisableDoubleClickEnabled)
         {
-            var ptr = memoryService.FollowPointers(KatanaMainApp.Base, KatanaMainApp.DoubleClickPtrChain, false);
+            var ptr = memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base), KatanaMainApp.DoubleClickPtrChain, false);
             memoryService.Write(ptr, isDisableDoubleClickEnabled);
         }
     }

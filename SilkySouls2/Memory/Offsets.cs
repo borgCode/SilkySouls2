@@ -120,6 +120,19 @@ namespace SilkySouls2.Memory
                         Scholar1_0_2 or Scholar1_0_3 => 0x38,
                         _ => 0x0
                     };
+                    
+                    public static int CommandBuffer => PatchManager.Current.PatchVersion switch
+                    {
+                        // Vanilla1_0_11 or Vanilla1_0_12 => 0x10,
+                        Scholar1_0_2 or Scholar1_0_3 => 0x40,
+                        _ => 0x0
+                    };
+                }
+
+                public static class CommandBufferOffsets
+                {
+                    public const int ActionId = 0x50;
+                    public const int ComboActionId = 0x54;
                 }
             }
 
@@ -327,6 +340,13 @@ namespace SilkySouls2.Memory
                 Scholar1_0_2 or Scholar1_0_3 => 0x40,
                 _ => 0x0
             };
+            
+            public static int ChrType => PatchManager.Current.PatchVersion switch
+            {
+                // Vanilla1_0_11 or Vanilla1_0_12 => 0x24,
+                Scholar1_0_2 or Scholar1_0_3 => 0x54,
+                _ => 0x0
+            };
 
             public static int Rot => PatchManager.Current.PatchVersion switch
             {
@@ -356,7 +376,7 @@ namespace SilkySouls2.Memory
                 _ => 0x0
             };
 
-            public static int PoiseImmunityPtr => PatchManager.Current.PatchVersion switch
+            public static int ChrActionFlags => PatchManager.Current.PatchVersion switch
             {
                 Vanilla1_0_11 or Vanilla1_0_12 => 0x94,
                 Scholar1_0_2 or Scholar1_0_3 => 0xB8,
@@ -581,9 +601,11 @@ namespace SilkySouls2.Memory
                 public const int Strike = 0x278;
             }
 
-            public static class PoiseStuff
+            public static class ChrActionFlagsOffsets
             {
+                
                 public const int LightStaggerImmuneFlag = 0x5E8;
+                public const int AttackDurationTrackPresentThisFrame = 0x7E4;
             }
 
             public static class OperatorOffsets
@@ -713,6 +735,14 @@ namespace SilkySouls2.Memory
 
         public static class ChrActionCtrl
         {
+            public static int EnemyAttackCtrl => PatchManager.Current.PatchVersion switch
+            {
+                // Vanilla1_0_11 or Vanilla1_0_12 => 0x11C,
+                Scholar1_0_2 or Scholar1_0_3 => 0x160,
+                _ => 0x0
+            };
+            
+            
             public static int ChrEquipBrokenActionCtrl => PatchManager.Current.PatchVersion switch
             {
                 Vanilla1_0_11 or Vanilla1_0_12 => 0x11C,
@@ -720,6 +750,32 @@ namespace SilkySouls2.Memory
                 _ => 0x0
             };
         }
+        
+        public static class EnemyAttackCtrl
+        {
+            public static int ComboRoutes => PatchManager.Current.PatchVersion switch
+            {
+                // Vanilla1_0_11 or Vanilla1_0_12 => 0x11C,
+                Scholar1_0_2 or Scholar1_0_3 => 0x28,
+                _ => 0x0
+            };
+            
+            public static int CurrentActionId => PatchManager.Current.PatchVersion switch
+            {
+                // Vanilla1_0_11 or Vanilla1_0_12 => 0x11C,
+                Scholar1_0_2 or Scholar1_0_3 => 0xEC,
+                _ => 0x0
+            };
+            
+            public static int BehaviorParams => PatchManager.Current.PatchVersion switch
+            {
+                // Vanilla1_0_11 or Vanilla1_0_12 => 0x11C,
+                Scholar1_0_2 or Scholar1_0_3 => 0x140,
+                _ => 0x0
+            };
+            
+        }
+        
 
         public static class HkHardwareInfo
         {

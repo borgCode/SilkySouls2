@@ -112,6 +112,13 @@ namespace SilkySouls2.Services
             return MemoryMarshal.Read<T>(bytes);
         }
 
+        public T[] ReadArray<T>(IntPtr addr, int count) where T : unmanaged
+        {
+            int size = Unsafe.SizeOf<T>() * count;
+            var bytes = ReadBytes(addr, size);
+            return MemoryMarshal.Cast<byte, T>(bytes).ToArray();
+        }
+
         public void Write<T>(IntPtr addr, T value) where T : unmanaged
         {
             int size = Unsafe.SizeOf<T>();
@@ -224,7 +231,7 @@ namespace SilkySouls2.Services
 
         public nint FollowPointers(nint baseAddress, int[] offsets, bool readFinalPtr)
         {
-            var ptr = ReadPointer(baseAddress);
+            var ptr = baseAddress;
 
             for (int i = 0; i < offsets.Length - 1; i++)
                 ptr = ReadPointer(ptr + offsets[i]);

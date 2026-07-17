@@ -59,14 +59,14 @@ public class MenuService(IMemoryService memoryService, IGameTickService gameTick
 
     private bool IsMenuOpen()
     {
-        var fixedJob = memoryService.FollowPointers(GameManagerImp.Base,
+        var fixedJob = memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base),
             GameManagerImp.NpcMenuFixOrderJobSequence, false);
         return memoryService.ReadPointer(fixedJob) != 0;
     }
 
     private void CloseCurrentMenu()
     {
-        var openFlag = memoryService.FollowPointers(GameManagerImp.Base, GameManagerImp.FeItemSelectMenuOpen, false);
+        var openFlag = memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base), GameManagerImp.FeItemSelectMenuOpen, false);
         memoryService.Write(openFlag, false);
 
         var dlBackAllocator =
@@ -131,7 +131,7 @@ public class MenuService(IMemoryService memoryService, IGameTickService gameTick
         var availableMenus = CustomCodeOffsets.Base + CustomCodeOffsets.AvailableMenus;
         var npcPos = CustomCodeOffsets.Base + CustomCodeOffsets.NpcPos;
 
-        var eventWindowManager = memoryService.FollowPointers(GameManagerImp.Base,
+        var eventWindowManager = memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base),
         [
             GameManagerImp.EventManager,
             GameManagerImp.EventManagerOffsets.EventWindowManager
@@ -158,7 +158,7 @@ public class MenuService(IMemoryService memoryService, IGameTickService gameTick
         var availableMenus = CustomCodeOffsets.Base + CustomCodeOffsets.AvailableMenus;
         var npcPos = CustomCodeOffsets.Base + CustomCodeOffsets.NpcPos;
 
-        var eventWindowManager = memoryService.FollowPointers(GameManagerImp.Base,
+        var eventWindowManager = memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base),
         [
             GameManagerImp.EventManager,
             GameManagerImp.EventManagerOffsets.EventWindowManager

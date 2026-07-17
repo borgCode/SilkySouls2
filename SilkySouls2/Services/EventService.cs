@@ -10,7 +10,7 @@ namespace SilkySouls2.Services
     {
         public void SetEvent(int eventId, bool setVal)
         {
-            var eventFlagMan = memoryService.FollowPointers(GameManagerImp.Base, [
+            var eventFlagMan = memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base), [
                 GameManagerImp.EventManager,
                 GameManagerImp.EventManagerOffsets.EventFlagManager
             ], true);
@@ -64,7 +64,7 @@ namespace SilkySouls2.Services
 
         public bool GetEvent(int gameId)
         {
-            var eventFlagMan = memoryService.FollowPointers(GameManagerImp.Base, [
+            var eventFlagMan = memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base), [
                 GameManagerImp.EventManager,
                 GameManagerImp.EventManagerOffsets.EventFlagManager
             ], true);

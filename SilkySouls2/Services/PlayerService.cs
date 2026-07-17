@@ -53,7 +53,7 @@ namespace SilkySouls2.Services
             memoryService.Write(GetPlayerCtrlField(ChrCtrl.Stamina), sp);
 
         private nint GetPlayerCtrlField(int fieldOffset) =>
-            memoryService.FollowPointers(GameManagerImp.Base, [GameManagerImp.PlayerCtrl, fieldOffset],
+            memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base), [GameManagerImp.PlayerCtrl, fieldOffset],
                 false);
 
         public void ToggleNoDeath(bool isNoDeathEnabled) =>
@@ -102,7 +102,7 @@ namespace SilkySouls2.Services
 
         private nint GetStatPtr(int statOffset)
         {
-            return memoryService.FollowPointers(GameManagerImp.Base, [
+            return memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base), [
                 GameManagerImp.PlayerCtrl,
                 ChrCtrl.StatsPtr,
                 statOffset
@@ -130,7 +130,7 @@ namespace SilkySouls2.Services
             var levelLookUp = Functions.LevelLookup;
             var levelUp = Functions.LevelUp;
 
-            var statsEntity = memoryService.FollowPointers(GameManagerImp.Base, [
+            var statsEntity = memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base), [
                 GameManagerImp.PlayerCtrl,
                 ChrCtrl.StatsPtr
             ], true);
@@ -280,7 +280,7 @@ namespace SilkySouls2.Services
                 return;
             }
 
-            var positionCtrl = memoryService.FollowPointers(GameManagerImp.Base,
+            var positionCtrl = memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base),
                 [GameManagerImp.PlayerCtrl, ChrCtrl.PositionCtrl], true);
 
             memoryService.Write(positionCtrl + ChrCtrl.PositionCtrlOffsets.Position, pos.Coords);
@@ -296,7 +296,7 @@ namespace SilkySouls2.Services
         public int GetNewGame() => memoryService.Read<byte>(GetNewGamePtr());
 
         private nint GetNewGamePtr() =>
-            memoryService.FollowPointers(GameManagerImp.Base, [
+            memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base), [
                 GameManagerImp.GameDataManager,
                 GameManagerImp.GameDataManagerOffsets.NewGamePtr,
                 GameManagerImp.GameDataManagerOffsets.NewGame
@@ -305,7 +305,7 @@ namespace SilkySouls2.Services
         public void GiveSouls(int souls)
         {
             var giveSoulsFunc = Functions.GiveSouls;
-            var statsEntity = memoryService.FollowPointers(GameManagerImp.Base, [
+            var statsEntity = memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base), [
                 GameManagerImp.PlayerCtrl,
                 ChrCtrl.StatsPtr
             ], true);
@@ -347,7 +347,7 @@ namespace SilkySouls2.Services
                 ? GameManagerImp.GameDataManagerOffsets.Inventory.ItemInventory2BagListForSpells
                 : GameManagerImp.GameDataManagerOffsets.Inventory.InventoryLists;
 
-            var inventoryBag = memoryService.FollowPointers(GameManagerImp.Base, [
+            var inventoryBag = memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base), [
                 GameManagerImp.GameDataManager,
                 GameManagerImp.GameDataManagerOffsets.InventoryPtr,
                 chainTail
@@ -468,7 +468,7 @@ namespace SilkySouls2.Services
 
         public void ToggleNoHit(bool isEnabled)
         {
-            var flags = memoryService.FollowPointers(GameManagerImp.Base, [
+            var flags = memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base), [
                 GameManagerImp.PlayerCtrl,
                 ChrCtrl.ChrFlags
             ], true);
@@ -487,7 +487,7 @@ namespace SilkySouls2.Services
         private void BreakWeaponScholar(ChrAsmSlotSelector slotSelector)
         {
             var bytes = AsmLoader.GetAsmBytes(AsmScript.BreakWeapon64);
-            var equipBrokenActionCtrl = memoryService.FollowPointers(GameManagerImp.Base, [
+            var equipBrokenActionCtrl = memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base), [
                 GameManagerImp.PlayerCtrl,
                 ChrCtrl.ChrActionCtrl,
                 ChrActionCtrl.ChrEquipBrokenActionCtrl
@@ -505,7 +505,7 @@ namespace SilkySouls2.Services
         private void BreakWeaponVanilla(ChrAsmSlotSelector slotSelector)
         {
             var bytes = AsmLoader.GetAsmBytes(AsmScript.BreakWeapon32);
-            var equipBrokenActionCtrl = memoryService.FollowPointers(GameManagerImp.Base, [
+            var equipBrokenActionCtrl = memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base), [
                 GameManagerImp.PlayerCtrl,
                 ChrCtrl.ChrActionCtrl,
                 ChrActionCtrl.ChrEquipBrokenActionCtrl
@@ -521,7 +521,7 @@ namespace SilkySouls2.Services
             
         }
 
-        public nint GetPlayerCtrl() => memoryService.FollowPointers(GameManagerImp.Base,
+        public nint GetPlayerCtrl() => memoryService.FollowPointers(memoryService.ReadPointer(GameManagerImp.Base),
             [GameManagerImp.PlayerCtrl], true);
 
         public void ToggleDisableRoll(bool isEnabled) =>

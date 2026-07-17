@@ -588,6 +588,7 @@ namespace SilkySouls2.ViewModels
                 _resistancesWindowWindow.DataContext = this;
             }
 
+            
             LastAct = _targetService.GetLastAct();
             Dist = _targetService.GetDist();
 

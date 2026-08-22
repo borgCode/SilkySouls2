@@ -1601,8 +1601,8 @@ namespace SilkySouls2.Memory
             {
                 Vanilla1_0_11 => 0x42FAC5,
                 Vanilla1_0_12 => 0x436D55,
-                Scholar1_0_2 => 0x41C1EB,
-                Scholar1_0_3 => 0x42336B,
+                Scholar1_0_2 => 0x41C217,
+                Scholar1_0_3 => 0x423397,
                 _ => 0
             };
 
